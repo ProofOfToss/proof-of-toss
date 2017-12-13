@@ -1,0 +1,29 @@
+// Allows us to use ES6 in our migrations and tests.
+require('babel-register')
+
+module.exports = {
+  networks: {
+    development: {
+      gas: 2500000,
+      gasPrice: 0,
+      from: 'your address',
+      host: 'localhost',
+      port: 4444,
+      network_id: '778' // Match any network id
+    },
+    // local: {
+    //   gas: 2500000,
+    //   // from: '0x58e2084952f6dacc6a23fc6838aaebebec2c40ec',
+    //   host: 'localhost',
+    //   port: 4444, //8545,
+    //   network_id: '7771' // Match any network id
+    // },
+    test: {
+      gas: 2500000,
+      // from: 'your address',
+      host: 'localhost',
+      port: 8545,
+      network_id: '*' // Match any network id
+    }
+  }
+}
