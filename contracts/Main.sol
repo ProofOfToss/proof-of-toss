@@ -20,7 +20,7 @@ contract Main {
     function newEvent(uint deposit) returns (address) {
         lastEvent = new Event(msg.sender, address(token));
         token.transferFrom(msg.sender, address(lastEvent), deposit);
-        NewEvent(now, address(lastEvent), msg.sender);
+        NewEvent(uint(now), address(lastEvent), msg.sender);
 
         return address(lastEvent);
     }
