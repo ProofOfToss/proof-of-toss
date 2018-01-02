@@ -1,0 +1,43 @@
+version: '2'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.4.0
+    container_name: elasticsearch_540
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=0.0.0.0
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - 9200:9200
+      - 9300:9300
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    mem_limit: 2g
+    cap_add:
+      - IPC_LOCK
+  kibana:
+    image: docker.elastic.co/kibana/kibana:5.4.0
+    container_name: kibana_540
+    environment:
+      - SERVER_HOST=0.0.0.0
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - 5601:5601
+  headPlugin:
+    image: mobz/elasticsearch-head:5
+    container_name: head_540
+    ports:
+      - 9100:9100
+
+volumes:
+  esdata:
+    driver: local

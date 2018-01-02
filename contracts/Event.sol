@@ -6,9 +6,11 @@ contract Event {
     Token token;
     address public creator;
     uint createdTimestamp;
+    string name;
 
-    function Event(address _creator, address _token) {
+    function Event(address _creator, address _token, string _name) {
         creator = _creator;
+        name = _name;
         token = Token(_token);
         createdTimestamp = block.timestamp;
     }
@@ -19,6 +21,10 @@ contract Event {
 
     function getCreator() constant returns (address) {
         return creator;
+    }
+
+    function getName() constant returns (string) {
+        return name;
     }
 
     function getCreatedTimestamp() constant returns (uint) {

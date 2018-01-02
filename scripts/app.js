@@ -50,7 +50,7 @@ module.exports = function(callback) {
 
     accounts = accs;
 
-    // runTest(); // uncomment to create some events
+    //runTest(); // uncomment to create some events
     getEvents();
   });
 
@@ -148,7 +148,7 @@ module.exports = function(callback) {
 
       console.log(`mainSC address: ${main.address}`);
 
-      return main.newEvent(1000, {from: accounts[1]});
+      return main.newEvent(1000, "test", {from: accounts[1]});
 
     }).then(function () {
 

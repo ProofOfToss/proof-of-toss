@@ -1,0 +1,7 @@
+cluster.name: "proof-of-toss-docker-cluster"
+node.name: "proof-of-toss-docker-single-node"
+network.host: 0.0.0.0
+
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+http.cors.allow-headers: "Authorization"
