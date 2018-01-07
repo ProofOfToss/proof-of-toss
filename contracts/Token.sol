@@ -8,6 +8,7 @@ contract Token {
 
     mapping (address => uint256) public balanceOf;      //!< array of all balances
     mapping (address => mapping (address => uint256)) public allowed;
+    mapping (address => mapping (address => uint256)) public blocked;
 
     uint256 totalTokens;
 
@@ -53,6 +54,23 @@ contract Token {
     // @return the rest of allowed tokens
     function allowance(address _owner, address _spender) constant returns (uint256 remaining) {
         return allowed[_owner][_spender];
+    }
+
+    function block(address _blocking, uint256 _value) {
+        if (_blocking == msg.sender) throw;
+        if (allowed[_blocking][msg.sender] < _value) throw;
+        if (balanceOf[msg.sender] < _value || _value <= 0) throw;
+
+        balanceOf[_blocking] -= _value;
+        blocked[_blocking][msg.sender] += _value;
+    }
+
+    function unblock(address _blocking, address _unblockTo, uint256 _value) {
+        if (blocked[_blocking][msg.sender] == 0) throw;
+        if (blocked[_blocking][msg.sender] < _value) throw;
+
+        delete blocked[_blocking][msg.sender];
+        balanceOf[_unblockTo] += _value;
     }
 
     function generateTokens(address _user, uint256 _value) {
