@@ -58,10 +58,11 @@ contract Token {
 
     function block(address _blocking, uint256 _value) {
         if (_blocking == msg.sender) throw;
+        if (_value <= 0) throw;
         if (allowed[_blocking][msg.sender] < _value) throw;
-        if (balanceOf[msg.sender] < _value || _value <= 0) throw;
 
         balanceOf[_blocking] -= _value;
+        allowed[_blocking][msg.sender] -= _value;
         blocked[_blocking][msg.sender] += _value;
     }
 
@@ -69,7 +70,7 @@ contract Token {
         if (blocked[_blocking][msg.sender] == 0) throw;
         if (blocked[_blocking][msg.sender] < _value) throw;
 
-        delete blocked[_blocking][msg.sender];
+        blocked[_blocking][msg.sender] -= _value;
         balanceOf[_unblockTo] += _value;
     }
 
