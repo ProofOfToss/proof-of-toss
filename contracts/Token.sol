@@ -56,6 +56,9 @@ contract Token {
         return allowed[_owner][_spender];
     }
 
+    // @brief Blocks tokens
+    // @param _blocking The address of tokens which are being blocked
+    // @param _value The blocked token count
     function block(address _blocking, uint256 _value) {
         if (_blocking == msg.sender) throw;
         if (_value <= 0) throw;
@@ -66,6 +69,10 @@ contract Token {
         blocked[_blocking][msg.sender] += _value;
     }
 
+    // @brief Unblocks tokens and sends them to the given address (to _unblockTo)
+    // @param _blocking The address of tokens which are blocked
+    // @param _unblockTo The address to send to the blocked tokens after unblocking
+    // @param _value The blocked token count to unblock
     function unblock(address _blocking, address _unblockTo, uint256 _value) {
         if (blocked[_blocking][msg.sender] == 0) throw;
         if (blocked[_blocking][msg.sender] < _value) throw;
