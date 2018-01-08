@@ -1,7 +1,5 @@
 import expectThrow from './helpers/expectThrow';
 
-var Main = artifacts.require("./Main.sol");
-var Event = artifacts.require("./Event.sol");
 var Token = artifacts.require("./Token.sol");
 
 contract('Token', function (accounts) {
