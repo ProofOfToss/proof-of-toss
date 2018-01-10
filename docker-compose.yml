@@ -38,6 +38,40 @@ services:
     ports:
       - 9100:9100
 
+  rsk:
+    build:
+      context: .
+      dockerfile: docker/rsk/Dockerfile
+    expose:
+      - 4444
+      - 8545
+    ports:
+      - 50505:50505
+    volumes:
+      - ./docker/rsk/rsk:/etc/rsk
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    tty: true
+    depends_on:
+      - rsk
+    links:
+      - rsk:rsk
+    volumes:
+      - ./config:/home/app/config
+      - ./contracts:/home/app/contracts
+      - ./migrations:/home/app/migrations
+      - ./public:/home/app/public
+      - ./scripts:/home/app/scripts
+      - ./src:/home/app/src
+      - ./test:/home/app/test
+      - ./elasticsearch.yml:/home/app/elasticsearch.yml
+      - ./kibana.yml:/home/app/kibana.yml
+      - ./package.json:/home/app/package.json
+      - ./truffle.js:/home/app/truffle.js
+
 volumes:
   esdata:
     driver: local
