@@ -1,0 +1,15 @@
+
+.DS_Store
+.eslintignore
+.eslintrc
+.gradle/
+.idea/
+snippets/
+build/
+deploy.sh
+node_modules/
+truffle.js
+build_
+old
+src/user
+src/images/uport-logo.svg

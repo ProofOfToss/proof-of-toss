@@ -116,6 +116,7 @@ module.exports = {
           /\.html$/,
           /\.(js|jsx)$/,
           /\.css$/,
+          /\.scss$/,
           /\.json$/,
           /\.woff$/,
           /\.woff2$/,
@@ -132,6 +133,10 @@ module.exports = {
         test: /\.(js|jsx)$/,
         include: paths.appSrc,
         loader: 'babel',
+      },
+      {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract('style', 'css?importLoaders=1!postcss', 'sass')
       },
       // The notation here is somewhat confusing.
       // "postcss" loader applies autoprefixer to our CSS.
@@ -185,6 +190,10 @@ module.exports = {
         query: {
           name: 'fonts/[name].[hash].[ext]'
         }
+      },
+      {
+        test: require.resolve('jquery'),
+        loader: 'expose?jQuery!expose?$'
       }
     ]
   },
@@ -257,6 +266,11 @@ module.exports = {
     // having to parse `index.html`.
     new ManifestPlugin({
       fileName: 'asset-manifest.json'
+    }),
+    new webpack.ProvidePlugin({
+      "$": "jquery",
+      "jQuery": "jquery",
+      "window.jQuery": "jquery"
     })
   ],
   // Some libraries import Node modules but don't use them in the browser.

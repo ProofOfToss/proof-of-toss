@@ -14,9 +14,9 @@ import NewEvent from './pages/new_event/NewEvent';
 import Event from './pages/event/Event';
 
 // Redux Store
-import store from './store'
+import store from './store';
 
-const history = syncHistoryWithStore(browserHistory, store)
+const history = syncHistoryWithStore(browserHistory, store);
 
 ReactDOM.render((
     <Provider store={store}>

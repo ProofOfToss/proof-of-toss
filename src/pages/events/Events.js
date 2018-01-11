@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import MainContract from '../../../build/contracts/Main.json'
 import getWeb3 from '../../util/getWeb3'
+import { Link } from 'react-router'
 
 class Events extends Component {
   constructor(props) {
@@ -8,7 +9,8 @@ class Events extends Component {
 
     this.state = {
       events: [],
-      web3: null
+      web3: null,
+      mainInstance: null
     }
   }
 
@@ -35,22 +37,21 @@ class Events extends Component {
     const main = contract(MainContract)
     main.setProvider(this.state.web3.currentProvider)
 
-    // Declaring this for later so we can chain functions on SimpleStorage.
-    var mainInstance
+    var self = this;
 
     // Get accounts.
     this.state.web3.eth.getAccounts((error, accounts) => {
       this.accounts = accounts;
 
       main.deployed().then((instance) => {
-        this.mainInstance = mainInstance = instance
+        self.setState({mainInstance: instance});
 
-        return mainInstance.NewEvent({}, {fromBlock: 0, toBlock: 'latest'});
+        return self.state.mainInstance.NewEvent({}, {fromBlock: 0, toBlock: 'latest'});
       }).then((events) => {
         events.get(function (error, log) {
           console.log(error, log);
           if (!error) {
-            return this.setState({ events: log })
+            return self.setState({ events: log })
           } else {
             console.log(error);
           }
@@ -63,11 +64,12 @@ class Events extends Component {
     var elements = [];
     for(var i = 0; i < this.state.events.length; i++) {
       var event = this.state.events[i];
-      elements.push(<div>
-        <p>Name: {event['eventName']}</p>
-        <p>Timestamp: {event['createdTimestamp']}</p>
-        <p>Address: {event['eventAddress']}</p>
-        <p>Creator: {event['eventCreator']}</p>
+      elements.push(<div className='well' key={event['transactionHash']}>
+        <p>Name: {event.args['eventName']}</p>
+        <p>Timestamp: {event.args['createdTimestamp'].c}</p>
+        <p>Address: {event.args['eventAddress']}</p>
+        <p>Creator: {event.args['eventCreator']}</p>
+        <p><Link to={'/event/' + event.args['eventAddress']}>more</Link></p>
       </div>);
     }
 

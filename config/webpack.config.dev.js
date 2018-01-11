@@ -18,6 +18,7 @@ var publicPath = '/';
 var publicUrl = '';
 // Get environment variables to inject into our app.
 var env = getClientEnvironment(publicUrl);
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
@@ -110,6 +111,7 @@ module.exports = {
           /\.html$/,
           /\.(js|jsx)$/,
           /\.css$/,
+          /\.scss$/,
           /\.json$/,
           /\.woff$/,
           /\.woff2$/,
@@ -142,6 +144,11 @@ module.exports = {
       {
         test: /\.css$/,
         loader: 'style!css?importLoaders=1!postcss'
+      },
+      {
+        test: /\.scss$/,
+        // include: paths.appSrc,
+        loader: 'style!css?importLoaders=1!sass?sourceMap!postcss'
       },
       // JSON is not enabled by default in Webpack but both Node and Browserify
       // allow it implicitly so we also enable it.
@@ -188,7 +195,11 @@ module.exports = {
       /*{
         test: /\.sol$/,
         loader: 'truffle-solidity?network_id=123'
-      }*/
+      },*/
+      {
+        test: require.resolve('jquery'),
+        loader: 'expose?jQuery!expose?$'
+      }
     ]
   },
 
@@ -230,7 +241,12 @@ module.exports = {
     // to restart the development server for Webpack to discover it. This plugin
     // makes the discovery automatic so you don't have to restart.
     // See https://github.com/facebookincubator/create-react-app/issues/186
-    new WatchMissingNodeModulesPlugin(paths.appNodeModules)
+    new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    new webpack.ProvidePlugin({
+      "$": "jquery",
+      "jQuery": "jquery",
+      "window.jQuery": "jquery"
+    })
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
