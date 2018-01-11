@@ -133,6 +133,9 @@ module.exports = {
         test: /\.(js|jsx)$/,
         include: paths.appSrc,
         loader: 'babel',
+        query: {
+          presets: ['react']
+        }
       },
       {
         test: /\.scss$/,

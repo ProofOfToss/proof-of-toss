@@ -1,4 +1,3 @@
-
 .DS_Store
 .eslintignore
 .eslintrc
@@ -13,3 +12,5 @@ build_
 old
 src/user
 src/images/uport-logo.svg
+npm-debug.log
+build_webpack
