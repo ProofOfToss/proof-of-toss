@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 import { strings } from '../../util/i18n';
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { strings } from '../../util/i18n';
-import Link, { LinkedComponent } from 'valuelink'
-import { Input, TextArea, Select, Radio, Checkbox } from 'valuelink/tags'
+import Link/*, { LinkedComponent }*/ from 'valuelink'
+import { Input/*, TextArea, Select, Radio, Checkbox*/ } from 'valuelink/tags'
 
 class EventForm extends Component {
   constructor(props) {

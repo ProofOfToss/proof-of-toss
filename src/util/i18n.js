@@ -39,3 +39,7 @@ export function switchLanguage(newLanguage) {
 export function strings() {
     return language;
 }
+
+export function getLanguages() {
+    return languages;
+}
