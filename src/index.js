@@ -24,7 +24,7 @@ import Payments from './pages/payments/Index'
 import PaymentsWithdraw from './pages/payments/Withdraw'
 
 import Judge from './pages/judge/Index'
-import JudgeConfirmResult from './pages/judge/ConfirmResult'
+import JudgeConfirmResult from './pages/judge/ModalConfirmResult'
 
 import Storage from './pages/storage/Storage'
 import NotFound from './pages/not_found/NotFound';

@@ -43,7 +43,7 @@ class App extends Component {
             { /* Collect the nav links, forms, and other content for toggling */ }
             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul className="nav navbar-nav">
-                
+
                 {/*<li className={ this._menuLinkClass('/storage') }><Link to="/storage" className="pure-menu-link">StorageSC test</Link></li>*/}
                 {/*<li className={ this._menuLinkClass('/events') }><Link to="/events" className="pure-menu-link">Events list</Link></li>*/}
                 {/*<li className={ this._menuLinkClass('/new_event') }><Link to="/new_event" className="pure-menu-link">New event</Link></li>*/}
