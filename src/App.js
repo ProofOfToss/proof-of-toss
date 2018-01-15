@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router'
 import NavbarUser from './components/navbar_user/NavbarUser'
 import Language from './components/navbar_user/Language'
+import { isAuthenticated, login, logout } from './util/auth.js'
 
 global.jQuery = require("jquery");
 require("bootstrap-sass");
