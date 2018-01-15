@@ -40,7 +40,9 @@ class Wallet extends Component {
 
   render() {
     return(
-      <span>{this.state.balance !== null ? <span>Balance: {this.state.balance} TOSS</span> : ''}</span>
+      <li className="navbar-text">
+        {this.state.balance !== null ? <span>Balance: {this.state.balance} TOSS</span> : 'Wallet info'}
+      </li>
     )
   }
 }
