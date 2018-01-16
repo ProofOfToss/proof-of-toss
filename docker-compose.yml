@@ -44,21 +44,29 @@ services:
       dockerfile: docker/rsk/Dockerfile
     expose:
       - 4444
-      - 8545
     ports:
       - 50505:50505
     volumes:
       - ./docker/rsk/rsk:/etc/rsk
+
+  testrpc:
+    image: trufflesuite/ganache-cli:latest
+    expose:
+      - 8545
 
   app:
     build:
       context: .
       dockerfile: docker/app/Dockerfile
     tty: true
+    ports:
+      - 3000:3000
     depends_on:
       - rsk
+      - testrpc
     links:
       - rsk:rsk
+      - testrpc:testrpc
     volumes:
       - ./config:/home/app/config
       - ./contracts:/home/app/contracts
