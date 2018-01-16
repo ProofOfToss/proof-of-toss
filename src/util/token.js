@@ -4,9 +4,6 @@ function getMyBalance(web3) {
   const contract = require('truffle-contract');
   const token = contract(TokenContract);
 
-  // @TODO: fix me
-  var web3 = window.web3;
-
   token.setProvider(web3.currentProvider);
 
   return token.deployed()

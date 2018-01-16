@@ -17,18 +17,23 @@ const web3Reducer = (state = initialState, action) => {
 
     case LOCK_WALLET:
       return {
-        'isWalletLocked': true
+        'isWalletLocked': true,
+        'currentAddress': state.currentAddress,
+        'web3': state.web3
       };
 
     case UNLOCK_WALLET:
       return {
         'isWalletLocked': false,
-        'currentAddress': action.currentAddress
+        'currentAddress': action.currentAddress,
+        'web3': state.web3
       };
 
     case CHANGE_ADDRESS:
       return {
-        'currentAddress': action.newAddress
+        'isWalletLocked': state.isWalletLocked,
+        'currentAddress': action.newAddress,
+        'web3': state.web3
       };
 
     default:

@@ -88,7 +88,8 @@ function mapPropsToState(state) {
   return {
     isAuthenticated: state.user.isAuthenticated,
     isWalletLocked: state.web3.isWalletLocked,
-    currentAddress: state.web3.currentAddress
+    currentAddress: state.web3.currentAddress,
+    web3: state.web3.web3
   };
 }
 

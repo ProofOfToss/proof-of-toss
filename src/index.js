@@ -32,18 +32,18 @@ import Event from './pages/event/Event';
 import store from './store';
 import { initWeb3, lockWallet, unlockWallet, changeAddress } from './actions/web3';
 
-const history = syncHistoryWithStore(browserHistory, store);
-
-function checkAuthorization() {
-  if (store.getState().user.isAuthenticated === false) {
-    history.push("/sign-in");
-  }
-}
-
 // Put ReactDOM.render() to a function because we need to wrap the rendering with web3 detection
 function renderReactDOM(web3) {
   if (typeof web3 !== 'undefined') {
     store.dispatch(initWeb3(web3));
+  }
+
+  const history = syncHistoryWithStore(browserHistory, store);
+
+  function checkAuthorization() {
+    if (store.getState().user.isAuthenticated === false) {
+      history.push("/sign-in");
+    }
   }
 
   ReactDOM.render((
@@ -95,7 +95,7 @@ getWeb3
         store.dispatch(authenticateUser(address));
       } else {
         store.dispatch(logoutUser());
-        history.push('/sign-in');
+        browserHistory.push('/sign-in');
       }
     }
 
@@ -112,7 +112,7 @@ getWeb3
 
             store.dispatch(lockWallet());
             store.dispatch(logoutUser());
-            history.push('/sign-in');
+            browserHistory.push('/sign-in');
           }
         } else {
           if (hasAccounts !== true) {
