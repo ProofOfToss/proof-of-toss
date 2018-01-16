@@ -1,8 +1,13 @@
 @import "~bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
 @import "./bootstrap/bootstrap";
 
-.App {
+html {
+  position: relative;
+  min-height: 100%;
+}
 
+.App {
+  margin-bottom: 200px;
 }
 
 footer {
