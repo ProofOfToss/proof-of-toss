@@ -1,0 +1,19 @@
+deploy_demo:
+  stage: deploy
+  environment:
+    name: demo
+    url: http://proof-of-toss.axioma.lv/
+# deploy will run on shared runner "Deploy on vs04"
+  tags:
+    - demo
+# the following configuration will deploy every commit of master branch
+  # when: manual
+  only:
+    - master
+# actual deployment commands starts here
+  script:
+    - echo "Build app"
+    - npm install
+    - npm run build
+    - echo "Deploy to Demo"
+    - rsync -hrlv --delete --exclude=.git --exclude=truffle.js --exclude=build --exclude=node_modules --exclude=npm-debug.log $CI_PROJECT_DIR/ /srv/www/proof-of-toss.axioma.lv/htdocs/
