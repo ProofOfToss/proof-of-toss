@@ -34,6 +34,12 @@ import { initWeb3, lockWallet, unlockWallet, changeAddress } from './actions/web
 
 const history = syncHistoryWithStore(browserHistory, store);
 
+function checkAuthorization() {
+  if (store.getState().user.isAuthenticated === false) {
+    history.push("/sign-in");
+  }
+}
+
 // Put ReactDOM.render() to a function because we need to wrap the rendering with web3 detection
 function renderReactDOM(web3) {
   if (typeof web3 !== 'undefined') {
@@ -48,22 +54,22 @@ function renderReactDOM(web3) {
 
           <Route path="sign-in" component={SignIn} />
 
-          <Route path="wallet" component={Wallet} />
+          <Route path="wallet" component={Wallet} onEnter={ checkAuthorization() } />
 
-          <Route path="play" component={Play} />
-          <Route path="play/event" component={PlayEvent} />
-          <Route path="play/event/bid_confirmation" component={PlayBidConfirmation} />
-          <Route path="play/event/contest_result" component={PlayContestResult} />
+          <Route path="play" component={Play} onEnter={ checkAuthorization() } />
+          <Route path="play/event" component={PlayEvent} onEnter={ checkAuthorization() } />
+          <Route path="play/event/bid_confirmation" component={PlayBidConfirmation} onEnter={ checkAuthorization() } />
+          <Route path="play/event/contest_result" component={PlayContestResult} onEnter={ checkAuthorization() } />
 
-          <Route path="payments" component={Payments} />
-          <Route path="payments/withdraw" component={PaymentsWithdraw} />
+          <Route path="payments" component={Payments} onEnter={ checkAuthorization() } />
+          <Route path="payments/withdraw" component={PaymentsWithdraw} onEnter={ checkAuthorization() } />
 
-          <Route path="judge" component={Judge} />
+          <Route path="judge" component={Judge} onEnter={ checkAuthorization() } />
 
-          <Route path="storage" component={Storage} />
-          <Route path='events' component={Events} />
-          <Route path='new_event' component={NewEvent} />
-          <Route path='event(/:id)' component={Event} />
+          <Route path="storage" component={Storage} onEnter={ checkAuthorization() } />
+          <Route path='events' component={Events} onEnter={ checkAuthorization() } />
+          <Route path='new_event' component={NewEvent} onEnter={ checkAuthorization() } />
+          <Route path='event(/:id)' component={Event} onEnter={ checkAuthorization() } />
 
           <Route path='*' component={NotFound} />
         </Route>
