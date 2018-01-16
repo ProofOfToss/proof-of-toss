@@ -34,42 +34,59 @@ import Event from './pages/event/Event';
 
 // Redux Store
 import store from './store';
+import { initWeb3 } from './actions/web3';
 
-const history = syncHistoryWithStore(browserHistory, store);
+// Put ReactDOM.render() to a function because we need to wrap the rendering with web3 detection
+function renderReactDOM(web3) {
+  store.dispatch(initWeb3(web3));
 
-ReactDOM.render((
+  const history = syncHistoryWithStore(browserHistory, store);
+
+  ReactDOM.render((
     <Provider store={store}>
       <Router history={history}>
         <Route path="/" component={App}>
-          <IndexRoute component={Home} />
+        <IndexRoute component={Home} />
 
-          <Route path="register" component={Register} />
-          <Route path="login" component={Login} />
+        <Route path="register" component={Register} />
+        <Route path="login" component={Login} />
 
-          <Route path="wallet" component={Wallet} />
-          <Route path="wallet/deposit" component={WalletDeposit} />
-          <Route path="wallet/send" component={WalletSend} />
+        <Route path="wallet" component={Wallet} />
+        <Route path="wallet/deposit" component={WalletDeposit} />
+        <Route path="wallet/send" component={WalletSend} />
 
-          <Route path="play" component={Play} />
-          <Route path="play/event" component={PlayEvent} />
-          <Route path="play/event/bid_confirmation" component={PlayBidConfirmation} />
-          <Route path="play/event/contest_result" component={PlayContestResult} />
+        <Route path="play" component={Play} />
+        <Route path="play/event" component={PlayEvent} />
+        <Route path="play/event/bid_confirmation" component={PlayBidConfirmation} />
+        <Route path="play/event/contest_result" component={PlayContestResult} />
 
-          <Route path="payments" component={Payments} />
-          <Route path="payments/withdraw" component={PaymentsWithdraw} />
+        <Route path="payments" component={Payments} />
+        <Route path="payments/withdraw" component={PaymentsWithdraw} />
 
-          <Route path="judge" component={Judge} />
-          <Route path="judge/confirm_result" component={JudgeConfirmResult} />
+        <Route path="judge" component={Judge} />
+        <Route path="judge/confirm_result" component={JudgeConfirmResult} />
 
-          <Route path="storage" component={Storage} />
-          <Route path='events' component={Events} />
-          <Route path='new_event' component={NewEvent} />
-          <Route path='event(/:id)' component={Event} />
+        <Route path="storage" component={Storage} />
+        <Route path='events' component={Events} />
+        <Route path='new_event' component={NewEvent} />
+        <Route path='event(/:id)' component={Event} />
 
-          <Route path='*' component={NotFound} />
+        <Route path='*' component={NotFound} />
         </Route>
       </Router>
     </Provider>
   ),
   document.getElementById('root')
 )
+}
+
+// Inject Web3 into store and render React DOM
+import getWeb3 from './util/getWeb3';
+
+getWeb3
+  .then(function (results) {
+    renderReactDOM(results.web3);
+  })
+  .catch(function() {
+    renderReactDOM();
+  });
