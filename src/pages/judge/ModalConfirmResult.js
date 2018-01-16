@@ -5,7 +5,7 @@ class ConfirmResult extends Component {
 
   render() {
     return(
-      <BaseModal handleHideModal = {this.props.handleHideModal}>
+      <BaseModal handleHideModal={this.props.handleHideModal}>
         <p>Modal confirm result body</p>
       </BaseModal>
     )
