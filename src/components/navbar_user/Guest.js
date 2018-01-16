@@ -6,8 +6,7 @@ class Guest extends Component {
   render() {
     return (
       <Fragment>
-        <li><Link to='/register' className='pure-menu-link'>Register</Link></li>
-        <li><Link to='/login' className='pure-menu-link'>Login</Link></li>
+        <li><Link to='/sign-in' className='pure-menu-link'>Sign in</Link></li>
       </Fragment>
     )
   }

@@ -1,20 +1,14 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
 
 import Wallet from '../wallet/Wallet'
 import Guest from './Guest'
 
 class NavbarUser extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = { isLoggedIn: true };
-  }
-
   render() {
-    const isLoggedIn = this.state.isLoggedIn;
-
     let navbarUser = null;
-    if(isLoggedIn) {
+
+    if (this.props.isAuthenticated) {
       navbarUser = <Wallet />
     } else {
       navbarUser = <Guest />
@@ -26,4 +20,10 @@ class NavbarUser extends Component {
   }
 }
 
-export default NavbarUser
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.user.isAuthenticated
+  };
+}
+
+export default connect(mapStateToProps)(NavbarUser);
