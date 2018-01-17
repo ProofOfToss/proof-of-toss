@@ -11,9 +11,17 @@ deploy_demo:
   only:
     - master
 # actual deployment commands starts here
+# need a testrpc running on localhost
+# mkdir testrpc_db
+# npm install ganache-cli
+# nohup ./node_modules/ganache-cli/build/cli.node.js --db=testrpc_db --account="0x1f8969bdcfdfe9c17580a43522a258543238cb9df11a4694be3e5fc9b0d1edea,100000000000000000000" --account="0x746dfbc1f0518516bdd42821435d297681338ff1d950b7e6b7d7480ca64375c6,100000000000000000000" --account="0x5b4c3249a068b0b3e14608993226450b9a635613cfa7fea0e045f349f5f1b6b4,100000000000000000000" --account="0xcc844e935f39a23e7061670c491eb2e8c95dfe8206bcb47c712b4c399212e893,100000000000000000000" --account="0xd83fa9e30c43be2fb10be664ec4fcecd9fc66ef6f4c084e1a28f381f85b66792,100000000000000000000" --account="0x8f838e8e3bb98b43f6ac545bc757583fbf2e965489e49d4709034ce92d86df21,100000000000000000000" --account="0x831baf12669d55a724486c82d22a178159aa0a71381bf24c84e67d17c7ff387a,100000000000000000000" --account="0x682218d983fa9b276792c60e6ad9e58762fa3068414c17a5f5742cd5130bf741,100000000000000000000" --account="0x42a9bd8cb5b90e2a9a4cd894ee04fdad2f70306f935cef37a619db22a53ef2bf,100000000000000000000" --account="0x48e8c82d4c25e31ee48af9d5cd72e51ef190ad312042d656495c625318229135,100000000000000000000" &
+# to stop testrpc:
+# kill `ps -a |grep "[g]anache-cli/build/cli.node.js"|cut -d" " -f 1`
   script:
     - echo "Build app"
     - npm install
+    - cp truffle.js.example truffle.js
+    - ./node_modules/truffle/build/cli.bundled.js --network test migrate
     - npm run build
     - echo "Deploy to Demo"
-    - rsync -hrlv --delete --exclude=.git --exclude=truffle.js --exclude=build --exclude=node_modules --exclude=npm-debug.log $CI_PROJECT_DIR/ /srv/www/proof-of-toss.axioma.lv/htdocs/
+    - rsync -hrlv --delete --exclude=.git --exclude=truffle.js --exclude=build --exclude=node_modules --exclude=npm-debug.log --exclude=testrpc_db $CI_PROJECT_DIR/ /srv/www/proof-of-toss.axioma.lv/htdocs/
