@@ -2,7 +2,7 @@ deploy_demo:
   stage: deploy
   environment:
     name: demo
-    url: http://proof-of-toss.axioma.lv/
+    url: http://proof-of-toss-demo.axioma.lv/
 # deploy will run on shared runner "Deploy on vs04"
   tags:
     - demo
@@ -24,4 +24,4 @@ deploy_demo:
     - ./node_modules/truffle/build/cli.bundled.js --network test migrate
     - npm run build
     - echo "Deploy to Demo"
-    - rsync -hrlv --delete --exclude=.git --exclude=truffle.js --exclude=build --exclude=node_modules --exclude=npm-debug.log --exclude=testrpc_db --exclude=nohup.out $CI_PROJECT_DIR/ /srv/www/proof-of-toss.axioma.lv/htdocs/
+    - rsync -hrlv --delete --exclude=.git --exclude=truffle.js --exclude=build --exclude=node_modules --exclude=npm-debug.log --exclude=testrpc_db --exclude=nohup.out $CI_PROJECT_DIR/ /srv/www/proof-of-toss-demo.axioma.lv/htdocs/
