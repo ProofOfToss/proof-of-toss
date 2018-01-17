@@ -50,14 +50,7 @@ class App extends Component {
                   {/*<li className={ this._menuLinkClass('/new_event') }><Link to="/new_event" className="pure-menu-link">New event</Link></li>*/}
 
                   <li className={ this._menuLinkClass('/new_event') }><Link to="/new_event" className="pure-menu-link">New event</Link></li>
-                  <li className="dropdown">
-                    <a href="#" className="dropdown-toggle" data-toggle="dropdown">Wallet <span className="caret"></span></a>
-                    <ul className="dropdown-menu" role="menu">
-                      <li><Link to="/wallet" className="pure-menu-link">Wallet</Link></li>
-                      <li><Link to="/wallet/deposit" className="pure-menu-link">Deposit</Link></li>
-                      <li><Link to="/wallet/send" className="pure-menu-link">Send</Link></li>
-                    </ul>
-                  </li>
+                  <li className={ this._menuLinkClass('/wallet') }><Link to="/wallet" className="pure-menu-link">Wallet</Link></li>
 
                   <li className="dropdown">
                     <a href="#" className="dropdown-toggle" data-toggle="dropdown">Play <span className="caret"></span></a>
@@ -77,13 +70,7 @@ class App extends Component {
                     </ul>
                   </li>
 
-                  <li className="dropdown">
-                    <a href="#" className="dropdown-toggle" data-toggle="dropdown">Judge <span className="caret"></span></a>
-                    <ul className="dropdown-menu" role="menu">
-                      <li><Link to="/judge" className="pure-menu-link">Judge</Link></li>
-                      <li><Link to="/judge/confirm_result" className="pure-menu-link">Confirm result</Link></li>
-                    </ul>
-                  </li>
+                  <li className={ this._menuLinkClass('/judge') }><Link to="/judge" className="pure-menu-link">Judge</Link></li>
                 </ul>
 
                 <ul className="nav navbar-nav navbar-right">

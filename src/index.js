@@ -12,8 +12,6 @@ import Register from './pages/user/Register'
 import Login from './pages/user/Login'
 
 import Wallet from './pages/wallet/Index'
-import WalletDeposit from './pages/wallet/Deposit'
-import WalletSend from './pages/wallet/Send'
 
 import Play from './pages/play/Index'
 import PlayEvent from './pages/play/Event'
@@ -24,7 +22,6 @@ import Payments from './pages/payments/Index'
 import PaymentsWithdraw from './pages/payments/Withdraw'
 
 import Judge from './pages/judge/Index'
-import JudgeConfirmResult from './pages/judge/ModalConfirmResult'
 
 import Storage from './pages/storage/Storage'
 import NotFound from './pages/not_found/NotFound';
@@ -52,8 +49,6 @@ function renderReactDOM(web3) {
         <Route path="login" component={Login} />
 
         <Route path="wallet" component={Wallet} />
-        <Route path="wallet/deposit" component={WalletDeposit} />
-        <Route path="wallet/send" component={WalletSend} />
 
         <Route path="play" component={Play} />
         <Route path="play/event" component={PlayEvent} />
@@ -64,7 +59,6 @@ function renderReactDOM(web3) {
         <Route path="payments/withdraw" component={PaymentsWithdraw} />
 
         <Route path="judge" component={Judge} />
-        <Route path="judge/confirm_result" component={JudgeConfirmResult} />
 
         <Route path="storage" component={Storage} />
         <Route path='events' component={Events} />
