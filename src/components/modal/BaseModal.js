@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 class BaseModal extends Component {
 
   componentDidMount(){
-    console.log(this.props);
     global.jQuery(ReactDOM.findDOMNode(this)).modal('show');
     global.jQuery(ReactDOM.findDOMNode(this)).on('hidden.bs.modal', this.props.handleHideModal);
   }
