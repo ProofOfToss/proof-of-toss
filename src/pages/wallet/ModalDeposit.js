@@ -17,18 +17,29 @@ class ModalDeposit extends Component {
         this.setState({
           addressQRCode: url
         })
-        console.log(url)
       })
       .catch(err => {
         console.error(err)
       })
   }
 
+  onApplyClick() {
+    alert('Applying...')
+  }
+
 
   render() {
 
+    const buttons = [{
+      title: 'Cancel',
+      className: 'btn-default',
+      attrs: {
+        'data-dismiss': 'modal'
+      }
+    }]
+
     return(
-      <BaseModal handleHideModal={this.props.handleHideModal}>
+      <BaseModal handleHideModal={this.props.handleHideModal} buttons={buttons} title="Deposit">
         <p>How to deposit? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse aliquam erat lacus, in vulputate lorem venenatis ac. Mauris euismod, tortor vel cursus faucibus, lorem felis porttitor neque, non convallis lectus libero euismod nulla. Cras in nisi vitae nisi fermentum eleifend et et quam. Aliquam mollis sem commodo, auctor ante ut, vulputate quam. Praesent facilisis libero molestie elit laoreet tempus. Nam massa tortor, viverra vitae erat ut, tempor gravida odio. Nunc vestibulum egestas ultrices. Vestibulum faucibus hendrerit nibh sed porta. Suspendisse id elementum lectus, vel gravida arcu.</p>
         <p>Address: 1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2</p>
         <p><img src={this.state.addressQRCode} alt="" /></p>
