@@ -75,6 +75,7 @@ services:
       - ./scripts:/home/app/scripts
       - ./src:/home/app/src
       - ./test:/home/app/test
+      - ./.babelrc:/home/app/.babelrc
       - ./elasticsearch.yml:/home/app/elasticsearch.yml
       - ./kibana.yml:/home/app/kibana.yml
       - ./package.json:/home/app/package.json

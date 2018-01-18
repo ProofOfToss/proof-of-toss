@@ -3,13 +3,16 @@ import { connect } from 'react-redux';
 import { getMyBalance } from './../../util/token'
 import TransactionItem from './TransactionItem'
 import ModalDeposit from './ModalDeposit'
+import ModalSend from "./ModalSend";
 
 class Index extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.handleDepositShowModal = this.handleDepositShowModal.bind(this)
     this.handleDepositHideModal = this.handleDepositHideModal.bind(this)
+    this.handleSendShowModal = this.handleSendShowModal.bind(this)
+    this.handleSendHideModal = this.handleSendHideModal.bind(this)
 
     this.state = {
       balance: 0.0,
@@ -45,6 +48,14 @@ class Index extends Component {
     this.setState({view: {showDepositModal: false}})
   }
 
+  handleSendShowModal() {
+    this.setState({view: {showSendModal: true}})
+  }
+
+  handleSendHideModal() {
+    this.setState({view: {showSendModal: false}})
+  }
+
   render() {
     return(
       <main className="container wallet-index">
@@ -54,14 +65,11 @@ class Index extends Component {
           <dd>{ this.state.balance.toFixed(2) }</dd>
 
           <dt>Block sum</dt>
-          <dd>
-            <input disabled type="email" className="form-control" id="inputEmail3" placeholder="Email"
-               value={this.state.blockSum.toFixed(2)}/>
-          </dd>
+          <dd>{ this.state.blockSum.toFixed(2) }</dd>
 
           <dt />
           <dd>
-            <button className="btn btn-primary">Send</button >
+            <button className="btn btn-primary" onClick={this.handleSendShowModal}>Send</button >
             <button className="btn btn-primary" onClick={this.handleDepositShowModal}>Deposit</button >
           </dd>
         </dl>
@@ -84,6 +92,7 @@ class Index extends Component {
         </table>
 
         {this.state.view.showDepositModal ? <ModalDeposit handleHideModal={this.handleDepositHideModal}/> : null}
+        {this.state.view.showSendModal ? <ModalSend handleHideModal={this.handleSendHideModal} /> : null}
       </main>
     )
   }
