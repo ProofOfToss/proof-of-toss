@@ -13,6 +13,7 @@ class SignIn extends Component {
       errorMessage: ''
     };
 
+    this.handleLogin = this.handleLogin.bind(this);
     this.handleSuccessfulLogin = this.handleSuccessfulLogin.bind(this);
     this.handleFailureLogin = this.handleFailureLogin.bind(this);
   }
@@ -35,6 +36,16 @@ class SignIn extends Component {
     this.redirectToHomepageIfAuthenticated();
   }
 
+  handleLogin() {
+    if (this.props.web3HasConnection === false) {
+      this.setState({loginFailed: true, errorMessage: 'Looks like that MetaMask is not connected to RPC server. Please check the connection.'});
+    } else {
+      this.setState({loginFailed: false, errorMessage: ''});
+    }
+
+    login(this.props.currentAddress, this.handleFailureLogin, this.handleSuccessfulLogin)
+  }
+
   handleSuccessfulLogin() {
     this.setState({loginFailed: false, errorMessage: ''});
     this.props.dispatch(authenticateUser(this.props.currentAddress));
@@ -47,19 +58,130 @@ class SignIn extends Component {
 
   renderErrorMessage() {
     if (this.state.loginFailed === true) {
-      return (<div><br/><b>{ this.state.errorMessage }</b></div>);
+      return (
+        <div className="alert alert-danger" role="alert">
+          { this.state.errorMessage }
+        </div>
+      );
     }
 
     return '';
   }
 
-  renderSignInButton() {
+  renderSignInContent() {
+    if (this.props.web3 === null) {
+      return (
+        <div>
+          <div className="alert alert-danger" role="alert">
+            <p>Please install or activate MetaMask extension.</p>
+            <p><a href="#" onClick={ () => { /*window.location.reload()*/ } }>I have installed and activated it!</a></p>
+          </div>
+
+          <div className="panel panel-default">
+            <div className="panel-body">
+              <h3>FAQ</h3>
+              <ul className="list-group">
+                <li className="list-group-item">
+                  <b>Cras justo odio Cras justo odio?</b><br />
+                  The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                </li>
+                <li className="list-group-item">
+                  <b>Dapibus ac facilisis inDapibus ac facilisis in?</b><br />
+                  The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                </li>
+                <li className="list-group-item">
+                  <b>Cras justo odio Cras justo odio?</b><br />
+                  The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                </li>
+                <li className="list-group-item">
+                  <b>Cras justo odio Cras justo odio?</b><br />
+                  The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                </li>
+                <li className="list-group-item">
+                  <b>Cras justo odio Cras justo odio?</b><br />
+                  The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (this.props.isWalletLocked === true) {
+      return (
+        <div>
+          <div className="alert alert-danger" role="alert">Please unlock your wallet to proceed!</div>
+
+          <div className="panel panel-default">
+            <div className="panel-body">
+              <h3>FAQ</h3>
+              <ul className="list-group">
+                <li className="list-group-item">
+                  <b>Cras justo odio Cras justo odio?</b><br />
+                  The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                </li>
+                <li className="list-group-item">
+                  <b>Dapibus ac facilisis inDapibus ac facilisis in?</b><br />
+                  The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                </li>
+                <li className="list-group-item">
+                  <b>Cras justo odio Cras justo odio?</b><br />
+                  The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                </li>
+                <li className="list-group-item">
+                  <b>Cras justo odio Cras justo odio?</b><br />
+                  The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                </li>
+                <li className="list-group-item">
+                  <b>Cras justo odio Cras justo odio?</b><br />
+                  The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <a className="btn btn-primary btn-large"onClick={ () => {
-          login(this.props.currentAddress, this.handleFailureLogin, this.handleSuccessfulLogin)
-        } }>
-        Sign in
-      </a>
+      <div>
+        <p className="text-center">
+          <a className="btn btn-primary btn-lg"onClick={ () => { this.handleLogin() } }>
+            Sign in
+          </a>
+        </p>
+
+        { this.renderErrorMessage() }
+
+        <div className="panel panel-default">
+          <div className="panel-body">
+            <h3>FAQ</h3>
+            <ul className="list-group">
+              <li className="list-group-item">
+                <b>Cras justo odio Cras justo odio?</b><br />
+                The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+              </li>
+              <li className="list-group-item">
+                <b>Dapibus ac facilisis inDapibus ac facilisis in?</b><br />
+                The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+              </li>
+              <li className="list-group-item">
+                <b>Cras justo odio Cras justo odio?</b><br />
+                The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+              </li>
+              <li className="list-group-item">
+                <b>Cras justo odio Cras justo odio?</b><br />
+                The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+              </li>
+              <li className="list-group-item">
+                <b>Cras justo odio Cras justo odio?</b><br />
+                The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     );
   }
 
@@ -70,14 +192,8 @@ class SignIn extends Component {
           <h1>Sign in</h1>
           <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
           <div>
-            {
-              this.props.isWalletLocked
-                ? <b>Please unlock your wallet to proceed!</b>
-                : this.renderSignInButton()
-            }
+            { this.renderSignInContent() }
           </div>
-
-          { this.renderErrorMessage() }
         </div>
       </main>
     )
@@ -89,7 +205,8 @@ function mapPropsToState(state) {
     isAuthenticated: state.user.isAuthenticated,
     isWalletLocked: state.web3.isWalletLocked,
     currentAddress: state.web3.currentAddress,
-    web3: state.web3.web3
+    web3: state.web3.web3,
+    web3HasConnection: state.web3.hasConnection
   };
 }
 

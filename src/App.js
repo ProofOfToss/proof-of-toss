@@ -3,6 +3,7 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux';
 import NavbarUser from './components/navbar_user/NavbarUser'
 import Language from './components/navbar_user/Language'
+import ModalWeb3LostConnection from './components/modal/ModalWeb3LostConnection'
 
 global.jQuery = require("jquery");
 require("bootstrap-sass");
@@ -149,6 +150,8 @@ class App extends Component {
               </div>
             </div>
           </footer>
+
+          { this.props.web3HasConnection === false ? <ModalWeb3LostConnection /> : '' }
         </div>
       </Fragment>
     );
@@ -157,7 +160,8 @@ class App extends Component {
 
 function mapPropsToState(state) {
   return {
-    isAuthenticated: state.user.isAuthenticated
+    isAuthenticated: state.user.isAuthenticated,
+    web3HasConnection: state.web3.hasConnection
   };
 }
 

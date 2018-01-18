@@ -30,7 +30,7 @@ import Event from './pages/event/Event';
 
 // Redux Store
 import store from './store';
-import { initWeb3, lockWallet, unlockWallet, changeAddress } from './actions/web3';
+import { initWeb3, lockWallet, unlockWallet, changeAddress, web3LostConnection } from './actions/web3';
 
 // Put ReactDOM.render() to a function because we need to wrap the rendering with web3 detection
 function renderReactDOM(web3) {
@@ -40,11 +40,11 @@ function renderReactDOM(web3) {
 
   const history = syncHistoryWithStore(browserHistory, store);
 
-  function checkAuthorization() {
+  const checkAuthorization = function () {
     if (store.getState().user.isAuthenticated === false) {
       history.push("/sign-in");
     }
-  }
+  };
 
   ReactDOM.render((
     <Provider store={store}>
@@ -54,22 +54,22 @@ function renderReactDOM(web3) {
 
           <Route path="sign-in" component={SignIn} />
 
-          <Route path="wallet" component={Wallet} onEnter={ checkAuthorization() } />
+          <Route path="wallet" component={Wallet} onEnter={ checkAuthorization } />
 
-          <Route path="play" component={Play} onEnter={ checkAuthorization() } />
-          <Route path="play/event" component={PlayEvent} onEnter={ checkAuthorization() } />
-          <Route path="play/event/bid_confirmation" component={PlayBidConfirmation} onEnter={ checkAuthorization() } />
-          <Route path="play/event/contest_result" component={PlayContestResult} onEnter={ checkAuthorization() } />
+          <Route path="play" component={Play} onEnter={ checkAuthorization } />
+          <Route path="play/event" component={PlayEvent} onEnter={ checkAuthorization } />
+          <Route path="play/event/bid_confirmation" component={PlayBidConfirmation} onEnter={ checkAuthorization } />
+          <Route path="play/event/contest_result" component={PlayContestResult} onEnter={ checkAuthorization } />
 
-          <Route path="payments" component={Payments} onEnter={ checkAuthorization() } />
-          <Route path="payments/withdraw" component={PaymentsWithdraw} onEnter={ checkAuthorization() } />
+          <Route path="payments" component={Payments} onEnter={ checkAuthorization } />
+          <Route path="payments/withdraw" component={PaymentsWithdraw} onEnter={ checkAuthorization } />
 
-          <Route path="judge" component={Judge} onEnter={ checkAuthorization() } />
+          <Route path="judge" component={Judge} onEnter={ checkAuthorization } />
 
-          <Route path="storage" component={Storage} onEnter={ checkAuthorization() } />
-          <Route path='events' component={Events} onEnter={ checkAuthorization() } />
-          <Route path='new_event' component={NewEvent} onEnter={ checkAuthorization() } />
-          <Route path='event(/:id)' component={Event} onEnter={ checkAuthorization() } />
+          <Route path="storage" component={Storage} onEnter={ checkAuthorization } />
+          <Route path='events' component={Events} onEnter={ checkAuthorization } />
+          <Route path='new_event' component={NewEvent} onEnter={ checkAuthorization } />
+          <Route path='event(/:id)' component={Event} onEnter={ checkAuthorization } />
 
           <Route path='*' component={NotFound} />
         </Route>
@@ -85,49 +85,63 @@ import getWeb3 from './util/getWeb3';
 import { isAuthenticated } from './util/auth';
 import { authenticateUser, logoutUser } from './actions/user'
 
+function checkAuthentication(address, redirectToSignIn) {
+  if (isAuthenticated(address)) {
+    store.dispatch(authenticateUser(address));
+  } else {
+    store.dispatch(logoutUser());
+
+    if (redirectToSignIn === true) {
+      browserHistory.push('/sign-in');
+    }
+  }
+}
+
 getWeb3
   .then(function (results) {
     var hasAccounts = null;
     var currentAddress = null;
+    var hasConnection = null;
 
-    function checkAuthentication(address) {
-      if (isAuthenticated(address)) {
-        store.dispatch(authenticateUser(address));
-      } else {
-        store.dispatch(logoutUser());
-        browserHistory.push('/sign-in');
-      }
-    }
-
+    // There are some problems with getting accounts through the public property,
+    // but still try to get accounts and double check the same thing within setInterval() function below.
     if (results.web3.eth.accounts.length > 0) {
-      checkAuthentication(results.web3.eth.accounts[0]);
+      checkAuthentication(results.web3.eth.accounts[0], false);
     }
 
     setInterval(function () {
+      if (results.web3.version.network === 'loading' && hasConnection !== false) {
+        hasConnection = false;
+
+        store.dispatch(web3LostConnection());
+      }
+
       results.web3.eth.getAccounts(function (err, accounts) {
         if (accounts.length === 0) {
           if (hasAccounts !== false) {
             // Wallet is locked
-            hasAccounts = false;
-
             store.dispatch(lockWallet());
             store.dispatch(logoutUser());
-            browserHistory.push('/sign-in');
+
+            browserHistory.push('/sign-in', hasAccounts !== null);
+            hasAccounts = false;
           }
         } else {
           if (hasAccounts !== true) {
             // Wallet is unlocked
-            hasAccounts = true;
-            currentAddress = accounts[0];
-
             store.dispatch(unlockWallet(accounts[0]));
-            checkAuthentication(accounts[0]);
+
+            checkAuthentication(accounts[0], hasAccounts !== null);
+
+            currentAddress = accounts[0];
+            hasAccounts = true;
           } else if (accounts[0] !== currentAddress) {
             // The address in the wallet has been changed
-            currentAddress = accounts[0];
-
             store.dispatch(changeAddress(accounts[0]));
-            checkAuthentication(accounts[0]);
+
+            checkAuthentication(accounts[0], currentAddress !== null);
+
+            currentAddress = accounts[0];
           }
         }
       });
@@ -135,7 +149,6 @@ getWeb3
 
     renderReactDOM(results.web3);
   })
-  .catch(function() {
+  .catch(function(e) {
     renderReactDOM();
   });
-
