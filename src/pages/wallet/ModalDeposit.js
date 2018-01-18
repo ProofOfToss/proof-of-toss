@@ -1,18 +1,21 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
 import QRCode from 'qrcode'
 import BaseModal from '../../components/modal/BaseModal'
+import { strings } from '../../util/i18n';
 
 class ModalDeposit extends Component {
 
   constructor(props) {
     super(props)
     this.state = {
+      address: null,
       addressQRCode: null
     };
   }
 
   componentDidMount() {
-    QRCode.toDataURL('1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2')
+    QRCode.toDataURL(this.props.currentAddress)
       .then(url => {
         this.setState({
           addressQRCode: url
@@ -22,11 +25,6 @@ class ModalDeposit extends Component {
         console.error(err)
       })
   }
-
-  onApplyClick() {
-    alert('Applying...')
-  }
-
 
   render() {
 
@@ -39,13 +37,20 @@ class ModalDeposit extends Component {
     }]
 
     return(
-      <BaseModal handleHideModal={this.props.handleHideModal} buttons={buttons} title="Deposit">
-        <p>How to deposit? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse aliquam erat lacus, in vulputate lorem venenatis ac. Mauris euismod, tortor vel cursus faucibus, lorem felis porttitor neque, non convallis lectus libero euismod nulla. Cras in nisi vitae nisi fermentum eleifend et et quam. Aliquam mollis sem commodo, auctor ante ut, vulputate quam. Praesent facilisis libero molestie elit laoreet tempus. Nam massa tortor, viverra vitae erat ut, tempor gravida odio. Nunc vestibulum egestas ultrices. Vestibulum faucibus hendrerit nibh sed porta. Suspendisse id elementum lectus, vel gravida arcu.</p>
-        <p>Address: 1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2</p>
+      <BaseModal handleHideModal={this.props.handleHideModal} buttons={buttons} title={strings().deposit.modal_title}>
+        <p>{strings().deposit.instruction}</p>
+        <p>{strings().deposit.address}: {this.props.currentAddress}</p>
         <p><img src={this.state.addressQRCode} alt="" /></p>
       </BaseModal>
     )
   }
 }
 
-export default ModalDeposit
+function mapPropsToState(state) {
+  return {
+    web3: state.web3.web3,
+    currentAddress: state.user.address
+  };
+}
+
+export default connect(mapPropsToState)(ModalDeposit)
