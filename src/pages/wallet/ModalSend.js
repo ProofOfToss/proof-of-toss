@@ -66,6 +66,7 @@ class ModalSend extends Component {
               <div className="form-group has-error">
                 <label className="control-label" htmlFor="send[sum]">Sum</label>
                 <input type="text" className="form-control" id="send[sum]" placeholder="Sum" />
+                <span id="helpBlock" className="help-block">Sum is incorrect.</span>
               </div>
               <div className="form-group">
                 <label className="control-label" htmlFor="send[fee]">Fee</label>
