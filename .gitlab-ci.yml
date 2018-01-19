@@ -19,7 +19,7 @@ deploy_demo:
 # kill `ps -a |grep "[g]anache-cli/build/cli.node.js"|cut -d" " -f 1`
   script:
     - echo "Build app"
-    - source scl_source enable devtoolset-2
+    - source /opt/rh/devtoolset-2/enable
     - npm install
     - cp truffle.js.example truffle.js
     - ./node_modules/truffle/build/cli.bundled.js --network test migrate
