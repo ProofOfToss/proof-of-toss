@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router'
+import { connect } from 'react-redux';
 import NavbarUser from './components/navbar_user/NavbarUser'
 import Language from './components/navbar_user/Language'
+import ModalWeb3LostConnection from './components/modal/ModalWeb3LostConnection'
 
 global.jQuery = require("jquery");
 require("bootstrap-sass");
@@ -14,6 +16,8 @@ class App extends Component {
     super(props);
 
     this._menuLinkClass = this._menuLinkClass.bind(this);
+    this.renderHeaderMenu = this.renderHeaderMenu.bind(this);
+    this.renderFooterMenu = this.renderFooterMenu.bind(this);
   }
 
   _menuLinkClass(path) {
@@ -22,6 +26,80 @@ class App extends Component {
     }
 
     return this.props.location.pathname === path ? 'active' : '';
+  }
+
+  renderHeaderMenu() {
+    if (this.props.isAuthenticated === false) {
+      return '';
+    }
+
+    return (
+      <ul className="nav navbar-nav">
+        <li className={ this._menuLinkClass('/new_event') }><Link to="/new_event" className="pure-menu-link">New event</Link></li>
+        <li className={ this._menuLinkClass('/wallet') }><Link to="/wallet" className="pure-menu-link">Wallet</Link></li>
+
+        <li className="dropdown">
+          <a href="#" className="dropdown-toggle" data-toggle="dropdown">Play <span className="caret"></span></a>
+          <ul className="dropdown-menu" role="menu">
+            <li><Link to="/play" className="pure-menu-link">Play</Link></li>
+            <li><Link to="/play/event" className="pure-menu-link">Event</Link></li>
+            <li><Link to="/play/event/bid_confirmation" className="pure-menu-link">Bid confirmation</Link></li>
+            <li><Link to="/play/event/contest_result" className="pure-menu-link">Contest result</Link></li>
+          </ul>
+        </li>
+
+        <li className="dropdown">
+          <a href="#" className="dropdown-toggle" data-toggle="dropdown">Payments <span className="caret"></span></a>
+          <ul className="dropdown-menu" role="menu">
+            <li><Link to="/payments" className="pure-menu-link">Payments</Link></li>
+            <li><Link to="/payments/withdraw" className="pure-menu-link">Withdraw payment</Link></li>
+          </ul>
+        </li>
+
+        <li className={ this._menuLinkClass('/judge') }><Link to="/judge" className="pure-menu-link">Judge</Link></li>
+      </ul>
+    );
+  }
+
+  renderFooterMenu() {
+    if (this.props.isAuthenticated === false) {
+      return '';
+    }
+
+    return (
+      <div className="row">
+
+        <div className="col-md-2">
+          <ul className="list-unstyled" role="menu">
+            <li><Link to="/wallet" className="pure-menu-link">Wallet</Link></li>
+            <li><Link to="/wallet/deposit" className="pure-menu-link">Deposit</Link></li>
+            <li><Link to="/wallet/send" className="pure-menu-link">Send</Link></li>
+          </ul>
+        </div>
+
+        <div className="col-md-2">
+          <ul className="list-unstyled" role="menu">
+            <li><Link to="/play" className="pure-menu-link">Play</Link></li>
+            <li><Link to="/play/event" className="pure-menu-link">Event</Link></li>
+            <li><Link to="/play/event/bid_confirmation" className="pure-menu-link">Bid confirmation</Link></li>
+            <li><Link to="/play/event/contest_result" className="pure-menu-link">Contest result</Link></li>
+          </ul>
+        </div>
+
+        <div className="col-md-2">
+          <ul className="list-unstyled" role="menu">
+            <li><Link to="/payments" className="pure-menu-link">Payments</Link></li>
+            <li><Link to="/payments/withdraw" className="pure-menu-link">Withdraw payment</Link></li>
+        </ul>
+        </div>
+
+        <div className="col-md-2">
+          <ul className="list-unstyled" role="menu">
+            <li><Link to="/judge" className="pure-menu-link">Judge</Link></li>
+          </ul>
+        </div>
+      </div>
+    );
   }
 
   render() {
@@ -43,35 +121,7 @@ class App extends Component {
 
               { /* Collect the nav links, forms, and other content for toggling */ }
               <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul className="nav navbar-nav">
-
-                  {/*<li className={ this._menuLinkClass('/storage') }><Link to="/storage" className="pure-menu-link">StorageSC test</Link></li>*/}
-                  {/*<li className={ this._menuLinkClass('/events') }><Link to="/events" className="pure-menu-link">Events list</Link></li>*/}
-                  {/*<li className={ this._menuLinkClass('/new_event') }><Link to="/new_event" className="pure-menu-link">New event</Link></li>*/}
-
-                  <li className={ this._menuLinkClass('/new_event') }><Link to="/new_event" className="pure-menu-link">New event</Link></li>
-                  <li className={ this._menuLinkClass('/wallet') }><Link to="/wallet" className="pure-menu-link">Wallet</Link></li>
-
-                  <li className="dropdown">
-                    <a href="#" className="dropdown-toggle" data-toggle="dropdown">Play <span className="caret"></span></a>
-                    <ul className="dropdown-menu" role="menu">
-                      <li><Link to="/play" className="pure-menu-link">Play</Link></li>
-                      <li><Link to="/play/event" className="pure-menu-link">Event</Link></li>
-                      <li><Link to="/play/event/bid_confirmation" className="pure-menu-link">Bid confirmation</Link></li>
-                      <li><Link to="/play/event/contest_result" className="pure-menu-link">Contest result</Link></li>
-                    </ul>
-                  </li>
-
-                  <li className="dropdown">
-                    <a href="#" className="dropdown-toggle" data-toggle="dropdown">Payments <span className="caret"></span></a>
-                    <ul className="dropdown-menu" role="menu">
-                      <li><Link to="/payments" className="pure-menu-link">Payments</Link></li>
-                      <li><Link to="/payments/withdraw" className="pure-menu-link">Withdraw payment</Link></li>
-                    </ul>
-                  </li>
-
-                  <li className={ this._menuLinkClass('/judge') }><Link to="/judge" className="pure-menu-link">Judge</Link></li>
-                </ul>
+                { this.renderHeaderMenu() }
 
                 <ul className="nav navbar-nav navbar-right">
                   <NavbarUser />
@@ -83,59 +133,36 @@ class App extends Component {
           </nav>
 
           {this.props.children}
+
+          <footer>
+            <div className="container">
+              { this.renderFooterMenu() }
+              <hr />
+              <div className="row copyright">
+                <div className="col-md-6">
+                  <a href="#">Terms of Service</a>
+                  <a href="#">Privacy</a>
+                  <a href="#">Security</a>
+                </div>
+                <div className="col-md-6">
+                  <p className="muted pull-right">© 2017 Proof of toos. All rights reserved</p>
+                </div>
+              </div>
+            </div>
+          </footer>
+
+          { this.props.web3HasConnection === false ? <ModalWeb3LostConnection /> : '' }
         </div>
-
-        <footer>
-          <div className="container">
-            <div className="row">
-
-              <div className="col-md-2">
-                <ul className="list-unstyled" role="menu">
-                  <li><Link to="/wallet" className="pure-menu-link">Wallet</Link></li>
-                  <li><Link to="/wallet/deposit" className="pure-menu-link">Deposit</Link></li>
-                  <li><Link to="/wallet/send" className="pure-menu-link">Send</Link></li>
-                </ul>
-              </div>
-
-              <div className="col-md-2">
-                <ul className="list-unstyled" role="menu">
-                  <li><Link to="/play" className="pure-menu-link">Play</Link></li>
-                  <li><Link to="/play/event" className="pure-menu-link">Event</Link></li>
-                  <li><Link to="/play/event/bid_confirmation" className="pure-menu-link">Bid confirmation</Link></li>
-                  <li><Link to="/play/event/contest_result" className="pure-menu-link">Contest result</Link></li>
-                </ul>
-              </div>
-
-              <div className="col-md-2">
-                <ul className="list-unstyled" role="menu">
-                  <li><Link to="/payments" className="pure-menu-link">Payments</Link></li>
-                  <li><Link to="/payments/withdraw" className="pure-menu-link">Withdraw payment</Link></li>
-                </ul>
-              </div>
-
-              <div className="col-md-2">
-                <ul className="list-unstyled" role="menu">
-                  <li><Link to="/judge" className="pure-menu-link">Judge</Link></li>
-                  <li><Link to="/judge/confirm_result" className="pure-menu-link">Confirm result</Link></li>
-                </ul>
-              </div>
-            </div>
-            <hr />
-            <div className="row copyright">
-              <div className="col-md-6">
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy</a>
-                <a href="#">Security</a>
-              </div>
-              <div className="col-md-6">
-                <p className="muted pull-right">© 2017 Proof of toos. All rights reserved</p>
-              </div>
-            </div>
-          </div>
-        </footer>
       </Fragment>
     );
   }
 }
 
-export default App
+function mapPropsToState(state) {
+  return {
+    isAuthenticated: state.user.isAuthenticated,
+    web3HasConnection: state.web3.hasConnection
+  };
+}
+
+export default connect(mapPropsToState)(App);

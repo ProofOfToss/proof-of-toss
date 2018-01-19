@@ -77,6 +77,8 @@
     "uport-connect": "^0.6.1",
     "valuelink": "^1.5.4",
     "web3": "^0.20.3",
+    "eth-sig-util": "^1.2.0",
+    "ethereumjs-util": "^5.1.1",
     "qrcode": "^1.2.0"
   },
   "scripts": {
