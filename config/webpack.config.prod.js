@@ -128,6 +128,16 @@ module.exports = {
           name: 'static/media/[name].[hash:8].[ext]'
         }
       },
+      {
+        test: /\.js$/,
+        include: /node_modules\/ethereumjs-util/,
+        loader: 'babel',
+        query: {
+          presets: ['es2015'],
+          plugins: ['transform-object-assign'],
+          sourceMaps: ['inline']
+        }
+      },
       // Process JS with Babel.
       {
         test: /\.(js|jsx)$/,
