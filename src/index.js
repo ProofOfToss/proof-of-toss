@@ -55,6 +55,8 @@ function renderReactDOM(web3) {
           <Route path="sign-in" component={SignIn} />
 
           <Route path="wallet" component={Wallet} onEnter={ checkAuthorization } />
+          <Route path="wallet/:page" component={Wallet} onEnter={ checkAuthorization } />
+
 
           <Route path="play" component={Play} onEnter={ checkAuthorization } />
           <Route path="play/event" component={PlayEvent} onEnter={ checkAuthorization } />

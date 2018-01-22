@@ -51,8 +51,8 @@ services:
 
   testrpc:
     image: trufflesuite/ganache-cli:latest
-    expose:
-      - 8545
+    ports:
+      - 8545:8545
 
   app:
     build:

@@ -15,4 +15,8 @@ function getMyBalance(web3) {
     });
 }
 
-export { getMyBalance };
+function getMyTransactions(web3) {
+
+}
+
+export { getMyBalance, getMyTransactions };
