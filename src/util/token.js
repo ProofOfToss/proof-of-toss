@@ -30,13 +30,26 @@ function getMyTransactions(web3) {
         items.push({
           time: web3.eth.getBlock(res.blockNumber).timestamp,
           type: res.args.to === address ? 'in' : 'out',
-          walletNumber: 'aKjmHRXCHg',
-          sum: web3.fromWei(res.args.value).toNumber(),
-          fee: 0.0001
+          walletNumber: res.args.to === address ? res.args.from : res.args.to,
+          sum: web3.fromWei(res.args.value, 'ether').toNumber(),
+          fee: calculateGasPrice(web3, res.transactionHash)
         })
       });
       return items;
     });
+}
+
+function calculateGasPrice(web3, transactionHash) {
+  let fee = null;
+
+  web3.eth.getTransaction(transactionHash)
+    .then(function(transaction) {
+      web3.eth.eth_getTransactionReceipt(transactionHash).then(function(transactionReceipt) {
+        fee = transactionReceipt.gasUsed * transaction.gasPrice
+      })
+    });
+
+  return web3.fromWei(fee, 'ether');
 }
 
 export { getMyBalance, getMyTransactions };
