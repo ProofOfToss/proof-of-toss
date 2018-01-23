@@ -50,7 +50,15 @@ services:
       - ./docker/rsk/rsk:/etc/rsk
 
   testrpc:
-    image: trufflesuite/ganache-cli:latest
+    image: trufflesuite/ganache-cli:v7.0.0-beta.0
+    entrypoint:
+      - node
+      - ./build/cli.node.js
+      - -b=1
+      - -a=5
+      - --account=0xca908fc0a71f7f72216d5f21e1073f64b86c8e9f010f5f8c86c21c9115a7ea98,0x65
+      - --account="0xeb2b67a6c57cb0b9502df9514d74fd18a77d57ab87691f6b58bfaa87d1ea3353,0x66"
+      - --account="0x15367f932a858b6e75037340e63dc38e6e0e8367b6bd08d2ae2faba4e165fff8,0x67"
     ports:
       - 8545:8545
 
