@@ -9,7 +9,6 @@ class ModalDeposit extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      address: null,
       addressQRCode: null
     };
   }
