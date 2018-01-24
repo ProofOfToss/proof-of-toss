@@ -2,19 +2,22 @@ const _ = require('lodash');
 
 function getBlockTransactions(web3, block) {
   let transactions = [];
+  var i;
 
-  for (var i = 0; i < block.transactions.length; i++) {
+  let _getTransaction = (resolve, reject) => {
+    web3.eth.getTransaction(block.transactions[i], (err, tx) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(tx);
+    });
+  };
+
+  for (i = 0; i < block.transactions.length; i++) {
     transactions.push(
-      new Promise((resolve, reject) => {
-        web3.eth.getTransaction(block.transactions[i], (err, tx) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-
-          resolve(tx);
-        });
-      })
+      new Promise(_getTransaction)
     );
   }
 
@@ -23,19 +26,22 @@ function getBlockTransactions(web3, block) {
 
 function getLatestBlocks(web3, from, to) {
   let blocks = [];
+  var i;
 
-  for (var i = to; i > from; i--) {
+  let _getBlock = (resolve, reject) => {
+    web3.eth.getBlock(i, (err, block) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(block);
+    });
+  };
+
+  for (i = to; i > from; i--) {
     blocks.push(
-      new Promise((resolve, reject) => {
-        web3.eth.getBlock(i, (err, block) => {
-          if (err) {
-            reject(err);
-            return;
-          }
-
-          resolve(block);
-        });
-      })
+      new Promise(_getBlock)
     );
   }
 

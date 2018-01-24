@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getMyBalance } from './../../util/token'
 import TransactionItem from './TransactionItem'
 import ModalDeposit from './ModalDeposit'
 import ModalSend from "./ModalSend";
@@ -15,8 +14,6 @@ class Index extends Component {
     this.handleSendHideModal = this.handleSendHideModal.bind(this)
 
     this.state = {
-      balance: 0.0,
-      blockSum: 0.1,
       transactions: [
         {id: 1, time: this.randomDate(new Date(2012, 0, 1), new Date()), type: 'in', walletNumber: 'aKjmHRXCHg', sum: 0.21, fee: 0.0001},
         {id: 2, time: this.randomDate(new Date(2012, 0, 1), new Date()), type: 'out', walletNumber: 'CkYKXUpNx1', sum: 1.54, fee: 0.0017},
@@ -25,19 +22,13 @@ class Index extends Component {
       ],
       view: {
         showDepositModal: false,
-        showSendModal: false
+        showSendModal: true
       }
     }
   }
 
   randomDate(start, end) {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-  }
-
-  componentWillMount() {
-    getMyBalance(this.props.web3).then((balance) => {
-      this.setState({ balance: balance });
-    });
   }
 
   handleDepositShowModal() {
@@ -62,10 +53,10 @@ class Index extends Component {
         <h1>TOSS</h1>
         <dl className="dl-horizontal">
           <dt>Your balance</dt>
-          <dd>{ this.state.balance.toFixed(2) }</dd>
+          <dd>{ this.props.balance.toFixed(2) }</dd>
 
           <dt>Block sum</dt>
-          <dd>{ this.state.blockSum.toFixed(2) }</dd>
+          <dd>{ this.props.blockedBalance.toFixed(2) }</dd>
 
           <dt />
           <dd>
@@ -100,7 +91,9 @@ class Index extends Component {
 
 function mapPropsToState(state) {
   return {
-    web3: state.web3.web3
+    web3: state.web3.web3,
+    balance: state.token.balance,
+    blockedBalance: state.token.blockedBalance,
   };
 }
 

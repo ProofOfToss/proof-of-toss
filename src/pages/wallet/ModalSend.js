@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import BaseModal from '../../components/modal/BaseModal'
-import { getMyBalance, getMyBlockedBalance, getMySBTCBalance } from './../../util/token'
+import CopyToClipboard from '../../components/clipboard/CopyToClipboard'
 import { strings } from '../../util/i18n';
+import config from '../../data/config.json';
 import { getGasPrices } from '../../util/gasPriceOracle';
 import { validateTossAddress } from '../../util/validators';
-import Link/*, { LinkedComponent }*/ from 'valuelink'
-import { Input/*, NumberInput, TextArea, Select, Radio, Checkbox*/ } from 'valuelink/tags'
+import Link from 'valuelink'
+import { Input } from 'valuelink/tags'
 import TokenContract from '../../../build/contracts/Token.json'
+import { refreshBalance } from '../../actions/token'
+import store from '../../store';
 
 class ModalSend extends Component {
 
@@ -17,11 +20,8 @@ class ModalSend extends Component {
     this.links = {};
 
     this.state = {
-      balance: 0,
-      sbtcBalance: 0,
-      blockSum: 0,
-      address: '',
-      sum: 0,
+      address: '0x9407808Bb24233D6cBd943A74BB2eF6d9c365De2',
+      sum: 10,
       fee: 0,
       gasLimit: 0,
       minFee: 0,
@@ -30,6 +30,7 @@ class ModalSend extends Component {
       currentAddress: null,
       successResponse: null,
       successTransaction: null,
+      waiting: false,
     };
 
     this.calcFee = this.calcFee.bind(this);
@@ -40,28 +41,19 @@ class ModalSend extends Component {
   }
 
   componentWillMount() {
-    getMyBalance(this.props.web3).then((balance) => {
-      if(this.links['sum']) {
-        delete this.links['sum'];
-      }
-
-      this.setState({ balance: balance });
-    });
-
-    getMyBlockedBalance(this.props.web3).then((blockSum) => {
-      this.setState({ blockSum: blockSum });
-    });
-
-    getMySBTCBalance(this.props.web3).then((sbtcBalance) => {
-      this.setState({ sbtcBalance: sbtcBalance });
-    });
-
     getGasPrices(this.props.web3).then((gasPrices) => {
       this.setState({ gasPrices: gasPrices });
       this.calcFee();
     });
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (this.props.balance !== nextProps.balance) {
+      if(this.links['sum']) {
+        delete this.links['sum'];
+      }
+    }
+  }
   componentDidUpdate(prevProps, prevState) {
     if (!this.state.gasPrices) {
       return;
@@ -73,7 +65,7 @@ class ModalSend extends Component {
   }
 
   onSendClick() {
-    this.setState({ errors: [] });
+    this.setState({ errors: [], waiting: true });
 
     const contract = require('truffle-contract');
     const token = contract(TokenContract);
@@ -93,8 +85,6 @@ class ModalSend extends Component {
 
     }).then((result) => {
 
-      console.log(result);
-
       this.setState({ successResponse: result });
 
       this.props.web3.eth.getTransaction(result.tx, (err, tx) => {
@@ -103,16 +93,17 @@ class ModalSend extends Component {
           return;
         }
 
-        this.setState({ successTransaction: tx });
+        this.setState({ successTransaction: tx, waiting: false });
+
+        store.dispatch(refreshBalance());
       });
 
     }).catch((e) => {
 
-      console.log(e);
-
       let errors = this.state.errors;
       errors.push(e);
-      this.setState({ errors: errors });
+      this.setState({ errors: errors, waiting: false });
+
     });
   }
 
@@ -151,11 +142,7 @@ class ModalSend extends Component {
       if (this.state.fee < minPrice) {
         this.setState({ fee: price });
       }
-    }).catch(function (e) {
-
-      console.log(e);
-
-    });
+    }).catch(function() {});
   }
 
   _renderErrors() {
@@ -184,12 +171,12 @@ class ModalSend extends Component {
       .check( v => v, strings().validation.required)
       .check( v => !isNaN(parseFloat(v)), strings().validation.token.sum_is_nan)
       .check( v => parseFloat(v) >= 1, strings().validation.token.sum_is_too_small)
-      .check( v => parseFloat(v) <= this.state.balance, strings().validation.token.sum_is_too_big);
+      .check( v => parseFloat(v) <= this.props.balance, strings().validation.token.sum_is_too_big);
 
     const feeLink = Link.state(this, 'fee')
       .check( v => v, strings().validation.required)
       .check( v => !isNaN(parseFloat(v)), strings().validation.token.fee_is_nan)
-      .check( v => parseFloat(v) >= this.state.minFee, strings().validation.token.fee_is_too_small + this.state.minFee + ' SBTC');
+      .check( v => parseFloat(v) >= this.state.minFee, strings().validation.token.fee_is_too_small + this.state.minFee + ' ' + config.view.currency_symbol);
 
     return <form>
       <div className='has-error'>
@@ -198,12 +185,12 @@ class ModalSend extends Component {
         </div>
       </div>
       <div className='form-group'>
-        <label>Balance: { this.state.balance.toFixed(2) } TOSS</label>
+        <label>Balance: { this.props.balance.toFixed(config.view.token_precision) } {config.view.token_symbol}</label>
       </div>
       {(
-        this.state.blockSum > 0 ?
+        this.props.blockedBalance > 0 ?
           <div className='form-group'>
-            <label>Block sum: { this.state.blockSum.toFixed(2) }</label>
+            <label>Block sum: { this.props.blockedBalance.toFixed(config.view.token_precision) } {config.view.token_symbol}</label>
           </div> : ''
       )}
       <div className={ addressLink.error ? 'form-group has-error' : 'form-group' }>
@@ -217,28 +204,32 @@ class ModalSend extends Component {
         <span className='help-block'>{ sumLink.error || '' }</span>
       </div>
       <div className={ feeLink.error ? 'form-group has-error' : 'form-group' }>
-        <label className='control-label' htmlFor='send[fee]'>Fee (SBTC)</label>
+        <label className='control-label' htmlFor='send[fee]'>Fee ({config.view.currency_symbol})</label>
         <Input valueLink={ feeLink } type='number' className='form-control' id='send[fee]' placeholder='Fee' onKeyPress={this.preventNonDigit} />
         <span className='help-block'>{ feeLink.error || '' }</span>
       </div>
       <div className='form-group'>
-        <span className='help-block'>SBTC Balance: { this.state.sbtcBalance.toFixed(8) }</span>
-        <span className='help-block'>{ this.state.gasLimit > 0 ? 'Gas limit: ' + this.state.gasLimit.toFixed(2) : '' }</span>
-        <span className='help-block'>{ this.state.gasLimit > 0 ? 'Gas price: ' + Number(this.props.web3.toWei(this.state.fee / this.state.gasLimit, 'gwei')).toFixed(2) + ' gwei' : '' }</span>
+        <span className='help-block'>{config.view.currency_symbol} Balance: { this.props.sbtcBalance.toFixed(config.view.currency_precision) }</span>
+        <span className='help-block'>{ this.state.gasLimit > 0 ? 'Gas limit: ' + this.state.gasLimit.toFixed(0) : '' }</span>
+        <span className='help-block'>{ this.state.gasLimit > 0 ? 'Gas price: ' + Number(this.props.web3.toWei(this.state.fee / this.state.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei' : '' }</span>
       </div>
     </form>
   }
 
   _renderTransaction() {
-    // return JSON.stringify(this.state.successTransaction, null, "\t");
-    console.log(this.state)
-
     return <div>
-      <p>{this.state.sum} TOSS successfully sent to {this.state.address}</p>
-      <div className='row'>
+      <div className='alert alert-success' role='alert'>
+        {this.state.sum} {config.view.token_symbol} successfully sent to {this.state.address}
+      </div>
+      <div>
         <table className='table'>
           <tbody>
-          <tr><th>Tx</th><td>{this.state.successResponse.tx}</td></tr>
+          <tr>
+            <th>Tx</th>
+            <td>
+              <CopyToClipboard style={{width: '300px'}} text={this.state.successResponse.tx} data={this.state.successResponse.tx} />
+            </td>
+          </tr>
           <tr><th>Block number</th><td>{this.state.successResponse.receipt.blockNumber}</td></tr>
           <tr><th>Gas used</th><td>{Number(this.state.successResponse.receipt.gasUsed)}</td></tr>
           <tr><th>Gas price</th><td>{Number(this.state.successTransaction.gasPrice)}</td></tr>
@@ -262,21 +253,36 @@ class ModalSend extends Component {
       isFormValid = !(this.links['address'].error || this.links['sum'].error || this.links['fee'].error);
     }
 
-    const buttons = [{
-      title: 'Cancel',
-      className: 'btn-default',
-      attrs: {
-        'data-dismiss': 'modal'
-      }
-    },
-    {
-      title: 'Send',
-      className: 'btn-primary',
-      attrs: {
-        onClick: this.onSendClick,
-        disabled: !isFormValid || this.state.successTransaction
-      }
-    }]
+    let buttons;
+
+    if (this.state.successTransaction) {
+      buttons = [{
+          title: 'Close',
+          className: 'btn-primary',
+          attrs: {
+            'data-dismiss': 'modal'
+          }
+        }
+      ];
+    } else {
+      buttons = [{
+        title: 'Cancel',
+        className: 'btn-default',
+        attrs: {
+          'data-dismiss': 'modal',
+          disabled: this.state.waiting
+        }
+      },
+        {
+          title: 'Send',
+          className: 'btn-primary',
+          attrs: {
+            onClick: this.onSendClick,
+            disabled: this.state.waiting || !isFormValid || this.state.successTransaction
+          }
+        }
+      ];
+    }
 
     return(
       <main className='container'>
@@ -294,6 +300,9 @@ function mapPropsToState(state) {
   return {
     web3: state.web3.web3,
     currentAddress: state.user.address,
+    balance: state.token.balance,
+    blockedBalance: state.token.blockedBalance,
+    sbtcBalance: state.token.sbtcBalance
   };
 }
 

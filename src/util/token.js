@@ -1,9 +1,9 @@
 import TokenContract from '../../build/contracts/Token.json'
 
-function getMyBalance(web3) {
-  const contract = require('truffle-contract');
-  const token = contract(TokenContract);
+const contract = require('truffle-contract');
+const token = contract(TokenContract);
 
+function getMyBalance(web3) {
   token.setProvider(web3.currentProvider);
 
   return token.deployed()

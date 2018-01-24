@@ -10,7 +10,6 @@ class Wallet extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { balance: null };
     this.handleSuccessfulLogout = this.handleSuccessfulLogout.bind(this);
   }
 
@@ -37,7 +36,7 @@ class Wallet extends Component {
     return(
       <React.Fragment>
         <li className="navbar-text">
-          {this.state.balance !== null ? <span>Balance: {this.state.balance} TOSS</span> : 'Wallet info'}
+          {this.props.balance !== null ? <span>Balance: {this.props.balance} TOSS</span> : 'Wallet info'}
         </li>
         <li className="navbar-text logout-button">
           { this.renderLogoutButton() }
@@ -50,7 +49,8 @@ class Wallet extends Component {
 function mapPropsToState(state) {
   return {
     web3: state.web3.web3,
-    currentAddress: state.user.address
+    currentAddress: state.user.address,
+    balance: state.token.balance,
   };
 }
 
