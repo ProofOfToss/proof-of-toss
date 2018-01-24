@@ -26,30 +26,74 @@ function getMyTransactions(web3) {
     .then((instance) => {
       let items = [];
       const address = web3.eth.accounts[0];
-      instance.Transfer({}, { fromBlock: 0, toBlock: 'pending' }, (err, res) => {
-        items.push({
-          time: web3.eth.getBlock(res.blockNumber).timestamp,
-          type: res.args.to === address ? 'in' : 'out',
-          walletNumber: res.args.to === address ? res.args.from : res.args.to,
-          sum: web3.fromWei(res.args.value, 'ether').toNumber(),
-          fee: calculateGasPrice(web3, res.transactionHash)
-        })
+
+      return new Promise((resolve, reject) => {
+        instance.Transfer({}, { fromBlock: 0, toBlock: 'pending' }).get(function (err, log) {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          log.forEach(function(res) {
+            var fee;
+
+            items.push(calculateGasPrice(web3, res.transactionHash)
+              .then(_fee => {
+                fee = _fee;
+
+                return new Promise((_resolve, _reject) => {
+                  web3.eth.getBlock(res.blockNumber, (err, block) => {
+                    if (err) {
+                      _reject(err);
+                      return;
+                    }
+
+                    _resolve(block.timestamp)
+                  });
+                })
+              })
+              .then(timestamp => {
+                return {
+                  time: new Date(timestamp),
+                  type: res.args.to === address ? 'in' : 'out',
+                  walletNumber: res.args.to === address ? res.args.from : res.args.to,
+                  sum: web3.fromWei(res.args.value, 'ether').toNumber(),
+                  fee: fee
+                };
+              })
+              .catch(e => reject(e))
+            );
+          });
+
+          Promise.all(items)
+            .then(_items => {
+              console.log(_items)
+              resolve(_items);
+            })
+            .catch(e => reject(e));
+        });
       });
-      return items;
     });
 }
 
 function calculateGasPrice(web3, transactionHash) {
-  let fee = null;
+  return new Promise((resolve, reject) => {
+    web3.eth.getTransaction(transactionHash, (err, transaction) => {
+      if (err) {
+        reject(err);
+        return;
+      }
 
-  web3.eth.getTransaction(transactionHash)
-    .then(function(transaction) {
-      web3.eth.eth_getTransactionReceipt(transactionHash).then(function(transactionReceipt) {
-        fee = transactionReceipt.gasUsed * transaction.gasPrice
-      })
+      web3.eth.getTransactionReceipt(transactionHash, (err, transactionReceipt) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve(web3.fromWei(transactionReceipt.gasUsed * transaction.gasPrice, 'ether'));
+      });
     });
-
-  return web3.fromWei(fee, 'ether');
+  });
 }
 
 export { getMyBalance, getMyTransactions };

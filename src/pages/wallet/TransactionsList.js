@@ -37,11 +37,12 @@ class TransactionList extends Component {
   }
 
   componentWillMount() {
-    const transactions = getMyTransactions(this.props.web3);
-    this.setState({
-      pageCount: transactions.length / this.state.perPage,
-      allTransactions: transactions
-    })
+    getMyTransactions(this.props.web3).then(transactions => {
+      this.setState({
+        pageCount: transactions.length / this.state.perPage,
+        transactions: transactions
+      })
+    });
   }
 
   render() {
