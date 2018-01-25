@@ -25,7 +25,6 @@ function getMyTransactions(web3) {
   return token.deployed()
     .then((instance) => {
       let items = [];
-      const address = web3.eth.accounts[0];
 
       return new Promise((resolve, reject) => {
         instance.Transfer({}, { fromBlock: 0, toBlock: 'pending' }).get(function (err, log) {
@@ -54,10 +53,10 @@ function getMyTransactions(web3) {
               })
               .then(timestamp => {
                 return {
-                  time: new Date(timestamp),
-                  type: res.args.to === address ? 'in' : 'out',
-                  walletNumber: res.args.to === address ? res.args.from : res.args.to,
-                  sum: web3.fromWei(res.args.value, 'ether').toNumber(),
+                  time: new Date(timestamp * 1000),
+                  to: res.args.to,
+                  from: res.args.from,
+                  sum: res.args.value.toNumber(),
                   fee: fee
                 };
               })
@@ -67,7 +66,6 @@ function getMyTransactions(web3) {
 
           Promise.all(items)
             .then(_items => {
-              console.log(_items)
               resolve(_items);
             })
             .catch(e => reject(e));
