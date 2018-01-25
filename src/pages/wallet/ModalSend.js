@@ -20,8 +20,8 @@ class ModalSend extends Component {
     this.links = {};
 
     this.state = {
-      address: '0x9407808Bb24233D6cBd943A74BB2eF6d9c365De2',
-      sum: 10,
+      address: '',
+      sum: 0,
       fee: 0,
       gasLimit: 0,
       minFee: 0,

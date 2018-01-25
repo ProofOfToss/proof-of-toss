@@ -22,7 +22,7 @@ class Index extends Component {
       ],
       view: {
         showDepositModal: false,
-        showSendModal: true
+        showSendModal: false
       }
     }
   }
