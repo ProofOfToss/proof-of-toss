@@ -3,5 +3,12 @@
     "url": "http://localhost:9200",
     "user": "elastic",
     "password": "changeme"
+  },
+  "view": {
+    "token_symbol": "TOSS",
+    "currency_symbol": "SBTC",
+    "token_precision": 2,
+    "currency_precision": 8,
+    "gwei_precision": 2
   }
 }

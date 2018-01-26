@@ -1,0 +1,38 @@
+.copy-to-clipboard {
+  display: flex;
+
+  &-text {
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  &-btn {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    right: 0;
+  }
+
+  .tooltip {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: opacity 1.000s ease;
+  }
+
+  &--hide-tooltip {
+    .tooltip {
+      opacity: 0;
+    }
+  }
+
+  &--show-tooltip {
+    .tooltip {
+      opacity: 1;
+    }
+  }
+}
