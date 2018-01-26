@@ -31,6 +31,10 @@ class ModalSend extends Component {
       successResponse: null,
       successTransaction: null,
       waiting: false,
+      formPrestine: true,
+      addressPrestine: true,
+      sumPrestine: true,
+      feePrestine: true,
     };
 
     this.calcFee = this.calcFee.bind(this);
@@ -53,7 +57,22 @@ class ModalSend extends Component {
         delete this.links['sum'];
       }
     }
+
+    if (this.state.formPrestine) {
+      if (this.state.address !== nextState.address) {
+        this.setState({addressPrestine: false});
+      }
+
+      if (this.state.sum !== nextState.sum) {
+        this.setState({sumPrestine: false});
+      }
+
+      if (this.state.fee !== nextState.fee) {
+        this.setState({feePrestine: false});
+      }
+    }
   }
+
   componentDidUpdate(prevProps, prevState) {
     if (!this.state.gasPrices) {
       return;
@@ -65,45 +84,53 @@ class ModalSend extends Component {
   }
 
   onSendClick() {
-    this.setState({ errors: [], waiting: true });
+    this.setState({formPrestine: false}, () => {
+      const {hasError} = this.validateForm();
 
-    const contract = require('truffle-contract');
-    const token = contract(TokenContract);
-    token.setProvider(this.props.web3.currentProvider);
+      if(hasError) {
+        return;
+      }
 
-    token.deployed().then((instance) => {
+      this.setState({ errors: [], waiting: true });
 
-      return instance.transfer(
-        this.state.address,
-        this.state.sum,
-        {
-          from: this.props.currentAddress,
-          gasPrice: Math.round(this.props.web3.toWei(this.state.fee / this.state.gasLimit)),
-          gas: this.state.gasLimit,
-        }
-      );
+      const contract = require('truffle-contract');
+      const token = contract(TokenContract);
+      token.setProvider(this.props.web3.currentProvider);
 
-    }).then((result) => {
+      token.deployed().then((instance) => {
 
-      this.setState({ successResponse: result });
+        return instance.transfer(
+          this.state.address,
+          this.state.sum,
+          {
+            from: this.props.currentAddress,
+            gasPrice: Math.round(this.props.web3.toWei(this.state.fee / this.state.gasLimit)),
+            gas: this.state.gasLimit,
+          }
+        );
 
-      this.props.web3.eth.getTransaction(result.tx, (err, tx) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
+      }).then((result) => {
 
-        this.setState({ successTransaction: tx, waiting: false });
+        this.setState({ successResponse: result });
 
-        store.dispatch(refreshBalance());
+        this.props.web3.eth.getTransaction(result.tx, (err, tx) => {
+          if (err) {
+            console.log(err);
+            return;
+          }
+
+          this.setState({ successTransaction: tx, waiting: false });
+
+          store.dispatch(refreshBalance());
+        });
+
+      }).catch((e) => {
+
+        let errors = this.state.errors;
+        errors.push(e);
+        this.setState({ errors: errors, waiting: false });
+
       });
-
-    }).catch((e) => {
-
-      let errors = this.state.errors;
-      errors.push(e);
-      this.setState({ errors: errors, waiting: false });
-
     });
   }
 
@@ -145,6 +172,40 @@ class ModalSend extends Component {
     }).catch(function() {});
   }
 
+  validateForm() {
+    const addressLink = Link.state(this, 'address');
+    const sumLink = Link.state(this, 'sum');
+    const feeLink = Link.state(this, 'fee');
+
+    if (!this.state.formPrestine || !this.state.addressPrestine) {
+      addressLink
+        .check( v => v, strings().validation.required)
+        .check( validateTossAddress, 'Invalid address');
+    }
+
+    if (!this.state.formPrestine || !this.state.sumPrestine) {
+      sumLink
+        .check( v => v, strings().validation.required)
+        .check( v => !isNaN(parseFloat(v)), strings().validation.token.sum_is_nan)
+        .check( v => parseFloat(v) >= 1, strings().validation.token.sum_is_too_small)
+        .check( v => parseFloat(v) <= this.props.balance, strings().validation.token.sum_is_too_big);
+    }
+
+    if (!this.state.formPrestine || !this.state.feePrestine) {
+      feeLink
+        .check( v => v, strings().validation.required)
+        .check( v => !isNaN(parseFloat(v)), strings().validation.token.fee_is_nan)
+        .check( v => parseFloat(v) >= this.state.minFee, strings().validation.token.fee_is_too_small + this.state.minFee + ' ' + config.view.currency_symbol);
+    }
+
+    return {
+      addressLink,
+      sumLink,
+      feeLink,
+      hasError: addressLink.error || sumLink.error || feeLink.error
+    }
+  }
+
   _renderErrors() {
     let elements = [];
     for(let i = 0; i < this.state.errors.length; i++) {
@@ -163,20 +224,7 @@ class ModalSend extends Component {
   }
 
   _renderForm() {
-    const addressLink = Link.state(this, 'address')
-      .check( v => v, strings().validation.required)
-      .check( validateTossAddress, 'Invalid address');
-
-    const sumLink = Link.state(this, 'sum')
-      .check( v => v, strings().validation.required)
-      .check( v => !isNaN(parseFloat(v)), strings().validation.token.sum_is_nan)
-      .check( v => parseFloat(v) >= 1, strings().validation.token.sum_is_too_small)
-      .check( v => parseFloat(v) <= this.props.balance, strings().validation.token.sum_is_too_big);
-
-    const feeLink = Link.state(this, 'fee')
-      .check( v => v, strings().validation.required)
-      .check( v => !isNaN(parseFloat(v)), strings().validation.token.fee_is_nan)
-      .check( v => parseFloat(v) >= this.state.minFee, strings().validation.token.fee_is_too_small + this.state.minFee + ' ' + config.view.currency_symbol);
+    const {addressLink, sumLink, feeLink} = this.validateForm();
 
     return <form>
       <div className='has-error'>
