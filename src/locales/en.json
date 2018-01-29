@@ -18,5 +18,17 @@
       "deposit_is_too_small": "Deposit should be >= 1 TOSS",
       "deposit_is_too_big": "Deposit should be < 1 000 000 000 TOSS"
     }
+  },
+  "pages": {
+    "wallet": {
+      "transactions_list": {
+        "time": "Time",
+        "type": "Type",
+        "wallet_number": "Wallet number",
+        "sum": "Sum",
+        "fee": "Fee"
+      }
+    }
   }
+
 }

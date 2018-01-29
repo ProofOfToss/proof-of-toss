@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import ReactPaginate from 'react-paginate';
 import { browserHistory } from 'react-router'
 import { connect } from 'react-redux';
+import { strings } from '../../util/i18n';
 import { getMyTransactions } from './../../util/token'
 import TransactionItem from './TransactionItem'
 
@@ -49,11 +50,11 @@ class TransactionList extends Component {
           <table className="table">
             <thead>
             <tr>
-              <th>Time</th>
-              <th>Type</th>
-              <th>Wallet number</th>
-              <th>Sum</th>
-              <th>Fee</th>
+              <th>{strings().pages.wallet.transactions_list.time}</th>
+              <th>{strings().pages.wallet.transactions_list.type}</th>
+              <th>{strings().pages.wallet.transactions_list.wallet_number}</th>
+              <th>{strings().pages.wallet.transactions_list.sum}</th>
+              <th>{strings().pages.wallet.transactions_list.fee}</th>
             </tr>
             </thead>
             <tbody>
@@ -64,8 +65,7 @@ class TransactionList extends Component {
           </table>
 
           {showPagination &&
-            <ReactPaginate previousLabel={"previous"}
-               nextLabel={"next"}
+            <ReactPaginate
                breakLabel={<a href="">...</a>}
                breakClassName={"break-me"}
                pageCount={this.state.pageCount}
@@ -94,7 +94,6 @@ class TransactionList extends Component {
 
 function mapPropsToState(state) {
   return {
-    web3: state.web3.web3,
     web3Local: state.web3.web3Local
   };
 }

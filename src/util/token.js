@@ -34,7 +34,7 @@ function getMyTransactions(web3) {
           }
 
           log.forEach(function(res) {
-            var fee;
+            let fee;
 
             items.push(calculateGasPrice(web3, res.transactionHash)
               .then(_fee => {
