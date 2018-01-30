@@ -36,7 +36,7 @@ import { initWeb3, lockWallet, unlockWallet, changeAddress, web3LostConnection }
 // Put ReactDOM.render() to a function because we need to wrap the rendering with web3 detection
 function renderReactDOM(web3) {
 
-  const provider = new Web3Local.providers.HttpProvider("http://localhost:8545");
+  const provider = new Web3Local.providers.HttpProvider(web3.currentProvider.originRpcAddress);
 
   if (typeof web3 !== 'undefined') {
     store.dispatch(initWeb3(web3, new Web3Local(provider)));
