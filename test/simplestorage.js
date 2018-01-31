@@ -3,6 +3,8 @@ var SimpleStorage = artifacts.require("./SimpleStorage.sol");
 contract('SimpleStorage', function(accounts) {
 
   it("...should store the value 89.", function() {
+    let simpleStorageInstance;
+
     return SimpleStorage.deployed().then(function(instance) {
       simpleStorageInstance = instance;
 

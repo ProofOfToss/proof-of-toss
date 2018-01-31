@@ -19,6 +19,11 @@ contract Main {
 
     function newEvent(uint deposit, string name) returns (address) {
         lastEvent = new Event(msg.sender, address(token), name);
+
+        if (token.allowanceToAllowBlocking(msg.sender, address(this))) {
+            token.allowBlocking(msg.sender, address(lastEvent));
+        }
+
         token.transferFrom(msg.sender, address(lastEvent), deposit);
         NewEvent(name, uint(now), address(lastEvent), msg.sender);
 
