@@ -4,6 +4,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { Provider } from 'react-redux'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { refreshBalance } from './actions/token'
+import initLocale  from './components/locale/init'
 
 // Layouts
 import App from './App'
@@ -38,6 +39,8 @@ function renderReactDOM(web3) {
   if (typeof web3 !== 'undefined') {
     store.dispatch(initWeb3(web3));
   }
+
+  initLocale();
 
   const history = syncHistoryWithStore(browserHistory, store);
 
