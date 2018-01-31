@@ -19,6 +19,8 @@ contract Token {
         balanceOf[msg.sender] = initialSupply;
     }
 
+    event TokenOperationEvent(string operation, address indexed from, address indexed to, uint256 value, address indexed _contract);
+
     // @brief Send coins
     // @param _to recipient of coins
     // @param _value amount of coins for send
@@ -27,6 +29,8 @@ contract Token {
 
         balanceOf[msg.sender] -= _value;
         balanceOf[_to] += _value;
+
+        TokenOperationEvent('transfer', msg.sender, _to, _value, 0);
     }
 
     // @brief Send coins
@@ -40,6 +44,8 @@ contract Token {
         balanceOf[_from] -= _value;
         balanceOf[_to] += _value;
         allowed[_from][msg.sender] -= _value;
+
+        TokenOperationEvent('transfer', msg.sender, _to, _value, 0);
     }
 
     // @brief Allow another contract to spend some tokens in your behalf
@@ -47,6 +53,8 @@ contract Token {
     // @param _value amount of approved tokens
     function approve(address _spender, uint256 _value) {
         allowed[msg.sender][_spender] = _value;
+
+        TokenOperationEvent('approve', msg.sender, _spender, _value, 0);
     }
 
     // @brief Get allowed amount of tokens
@@ -76,6 +84,8 @@ contract Token {
         if (codeLength <= 0) throw; // Only smart contracts allowed
 
         grantedToAllowBlocking[msg.sender][_contract] = permission;
+
+        TokenOperationEvent('grant_allow_blocking', msg.sender, _contract, 0, 0);
     }
 
     // @brief Allow another contract to block tokens. Can't be revoked
@@ -93,6 +103,8 @@ contract Token {
         if (! grantedToAllowBlocking[_owner][msg.sender]) throw;
 
         allowedToBlocking[_owner][_contract] = true;
+
+        TokenOperationEvent('allow_blocking', _owner, _contract, 0, msg.sender);
     }
 
     // @brief Check if contract is granted to allow blocking to other contracts
@@ -112,6 +124,8 @@ contract Token {
 
         balanceOf[_blocking] -= _value;
         blocked[_blocking][msg.sender] += _value;
+
+        TokenOperationEvent('block', _blocking, 0, _value, msg.sender);
     }
 
     // @brief Unblocks tokens and sends them to the given address (to _unblockTo)
@@ -125,6 +139,8 @@ contract Token {
 
         blocked[_blocking][msg.sender] -= _value;
         balanceOf[_unblockTo] += _value;
+
+        TokenOperationEvent('unblock', _blocking, _unblockTo, _value, msg.sender);
     }
 
     // Pre-sale
