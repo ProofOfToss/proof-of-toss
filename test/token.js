@@ -1,5 +1,4 @@
 import expectThrow from './helpers/expectThrow';
-var Web3 = require('web3');
 
 var Token = artifacts.require("./Token.sol");
 var Blocker = artifacts.require("./test/Blocker.sol");

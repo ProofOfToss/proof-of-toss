@@ -1,6 +1,18 @@
 pragma solidity ^0.4.2;
 
 contract Token {
+    // Pre-sale tokens transfer
+
+    address owner;
+
+    uint preSaleTransferEnd;
+    uint256 icoSoftcap;
+
+    modifier presaleEnded {
+        require(msg.sender == owner || (now > preSaleTransferEnd && balanceOf[owner] <= (totalTokens - icoSoftcap)));
+        _;
+    }
+
     // ERC20
 
     string public standard = 'Token 0.1';
@@ -13,7 +25,12 @@ contract Token {
 
     uint256 totalTokens;
 
-    function Token() {
+    function Token(uint _preSaleTransferEnd, uint256 _icoSoftcap) {
+        owner = msg.sender;
+
+        preSaleTransferEnd = _preSaleTransferEnd;
+        icoSoftcap = _icoSoftcap;
+
         uint256 initialSupply = 1000000000;
         totalTokens = initialSupply;
         balanceOf[msg.sender] = initialSupply;
@@ -24,7 +41,7 @@ contract Token {
     // @brief Send coins
     // @param _to recipient of coins
     // @param _value amount of coins for send
-    function transfer(address _to, uint256 _value) {
+    function transfer(address _to, uint256 _value) presaleEnded {
         if (balanceOf[msg.sender] < _value || _value <= 0) throw;
 
         balanceOf[msg.sender] -= _value;
@@ -37,7 +54,7 @@ contract Token {
     // @param _from source of coins
     // @param _to recipient of coins
     // @param _value amount of coins for send
-    function transferFrom(address _from, address _to, uint256 _value) {
+    function transferFrom(address _from, address _to, uint256 _value) presaleEnded {
         if (balanceOf[_from] < _value || _value <= 0) throw;
         if (allowed[_from][msg.sender] < _value) throw;
 
@@ -51,7 +68,7 @@ contract Token {
     // @brief Allow another contract to spend some tokens in your behalf
     // @param _spender another contract address
     // @param _value amount of approved tokens
-    function approve(address _spender, uint256 _value) {
+    function approve(address _spender, uint256 _value) presaleEnded {
         allowed[msg.sender][_spender] = _value;
 
         TokenOperationEvent('approve', msg.sender, _spender, _value, 0);
@@ -61,7 +78,7 @@ contract Token {
     // @param _owner owner of allowance
     // @param _spender spender contract
     // @return the rest of allowed tokens
-    function allowance(address _owner, address _spender) constant returns (uint256 remaining) {
+    function allowance(address _owner, address _spender) constant returns (uint256 remaining)  {
         return allowed[_owner][_spender];
     }
 
@@ -118,7 +135,7 @@ contract Token {
     // @brief Blocks tokens
     // @param _blocking The address of tokens which are being blocked
     // @param _value The blocked token count
-    function block(address _blocking, uint256 _value) {
+    function block(address _blocking, uint256 _value) presaleEnded {
         if (! allowedToBlocking[_blocking][msg.sender]) throw;
         if (balanceOf[_blocking] < _value || _value <= 0) throw;
 
@@ -132,7 +149,7 @@ contract Token {
     // @param _blocking The address of tokens which are blocked
     // @param _unblockTo The address to send to the blocked tokens after unblocking
     // @param _value The blocked token count to unblock
-    function unblock(address _blocking, address _unblockTo, uint256 _value) {
+    function unblock(address _blocking, address _unblockTo, uint256 _value) presaleEnded {
         if (blocked[_blocking][msg.sender] == 0) throw;
         if (! allowedToBlocking[_blocking][msg.sender]) throw;
         if (blocked[_blocking][msg.sender] < _value) throw;
@@ -142,10 +159,6 @@ contract Token {
 
         TokenOperationEvent('unblock', _blocking, _unblockTo, _value, msg.sender);
     }
-
-    // Pre-sale
-
-
 
     // Testing
 

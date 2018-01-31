@@ -5,7 +5,7 @@ var BlockingGranter = artifacts.require("BlockingGranter");
 var Blocker = artifacts.require("Blocker");
 
 module.exports = function(deployer) {
-  deployer.deploy(Token, {gasPrice: 1000}).then(function() {
+  deployer.deploy(Token, 0, 0, {gasPrice: 1000}).then(function() {
 
     if (true/* || process.env.NODE_ENV === 'test'*/) {
       deployer.deploy(BlockingGranter, Token.address, {gasPrice: 1000});
