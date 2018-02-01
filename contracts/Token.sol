@@ -17,6 +17,8 @@ contract Token {
         balanceOf[msg.sender] = initialSupply;
     }
 
+    event Transfer(address indexed from, address indexed to, uint256 value);
+
     // @brief Send coins
     // @param _to recipient of coins
     // @param _value amount of coins for send
@@ -25,6 +27,7 @@ contract Token {
 
         balanceOf[msg.sender] -= _value;
         balanceOf[_to] += _value;
+        Transfer(msg.sender, _to, _value);
     }
 
     // @brief Send coins
