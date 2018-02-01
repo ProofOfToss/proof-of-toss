@@ -4,6 +4,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { Provider } from 'react-redux'
 import { syncHistoryWithStore } from 'react-router-redux'
 import Web3Local from 'web3';
+import { refreshBalance } from './actions/token'
 
 // Layouts
 import App from './App'
@@ -154,6 +155,13 @@ getWeb3
     }, 500);
 
     renderReactDOM(results.web3);
+  })
+  .then(() => {
+    store.dispatch(refreshBalance());
+
+    setInterval(() => {
+      store.dispatch(refreshBalance());
+    }, 500);
   })
   .catch(function(e) {
     renderReactDOM();

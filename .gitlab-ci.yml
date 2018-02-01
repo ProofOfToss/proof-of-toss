@@ -22,7 +22,9 @@ deploy_demo:
     - source /opt/rh/devtoolset-2/enable
     - npm install
     - cp truffle.js.example truffle.js
+    - mkdir $CI_PROJECT_DIR/build
+    - rsync -hrlv --delete /srv/www/proof-of-toss-demo.axioma.lv/htdocs/build/ $CI_PROJECT_DIR/build/
     - ./node_modules/truffle/build/cli.bundled.js --network test migrate
     - npm run build
     - echo "Deploy to Demo"
-    - rsync -hrlv --delete --exclude=.git --exclude=truffle.js --exclude=build --exclude=node_modules --exclude=npm-debug.log --exclude=testrpc_db --exclude=nohup.out $CI_PROJECT_DIR/ /srv/www/proof-of-toss-demo.axioma.lv/htdocs/
+    - rsync -hrlv --delete --exclude=.git --exclude=node_modules --exclude=npm-debug.log --exclude=testrpc_db --exclude=nohup.out $CI_PROJECT_DIR/ /srv/www/proof-of-toss-demo.axioma.lv/htdocs/
