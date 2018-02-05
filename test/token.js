@@ -157,19 +157,23 @@ contract('Token', function (accounts) {
       .then(function (instance) {
         token = instance;
         return token.balanceOf(accounts[0]);
-      }).then(function(balanceOf) {
+      })
+      .then(function(balanceOf) {
         ownerBalanceOf = balanceOf.toNumber();
         return BlockingGranter.deployed();
-      }).then(function (instance) {
+      })
+      .then(function (instance) {
         granter = instance;
         return Blocker.deployed();
-      }).then(async function (instance) {
+      })
+      .then(function (instance) {
         blocker = instance;
         return token.grantToAllowBlocking(granter.address, true, {from: accounts[0]});
-      }).then(async function () {
+      })
+      .then(function () {
         return granter.grant(accounts[0], blocker.address, {from: accounts[1]});
       })
-      .then(async function () {
+      .then(function () {
         return blocker.block(accounts[0], blockedCount, {from: accounts[1]});
       })
       .then(function () {
@@ -185,15 +189,17 @@ contract('Token', function (accounts) {
       })
       .then(async function () {
         await expectThrow(blocker.unblock(accounts[0], blockedCount + 1, {from: accounts[1]}));
-      })
-      .then(function () {
+
         return blocker.unblock(accounts[0], blockedCount, {from: accounts[1]});
+      })
+      .then(async function () {
+        assert.equal(0, await token.blocked(accounts[0], blocker.address));
+        assert.equal(ownerBalanceOf, await token.balanceOf(accounts[0]));
       });
 
   });
 
   it("should allow to block tokens for msg.sender who is approved by tokens owner with sufficient approved token count and than to unblock tokens", function() {
-
     let blockedCount = 1000;
     let ownerBalanceOf;
     let currentBlock = Token.web3.eth.blockNumber;
@@ -203,19 +209,23 @@ contract('Token', function (accounts) {
       .then(function (instance) {
         token = instance;
         return token.balanceOf(accounts[0]);
-      }).then(function(balanceOf) {
+      })
+      .then(function(balanceOf) {
         ownerBalanceOf = balanceOf.toNumber();
         return BlockingGranter.deployed();
-      }).then(function (instance) {
+      })
+      .then(function (instance) {
         granter = instance;
         return Blocker.deployed();
-      }).then(async function (instance) {
+      })
+      .then(function (instance) {
         blocker = instance;
         return token.grantToAllowBlocking(granter.address, true, {from: accounts[0]});
-      }).then(async function () {
+      })
+      .then(function () {
         return granter.grant(accounts[0], blocker.address, {from: accounts[1]});
       })
-      .then(async function () {
+      .then(function () {
         return blocker.block(accounts[0], blockedCount, {from: accounts[1]});
       })
       .then(function () {
@@ -271,39 +281,45 @@ contract('Token', function (accounts) {
       .then(async function (blocked) {
         assert.equal(0, blocked.toNumber());
 
-        let operations = await token.TokenOperationEvent({}, {fromBlock: currentBlock, toBlock: 'latest'});
+        let operations = await token.TokenOperationEvent({}, {fromBlock: currentBlock + 1, toBlock: 'latest'});
 
-        operations.get(function (error, log) {
-          assert.equal(null, error);
-          assert.equal(5, log.length);
+        return new Promise((resolve, reject) => {
+          operations.get(function (error, log) {
+            console.log(log);
 
-          assert.equal('grant_allow_blocking', log[0].args.operation);
-          assert.equal(accounts[0], log[0].args.from);
-          assert.equal(granter.address, log[0].args.to);
-          assert.equal(0, log[0].args.value.toNumber());
+            assert.equal(null, error);
+            assert.equal(5, log.length);
 
-          assert.equal('allow_blocking', log[1].args.operation);
-          assert.equal(accounts[0], log[1].args.from);
-          assert.equal(blocker.address, log[1].args.to);
-          assert.equal(0, log[1].args.value.toNumber());
+            assert.equal('grant_allow_blocking', log[0].args.operation);
+            assert.equal(accounts[0], log[0].args.from);
+            assert.equal(granter.address, log[0].args.to);
+            assert.equal(0, log[0].args.value.toNumber());
 
-          assert.equal('block', log[2].args.operation);
-          assert.equal(accounts[0], log[2].args.from);
-          assert.equal(0, log[2].args.to);
-          assert.equal(1000, log[2].args.value.toNumber());
-          assert.equal(blocker.address, log[2].args._contract);
+            assert.equal('allow_blocking', log[1].args.operation);
+            assert.equal(accounts[0], log[1].args.from);
+            assert.equal(blocker.address, log[1].args.to);
+            assert.equal(0, log[1].args.value.toNumber());
 
-          assert.equal('unblock', log[3].args.operation);
-          assert.equal(accounts[0], log[3].args.from);
-          assert.equal(accounts[0], log[3].args.to);
-          assert.equal(300, log[3].args.value.toNumber());
-          assert.equal(blocker.address, log[3].args._contract);
+            assert.equal('block', log[2].args.operation);
+            assert.equal(accounts[0], log[2].args.from);
+            assert.equal(0, log[2].args.to);
+            assert.equal(1000, log[2].args.value.toNumber());
+            assert.equal(blocker.address, log[2].args._contract);
 
-          assert.equal('unblock', log[4].args.operation);
-          assert.equal(accounts[0], log[4].args.from);
-          assert.equal(accounts[1], log[4].args.to);
-          assert.equal(700, log[4].args.value.toNumber());
-          assert.equal(blocker.address, log[4].args._contract);
+            assert.equal('unblock', log[3].args.operation);
+            assert.equal(accounts[0], log[3].args.from);
+            assert.equal(accounts[0], log[3].args.to);
+            assert.equal(300, log[3].args.value.toNumber());
+            assert.equal(blocker.address, log[3].args._contract);
+
+            assert.equal('unblock', log[4].args.operation);
+            assert.equal(accounts[0], log[4].args.from);
+            assert.equal(accounts[1], log[4].args.to);
+            assert.equal(700, log[4].args.value.toNumber());
+            assert.equal(blocker.address, log[4].args._contract);
+
+            resolve();
+          });
         });
       });
   });

@@ -9,17 +9,17 @@ import "../contracts/test/BlockingGranter.sol";
 
 contract TestToken {
 
-	function testInitialBalanceUsingDeployedContract() {
-		Token token = Token(DeployedAddresses.Token());
-
-		uint expected = 1000000000;
-
-		Assert.equal(token.balanceOf(tx.origin), expected, "Owner should have 10000000000 tokens initially");
-	}
-
-	function testBlocking() {
+    function testInitialBalanceUsingDeployedContract() {
         Token token = Token(DeployedAddresses.Token());
-		BlockingGranter blockingGranter = BlockingGranter(DeployedAddresses.BlockingGranter());
+
+        uint expected = 1000000000;
+
+        Assert.equal(token.balanceOf(tx.origin), expected, "Owner should have 10000000000 tokens initially");
+    }
+
+    function testBlocking() {
+        Token token = Token(DeployedAddresses.Token());
+        BlockingGranter blockingGranter = BlockingGranter(DeployedAddresses.BlockingGranter());
         Blocker blocker = Blocker(DeployedAddresses.Blocker());
 
         token.generateTokens(address(this), 1000000000);
@@ -34,11 +34,11 @@ contract TestToken {
 
         blocker.block(address(this), 1000000000);
 
-		Assert.equal(token.balanceOf(address(this)), 0, "Owner should have 0 tokens after block");
+        Assert.equal(token.balanceOf(address(this)), 0, "Owner should have 0 tokens after block");
 
         blocker.unblock(address(this), 1000);
 
         Assert.equal(token.balanceOf(address(this)), 1000, "Owner should have 0 tokens after unblock");
-	}
+    }
 
 }

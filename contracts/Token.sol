@@ -117,6 +117,7 @@ contract Token {
 
         if (codeLength <= 0) throw; // Only smart contracts allowed
         if (_contract == msg.sender) throw;
+        if (_contract == _owner) throw;
         if (! grantedToAllowBlocking[_owner][msg.sender]) throw;
 
         allowedToBlocking[_owner][_contract] = true;
