@@ -4,9 +4,10 @@ export const UNLOCK_WALLET = 'UNLOCK_WALLET';
 export const CHANGE_ADDRESS = 'CHANGE_ADDRESS';
 export const WEB3_LOST_CONNECTION = 'WEB3_LOST_CONNECTION';
 
-export const initWeb3 = (web3) => ({
+export const initWeb3 = (web3, web3Local) => ({
   'type': INIT_WEB3,
-  'web3': web3
+  'web3': web3,
+  'web3Local': web3Local
 });
 
 export const lockWallet = () => ({

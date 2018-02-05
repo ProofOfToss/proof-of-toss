@@ -24,6 +24,7 @@ const web3Reducer = (state = initialState, action) => {
     case INIT_WEB3:
       return Object.assign({}, state, {
         'web3': action.web3,
+        'web3Local': action.web3Local,
         'currentAddress': getCurrentAddress(action.web3),
         'isWalletLocked': isWalletLocked(action.web3),
         'hasConnection': hasConnection(action.web3)
