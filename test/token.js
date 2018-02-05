@@ -285,8 +285,6 @@ contract('Token', function (accounts) {
 
         return new Promise((resolve, reject) => {
           operations.get(function (error, log) {
-            console.log(log);
-
             assert.equal(null, error);
             assert.equal(5, log.length);
 
