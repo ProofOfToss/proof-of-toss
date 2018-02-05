@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import { syncHistoryWithStore } from 'react-router-redux'
 import Web3Local from 'web3';
 import { refreshBalance } from './actions/token'
+import initLocale  from './components/locale/init'
 
 // Layouts
 import App from './App'
@@ -42,6 +43,8 @@ function renderReactDOM(web3) {
   if (typeof web3 !== 'undefined') {
     store.dispatch(initWeb3(web3, new Web3Local(provider)));
   }
+
+  initLocale();
 
   const history = syncHistoryWithStore(browserHistory, store);
 

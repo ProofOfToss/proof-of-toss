@@ -10,5 +10,11 @@
     "token_precision": 2,
     "currency_precision": 8,
     "gwei_precision": 2
+  },
+  "languages": {
+    "list": [
+      {"name": "English", "code": "en"},
+      {"name": "Russian", "code": "ru"}
+    ]
   }
 }

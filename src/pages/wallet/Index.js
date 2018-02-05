@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { getTranslate } from 'react-localize-redux';
 import TransactionsList from './TransactionsList'
 import ModalDeposit from './ModalDeposit'
 import ModalSend from "./ModalSend";
@@ -42,7 +43,7 @@ class Index extends Component {
       <main className="container wallet-index">
         <h1>TOSS</h1>
         <dl className="dl-horizontal">
-          <dt>Your balance</dt>
+          <dt>{ this.props.translate('pages.wallet.info.your_balance')}</dt>
           <dd>{ this.props.balance.toFixed(2) }</dd>
 
           <dt>Block sum</dt>
@@ -69,6 +70,7 @@ function mapPropsToState(state) {
     web3: state.web3.web3,
     balance: state.token.balance,
     blockedBalance: state.token.blockedBalance,
+    translate: getTranslate(state.locale)
   };
 }
 

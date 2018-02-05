@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
+import { getTranslate } from 'react-localize-redux';
 import BaseModal from '../../components/modal/BaseModal'
 import CopyToClipboard from '../../components/clipboard/CopyToClipboard'
 import { strings } from '../../util/i18n';
@@ -233,33 +234,33 @@ class ModalSend extends Component {
         </div>
       </div>
       <div className='form-group'>
-        <label>Balance: { this.props.balance.toFixed(config.view.token_precision) } {config.view.token_symbol}</label>
+        <label>{ this.props.translate('pages.wallet.send.balance') }: { this.props.balance.toFixed(config.view.token_precision) } {config.view.token_symbol}</label>
       </div>
       {(
         this.props.blockedBalance > 0 ?
           <div className='form-group'>
-            <label>Block sum: { this.props.blockedBalance.toFixed(config.view.token_precision) } {config.view.token_symbol}</label>
+            <label>{ this.props.translate('pages.wallet.send.block_sum') }: { this.props.blockedBalance.toFixed(config.view.token_precision) } {config.view.token_symbol}</label>
           </div> : ''
       )}
       <div className={ addressLink.error ? 'form-group has-error' : 'form-group' }>
-        <label className='control-label' htmlFor='send[address]'>Address</label>
-        <Input valueLink={ addressLink } type='text' className='form-control' id='send[address]' placeholder='Address' />
+        <label className='control-label' htmlFor='send[address]'>{ this.props.translate('pages.wallet.send.address') }</label>
+        <Input valueLink={ addressLink } type='text' className='form-control' id='send[address]' placeholder={ this.props.translate('pages.wallet.send.address') } />
         <span className='help-block'>{ addressLink.error || '' }</span>
       </div>
       <div className={ sumLink.error ? 'form-group has-error' : 'form-group' }>
-        <label className='control-label' htmlFor='send[sum]'>Sum</label>
-        <Input valueLink={ sumLink } type='number' className='form-control' id='send[sum]' placeholder='Sum' onKeyPress={this.preventNonDigit} />
+        <label className='control-label' htmlFor='send[sum]'>{ this.props.translate('pages.wallet.send.sum') }</label>
+        <Input valueLink={ sumLink } type='number' className='form-control' id='send[sum]' placeholder={ this.props.translate('pages.wallet.send.sum') } onKeyPress={this.preventNonDigit} />
         <span className='help-block'>{ sumLink.error || '' }</span>
       </div>
       <div className={ feeLink.error ? 'form-group has-error' : 'form-group' }>
-        <label className='control-label' htmlFor='send[fee]'>Fee ({config.view.currency_symbol})</label>
-        <Input valueLink={ feeLink } type='number' className='form-control' id='send[fee]' placeholder='Fee' onKeyPress={this.preventNonDigit} />
+        <label className='control-label' htmlFor='send[fee]'>{ this.props.translate('pages.wallet.send.fee') } ({config.view.currency_symbol})</label>
+        <Input valueLink={ feeLink } type='number' className='form-control' id='send[fee]' placeholder={ this.props.translate('pages.wallet.send.fee') } onKeyPress={this.preventNonDigit} />
         <span className='help-block'>{ feeLink.error || '' }</span>
       </div>
       <div className='form-group'>
-        <span className='help-block'>{config.view.currency_symbol} Balance: { this.props.sbtcBalance.toFixed(config.view.currency_precision) }</span>
-        <span className='help-block'>{ this.state.gasLimit > 0 ? 'Gas limit: ' + this.state.gasLimit.toFixed(0) : '' }</span>
-        <span className='help-block'>{ this.state.gasLimit > 0 ? 'Gas price: ' + Number(this.props.web3.toWei(this.state.fee / this.state.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei' : '' }</span>
+        <span className='help-block'>{ this.props.translate('pages.wallet.send.currency_balance', {currency: config.view.currency_symbol}) }: { this.props.sbtcBalance.toFixed(config.view.currency_precision) }</span>
+        <span className='help-block'>{ this.state.gasLimit > 0 ? this.props.translate('pages.wallet.send.gas_limit') + ': ' + this.state.gasLimit.toFixed(0) : '' }</span>
+        <span className='help-block'>{ this.state.gasLimit > 0 ? this.props.translate('pages.wallet.send.gas_price') + ': ' +  Number(this.props.web3.toWei(this.state.fee / this.state.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei' : '' }</span>
       </div>
     </form>
   }
@@ -335,7 +336,7 @@ class ModalSend extends Component {
     return(
       <main className='container'>
         <div>
-          <BaseModal handleHideModal={this.props.handleHideModal} buttons={buttons} title='Send'>
+          <BaseModal handleHideModal={this.props.handleHideModal} buttons={buttons} title={ this.props.translate('pages.wallet.send.title') }>
             { content }
           </BaseModal>
         </div>
@@ -350,7 +351,8 @@ function mapPropsToState(state) {
     currentAddress: state.user.address,
     balance: state.token.balance,
     blockedBalance: state.token.blockedBalance,
-    sbtcBalance: state.token.sbtcBalance
+    sbtcBalance: state.token.sbtcBalance,
+    translate: getTranslate(state.locale)
   };
 }
 
