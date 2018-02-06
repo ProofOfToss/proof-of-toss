@@ -5,7 +5,7 @@ import "./Event.sol";
 
 contract Main {
     Token token;
-    Event lastEvent = new Event(0, 0, "");
+    uint8 version = 1;
 
     function Main(address _token) {
         token = Token(_token);
@@ -17,8 +17,11 @@ contract Main {
 
     event NewEvent(string eventName, uint256 indexed createdTimestamp, address indexed eventAddress, address indexed eventCreator);
 
-    function newEvent(uint deposit, string name) returns (address) {
-        lastEvent = new Event(msg.sender, address(token), name);
+    function newEvent(string name, uint256 deposit, byte2 locale, byte32 category, Tag[] tags, string description,
+        uint operatorId, uint64 startDate, uint64 endDate, string sourceUrl, Result[] possibleResults
+    ) returns (address) {
+
+        lastEvent = new Event(msg.sender, name, deposit, locale, category);
         token.transferFrom(msg.sender, address(lastEvent), deposit);
         NewEvent(name, uint(now), address(lastEvent), msg.sender);
 

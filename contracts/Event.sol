@@ -1,18 +1,64 @@
-pragma solidity ^0.4.2;
+    pragma solidity ^0.4.2;
 
 import "./Token.sol";
 
 contract Event {
-    Token token;
-    address public creator;
-    uint createdTimestamp;
-    string name;
+    enum Statuses { Published, Accepted, Started, Judging, Finished }
 
-    function Event(address _creator, address _token, string _name) {
+    struct Tag {
+        byte2 locale;
+        string name;
+    }
+
+    struct Result {
+        string description;
+        ufixed customCooficient;
+        unit betCount;
+        uint betSum;
+    }
+
+
+    uint constant public meta_version = 1;
+    address public creator;
+    bool public status = Statuses.Published;
+    byte2 public locale;
+    byte32 public category;
+    Tag[] public tags;
+    string public name;
+    string public description;
+    uint public startDate;
+    uint public endDate;
+    string public sourceUrl;
+    Result[] possibleResults;
+    uint createdTimestamp;
+
+
+
+    function Event(address _creator, string _name, uint256 deposit, byte2 _locale, byte32 _category, string[] _tags,
+        string _name, string _description, uint _startDate, uint _endDate, string _sourceUrl, string[] _possibleResults
+
+    ) {
         creator = _creator;
         name = _name;
-        token = Token(_token);
+        deposit = _deposit;
+        locale = _locale;
+        category = _category;
+        tags = transformTags(_tags);
+        name = _name;
+        description = _description;
+        startDate = _startDate;
+        endDate = _endDate;
+        sourceUrl = _sourceUrl;
+        possibleResults = transformPossibleResults(_possibleResults);
         createdTimestamp = block.timestamp;
+    }
+
+    function private transformTags(tags) {
+        return tags;
+    }
+
+    function private transformPossibleResults(possibleResults) {
+        return possibleResults;
     }
 
     function getToken() constant returns (address) {
