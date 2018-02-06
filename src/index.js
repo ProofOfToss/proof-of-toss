@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { Provider } from 'react-redux'
 import { syncHistoryWithStore } from 'react-router-redux'
-import Web3Local from 'web3';
 import { refreshBalance } from './actions/token'
 
 // Layouts
@@ -37,10 +36,8 @@ import { initWeb3, lockWallet, unlockWallet, changeAddress, web3LostConnection }
 // Put ReactDOM.render() to a function because we need to wrap the rendering with web3 detection
 function renderReactDOM(web3) {
 
-  const provider = new Web3Local.providers.HttpProvider(web3.currentProvider.originRpcAddress);
-
   if (typeof web3 !== 'undefined') {
-    store.dispatch(initWeb3(web3, new Web3Local(provider)));
+    store.dispatch(initWeb3(web3));
   }
 
   const history = syncHistoryWithStore(browserHistory, store);
