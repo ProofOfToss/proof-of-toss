@@ -69,7 +69,7 @@ class App extends Component {
     return (
       <div className="row">
 
-        <div className="col-md-2">
+        <div className="col-xs-2 col-md-2">
           <ul className="list-unstyled" role="menu">
             <li><Link to="/wallet" className="pure-menu-link">Wallet</Link></li>
             <li><Link to="/wallet/deposit" className="pure-menu-link">Deposit</Link></li>
@@ -77,7 +77,7 @@ class App extends Component {
           </ul>
         </div>
 
-        <div className="col-md-2">
+        <div className="col-xs-2 col-md-2">
           <ul className="list-unstyled" role="menu">
             <li><Link to="/play" className="pure-menu-link">Play</Link></li>
             <li><Link to="/play/event" className="pure-menu-link">Event</Link></li>
@@ -86,14 +86,14 @@ class App extends Component {
           </ul>
         </div>
 
-        <div className="col-md-2">
+        <div className="col-xs-2 col-md-2">
           <ul className="list-unstyled" role="menu">
             <li><Link to="/payments" className="pure-menu-link">Payments</Link></li>
             <li><Link to="/payments/withdraw" className="pure-menu-link">Withdraw payment</Link></li>
         </ul>
         </div>
 
-        <div className="col-md-2">
+        <div className="col-xs-2 col-md-2">
           <ul className="list-unstyled" role="menu">
             <li><Link to="/judge" className="pure-menu-link">Judge</Link></li>
           </ul>
