@@ -8,7 +8,7 @@ contract Event {
 
     struct Tag {
         string name;
-        string locale;
+        bytes2 locale;
     }
 
     struct Result {
@@ -25,18 +25,18 @@ contract Event {
     bytes32 public category;
     Tag[] public tags;
     string public name;
-    uint256 public deposit;
+    uint public deposit;
     string public description;
-    uint public startDate;
-    uint public endDate;
+    uint64 public startDate;
+    uint64 public endDate;
     string public sourceUrl;
     Result[] possibleResults;
     uint createdTimestamp;
 
 
 
-    function Event(address _creator, string _name, uint256 _deposit, bytes2 _locale, bytes32 _category, string[] _tags,
-        string _description, uint _startDate, uint _endDate, string _sourceUrl, string[] _possibleResults
+    function Event(address _creator, string _name, uint _deposit, bytes2 _locale, bytes32 _category, string[] _tags,
+        string _description, uint64 _startDate, uint64 _endDate, string _sourceUrl, string[] _possibleResults
     ) {
         creator = _creator;
         name = _name;
@@ -54,7 +54,6 @@ contract Event {
     }
 
     function transformTags(string[] _tags) private {
-
         for(uint i = 0; i < _tags.length / 2; i++) {
             tags.push(Tag(_tags[i * 2], _tags[i * 2 + 1]));
         }
@@ -63,7 +62,7 @@ contract Event {
     function transformPossibleResults(string[] _possibleResults) private {
         for(uint i = 0; i < _possibleResults.length / 4; i++) {
             possibleResults.push(Result(_possibleResults[i * 2], ufixed(_possibleResults[i * 2 + 1]),
-                uint256(_possibleResults[i * 2 + 2]), uint256(_possibleResults[i * 2 + 3])));
+                uint(_possibleResults[i * 2 + 2]), uint(_possibleResults[i * 2 + 3])));
         }
     }
 
