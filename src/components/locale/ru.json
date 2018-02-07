@@ -1,0 +1,48 @@
+{
+  "notfound": {
+    "error": "Error 404: File Not Found",
+    "message": "The requested file could not be found."
+  },
+  "form": {
+    "event": {
+      "name": "Name",
+      "deposit": "Deposit",
+      "submit": "Submit"
+    }
+  },
+  "validation": {
+    "required": "Is required",
+    "event": {
+      "name_is_too_short": "Name is too short min 3 symbols",
+      "deposit_is_nan": "Deposit should be a number",
+      "deposit_is_too_small": "Deposit should be >= 1 TOSS",
+      "deposit_is_too_big": "Deposit should be < 1 000 000 000 TOSS"
+    }
+  },
+  "pages": {
+    "wallet": {
+      "send": {
+        "title": "Отправка",
+        "balance": "Баланс",
+        "block_sum": "Block sum",
+        "address": "Address",
+        "sum": "Sum",
+        "fee": "Fee",
+        "currency_balance": "${ currency } balance",
+        "gas_limit": "Gas limit",
+        "gas_price": "Gas price"
+      },
+      "info": {
+        "your_balance": "Ваш баланс"
+      },
+      "transactions_list": {
+        "time": "Time",
+        "type": "Type",
+        "wallet_number": "Wallet number",
+        "sum": "Sum",
+        "fee": "Fee"
+      }
+    }
+  }
+
+}

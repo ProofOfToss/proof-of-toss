@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import TransactionItem from './TransactionItem'
+import { getTranslate } from 'react-localize-redux';
+import TransactionsList from './TransactionsList'
 import ModalDeposit from './ModalDeposit'
 import ModalSend from "./ModalSend";
 
@@ -14,21 +15,11 @@ class Index extends Component {
     this.handleSendHideModal = this.handleSendHideModal.bind(this)
 
     this.state = {
-      transactions: [
-        {id: 1, time: this.randomDate(new Date(2012, 0, 1), new Date()), type: 'in', walletNumber: 'aKjmHRXCHg', sum: 0.21, fee: 0.0001},
-        {id: 2, time: this.randomDate(new Date(2012, 0, 1), new Date()), type: 'out', walletNumber: 'CkYKXUpNx1', sum: 1.54, fee: 0.0017},
-        {id: 3, time: this.randomDate(new Date(2012, 0, 1), new Date()), type: 'out', walletNumber: 'hYp2PcijCH', sum: 6.76, fee: 0.0023},
-        {id: 4, time: this.randomDate(new Date(2012, 0, 1), new Date()), type: 'in', walletNumber: 'hYp2PcijCH', sum: 0.34, fee: 0.0003}
-      ],
       view: {
         showDepositModal: false,
         showSendModal: false
       }
     }
-  }
-
-  randomDate(start, end) {
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
   }
 
   handleDepositShowModal() {
@@ -52,7 +43,7 @@ class Index extends Component {
       <main className="container wallet-index">
         <h1>TOSS</h1>
         <dl className="dl-horizontal">
-          <dt>Your balance</dt>
+          <dt>{ this.props.translate('pages.wallet.info.your_balance')}</dt>
           <dd>{ this.props.balance.toFixed(2) }</dd>
 
           <dt>Block sum</dt>
@@ -65,22 +56,7 @@ class Index extends Component {
           </dd>
         </dl>
 
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Time</th>
-              <th>Type</th>
-              <th>Wallet number</th>
-              <th>Sum</th>
-              <th>Fee</th>
-            </tr>
-          </thead>
-          <tbody>
-          {this.state.transactions.map(function(listItem){
-            return <TransactionItem  key={listItem.id} item={listItem} />
-          })}
-          </tbody>
-        </table>
+        <TransactionsList page={this.props.params.page} />
 
         {this.state.view.showDepositModal ? <ModalDeposit handleHideModal={this.handleDepositHideModal}/> : null}
         {this.state.view.showSendModal ? <ModalSend handleHideModal={this.handleSendHideModal} /> : null}
@@ -94,6 +70,7 @@ function mapPropsToState(state) {
     web3: state.web3.web3,
     balance: state.token.balance,
     blockedBalance: state.token.blockedBalance,
+    translate: getTranslate(state.locale)
   };
 }
 

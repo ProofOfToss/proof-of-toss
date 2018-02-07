@@ -26,9 +26,21 @@
       "fee_is_too_small": "Fee should be >= "
     }
   },
+  "pages": {
+    "wallet": {
+      "transactions_list": {
+        "time": "Time",
+        "type": "Type",
+        "wallet_number": "Wallet number",
+        "sum": "Sum",
+        "fee": "Fee"
+      }
+    }
+  },
   "deposit": {
     "instruction": "How to deposit? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse aliquam erat lacus, in vulputate lorem venenatis ac. Mauris euismod, tortor vel cursus faucibus, lorem felis porttitor neque, non convallis lectus libero euismod nulla. Cras in nisi vitae nisi fermentum eleifend et et quam. Aliquam mollis sem commodo, auctor ante ut, vulputate quam. Praesent facilisis libero molestie elit laoreet tempus. Nam massa tortor, viverra vitae erat ut, tempor gravida odio. Nunc vestibulum egestas ultrices. Vestibulum faucibus hendrerit nibh sed porta. Suspendisse id elementum lectus, vel gravida arcu.",
     "address": "Address",
     "modal_title": "Deposit"
   }
+
 }

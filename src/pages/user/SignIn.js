@@ -147,7 +147,7 @@ class SignIn extends Component {
     return (
       <div>
         <p className="text-center">
-          <a className="btn btn-primary btn-lg"onClick={ () => { this.handleLogin() } }>
+          <a className="btn btn-primary btn-lg" onClick={ () => { this.handleLogin() } }>
             Sign in
           </a>
         </p>

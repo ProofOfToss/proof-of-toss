@@ -36,6 +36,7 @@ contract Token {
         balanceOf[msg.sender] = initialSupply;
     }
 
+    event Transfer(address indexed from, address indexed to, uint256 value);
     event TokenOperationEvent(string operation, address indexed from, address indexed to, uint256 value, address indexed _contract);
 
     // @brief Send coins
@@ -47,6 +48,7 @@ contract Token {
         balanceOf[msg.sender] -= _value;
         balanceOf[_to] += _value;
 
+        Transfer(msg.sender, _to, _value);
         TokenOperationEvent('transfer', msg.sender, _to, _value, 0);
     }
 
@@ -62,7 +64,8 @@ contract Token {
         balanceOf[_to] += _value;
         allowed[_from][msg.sender] -= _value;
 
-        TokenOperationEvent('transfer', msg.sender, _to, _value, 0);
+        Transfer(_from, _to, _value);
+        TokenOperationEvent('transfer', _from, _to, _value, 0);
     }
 
     // @brief Allow another contract to spend some tokens in your behalf

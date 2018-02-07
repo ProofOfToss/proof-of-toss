@@ -87,7 +87,9 @@
     "web3": "^0.20.3",
     "eth-sig-util": "^1.2.0",
     "ethereumjs-util": "^5.1.1",
-    "qrcode": "^1.2.0"
+    "qrcode": "^1.2.0",
+    "react-paginate": "^5.0.0",
+    "react-localize-redux": "^2.14.1"
   },
   "scripts": {
     "start_app": "truffle exec --network test scripts/app.js",

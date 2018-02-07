@@ -4,6 +4,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { Provider } from 'react-redux'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { refreshBalance } from './actions/token'
+import initLocale  from './components/locale/init'
 
 // Layouts
 import App from './App'
@@ -35,9 +36,12 @@ import { initWeb3, lockWallet, unlockWallet, changeAddress, web3LostConnection }
 
 // Put ReactDOM.render() to a function because we need to wrap the rendering with web3 detection
 function renderReactDOM(web3) {
+
   if (typeof web3 !== 'undefined') {
     store.dispatch(initWeb3(web3));
   }
+
+  initLocale();
 
   const history = syncHistoryWithStore(browserHistory, store);
 
@@ -56,6 +60,8 @@ function renderReactDOM(web3) {
           <Route path="sign-in" component={SignIn} />
 
           <Route path="wallet" component={Wallet} onEnter={ checkAuthorization } />
+          <Route path="wallet/:page" component={Wallet} onEnter={ checkAuthorization } />
+
 
           <Route path="play" component={Play} onEnter={ checkAuthorization } />
           <Route path="play/event" component={PlayEvent} onEnter={ checkAuthorization } />
