@@ -17,11 +17,12 @@ contract Main {
 
     event NewEvent(string eventName, uint256 indexed createdTimestamp, address indexed eventAddress, address indexed eventCreator);
 
-    function newEvent(string name, uint256 deposit, byte2 locale, byte32 category, Tag[] tags, string description,
-        uint operatorId, uint64 startDate, uint64 endDate, string sourceUrl, Result[] possibleResults
+    function newEvent(string name, uint256 deposit, bytes2 locale, bytes32 category, string[] tags, string description,
+        uint operatorId, uint64 startDate, uint64 endDate, string sourceUrl, string[] possibleResults
     ) returns (address) {
 
-        lastEvent = new Event(msg.sender, name, deposit, locale, category);
+        Event lastEvent = new Event(msg.sender, name, deposit, locale, category, tags, description, startDate, endDate,
+            sourceUrl, possibleResults);
         token.transferFrom(msg.sender, address(lastEvent), deposit);
         NewEvent(name, uint(now), address(lastEvent), msg.sender);
 

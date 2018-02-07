@@ -21,7 +21,25 @@ contract TestMain {
 
         token.approve(address(main), 1000);
 
-        address eventAddress = main.newEvent(1000);
+        string[] storage tags = new string[](2);
+        tags.push('tag_1');
+        tags.push('en');
+        tags.push('tag_2');
+        tags.push('en');
+
+        string[] storage possibleResults = new string[](8);
+        tags.push('description_1');
+        tags.push('customCooficient_1');
+        tags.push('0');
+        tags.push('0');
+        tags.push('description_2');
+        tags.push('customCooficient_2');
+        tags.push('0');
+        tags.push('0');
+
+        address eventAddress = main.newEvent('Tested event', 1000, 'en', 'category_id', tags, 'description', 1,
+            1517406195, 1580478195, 'source_url', possibleResults);
+
         Assert.equal(eventAddress != 0, true, "Event shod be created");
 
         Assert.equal(token.balanceOf(creator), 999999000, "Owner should have 999999000 tokens after event deposit");
@@ -37,6 +55,10 @@ contract TestMain {
 
         Assert.equal(token.balanceOf(creator), 1000000000, "Owner should have 1000000000 tokens after withdraw");
         Assert.equal(token.balanceOf(eventAddress), 0, "Event balance should be 0 after withdraw");
+    }
+
+    function testCreateNewEvent() {
+
     }
 
 }

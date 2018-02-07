@@ -1,30 +1,31 @@
-    pragma solidity ^0.4.2;
+pragma solidity ^0.4.2;
 
 import "./Token.sol";
 
 contract Event {
+    Token token;
     enum Statuses { Published, Accepted, Started, Judging, Finished }
 
     struct Tag {
-        byte2 locale;
         string name;
+        string locale;
     }
 
     struct Result {
         string description;
-        ufixed customCooficient;
-        unit betCount;
+        ufixed customCoefficient;
+        uint betCount;
         uint betSum;
     }
 
-
     uint constant public meta_version = 1;
     address public creator;
-    bool public status = Statuses.Published;
-    byte2 public locale;
-    byte32 public category;
+    Statuses public status = Statuses.Published;
+    bytes2 public locale;
+    bytes32 public category;
     Tag[] public tags;
     string public name;
+    uint256 public deposit;
     string public description;
     uint public startDate;
     uint public endDate;
@@ -34,31 +35,36 @@ contract Event {
 
 
 
-    function Event(address _creator, string _name, uint256 deposit, byte2 _locale, byte32 _category, string[] _tags,
-        string _name, string _description, uint _startDate, uint _endDate, string _sourceUrl, string[] _possibleResults
-
+    function Event(address _creator, string _name, uint256 _deposit, bytes2 _locale, bytes32 _category, string[] _tags,
+        string _description, uint _startDate, uint _endDate, string _sourceUrl, string[] _possibleResults
     ) {
         creator = _creator;
         name = _name;
         deposit = _deposit;
         locale = _locale;
         category = _category;
-        tags = transformTags(_tags);
-        name = _name;
         description = _description;
         startDate = _startDate;
         endDate = _endDate;
         sourceUrl = _sourceUrl;
-        possibleResults = transformPossibleResults(_possibleResults);
         createdTimestamp = block.timestamp;
+
+        transformTags(_tags);
+        transformPossibleResults(_possibleResults);
     }
 
-    function private transformTags(tags) {
-        return tags;
+    function transformTags(string[] _tags) private {
+
+        for(uint i = 0; i < _tags.length / 2; i++) {
+            tags.push(Tag(_tags[i * 2], _tags[i * 2 + 1]));
+        }
     }
 
-    function private transformPossibleResults(possibleResults) {
-        return possibleResults;
+    function transformPossibleResults(string[] _possibleResults) private {
+        for(uint i = 0; i < _possibleResults.length / 4; i++) {
+            possibleResults.push(Result(_possibleResults[i * 2], ufixed(_possibleResults[i * 2 + 1]),
+                uint256(_possibleResults[i * 2 + 2]), uint256(_possibleResults[i * 2 + 3])));
+        }
     }
 
     function getToken() constant returns (address) {
