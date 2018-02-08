@@ -23,20 +23,20 @@ contract Event {
     Statuses public status = Statuses.Published;
     bytes2 public locale;
     bytes32 public category;
-    Tag[] public tags;
+//    Tag[] public tags;
     string public name;
     uint public deposit;
     string public description;
     uint64 public startDate;
     uint64 public endDate;
     string public sourceUrl;
-    Result[] possibleResults;
+//    Result[] possibleResults;
     uint createdTimestamp;
 
 
 
-    function Event(address _creator, string _name, uint _deposit, bytes2 _locale, bytes32 _category, string[] _tags,
-        string _description, uint64 _startDate, uint64 _endDate, string _sourceUrl, string[] _possibleResults
+    function Event(address _creator, string _name, uint _deposit, bytes2 _locale, bytes32 _category,
+        string _description, uint64 _startDate, uint64 _endDate, string _sourceUrl
     ) {
         creator = _creator;
         name = _name;
@@ -49,22 +49,22 @@ contract Event {
         sourceUrl = _sourceUrl;
         createdTimestamp = block.timestamp;
 
-        transformTags(_tags);
-        transformPossibleResults(_possibleResults);
+//        transformTags(_tags);
+//        transformPossibleResults(_possibleResults);
     }
 
-    function transformTags(string[] _tags) private {
-        for(uint i = 0; i < _tags.length / 2; i++) {
-            tags.push(Tag(_tags[i * 2], _tags[i * 2 + 1]));
-        }
-    }
-
-    function transformPossibleResults(string[] _possibleResults) private {
-        for(uint i = 0; i < _possibleResults.length / 4; i++) {
-            possibleResults.push(Result(_possibleResults[i * 2], ufixed(_possibleResults[i * 2 + 1]),
-                uint(_possibleResults[i * 2 + 2]), uint(_possibleResults[i * 2 + 3])));
-        }
-    }
+//    function transformTags(string[] _tags) private {
+//        for(uint i = 0; i < _tags.length / 2; i++) {
+//            tags.push(Tag(_tags[i * 2], _tags[i * 2 + 1]));
+//        }
+//    }
+//
+//    function transformPossibleResults(string[] _possibleResults) private {
+//        for(uint i = 0; i < _possibleResults.length / 4; i++) {
+//            possibleResults.push(Result(_possibleResults[i * 2], ufixed(_possibleResults[i * 2 + 1]),
+//                uint(_possibleResults[i * 2 + 2]), uint(_possibleResults[i * 2 + 3])));
+//        }
+//    }
 
     function getToken() constant returns (address) {
         return address(token);
