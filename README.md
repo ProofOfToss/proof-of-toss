@@ -61,6 +61,37 @@ docker-compose up
 \# run frontend tests
 - npm run test
 
+## Как проверять exceptions из смарт-контрактов
+
+Для того, чтобы проверить ожидаемый exception, нужно сделать следующее:
+
+- в тестовом файле (.js) в начало файла вставить: ```import expectThrow from './helpers/expectThrow';```
+- функцию, внутри которой ожидается exception, нужно пометить, как async
+- проверка на exception осуществляется так: ```await expectThrow(function() { throw "Error"; });```
+
+Пример:
+
+```js
+import expectThrow from './helpers/expectThrow';
+
+var Main = artifacts.require("./Main.sol");
+var Event = artifacts.require("./Event.sol");
+var Token = artifacts.require("./Token.sol");
+
+contract('Token', function (accounts) {
+
+  it("should not allow to block tokens for the same address as msg.sender", function() {
+
+    return Token.deployed()
+      .then(async function (instance) {
+        await expectThrow(instance.block(accounts[0], 1000));
+      });
+
+  });
+
+});
+```
+
 # Инструкция "как работать с фронтендом"
 # Правила по стилю кодирования
 # Описание рабочего режима с git (что имеется введу под режимом c git?)

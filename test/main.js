@@ -40,7 +40,7 @@ contract('Main', function(accounts) {
 
     }).then(function() {
 
-      return main.newEvent(1000, {from: accounts[1]});
+      return main.newEvent(1000, 'test', {from: accounts[1]});
 
     }).then(function(eventAddress) {
 
