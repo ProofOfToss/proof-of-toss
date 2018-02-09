@@ -22,7 +22,7 @@ contract Main {
         uint operatorId, uint64 startDate, uint64 endDate, string sourceUrl
     ) returns (address) {
 
-        lastEvent = new Event(msg.sender, name, deposit, locale, category, description, startDate, endDate,
+        lastEvent = new Event(msg.sender, address(token), name, deposit, locale, category, description, startDate, endDate,
             sourceUrl);
         token.transferFrom(msg.sender, address(lastEvent), deposit);
         NewEvent(name, uint(now), address(lastEvent), msg.sender);

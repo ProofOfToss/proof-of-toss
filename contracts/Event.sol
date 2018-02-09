@@ -35,9 +35,10 @@ contract Event {
 
 
 
-    function Event(address _creator, string _name, uint _deposit, bytes2 _locale, bytes32 _category,
+    function Event(address _creator, address _token, string _name, uint _deposit, bytes2 _locale, bytes32 _category,
         string _description, uint64 _startDate, uint64 _endDate, string _sourceUrl
     ) {
+        token = Token(_token);
         creator = _creator;
         name = _name;
         deposit = _deposit;
