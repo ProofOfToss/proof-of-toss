@@ -24,6 +24,11 @@ contract Main {
 
         lastEvent = new Event(msg.sender, address(token), name, deposit, locale, category, description, startDate, endDate,
             sourceUrl);
+
+        if (token.allowanceToAllowBlocking(msg.sender, address(this))) {
+            token.allowBlocking(msg.sender, address(lastEvent));
+        }
+
         token.transferFrom(msg.sender, address(lastEvent), deposit);
         NewEvent(name, uint(now), address(lastEvent), msg.sender);
 

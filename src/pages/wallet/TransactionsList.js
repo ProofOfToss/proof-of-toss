@@ -29,7 +29,7 @@ class TransactionList extends Component {
   }
 
   componentWillMount() {
-    getMyTransactions(this.props.web3Local).then(transactions => {
+    getMyTransactions(this.props.web3).then(transactions => {
       this.setState({
         pageCount: transactions.length / this.state.perPage,
         transactions: transactions
@@ -94,7 +94,7 @@ class TransactionList extends Component {
 
 function mapPropsToState(state) {
   return {
-    web3Local: state.web3.web3Local
+    web3: state.web3.web3
   };
 }
 

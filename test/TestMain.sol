@@ -21,7 +21,7 @@ contract TestMain {
 
         token.approve(address(main), 1000);
 
-        address eventAddress = main.newEvent('Tested event', 1000, 'en', 'category_id', 'description', 1,
+        address eventAddress = main.newEvent('Test event', 1000, 'en', 'category_id', 'description', 1,
             1517406195, 1580478195, 'source_url');
 
         Assert.equal(eventAddress != 0, true, "Event shod be created");

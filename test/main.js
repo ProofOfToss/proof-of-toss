@@ -40,7 +40,7 @@ contract('Main', function(accounts) {
 
     }).then(function() {
 
-      return main.newEvent('Tested event', 1000, 'en', 'category_id', 'description', 1,
+      return main.newEvent('Test event', 1000, 'en', 'category_id', 'description', 1,
         1517406195, 1580478195, 'source_url', {from: accounts[1]});
 
     }).then(function(eventAddress) {
