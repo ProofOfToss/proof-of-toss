@@ -5,7 +5,8 @@ import "./Event.sol";
 
 contract Main {
     Token token;
-    Event lastEvent = new Event(0, 0, "");
+    uint8 version = 1;
+    Event lastEvent;
 
     function Main(address _token) {
         token = Token(_token);
@@ -17,8 +18,12 @@ contract Main {
 
     event NewEvent(string eventName, uint256 indexed createdTimestamp, address indexed eventAddress, address indexed eventCreator);
 
-    function newEvent(uint deposit, string name) returns (address) {
-        lastEvent = new Event(msg.sender, address(token), name);
+    function newEvent(string name, uint deposit, bytes2 locale, bytes32 category, string description,
+        uint operatorId, uint64 startDate, uint64 endDate, string sourceUrl
+    ) returns (address) {
+
+        lastEvent = new Event(msg.sender, address(token), name, deposit, locale, category, description, startDate, endDate,
+            sourceUrl);
 
         if (token.allowanceToAllowBlocking(msg.sender, address(this))) {
             token.allowBlocking(msg.sender, address(lastEvent));

@@ -21,7 +21,9 @@ contract TestMain {
 
         token.approve(address(main), 1000);
 
-        address eventAddress = main.newEvent(1000, "Test event");
+        address eventAddress = main.newEvent('Test event', 1000, 'en', 'category_id', 'description', 1,
+            1517406195, 1580478195, 'source_url');
+
         Assert.equal(eventAddress != 0, true, "Event shod be created");
 
         Assert.equal(token.balanceOf(creator), 999999000, "Owner should have 999999000 tokens after event deposit");
@@ -38,5 +40,4 @@ contract TestMain {
         Assert.equal(token.balanceOf(creator), 1000000000, "Owner should have 1000000000 tokens after withdraw");
         Assert.equal(token.balanceOf(eventAddress), 0, "Event balance should be 0 after withdraw");
     }
-
 }
