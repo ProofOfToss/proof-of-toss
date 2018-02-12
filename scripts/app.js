@@ -1,29 +1,230 @@
-// Import libraries we need.
-var fs = require('fs');
-var Web3 = require('web3');
-var contract = require('truffle-contract');
-var Config = require("truffle-config");
-var Resolver = require("truffle-resolver");
+import appConfig from '../src/data/config.json';
 
-module.exports = function(callback) {
-  var config = Config.detect({'network': 'test'});
-  var resolver = new Resolver(config);
-  var provider = config.provider;
+import _ from 'lodash';
+import fs from 'fs';
+import Web3 from 'web3';
+import contract from 'truffle-contract';
+import Config from 'truffle-config';
+import Resolver from 'truffle-resolver';
+
+import log4js from 'log4js';
+
+log4js.configure({
+  appenders: {
+    elasticsearch: { type: 'file', filename: 'elasticsearch.log' },
+    out: { type: 'stdout' },
+  },
+  categories: { default: { appenders: ['elasticsearch', 'out'], level: 'debug' } }
+});
+
+const logger = log4js.getLogger('elasticsearch');
+
+import AwsEsClient from '../src/util/esClient';
+
+const esClient = new AwsEsClient(
+  { log: 'error' },
+  appConfig.elasticsearch.esNode,
+  appConfig.elasticsearch.region,
+  appConfig.elasticsearch.accessKeyId,
+  appConfig.elasticsearch.secretAccessKey,
+  appConfig.elasticsearch.useSSL
+);
+
+const tagMapping = {
+  'properties': {
+    'name': {'type': 'text'},
+    'locale': {'type': 'keyword'},
+  }
+};
+
+const eventMapping = {
+  'properties': {
+    'name': {'type': 'text'},
+    'description': {'type': 'text'},
+    'address': {'type': 'keyword'},
+    'createdBy': {'type': 'keyword'},
+    'createdAt': {'type': 'date'},
+    'locale': {'type': 'keyword'},
+    'category': {'type': 'keyword'},
+    'startDate': {'type': 'date'},
+    'endDate': {'type': 'date'},
+    'sourceUrl': {'type': 'text'},
+    'tag': {'type': 'nested'},
+  }
+};
+
+(async (callback) => {
+  const web3 = new Web3();
+
+  const fatal = function() {
+    let _fatal = logger.fatal.bind(logger);
+
+    for (let key in arguments) {
+      if (arguments.hasOwnProperty(key)) {
+        _fatal = _fatal.bind(logger, arguments[key]);
+      }
+    }
+
+    _fatal();
+
+    callback();
+    process.exit(1);
+  };
+
+  const createIndex = async (force = false) => {
+    try {
+      let eventIndexExists = await esClient.indices.exists({index: 'toss_event'});
+      let tagIndexExists = await esClient.indices.exists({index: 'toss_tag'});
+
+      if (eventIndexExists && force) {
+        await esClient.indices.delete({index: 'toss_event'});
+        eventIndexExists = false;
+      }
+      if (tagIndexExists && force) {
+        await esClient.indices.delete({index: 'toss_tag'});
+        tagIndexExists = false;
+      }
+
+      eventIndexExists || await esClient.indices.create({
+        index: 'toss_event',
+        body: {
+          'mappings': {
+            'event': eventMapping,
+          }
+        },
+      });
+
+      tagIndexExists || await esClient.indices.create({
+        index: 'toss_tag',
+        body: {
+          'mappings': {
+            'tag': tagMapping,
+          }
+        },
+      });
+    } catch (error) {
+      fatal(error, 'failed to create index! exiting');
+    }
+  };
+
+  const updateMappings = async () => {
+    try {
+      await esClient.indices.putMapping({
+        index: 'toss_tag',
+        type: 'tag',
+        body: tagMapping,
+      });
+
+      await esClient.indices.putMapping({
+        index: 'toss_event',
+        type: 'event',
+        body: eventMapping,
+      });
+    } catch (error) {
+      fatal(error, 'failed to update mappings! exiting');
+    }
+  };
+
+  const convertBlockchainEventToEventDoc = async (_event) => {
+    try {
+      const event = Event.at(_event.eventAddress);
+
+      const locale = await event.locale({from: accounts[0]});
+      const category = await event.category({from: accounts[0]});
+      const description = await event.description({from: accounts[0]});
+      const startDate = await event.startDate({from: accounts[0]});
+      const endDate = await event.endDate({from: accounts[0]});
+      const sourceUrl = await event.sourceUrl({from: accounts[0]});
+
+      return {
+        'name': /*web3.toUtf8*/(_event.eventName),
+        'description': /*web3.toUtf8*/(description),
+        'address': _event.eventAddress,
+        'createdBy': _event.eventCreator,
+        'createdAt': _event.createdTimestamp.c,
+        'locale': /*web3.toUtf8*/(locale),
+        'category': /*web3.toUtf8*/(category),
+        'startDate': startDate.c,
+        'endDate': endDate.c,
+        'sourceUrl': /*web3.toUtf8*/(sourceUrl),
+        'tag': [],
+      };
+    } catch (err) {
+      logger.error(err);
+      throw err;
+    }
+  };
+
+  const indexEvents = async (events) => {
+    if (events.length === 0) return;
+
+    let body = [];
+
+    for(let i = 0; i < events.length; i++) {
+      try {
+        const doc = await convertBlockchainEventToEventDoc(events[i]);
+        body.push({ index: { _index: 'toss_event', _type: 'event', _id: doc.address } });
+        body.push(doc);
+      } catch (err) {
+        logger.error(err);
+        throw err;
+      }
+    }
+
+    await esClient.bulk({body}).then((result) => {
+      logger.info(result.items);
+    }).catch((error) => {
+      logger.error(error);
+    });
+  };
+
+  const indexTags = async (tags) => {
+    if (events.length === 0) return;
+
+    let body = [];
+
+    for(let i = 0; i < tags.length; i++) {
+      const doc = convertBlockchainEventToEventDoc(events[i]);
+      body.push({ index: { _index: 'toss_tag', _type: 'tag', _id: new Buffer(`${tags[i].locale} ${tags[i].name}`).toString('base64') } });
+      body.push(doc);
+    }
+
+    await esClient.bulk({body}).then((result) => {
+      logger.info(result.items);
+    }).catch((error) => {
+      logger.error(error);
+    });
+  };
+
+  await esClient.ping({
+    // ping usually has a 3000ms timeout
+    requestTimeout: 5000
+  }).then(() => {
+    logger.info('elasticsearch cluster is up');
+  }).catch((error) => {
+    fatal(error, 'elasticsearch cluster is down! exiting');
+  });
+
+  await createIndex(true);
+  await updateMappings();
+
+  const config = Config.detect({'network': appConfig.network});
+  const resolver = new Resolver(config);
+  const provider = config.provider;
 
   // Import our contract artifacts and turn them into usable abstractions.
-  // var token_artifacts = require('../build/contracts/Token.json');
-  // var main_artifacts = require('../build/contracts/Main.json');
-  // var event_artifacts = require('../build/contracts/Event.json');
-  // var Token = contract(token_artifacts);
-  // var Main = contract(main_artifacts);
-  // var Event = contract(event_artifacts);
+  // const token_artifacts = require('../build/contracts/Token.json');
+  // const main_artifacts = require('../build/contracts/Main.json');
+  // const event_artifacts = require('../build/contracts/Event.json');
+  // const Token = contract(token_artifacts);
+  // const Main = contract(main_artifacts);
+  // const Event = contract(event_artifacts);
   // Это НЕ РАБОТАЕТ – дичайшие глюки
 
-  var Main = resolver.require("../contracts/Main.sol");
-  var Event = resolver.require("../contracts/Event.sol");
-  var Token = resolver.require("../contracts/Token.sol");
+  const Main = resolver.require("../contracts/Main.sol");
+  const Event = resolver.require("../contracts/Event.sol");
+  const Token = resolver.require("../contracts/Token.sol");
 
-  var web3 = new Web3();
   web3.setProvider(provider);
 
   Token.setProvider(provider);
@@ -35,168 +236,111 @@ module.exports = function(callback) {
 
   web3.eth.defaultAccount = web3.eth.coinbase;
 
-  var main, token, event, accounts;
+  let main, token, event, accounts;
 
-  web3.eth.getAccounts(function(err, accs) {
-    if (err != null) {
-      alert("There was an error fetching your accounts.");
-      return;
+  web3.eth.getAccounts((err, accs) => {
+    if (err !== null) {
+      fatal(err, "There was an error fetching your accounts.");
     }
 
-    if (accs.length == 0) {
-      alert("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-      return;
+    if (accs.length === 0) {
+      fatal("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
     }
 
     accounts = accs;
 
-    //runTest(); // uncomment to create some events
-    getEvents();
+    // runTest(); // uncomment to create some events
+    // getEvents();
   });
 
-  function getEvents() {
-    var main;
-    var cachedEventsFile = './cachedEvents.json';
-    var cachedEvents = [], cacheConsistent = false;
+  try {
+    main = await Main.deployed();
+    token = await Token.deployed();
+  } catch (error) {
+    fatal(error);
+  }
 
-    if (fs.existsSync(cachedEventsFile)) {
-      try {
-        cachedEvents = JSON.parse(fs.readFileSync(cachedEventsFile, {encoding: "utf8"}));
-      } catch (e) {
-        console.log(e);
+  const cacheStateFile = './cache_state.json';
+
+  function readCacheState(defaultState) {
+    if (fs.existsSync(cacheStateFile)) {
+      return JSON.parse(fs.readFileSync(cacheStateFile, {encoding: "utf8"}));
+    } else {
+      return defaultState;
+    }
+  }
+
+  function writeCacheState(cacheState) {
+    return fs.writeFileSync(cacheStateFile, JSON.stringify(cacheState) + '\n');
+  }
+
+  let cacheState = readCacheState({lastBlock: appConfig.firstBlock});
+
+  logger.info(`Caching events starting from block #${cacheState.lastBlock} to block #${web3.eth.blockNumber}`);
+
+  const step = 10;
+
+  for(let i = cacheState.lastBlock; i < web3.eth.blockNumber; i += step) {
+    logger.info(`Caching events from block #${i}`);
+
+    const events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: cacheState.lastBlock + step});
+    events.get(async (error, log) => {
+      if (error) {
+        fatal(error);
       }
+
+      try {
+        await indexEvents(_.map(log, 'args'));
+      } catch (err) {
+        fatal(err);
+      }
+    });
+
+    cacheState.lastBlock = i;
+    writeCacheState(cacheState);
+  }
+
+  logger.info(`Watching for new events`);
+
+  let events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
+  const watchEvents = () => {
+    const retry = () => {
+      try {
+
+        events.stopWatching();
+        events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
+      } catch (err) {
+        logger.error(err);
+        return setTimeout(retry, 1000);
+      }
+
+      setTimeout(watchEvents, 1000);
     };
 
-    Main.deployed().then(function (instance) {
+    try {
 
-      main = instance;
-
-      // return main.allEvents({fromBlock: 0, toBlock: 'latest'});
-      return main.NewEvent({}, {fromBlock: 0, toBlock: 'latest'});
-
-    }).then(function (events) {
-      
-      console.log(events);
-
-      events.get(function (error, log) {
-        if (!error) {
-          // console.log(log);
-
-          if(cachedEvents.length == log.length) {
-            cacheConsistent = true;
-          } else {
-            cachedEvents = [];
-            log.forEach(function (event) {
-              cachedEvents.push(event.args);
-            });
-            fs.writeFileSync(cachedEventsFile, JSON.stringify(cachedEvents) + '\n');
-          }
-
-          if(cacheConsistent) {
-            console.log('Loaded cached data');
-          } else {
-            console.log('Cache updated');
-          }
-
-          cachedEvents.forEach(function (event) {
-            console.log(event);
-          });
-        } else {
-          console.log(error);
+      events.watch(async (error, response) => {
+        if (error) {
+          logger.error(error, `Error while watching for new events starting from block #${cacheState.lastBlock}`);
+          return retry();
         }
-      });
 
-      //callback();
-      //process.exit();
-
-    });
-  }
-
-  function runTest() {
-    Token.deployed().then(function (instance) {
-
-      token = instance;
-
-      return Main.deployed();
-
-    }).then(function (instance) {
-
-      main = instance;
-
-      main.NewEvent().watch(function(error, result){
-        console.log('AAAAAAA');
-        if (!error) {
-          console.log(result);
-        } else {
-          console.log(error);
+        try {
+          await indexEvents([response.args]);
+        } catch (err) {
+          logger.error(err, `Error while indexing new event at block #${response.blockNumber}`);
+          return retry();
         }
+
+        cacheState.lastBlock = response.blockNumber - 1;
+        writeCacheState(cacheState);
       });
 
-      return token.transfer(accounts[1], 10000, {from: accounts[0]});
+    } catch (err) {
+      logger.error(err);
+      return setTimeout(retry, 1000);
+    }
+  };
 
-    }).then(function (instance) {
-
-      return main.getToken();
-
-    }).then(function(tokenAddress) {
-
-      console.log(`tokenSC address: ${tokenAddress} ${token.address}`);
-
-      return token.approve(main.address, 1000, {from: accounts[1]});
-
-    }).then(function () {
-
-      console.log(`mainSC address: ${main.address}`);
-
-      return main.newEvent(1000, "test", {from: accounts[1]});
-
-    }).then(function () {
-
-      return main.getLastEvent({from: accounts[1]});
-
-    }).then(function (eventAddress) {
-
-      console.log(`event address: ${eventAddress}`);
-
-      event = Event.at(eventAddress);
-
-      return event.getCreatedTimestamp({from: accounts[1]});
-
-    }).then(function (timestamp) {
-
-      console.log(`timestamp: ${timestamp.toNumber()}`);
-
-    }).then(function () {
-
-      return token.balanceOf(event.address, {from: accounts[1]});
-
-    }).then(function (balance) {
-
-      console.log(`event balance: ${balance}`);
-
-    }).then(function () {
-
-      return main.allEvents();
-
-    }).then(function (events) {
-
-      events.get(function (error, log) {
-        if (!error)
-          console.log(log);
-        else
-          console.log(error);
-      });
-
-      //callback();
-      //process.exit();
-
-    }).catch(function (e) {
-
-      console.log(e);
-
-      callback();
-      process.exit();
-
-    });
-  }
-}
+  watchEvents();
+})(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error); });
