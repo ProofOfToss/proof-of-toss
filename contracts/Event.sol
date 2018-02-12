@@ -1,5 +1,6 @@
 pragma solidity ^0.4.2;
 
+import "./installed_contracts/jsmnsol-lib/contracts/JsmnSolLib.sol";
 import "./Token.sol";
 
 contract Event {
@@ -23,7 +24,7 @@ contract Event {
     Statuses public status = Statuses.Published;
     bytes2 public locale;
     bytes32 public category;
-//    Tag[] public tags;
+    Tag[] public tags;
     string public name;
     uint public deposit;
     string public description;
@@ -36,7 +37,7 @@ contract Event {
 
 
     function Event(address _creator, address _token, string _name, uint _deposit, bytes2 _locale, bytes32 _category,
-        string _description, uint64 _startDate, uint64 _endDate, string _sourceUrl
+        string _description, uint64 _startDate, uint64 _endDate, string _sourceUrl, string memory _tags
     ) {
         token = Token(_token);
         creator = _creator;
@@ -50,8 +51,32 @@ contract Event {
         sourceUrl = _sourceUrl;
         createdTimestamp = block.timestamp;
 
+        parseTags(_tags);
+
 //        transformTags(_tags);
 //        transformPossibleResults(_possibleResults);
+    }
+
+    function parseTags(string _tags) private {
+        uint returnValue;
+        JsmnSolLib.Token[] memory tokens;
+        uint actualNum;
+        bytes2 localeBytes2;
+
+        (returnValue, tokens, actualNum) = JsmnSolLib.parse(_tags, 3);
+
+        for(uint i = 0; i < 3; i++) {
+            string memory localeString = JsmnSolLib.getBytes(_tags, tokens[i * 2 + 1].start, tokens[i * 2 + 2].end);
+
+            assembly {
+                localeBytes2 := mload(add(localeString, 2))
+            }
+
+            tags.push(Tag(
+                JsmnSolLib.getBytes(_tags, tokens[i * 2 + 1].start, tokens[i * 2 + 2].end),
+                localeBytes2
+            ));
+        }
     }
 
 //    function transformTags(string[] _tags) private {
