@@ -1,9 +1,12 @@
 pragma solidity ^0.4.2;
 
-import "./installed_contracts/jsmnsol-lib/contracts/JsmnSolLib.sol";
+import "./installed_contracts/strings.sol";
+import "./installed_contracts/JsmnSolLib.sol";
 import "./Token.sol";
 
 contract Event {
+    using strings for *;
+
     Token token;
     enum Statuses { Published, Accepted, Started, Judging, Finished }
 
@@ -14,7 +17,7 @@ contract Event {
 
     struct Result {
         string description;
-        ufixed customCoefficient;
+        uint customCoefficient;
         uint betCount;
         uint betSum;
     }
@@ -24,15 +27,16 @@ contract Event {
     Statuses public status = Statuses.Published;
     bytes2 public locale;
     bytes32 public category;
-    Tag[] public tags;
     string public name;
     uint public deposit;
     string public description;
     uint64 public startDate;
     uint64 public endDate;
     string public sourceUrl;
-//    Result[] possibleResults;
     uint createdTimestamp;
+
+    Tag[3] public tags;
+    Result[3] possibleResults;
 
 
 
@@ -52,45 +56,27 @@ contract Event {
         createdTimestamp = block.timestamp;
 
         parseTags(_tags);
-
-//        transformTags(_tags);
-//        transformPossibleResults(_possibleResults);
+//        parseResults(_results);
     }
 
     function parseTags(string _tags) private {
-        uint returnValue;
-        JsmnSolLib.Token[] memory tokens;
-        uint actualNum;
-        bytes2 localeBytes2;
-
-        (returnValue, tokens, actualNum) = JsmnSolLib.parse(_tags, 3);
-
+        var tagsSlice = _tags.toSlice();
+        var delimiter = ".".toSlice();
         for(uint i = 0; i < 3; i++) {
-            string memory localeString = JsmnSolLib.getBytes(_tags, tokens[i * 2 + 1].start, tokens[i * 2 + 2].end);
+
+            if(tagsSlice.len() < 2) break;
+
+            //Convert locale to bytes2
+            bytes2 localeBytes2;
+            string memory localeString = tagsSlice.split(delimiter).toString();
 
             assembly {
                 localeBytes2 := mload(add(localeString, 2))
             }
 
-            tags.push(Tag(
-                JsmnSolLib.getBytes(_tags, tokens[i * 2 + 1].start, tokens[i * 2 + 2].end),
-                localeBytes2
-            ));
+            tags[i] = Tag(tagsSlice.split(delimiter).toString(), localeBytes2);
         }
     }
-
-//    function transformTags(string[] _tags) private {
-//        for(uint i = 0; i < _tags.length / 2; i++) {
-//            tags.push(Tag(_tags[i * 2], _tags[i * 2 + 1]));
-//        }
-//    }
-//
-//    function transformPossibleResults(string[] _possibleResults) private {
-//        for(uint i = 0; i < _possibleResults.length / 4; i++) {
-//            possibleResults.push(Result(_possibleResults[i * 2], ufixed(_possibleResults[i * 2 + 1]),
-//                uint(_possibleResults[i * 2 + 2]), uint(_possibleResults[i * 2 + 3])));
-//        }
-//    }
 
     function getToken() constant returns (address) {
         return address(token);

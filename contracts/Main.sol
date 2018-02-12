@@ -19,7 +19,7 @@ contract Main {
     event NewEvent(string eventName, uint256 indexed createdTimestamp, address indexed eventAddress, address indexed eventCreator);
 
     function newEvent(string name, uint deposit, bytes2 locale, bytes32 category, string description,
-        uint operatorId, uint64 startDate, uint64 endDate, string sourceUrl, string tags
+        uint operatorId, uint64 startDate, uint64 endDate, string sourceUrl, string tags, string results
     ) returns (address) {
 
         lastEvent = new Event(msg.sender, address(token), name, deposit, locale, category, description, startDate, endDate,
