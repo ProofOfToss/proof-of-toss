@@ -23,7 +23,7 @@ contract Main {
     ) returns (address) {
 
         lastEvent = new Event(msg.sender, address(token), name, deposit, locale, category, description, startDate, endDate,
-            sourceUrl, tags);
+            sourceUrl, tags, results);
 
         if (token.allowanceToAllowBlocking(msg.sender, address(this))) {
             token.allowBlocking(msg.sender, address(lastEvent));

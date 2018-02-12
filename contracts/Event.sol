@@ -38,10 +38,8 @@ contract Event {
     Tag[3] public tags;
     Result[3] possibleResults;
 
-
-
     function Event(address _creator, address _token, string _name, uint _deposit, bytes2 _locale, bytes32 _category,
-        string _description, uint64 _startDate, uint64 _endDate, string _sourceUrl, string memory _tags
+        string _description, uint64 _startDate, uint64 _endDate, string _sourceUrl, string memory _tags, string _results
     ) {
         token = Token(_token);
         creator = _creator;
@@ -56,7 +54,7 @@ contract Event {
         createdTimestamp = block.timestamp;
 
         parseTags(_tags);
-//        parseResults(_results);
+        parseResults(_results);
     }
 
     function parseTags(string _tags) private {
@@ -75,6 +73,22 @@ contract Event {
             }
 
             tags[i] = Tag(tagsSlice.split(delimiter).toString(), localeBytes2);
+        }
+    }
+
+    function parseResults(string _results) private {
+        var resultsSlice = _results.toSlice();
+        var delimiter = ".".toSlice();
+        for(uint i = 0; i < 3; i++) {
+
+            if(resultsSlice.len() < 4) break;
+
+            possibleResults[i] = Result(
+                resultsSlice.split(delimiter).toString(),
+                uint(JsmnSolLib.parseInt(resultsSlice.split(delimiter).toString())),
+                uint(JsmnSolLib.parseInt(resultsSlice.split(delimiter).toString())),
+                uint(JsmnSolLib.parseInt(resultsSlice.split(delimiter).toString()))
+            );
         }
     }
 
