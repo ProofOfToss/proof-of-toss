@@ -129,12 +129,12 @@ const eventMapping = {
     try {
       const event = Event.at(_event.eventAddress);
 
-      const locale = await event.locale({from: accounts[0]});
-      const category = await event.category({from: accounts[0]});
-      const description = await event.description({from: accounts[0]});
-      const startDate = await event.startDate({from: accounts[0]});
-      const endDate = await event.endDate({from: accounts[0]});
-      const sourceUrl = await event.sourceUrl({from: accounts[0]});
+      const locale = await event.locale();
+      const category = await event.category();
+      const description = await event.description();
+      const startDate = await event.startDate();
+      const endDate = await event.endDate();
+      const sourceUrl = await event.sourceUrl();
 
       return {
         'name': /*web3.toUtf8*/(_event.eventName),
@@ -179,14 +179,13 @@ const eventMapping = {
   };
 
   const indexTags = async (tags) => {
-    if (events.length === 0) return;
+    if (tags.length === 0) return;
 
     let body = [];
 
     for(let i = 0; i < tags.length; i++) {
-      const doc = convertBlockchainEventToEventDoc(events[i]);
       body.push({ index: { _index: 'toss_tag', _type: 'tag', _id: new Buffer(`${tags[i].locale} ${tags[i].name}`).toString('base64') } });
-      body.push(doc);
+      body.push({ name: tags[i].name, locale: tags[i].locale });
     }
 
     await esClient.bulk({body}).then((result) => {
