@@ -30,29 +30,6 @@ const esClient = new AwsEsClient(
   appConfig.elasticsearch.useSSL
 );
 
-const tagMapping = {
-  'properties': {
-    'name': {'type': 'text'},
-    'locale': {'type': 'keyword'},
-  }
-};
-
-const eventMapping = {
-  'properties': {
-    'name': {'type': 'text'},
-    'description': {'type': 'text'},
-    'address': {'type': 'keyword'},
-    'createdBy': {'type': 'keyword'},
-    'createdAt': {'type': 'date'},
-    'locale': {'type': 'keyword'},
-    'category': {'type': 'keyword'},
-    'startDate': {'type': 'date'},
-    'endDate': {'type': 'date'},
-    'sourceUrl': {'type': 'text'},
-    'tag': {'type': 'nested'},
-  }
-};
-
 (async (callback) => {
   const web3 = new Web3();
 
@@ -69,60 +46,6 @@ const eventMapping = {
 
     callback();
     process.exit(1);
-  };
-
-  const createIndex = async (force = false) => {
-    try {
-      let eventIndexExists = await esClient.indices.exists({index: 'toss_event'});
-      let tagIndexExists = await esClient.indices.exists({index: 'toss_tag'});
-
-      if (eventIndexExists && force) {
-        await esClient.indices.delete({index: 'toss_event'});
-        eventIndexExists = false;
-      }
-      if (tagIndexExists && force) {
-        await esClient.indices.delete({index: 'toss_tag'});
-        tagIndexExists = false;
-      }
-
-      eventIndexExists || await esClient.indices.create({
-        index: 'toss_event',
-        body: {
-          'mappings': {
-            'event': eventMapping,
-          }
-        },
-      });
-
-      tagIndexExists || await esClient.indices.create({
-        index: 'toss_tag',
-        body: {
-          'mappings': {
-            'tag': tagMapping,
-          }
-        },
-      });
-    } catch (error) {
-      fatal(error, 'failed to create index! exiting');
-    }
-  };
-
-  const updateMappings = async () => {
-    try {
-      await esClient.indices.putMapping({
-        index: 'toss_tag',
-        type: 'tag',
-        body: tagMapping,
-      });
-
-      await esClient.indices.putMapping({
-        index: 'toss_event',
-        type: 'event',
-        body: eventMapping,
-      });
-    } catch (error) {
-      fatal(error, 'failed to update mappings! exiting');
-    }
   };
 
   const convertBlockchainEventToEventDoc = async (_event) => {
@@ -204,9 +127,6 @@ const eventMapping = {
     fatal(error, 'elasticsearch cluster is down! exiting');
   });
 
-  await createIndex(true);
-  await updateMappings();
-
   const config = Config.detect({'network': appConfig.network});
   const resolver = new Resolver(config);
   const provider = config.provider;
@@ -235,7 +155,7 @@ const eventMapping = {
 
   web3.eth.defaultAccount = web3.eth.coinbase;
 
-  let main, token, event, accounts;
+  let main, token, accounts;
 
   web3.eth.getAccounts((err, accs) => {
     if (err !== null) {
@@ -247,9 +167,6 @@ const eventMapping = {
     }
 
     accounts = accs;
-
-    // runTest(); // uncomment to create some events
-    // getEvents();
   });
 
   try {
