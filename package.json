@@ -66,7 +66,9 @@
     "webpack": "1.14.0",
     "webpack-dev-server": "1.16.2",
     "webpack-manifest-plugin": "1.1.0",
-    "whatwg-fetch": "1.0.0"
+    "whatwg-fetch": "1.0.0",
+    "aws-sdk": "^2.194.0",
+    "glob": "^7.1.2"
   },
   "dependencies": {
     "jquery": "^3.2.1",
@@ -95,6 +97,7 @@
     "start_app": "truffle exec --network test scripts/app.js",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
+    "deploy": "node scripts/deploy.js",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
