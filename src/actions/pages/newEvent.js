@@ -8,9 +8,6 @@ export const saveEvent = (formData) => {
   return (dispatch, getState) => {
     dispatch({type: SAVE_EVENT, formData: formData});
 
-    console.log(getState());
-    console.log(formData);
-
     const web3 = getState().web3.web3;
     let mainContract;
     let tokenContract;
@@ -32,8 +29,6 @@ export const saveEvent = (formData) => {
       }).then((instance) => {
 
         tokenContract = instance;
-        console.log(mainContract);
-        console.log(tokenContract);
 
         return tokenContract.approve(mainContract.address, formData.deposit, {from: getState().user.address});
 
@@ -42,13 +37,12 @@ export const saveEvent = (formData) => {
         return mainContract.newEvent(formData.deposit, formData.name, {from: getState().user.address});
 
       }).then(function () {
-        console.log(arguments);
 
         return mainContract.getLastEvent({from: getState().user.address});
 
       }).then((eventAddress) => {
 
-        // self.setState({eventAddress: eventAddress});
+        dispatch({type: SAVED_EVENT});
 
       });
     })

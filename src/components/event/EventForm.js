@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import store from '../../store';
 import Link/*, { LinkedComponent }*/ from 'valuelink'
 import { Input/*, TextArea, Select, Radio, Checkbox*/ } from 'valuelink/tags'
 import { getTranslate } from 'react-localize-redux';
@@ -10,10 +9,10 @@ import { saveEvent } from '../../actions/pages/newEvent'
 
 class EventForm extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.handleTagsChange = this.handleTagsChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
+    this.handleTagsChange = this.handleTagsChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
 
     this.state = {
       saving: false,
@@ -60,8 +59,6 @@ class EventForm extends Component {
       <div className="form-group">
         <label htmlFor="event[tags]">{ this.props.translate('pages.new_event.form.tags')}*</label>
         <TagsInput value={this.state.formData.tags} onChange={this.handleTagsChange} />
-        {/*<Input valueLink={ tagsLink } type='text' id="event[tags]" className='form-control' data-role="tagsinput" />*/}
-        {/*<span id="helpBlock" className="help-block">{ depositLink.error || '' }</span>*/}
       </div>
       <button type="submit" className="btn btn-default" disabled={nameLink.error || depositLink.error}>
         { this.props.translate('pages.new_event.form.submit')}
@@ -83,6 +80,6 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(saveEvent(formData))
     }
   }
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(EventForm);
