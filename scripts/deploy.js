@@ -5,11 +5,15 @@ const Cloudfront = require('aws-sdk/clients/cloudfront');
 const fs =  require('fs');
 const glob = require("glob");
 
+const config = require('../config/deploy_config.js');
+
 AWS.config.logger = console;
+
+console.log(config);
 
 const s3 = new S3({
   params: {
-    Bucket: 'proof-of-toss'
+    Bucket: config.bucketName
   }
 });
 
@@ -59,12 +63,14 @@ getFilesListFromBasket.then(data => {
       {
         name: './build_webpack/index.html',
         key: 'index.html',
-        contentType: 'text/html'
+        contentType: 'text/html',
+        cacheControl: 'no-cache'
       },
       {
         name: './build_webpack/favicon.ico',
         key: 'favicon.ico',
-        contentType: 'text/html'
+        contentType: 'text/html',
+        cacheControl: 'no-cache'
       }
     ];
 
@@ -72,7 +78,8 @@ getFilesListFromBasket.then(data => {
       files.push({
         name: file,
         key: file.replace(/.\/build_webpack\//, ''),
-        contentType: 'application/javascript'
+        contentType: 'application/javascript',
+        cacheControl: 'no-cache'
       });
     });
 
@@ -83,7 +90,12 @@ getFilesListFromBasket.then(data => {
     files.forEach(file => {
       const promise = new Promise((resolve, reject) => {
         fs.readFile(file.name, (err, data) => {
-          let params = {Key: file.key, Body: data, ContentType: file.contentType };
+          let params = {
+            Key: file.key,
+            Body: data,
+            ContentType: file.contentType,
+            CacheControl: file.cacheControl
+          };
           s3.putObject(params).promise().then(data => {
               resolve();
           }).catch(error => {
@@ -99,7 +111,7 @@ getFilesListFromBasket.then(data => {
       console.log('All files uploaded');
 
       const params = {
-        DistributionId: 'E891D72CH6201',
+        DistributionId: config.cloudFrontDistributionID,
         InvalidationBatch: {
           CallerReference: Date.now().toString(),
           Paths: {
@@ -113,6 +125,7 @@ getFilesListFromBasket.then(data => {
 
       cloudfront.createInvalidation(params).promise().then(data => {
         console.log('Invalidation success');
+        console.log(data);
       }).catch(err => {
         console.log('Invalidation error:');
         console.log(err);

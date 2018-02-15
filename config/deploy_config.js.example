@@ -1,0 +1,4 @@
+module.exports = {
+  bucketName: 'proof-of-toss',
+  cloudFrontDistributionID: 'E891D72CH6201'
+};
