@@ -40,11 +40,12 @@ contract('Main', function(accounts) {
 
     }).then(function() {
 
+      const eventData = 'category_id.en.1517406195.1580478195';
       const tags = 'en.tag1_name.en.tag2_name.en.tag3_name';
       const results = '"result_description_1.10.5.7"';
 
-      return main.newEvent('Test event', 1000, 'en', 'category_id', 'description', 1,
-        1517406195, 1580478195, 'source_url', tags, results, {from: accounts[1]});
+      return main.newEvent('Test event', 1000, 'description', 1, eventData,
+        'source_url', tags, results, {from: accounts[1]});
 
     }).then(function(eventAddress) {
 
