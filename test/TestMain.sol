@@ -21,8 +21,8 @@ contract TestMain {
 
         token.approve(address(main), 1000);
 
-        address eventAddress = main.newEvent('Test event', 1000, 'en', 'category_id', 'description', 1,
-            1517406195, 1580478195, 'source_url', 'en.tag1_name.en.tag2_name.en.tag3_name',
+        address eventAddress = main.newEvent('Test event', 1000, 'description', 1,
+            'category_id.en.1517406195.1580478195', 'source_url', 'en.tag1_name.en.tag2_name.en.tag3_name',
             "result_description_1.10.5.7"
         );
 

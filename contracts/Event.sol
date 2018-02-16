@@ -35,32 +35,57 @@ contract Event {
     string public sourceUrl;
     uint createdTimestamp;
 
-    Tag[3] public tags;
+    Tag[10] public tags;
     Result[3] possibleResults;
 
-    function Event(address _creator, address _token, string _name, uint _deposit, bytes2 _locale, bytes32 _category,
-        string _description, uint64 _startDate, uint64 _endDate, string _sourceUrl, string memory _tags, string _results
+    function Event(address _creator, address _token, string _name, uint _deposit,
+        string _description, string memory _dates, string _sourceUrl, string memory _tags, string memory _results
     ) {
         token = Token(_token);
         creator = _creator;
         name = _name;
         deposit = _deposit;
-        locale = _locale;
-        category = _category;
         description = _description;
-        startDate = _startDate;
-        endDate = _endDate;
         sourceUrl = _sourceUrl;
         createdTimestamp = block.timestamp;
 
+        parseData(_tags);
         parseTags(_tags);
         parseResults(_results);
+    }
+
+    function parseData(string _data) private {
+        var dataSlice = _data.toSlice();
+        var delimiter = ".".toSlice();
+
+        //Convert category to bytes32
+        bytes32 categoryBytes32;
+        string memory categoryString = dataSlice.split(delimiter).toString();
+
+        assembly {
+            categoryBytes32 := mload(add(localeString, 32))
+        }
+
+        category = categoryBytes32;
+
+        //Convert locale to bytes2
+        bytes2 localeBytes2;
+        string memory localeString = dataSlice.split(delimiter).toString();
+
+        assembly {
+            localeBytes2 := mload(add(localeString, 2))
+        }
+
+        locale = localeBytes2;
+
+        startDate = uint64(JsmnSolLib.parseInt(dataSlice.split(delimiter).toString()));
+        endDate = uint64(JsmnSolLib.parseInt(dataSlice.split(delimiter).toString()));
     }
 
     function parseTags(string _tags) private {
         var tagsSlice = _tags.toSlice();
         var delimiter = ".".toSlice();
-        for(uint i = 0; i < 3; i++) {
+        for(uint i = 0; i < 10; i++) {
 
             if(tagsSlice.len() < 2) break;
 
