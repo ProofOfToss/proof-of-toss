@@ -70,7 +70,8 @@
     "webpack": "1.14.0",
     "webpack-dev-server": "1.16.2",
     "webpack-manifest-plugin": "1.1.0",
-    "whatwg-fetch": "1.0.0"
+    "whatwg-fetch": "1.0.0",
+    "redux-logger": "^3.0.6"
   },
   "dependencies": {
     "aws-sdk": "^2.192.0",
@@ -96,7 +97,14 @@
     "truffle-resolver": "^4.0.1",
     "uport-connect": "^0.6.1",
     "valuelink": "^1.5.4",
-    "web3": "^0.20.3"
+    "web3": "^0.20.3",
+    "eth-sig-util": "^1.2.0",
+    "ethereumjs-util": "^5.1.1",
+    "qrcode": "^1.2.0",
+    "react-paginate": "^5.0.0",
+    "react-localize-redux": "^2.14.1",
+    "bootstrap-tagsinput": "^0.7.1",
+    "react-tagsinput": "^3.19.0"
   },
   "scripts": {
     "start_app": "babel-node scripts/app.js",

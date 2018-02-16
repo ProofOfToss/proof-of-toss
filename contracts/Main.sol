@@ -18,12 +18,12 @@ contract Main {
 
     event NewEvent(string eventName, uint256 indexed createdTimestamp, address indexed eventAddress, address indexed eventCreator);
 
-    function newEvent(string name, uint deposit, bytes2 locale, bytes32 category, string description,
-        uint operatorId, uint64 startDate, uint64 endDate, string sourceUrl
+    function newEvent(string name, uint deposit, string description,
+        uint operatorId, string eventData, string sourceUrl, string tags, string results
     ) returns (address) {
 
-        lastEvent = new Event(msg.sender, address(token), name, deposit, locale, category, description, startDate, endDate,
-            sourceUrl);
+        lastEvent = new Event(msg.sender, address(token), name, deposit, description, eventData,
+            sourceUrl, tags, results);
 
         if (token.allowanceToAllowBlocking(msg.sender, address(this))) {
             token.allowBlocking(msg.sender, address(lastEvent));
