@@ -12,6 +12,7 @@
   },
   "validation": {
     "required": "Is required",
+    "min_length": "This value is too short. It should have ${ min } character or more.",
     "event": {
       "name_is_too_short": "Name is too short min 3 symbols",
       "deposit_is_nan": "Deposit should be a number",
@@ -46,12 +47,32 @@
     "new_event": {
       "form":
       {
+        "language": "Language",
+        "category": "Category",
         "name": "Name",
+        "bid_type": "Bid type",
         "deposit": "Deposit",
         "submit": "Submit",
-        "tags": "Tags"
+        "tags": "Tags",
+        "time_zone": "Time zone",
+        "date_start": "Start time",
+        "date_end": "End time",
+        "description": "Description",
+        "source_url": "Source url",
+        "source_url_add_new": "Add new",
+        "source_url_remove": "Remove",
+        "results": "Results",
+        "results_add_new": "Add new",
+        "results_remove": "Remove",
+        "results_move_up": "Up",
+        "results_move_down": "Down"
       }
     }
+  },
+  "categories": {
+    "sport": "Sport",
+    "economy": "Economy",
+    "weather": "Weather"
   }
 
 }

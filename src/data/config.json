@@ -16,5 +16,10 @@
       {"name": "English", "code": "en"},
       {"name": "Russian", "code": "ru"}
     ]
-  }
+  },
+  "categories": [
+    {"id": 1, "name": "sport"},
+    {"id": 2, "name": "economy"},
+    {"id": 3, "name": "weather"}
+  ]
 }
