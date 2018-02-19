@@ -18,7 +18,7 @@ contract Token {
     string public standard = 'Token 0.1';
     string public name = 'TOSS';                        //!< name for display purporses
     string public symbol = 'TOSS';                      //!< symbol for display purporses
-    uint8 public decimals = 8;                          //!< amount of decimals for display purporses
+    uint8 public decimals = 4;                          //!< amount of decimals for display purporses
 
     mapping (address => uint256) public balanceOf;      //!< array of all balances
     mapping (address => mapping (address => uint256)) public allowed;
@@ -31,7 +31,7 @@ contract Token {
         preSaleTransferEnd = _preSaleTransferEnd;
         icoSoftcap = _icoSoftcap;
 
-        uint256 initialSupply = 1000000000;
+        uint256 initialSupply = 1000000000; // 100000.0000 TOSS
         totalTokens = initialSupply;
         balanceOf[msg.sender] = initialSupply;
     }
