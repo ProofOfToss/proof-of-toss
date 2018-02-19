@@ -189,6 +189,23 @@ class ModalSend extends Component {
       sumLink
         .check( v => v, strings().validation.required)
         .check( v => !isNaN(parseFloat(v)), strings().validation.token.sum_is_nan)
+        .check( v => v.indexOf(',') === -1, strings().validation.token.invalid_delimiter)
+        .check( v => {
+          let splittedValue = (parseFloat(v) + '').split('.');
+
+          if (splittedValue.length === 1) {
+            // no decimals
+            return parseFloat(splittedValue[0]) === parseFloat(v);
+          }
+
+          if (splittedValue.length === 0 || splittedValue.length > 2) {
+            // something is wrong (0 means no value is supplied, >2 means weird things)
+            return false;
+          }
+
+          // check max decimal points
+          return splittedValue[1].length <= 4;
+        }, strings().validation.token.wrong_precision )
         .check( v => parseFloat(v) >= config.view.token_min_send_value, strings().validation.token.sum_is_too_small)
         .check(
           v => denormalizeBalance(v, this.props.decimals) <= this.props.balance,
