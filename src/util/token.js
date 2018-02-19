@@ -3,6 +3,14 @@ import TokenContract from '../../build/contracts/Token.json'
 const contract = require('truffle-contract');
 const token = contract(TokenContract);
 
+function formatBalance(balance, decimals) {
+  return (parseInt(balance) / Math.pow(10, decimals)).toFixed(decimals, 10);
+}
+
+function denormalizeBalance(balance, decimals) {
+  return parseFloat(balance) * Math.pow(10, decimals);
+}
+
 function getMyBalance(web3) {
   token.setProvider(web3.currentProvider);
 
@@ -12,6 +20,18 @@ function getMyBalance(web3) {
     })
     .then((balance) => {
       return balance.toNumber();
+    });
+}
+
+function getDecimals(web3) {
+  token.setProvider(web3.currentProvider);
+
+  return token.deployed()
+    .then((instance) => {
+      return instance.decimals();
+    })
+    .then((decimals) => {
+      return decimals.toNumber();
     });
 }
 
@@ -95,7 +115,7 @@ function calculateGasPrice(web3, transactionHash) {
 }
 
 function getMyBlockedBalance(/*web3*/) {
-  return Promise.resolve(0.1); // TODO Real logic after smart-contract implementation
+  return Promise.resolve(1); // TODO Real logic after smart-contract implementation
 }
 
 function getMySBTCBalance(web3) {
@@ -113,4 +133,12 @@ function getMySBTCBalance(web3) {
   return promise;
 }
 
-export { getMyBalance, getMyBlockedBalance, getMySBTCBalance, getMyTransactions };
+export {
+  getMyBalance,
+  getMyBlockedBalance,
+  getMySBTCBalance,
+  getMyTransactions,
+  getDecimals,
+  formatBalance,
+  denormalizeBalance
+};

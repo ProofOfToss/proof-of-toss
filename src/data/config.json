@@ -8,8 +8,9 @@
     "token_symbol": "TOSS",
     "currency_symbol": "SBTC",
     "token_precision": 2,
-    "currency_precision": 8,
-    "gwei_precision": 2
+    "currency_precision": 4,
+    "gwei_precision": 2,
+    "token_min_send_value": 0.0001
   },
   "languages": {
     "list": [
