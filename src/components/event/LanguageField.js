@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import Link from 'valuelink'
 import { Select } from 'valuelink/tags'
 import { getTranslate } from 'react-localize-redux';
-import config from "../../data/config.json"
+import config from "../../data/config.json";
+
+export const DEFAULT_LANGUAGE = config.languages.list[0].code;
 
 class LanguageField extends Component {
   constructor(props) {
@@ -21,7 +23,7 @@ class LanguageField extends Component {
     this.setState({
       languages: config.languages.list,
       formData: {
-        language: config.languages.list[0].code
+        language: DEFAULT_LANGUAGE
       }
     });
   }
@@ -29,6 +31,9 @@ class LanguageField extends Component {
   render() {
     const languageLink = Link.state(this, 'formData').at('language')
       .check( v => v, this.props.translate('validation.required'))
+      .onChange(v => {
+        this.props.onChange({language: v});
+      })
     ;
 
     return <div className={"form-group" + (languageLink.error ? ' has-error' : '')}>

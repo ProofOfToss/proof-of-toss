@@ -7,6 +7,10 @@ import timezones from "timezones.json"
 import Datetime from "react-datetime"
 import 'react-datetime/css/react-datetime.css'
 
+export const DEFAULT_TIMEZONE = 10;
+export const DEFAULT_START_TIME = Datetime.moment().add(1, 'hours');
+export const DEFAULT_END_TIME = DEFAULT_START_TIME.clone();
+
 class DateFields extends Component {
   constructor(props) {
     super(props);
@@ -15,49 +19,113 @@ class DateFields extends Component {
     this.isValidEndDate = this.isValidEndDate.bind(this);
     this.onChangeStartTime = this.onChangeStartTime.bind(this);
     this.onChangeEndTime = this.onChangeEndTime.bind(this);
+    this.getEndDateInputProps = this.getEndDateInputProps.bind(this);
 
     this.state = {
       timeZones: [].concat.apply([], timezones.map((item) => {
         return item.utc
       })),
       formData: {
-        timeZone: '10',
-        startTime: null,
-        endTime: null
+        timeZone: DEFAULT_TIMEZONE,
+        startTime: DEFAULT_START_TIME,
+        endTime: DEFAULT_END_TIME
       },
-      now: Datetime.moment().add( 1, 'hour' )
+      startTimeConstraints: {
+        hours: {
+          min: DEFAULT_START_TIME.hours()
+        }
+      },
+      endTimeConstraints: {
+        hours: {
+          min: DEFAULT_START_TIME.hours()
+        }
+      }
     }
   }
 
   onChangeStartTime(currentDate) {
+
+    const timeConstraints = this.calculateStartTimeConstraints(currentDate);
+
     this.setState({
       formData: {
         ...this.state.formData,
-        startTime: currentDate
-      }
-    })
+        startTime: currentDate,
+        endTime: currentDate.clone()
+      },
+      startTimeConstraints: timeConstraints,
+      endTimeConstraints: timeConstraints
+    });
+
+    this.props.onChange('startTime', currentDate);
   }
 
   onChangeEndTime(currentDate) {
+
+    let endTime = currentDate;
+
+    if(currentDate.isSame(this.state.formData.startTime, 'day')) {
+      endTime = currentDate.hours(this.state.formData.startTime.hours())
+        .minutes(this.state.formData.startTime.minutes());
+    }
+
     this.setState({
       formData: {
         ...this.state.formData,
-        endTime: currentDate
-      }
-    })
+        endTime: endTime
+      },
+      endTimeConstraints: this.calculateEndTimeConstraints(currentDate)
+    });
+
+    this.props.onChange('endTime', endTime);
   }
 
   isValidStartDate(currentDate) {
-    return currentDate.isAfter( this.state.now );
+    return currentDate.isSameOrAfter(Datetime.moment().add(1, 'hour'), 'day');
   }
 
   isValidEndDate(currentDate) {
-    return currentDate.isSameOrAfter( this.state.formData.startTime );
+    return currentDate.isSameOrAfter(this.state.formData.startTime, 'day');
+  }
+
+  calculateStartTimeConstraints(currentDate) {
+    if(currentDate.isSame(Datetime.moment(), 'day')) {
+      return {
+        hours: {
+          min: Datetime.moment().hours() + 1
+        }
+      }
+    }
+
+    return {};
+  }
+
+  calculateEndTimeConstraints(currentDate) {
+    if(currentDate.isSame(this.state.formData.startTime, 'day')) {
+      return {
+        hours: {
+          min: this.state.formData.startTime.hours()
+        }
+      }
+    }
+
+    return {};
+  }
+
+  getEndDateInputProps() {
+    if(null === this.state.formData.startTime) {
+      return {
+        disabled: true
+      }
+    }
   }
 
   render() {
     const timeZoneLink = Link.state(this, 'formData').at('timeZone')
       .check( v => v, this.props.translate('validation.required'))
+      .onChange(v => {
+        this.props.onChange('timeZone', v);
+      })
     ;
 
     return <Fragment>
@@ -78,12 +146,17 @@ class DateFields extends Component {
 
       <div className="form-group">
         <label htmlFor="event[date_start]">{ this.props.translate('pages.new_event.form.date_start')}*</label>
-        <Datetime isValidDate={this.isValidStartDate} onChange={this.onChangeStartTime} closeOnSelect={true}/>
+        <Datetime isValidDate={this.isValidStartDate} onChange={this.onChangeStartTime}
+          timeConstraints={this.state.startTimeConstraints} timeFormat="H:mm"
+                  value={this.state.formData.startTime}/>
       </div>
 
       <div className="form-group">
         <label htmlFor="event[date_start]">{ this.props.translate('pages.new_event.form.date_end')}*</label>
-        <Datetime isValidDate={this.isValidEndDate} onChange={this.onChangeEndTime} closeOnSelect={true} />
+        <Datetime isValidDate={this.isValidEndDate} onChange={this.onChangeEndTime}
+            timeConstraints={this.state.endTimeConstraints} timeFormat="H:mm" inputProps={this.getEndDateInputProps()}
+            value={this.state.formData.endTime}
+         />
       </div>
     </Fragment>
     ;

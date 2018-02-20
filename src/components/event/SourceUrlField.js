@@ -13,26 +13,28 @@ class SourceUrlField extends Component {
 
     this.state = {
       sourceUrl: '',
-      sourceUrls: ["Url 1", "Url 2", "Url 3"]
+      sourceUrls: []
     }
   }
 
-  componentDidMount() {
-
-  }
-
   addSourceUrl() {
+    const sourceUrls = [...this.state.sourceUrls, this.state.sourceUrl];
+
     this.setState({
-      sourceUrls: [...this.state.sourceUrls, this.state.sourceUrl]
-    })
+      sourceUrls: sourceUrls
+    });
+
+    this.props.onChange({sourceUrls: sourceUrls})
   }
 
   removeSourceUrl(key) {
-    let sourceUrls = this.state.sourceUrls;
+    const sourceUrls = this.state.sourceUrls;
     sourceUrls.splice(key, 1);
     this.setState({
       sourceUrls: sourceUrls
-    })
+    });
+
+    this.props.onChange({sourceUrls: sourceUrls});
   }
 
   render() {
@@ -42,18 +44,18 @@ class SourceUrlField extends Component {
     ;
 
     return <Fragment>
-      <ul>
-        {this.state.sourceUrls.map((sourceUrl, key) => {
-          return <li key={key}>
-            {sourceUrl}&nbsp;
-            <a className="btn btn-default btn-xs" onClick={() => {this.removeSourceUrl(key)}}>
-              { this.props.translate('pages.new_event.form.source_url_remove')}
-            </a>
-          </li>
-        }, this)}
-      </ul>
       <div className={"form-group" + (sourceUrlLink.error ? ' has-error' : '')}>
         <label htmlFor="event[source_url]">{ this.props.translate('pages.new_event.form.source_url')}*</label>
+        <ul>
+          {this.state.sourceUrls.map((sourceUrl, key) => {
+            return <li key={key}>
+              {sourceUrl}&nbsp;
+              <a className="btn btn-default btn-xs" onClick={() => {this.removeSourceUrl(key)}}>
+                { this.props.translate('pages.new_event.form.source_url_remove')}
+              </a>
+            </li>
+          }, this)}
+        </ul>
         <div className="row">
           <div className="col-xs-8">
             <Input valueLink={ sourceUrlLink } type='text' id="event[source_url]" className='form-control' />

@@ -5,16 +5,18 @@ import { Select } from 'valuelink/tags'
 import { getTranslate } from 'react-localize-redux';
 import config from "../../data/config.json"
 
+export const DEFAULT_CATEGORY = 1;
+
 class CategoryField extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       formData: {
-        category: 1
+        category: DEFAULT_CATEGORY
       },
       categories: []
-    }
+    };
   }
 
   componentDidMount() {
@@ -26,6 +28,9 @@ class CategoryField extends Component {
   render() {
     const categoryLink = Link.state(this, 'formData').at('category')
       .check( v => v, this.props.translate('validation.required'))
+      .onChange(v => {
+        this.props.onChange({category: v});
+      })
     ;
 
     return <div className={"form-group" + (categoryLink.error ? ' has-error' : '')}>

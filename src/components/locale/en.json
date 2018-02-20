@@ -13,6 +13,7 @@
   "validation": {
     "required": "Is required",
     "min_length": "This value is too short. It should have ${ min } character or more.",
+    "range": "This value should be between ${ min } and ${ max } or less",
     "event": {
       "name_is_too_short": "Name is too short min 3 symbols",
       "deposit_is_nan": "Deposit should be a number",
@@ -62,6 +63,8 @@
         "source_url_add_new": "Add new",
         "source_url_remove": "Remove",
         "results": "Results",
+        "results_name": "Name",
+        "results_coefficient": "Coefficient",
         "results_add_new": "Add new",
         "results_remove": "Remove",
         "results_move_up": "Up",

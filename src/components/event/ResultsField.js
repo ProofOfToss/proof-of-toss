@@ -18,14 +18,23 @@ class ResultsField extends Component {
 
     this.state = {
       result: '',
-      results: ["Result 1", "Result 2", "Result 3"]
-    }
+      resultCoefficient: '',
+      results: []
+    };
   }
 
   addResult() {
+    if(this.resultLink.error !== undefined || this.resultLinkCoefficient.error !== undefined) {
+      return;
+    }
+
+    const results = [...this.state.results, {name: this.state.result, coefficient: this.state.resultCoefficient}];
+
     this.setState({
-      results: [...this.state.results, this.state.result]
-    })
+      results: results
+    });
+
+    this.props.onChange({results: results})
   }
 
   removeResult(key) {
@@ -33,7 +42,9 @@ class ResultsField extends Component {
     results.splice(key, 1);
     this.setState({
       results: results
-    })
+    });
+
+    this.props.onChange({results: results});
   }
 
   moveResult(key) {
@@ -41,39 +52,49 @@ class ResultsField extends Component {
   }
 
   render() {
-    const resultLink = Link.state(this, 'result')
+
+    this.resultLink = Link.state(this, 'result')
       .check( v => v, this.props.translate('validation.required'))
       .check( v => v.length >= 3, this.props.translate('validation.min_length', {min: 3}))
     ;
 
+    this.resultLinkCoefficient = Link.state(this, 'resultCoefficient')
+      .check( v => parseFloat(v) >= 1, this.props.translate('validation.range', {min: 1, max: 99}))
+      .check( v => parseFloat(v) <= 99, this.props.translate('validation.range', {min: 1, max: 99}))
+    ;
+
     return <Fragment>
-      <ul>
-        {this.state.results.map((result, key) => {
-          return <li key={key}>
-            {result}&nbsp;
-            <a className="btn btn-default btn-xs" onClick={() => {this.removeResult(key)}}>
-              { this.props.translate('pages.new_event.form.results_remove')}
-            </a>&nbsp;
-            <a className="btn btn-default btn-xs" onClick={() => {this.moveResult(MOVE_UP, key)}}>
-              { this.props.translate('pages.new_event.form.results_move_up')}
-            </a>&nbsp;
-            <a className="btn btn-default btn-xs" onClick={() => {this.moveResult(MOVE_DOWN, key)}}>
-              { this.props.translate('pages.new_event.form.results_move_down')}
-            </a>
-          </li>
-        }, this)}
-      </ul>
-      <div className={"form-group" + (resultLink.error ? ' has-error' : '')}>
+      <div className={"form-group" + (this.resultLink.error || this.resultLinkCoefficient.error ? ' has-error' : '')}>
         <label htmlFor="event[result]">{ this.props.translate('pages.new_event.form.results')}*</label>
+        <ul>
+          {this.state.results.map((result, key) => {
+            return <li key={key}>
+              {result.name}&nbsp;{result.coefficient}&nbsp;
+              <a className="btn btn-default btn-xs" onClick={() => {this.removeResult(key)}}>
+                { this.props.translate('pages.new_event.form.results_remove')}
+              </a>&nbsp;
+              <a className="btn btn-default btn-xs" onClick={() => {this.moveResult(MOVE_UP, key)}}>
+                { this.props.translate('pages.new_event.form.results_move_up')}
+              </a>&nbsp;
+              <a className="btn btn-default btn-xs" onClick={() => {this.moveResult(MOVE_DOWN, key)}}>
+                { this.props.translate('pages.new_event.form.results_move_down')}
+              </a>
+            </li>
+          }, this)}
+        </ul>
         <div className="row">
-          <div className="col-xs-8">
-            <Input valueLink={ resultLink } type='text' id="event[result]" className='form-control' />
+          <div className="col-xs-6">
+            <Input valueLink={ this.resultLink } type='text' id="event[result]" className='form-control' />
+            <span id="helpBlock" className="help-block">{ this.resultLink.error || '' }</span>
+          </div>
+          <div className="col-xs-2">
+            <Input valueLink={ this.resultLinkCoefficient } type='number' id="event[result_coefficient]" className='form-control' />
+            <span id="helpBlock" className="help-block">{ this.resultLinkCoefficient.error || '' }</span>
           </div>
           <div className="col-xs-4">
             <a className="btn btn-default" onClick={this.addResult}>{ this.props.translate('pages.new_event.form.results_add_new')}</a>
           </div>
         </div>
-        <span id="helpBlock" className="help-block">{ resultLink.error || '' }</span>
       </div>
     </Fragment>
     ;

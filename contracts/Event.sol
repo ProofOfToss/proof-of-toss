@@ -39,7 +39,7 @@ contract Event {
     Result[3] possibleResults;
 
     function Event(address _creator, address _token, string _name, uint _deposit,
-        string _description, string memory _dates, string _sourceUrl, string memory _tags, string memory _results
+        string _description, string memory _data, string _sourceUrl, string memory _tags, string memory _results
     ) {
         token = Token(_token);
         creator = _creator;
@@ -49,7 +49,7 @@ contract Event {
         sourceUrl = _sourceUrl;
         createdTimestamp = block.timestamp;
 
-        parseData(_tags);
+        parseData(_data);
         parseTags(_tags);
         parseResults(_results);
     }
@@ -111,8 +111,8 @@ contract Event {
             possibleResults[i] = Result(
                 resultsSlice.split(delimiter).toString(),
                 uint(JsmnSolLib.parseInt(resultsSlice.split(delimiter).toString())),
-                uint(JsmnSolLib.parseInt(resultsSlice.split(delimiter).toString())),
-                uint(JsmnSolLib.parseInt(resultsSlice.split(delimiter).toString()))
+                0,
+                0
             );
         }
     }

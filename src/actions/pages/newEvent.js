@@ -34,7 +34,26 @@ export const saveEvent = (formData) => {
 
       }).then(function() {
 
-        return mainContract.newEvent(formData.deposit, formData.name, {from: getState().user.address});
+        const tags = formData.tags.reduce((previousValue, currentValue) => {
+          if(previousValue.length > 0) {
+            previousValue += '.';
+          }
+
+          return `${previousValue}${formData.language}.${currentValue}`
+        }, '');
+
+        const results = formData.results.reduce((previousValue, currentValue) => {
+          if(previousValue.length > 0) {
+            previousValue += '.';
+          }
+
+          return `${previousValue}${currentValue.name}.${currentValue.coefficient}`
+        }, '');
+
+        return mainContract.newEvent(formData.name, formData.deposit, formData.description, 1,
+          `${formData.category}.${formData.language}.${formData.startTime.unix()}.${formData.endTime.unix()}`,
+          formData.sourceUrls[0], tags, results,
+          {from: getState().user.address});
 
       }).then(function () {
 
