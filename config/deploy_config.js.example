@@ -1,4 +1,5 @@
 module.exports = {
-  bucketName: 'proof-of-toss',
-  cloudFrontDistributionID: 'E891D72CH6201'
+  bucketName: 'site_bucket_name',
+  cloudFrontDistributionID: 'cloudfront_distribution_id',
+  region: 'region'
 };

@@ -7,17 +7,20 @@ const glob = require("glob");
 
 const config = require('../config/deploy_config.js');
 
+// const credentials = new AWS.Credentials(config.accessKeyId, config.secretAccessKey);
+
 AWS.config.logger = console;
 
-console.log(config);
-
 const s3 = new S3({
+  region: config.region,
   params: {
     Bucket: config.bucketName
   }
 });
 
-const cloudfront = new Cloudfront();
+const cloudfront = new Cloudfront({
+  region: config.region
+});
 
 const getFilesListFromBasket = new Promise((resolve, reject) => {
   s3.listObjects().promise().then(data => {
