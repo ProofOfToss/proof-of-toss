@@ -150,6 +150,11 @@ getWeb3
 
             currentAddress = accounts[0];
           }
+
+          if (accounts[0] !== store.getState().web3.currentAddress) {
+            // The address in the wallet has been changed
+            store.dispatch(changeAddress(accounts[0]));
+          }
         }
       });
     }, 500);

@@ -1,100 +1,75 @@
-# Список используемых технологий
+# Technologies
 
 - node.js
 - babel-cli
-- truffle 3.x (на 4.x – дичь)
+- truffle 4.x
 - solc 0.4.15
-- solidity
 
-https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md
+This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
-# Требуемые пакеты и версии
-# Инструкция "как установить проект"
+# How to install
 
-npm install -g solc
-npm install -g truffle
+This project use [solc (Solidity compiler)](http://solidity.readthedocs.io/en/develop/installing-solidity.html) and 
+[truffle framework](https://github.com/trufflesuite/truffle).
 
-- npm install
-- truffle compile
-- truffle --network test migrate
-
-\# run dev web server
-npm run start
-
-\# run node app
-- npm run start_app
-
-перезапуск миграций с определенного номера
-- truffle migrate -f 1
-
-https://stackoverflow.com/questions/44002643/how-to-use-the-official-docker-elasticsearch-container
-docker-compose up
-
-# Инструкция по установке проекта через Docker compose
-
-1. Скопировать файл `truffle.js.example` в `truffle.js`
-2. Скопировать файл `docker/rsk/rsk/testnet.conf.example` в файл `docker/rsk/rsk/testnet.conf`
-3. Запустить `docker-compose up -d` и дождаться запуска всех контейнеров
-
-   Контейнер `app` не запустится, т.к. не найстроена нода `rsk`
-4. Выполнить `docker-compose exec rsk java -cp /usr/share/rsk/rskj-core-0.4.0-BAMBOO-all.jar co.rsk.GenNodeKeyId`. Сохранить вывод этой команды.
-5. В файле `docker/rsk/rsk/testnet` изменить 4 параметра:
-
-    `nodeId`, `privateKey`, `miner` -> `reward.address`, 
-    `wallet` -> `accounts[0]` -> `privateKey`
-    
-    Все данные можно получить из пункта 4 
-    
-6. Выполнить комманду `docker-compose exec rsk java -Drsk.conf.file=/etc/rsk/testnet.conf -cp /usr/share/rsk/rskj-core-0.4.0-BAMBOO-all.jar co.rsk.Start`
-7. Теперь можно запустить контейнер `app` командой `docker-compose start app`   
-
-# Инструкция "как работать с тестами"
-
-- testrpc --gasLimit 1111115141592
-
-Либо, если на testrpc глюки, использовать geth на приватном блокчейне.
-- geth --datadir=./chaindata --rpc --mine --unlock "comma separated accounts"
-
-- truffle --network test migrate -f
-- truffle --network test test
-
-\# run frontend tests
-- npm run test
-
-## Как проверять exceptions из смарт-контрактов
-
-Для того, чтобы проверить ожидаемый exception, нужно сделать следующее:
-
-- в тестовом файле (.js) в начало файла вставить: ```import expectThrow from './helpers/expectThrow';```
-- функцию, внутри которой ожидается exception, нужно пометить, как async
-- проверка на exception осуществляется так: ```await expectThrow(function() { throw "Error"; });```
-
-Пример:
-
-```js
-import expectThrow from './helpers/expectThrow';
-
-var Main = artifacts.require("./Main.sol");
-var Event = artifacts.require("./Event.sol");
-var Token = artifacts.require("./Token.sol");
-
-contract('Token', function (accounts) {
-
-  it("should not allow to block tokens for the same address as msg.sender", function() {
-
-    return Token.deployed()
-      .then(async function (instance) {
-        await expectThrow(instance.block(accounts[0], 1000));
-      });
-
-  });
-
-});
+To install them execute:
+```
+$ npm install -g solc truffle
 ```
 
-# Инструкция "как работать с фронтендом"
-# Правила по стилю кодирования
-# Описание рабочего режима с git (что имеется введу под режимом c git?)
-# Список автотестов?
-# Инструкция "как деплоить"
-# Ссылки на техническую документацию (как в том репозитории, так на других носителях (типа Google Drive))
+Project also required connection to [rsk blockchain](http://www.rsk.co/). For development it is possible to use [testrpc](https://github.com/trufflesuite/ganache-cli):
+```
+$ npm install -g ganache-cli
+```
+
+1. After that go to the project root directory and install dependencies:
+    ```
+    $ npm install
+    ```
+    
+1. Copy `truffle.js.example` to `truffle.js`
+
+1. Copy `src/data/config.json.dist` to `src/data/config.json`
+
+1. Compile and deploy contracts:
+    ```
+    $ truffle compile
+    $ truffle --network test migrate
+    ```
+
+1. Launch server:
+    ```
+    $ npm run start
+    ```
+    
+After that open `localhost:3000` in a browser
+
+# Elastic search
+
+We are using [elastic search](https://www.elastic.co/products/elasticsearch) to store some information in it.
+It is necessary to install [babel cli](http://babeljs.io/docs/usage/cli/) before.
+Then execute this command to launch this script:
+```
+$ ./node_modules/babel-cli/bin/babel-node.js scripts/app.js
+```
+This script will handle blockchain events and save them in [elastic search](https://www.elastic.co/products/elasticsearch)
+ 
+
+# How to execute tests in testrpc blockchain
+
+#### Solidity contracts tests
+```
+$ truffle --network test test
+```
+
+#### Frontend tests
+```
+$ npm run test
+```
+
+# How to build frontend
+To create `html` and `js` files execute:
+```
+$ npm run build
+```
+After that files will be in the `./build_webpack` folder.
