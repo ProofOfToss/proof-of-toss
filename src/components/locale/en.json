@@ -42,6 +42,15 @@
         "sum": "Sum",
         "fee": "Fee"
       }
+    },
+    "new_event": {
+      "form":
+      {
+        "name": "Name",
+        "deposit": "Deposit",
+        "submit": "Submit",
+        "tags": "Tags"
+      }
     }
   }
 

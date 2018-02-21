@@ -2,6 +2,7 @@ import { browserHistory } from 'react-router'
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunkMiddleware from 'redux-thunk'
 import { routerMiddleware } from 'react-router-redux'
+import logger from 'redux-logger'
 import reducer from './reducer'
 
 // Redux DevTools
@@ -14,7 +15,8 @@ const store = createStore(
   composeEnhancers(
     applyMiddleware(
       thunkMiddleware,
-      routingMiddleware
+      routingMiddleware,
+      logger
     )
   )
 )
