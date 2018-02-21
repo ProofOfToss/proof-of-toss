@@ -17,7 +17,7 @@ To install them execute:
 $ npm install -g solc truffle
 ```
 
-Project also required connection to Ethereum blockchain. For development it is possible to use [testrpc](https://github.com/trufflesuite/ganache-cli):
+Project also required connection to [rsk blockchain](http://www.rsk.co/). For development it is possible to use [testrpc](https://github.com/trufflesuite/ganache-cli):
 ```
 $ npm install -g ganache-cli
 ```
@@ -26,6 +26,8 @@ $ npm install -g ganache-cli
     ```
     $ npm install
     ```
+    
+1. Copy `truffle.js.example` to `truffle.js`
 
 1. Copy `src/data/config.json.dist` to `src/data/config.json`
 
@@ -40,7 +42,18 @@ $ npm install -g ganache-cli
     $ npm run start
     ```
     
-After that open `localhost:3000` in a browser 
+After that open `localhost:3000` in a browser
+
+# Elastic search
+
+We are using [elastic search](https://www.elastic.co/products/elasticsearch) to store some information in it.
+It is necessary to install [babel cli](http://babeljs.io/docs/usage/cli/) before.
+Then execute this command to launch this script:
+```
+$ ./node_modules/babel-cli/bin/babel-node.js scripts/app.js
+```
+This script will handle blockchain events and save them in [elastic search](https://www.elastic.co/products/elasticsearch)
+ 
 
 # How to execute tests in testrpc blockchain
 
