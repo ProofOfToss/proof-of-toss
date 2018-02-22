@@ -126,11 +126,22 @@ class ModalSend extends Component {
         });
 
       }).catch((e) => {
-
+        let msg = '';
         let errors = this.state.errors;
-        errors.push(e);
-        this.setState({ errors: errors, waiting: false });
 
+        if (
+          // firefox do not have normal msg, so trying to check for method name in call stack
+          e.message.indexOf('nsetTxStatusRejected') !== -1
+          // chrome have normal message
+          || e.message.indexOf('User denied transaction signature') !== -1) {
+          msg = this.props.translate('pages.wallet.send.user_denied_tx');
+        } else {
+          msg = this.props.translate('pages.wallet.send.unexpected_error');
+        }
+
+        errors.push(new Error(msg));
+
+        this.setState({ errors: errors, waiting: false });
       });
     });
   }
