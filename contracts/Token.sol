@@ -31,7 +31,7 @@ contract Token {
         preSaleTransferEnd = _preSaleTransferEnd;
         icoSoftcap = _icoSoftcap;
 
-        uint256 initialSupply = 1000000000; // 100000.0000 TOSS
+        uint256 initialSupply = 10000000000000; // 1,000,000,000.0000 TOSS
         totalTokens = initialSupply;
         balanceOf[msg.sender] = initialSupply;
     }
