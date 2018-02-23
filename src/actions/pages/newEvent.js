@@ -1,13 +1,23 @@
 import MainContract from '../../../build/contracts/Main.json'
 import TokenContract from '../../../build/contracts/Token.json'
 
-export const SAVE_EVENT = 'SAVE_EVENT';
+export const FORM_SAVE_EVENT = 'FORM_SAVE_EVENT';
+export const MODAL_SAVE_EVENT = 'MODAL_SAVE_EVENT';
+export const MODAL_CLOSE_EVENT = 'MODAL_CLOSE_EVENT';
+export const SAVE_ERROR_EVENT = 'SAVE_ERROR_EVENT';
 export const SAVED_EVENT = 'SAVED_EVENT';
 
-export const saveEvent = (formData) => {
-  return (dispatch, getState) => {
-    dispatch({type: SAVE_EVENT, formData: formData});
+export const formSaveEvent = (formData) => ({
+  type: FORM_SAVE_EVENT,
+  formData: formData
+});
 
+export const modalSaveEvent = () => {
+
+  return (dispatch, getState) => {
+    dispatch({type: MODAL_SAVE_EVENT});
+
+    const formData = getState().newEvent.formData;
     const web3 = getState().web3.web3;
     let mainContract;
     let tokenContract;
@@ -63,10 +73,16 @@ export const saveEvent = (formData) => {
 
         dispatch({type: SAVED_EVENT});
 
+      }).catch(function(e) {
+        dispatch({type: SAVE_ERROR_EVENT, error: e})
       });
     })
   }
 };
+
+export const modalCloseEvent = () => ({
+  type: MODAL_CLOSE_EVENT
+});
 
 export const savedEvent = () => ({
   'type': SAVED_EVENT

@@ -1,52 +1,31 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Link from 'valuelink'
 import { Select } from 'valuelink/tags'
 import { getTranslate } from 'react-localize-redux';
 import config from "../../data/config.json";
-
-export const DEFAULT_LANGUAGE = config.languages.list[0].code;
 
 class LanguageField extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      formData: {
-        language: null
-      },
-      languages: []
+      languages: config.languages.list
     }
   }
 
-  componentDidMount() {
-    this.setState({
-      languages: config.languages.list,
-      formData: {
-        language: DEFAULT_LANGUAGE
-      }
-    });
-  }
-
   render() {
-    const languageLink = Link.state(this, 'formData').at('language')
-      .check( v => v, this.props.translate('validation.required'))
-      .onChange(v => {
-        this.props.onChange({language: v});
-      })
-    ;
 
-    return <div className={"form-group" + (languageLink.error ? ' has-error' : '')}>
+    return <div className={"form-group" + (this.props.valueLink.error ? ' has-error' : '')}>
         <label htmlFor="event[language]">{ this.props.translate('pages.new_event.form.language')}*</label>
         {this.state.languages.length > 0 &&
-          <Select valueLink={languageLink} type='text' id="event[language]" className='form-control'
-                  value={this.state.formData.language}>
+          <Select valueLink={this.props.valueLink} type='text' id="event[language]" className='form-control'
+                  >
             {this.state.languages.map((language) => {
               return <option key={language.code} value={language.code}>{language.name}</option>
             }, this)}
           </Select>
         }
-        <span id="helpBlock" className="help-block">{ languageLink.error || '' }</span>
+        <span id="helpBlock" className="help-block">{ this.props.valueLink.error || '' }</span>
       </div>
     ;
   }

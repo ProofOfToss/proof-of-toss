@@ -13,14 +13,32 @@ class SourceUrlField extends Component {
 
     this.state = {
       sourceUrl: '',
-      sourceUrls: []
+      showSourceUrlErrors: false,
+      sourceUrls: ['Source url']
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.saved) {
+      this.setState({
+        sourceUrls: []
+      });
     }
   }
 
   addSourceUrl() {
+    if(this.sourceUrlLink.error !== undefined) {
+      this.setState({
+        showSourceUrlErrors: true
+      });
+      return;
+    }
+
     const sourceUrls = [...this.state.sourceUrls, this.state.sourceUrl];
 
     this.setState({
+      sourceUrl: '',
+      showSourceUrlErrors: false,
       sourceUrls: sourceUrls
     });
 
@@ -38,33 +56,40 @@ class SourceUrlField extends Component {
   }
 
   render() {
-    const sourceUrlLink = Link.state(this, 'sourceUrl')
+    this.sourceUrlLink = Link.state(this, 'sourceUrl')
       .check( v => v, this.props.translate('validation.required'))
       .check( v => v.length >= 3, this.props.translate('validation.min_length', {min: 3}))
     ;
 
     return <Fragment>
-      <div className={"form-group" + (sourceUrlLink.error ? ' has-error' : '')}>
-        <label htmlFor="event[source_url]">{ this.props.translate('pages.new_event.form.source_url')}*</label>
+      <div className="form-group">
+        <label htmlFor="event[source_url]">{ this.props.translate('pages.new_event.form.source_url.label')}*</label>
         <ul>
           {this.state.sourceUrls.map((sourceUrl, key) => {
             return <li key={key}>
               {sourceUrl}&nbsp;
               <a className="btn btn-default btn-xs" onClick={() => {this.removeSourceUrl(key)}}>
-                { this.props.translate('pages.new_event.form.source_url_remove')}
+                { this.props.translate('pages.new_event.form.source_url.remove')}
               </a>
             </li>
           }, this)}
         </ul>
         <div className="row">
-          <div className="col-xs-8">
-            <Input valueLink={ sourceUrlLink } type='text' id="event[source_url]" className='form-control' />
+          <div className={"col-xs-8" + (this.sourceUrlLink.error && this.state.showSourceUrlErrors ? ' has-error' : '')}>
+            <Input valueLink={ this.sourceUrlLink } type='text' id="event[source_url]" className='form-control' />
+            {this.sourceUrlLink.error && this.state.showSourceUrlErrors &&
+              <span id="helpBlock" className="help-block">{ this.sourceUrlLink.error || '' }</span>
+            }
           </div>
           <div className="col-xs-4">
-            <a className="btn btn-default" onClick={this.addSourceUrl}>{ this.props.translate('pages.new_event.form.source_url_add_new')}</a>
+            <a className="btn btn-default" onClick={this.addSourceUrl}>{ this.props.translate('pages.new_event.form.source_url.add_new')}</a>
           </div>
         </div>
-        <span id="helpBlock" className="help-block">{ sourceUrlLink.error || '' }</span>
+        {this.state.sourceUrls.length < 1 && this.props.showErrors &&
+          <div className={this.state.sourceUrls < 1 && this.props.showErrors ? ' has-error' : ''}>
+            <span id="helpBlock" className="help-block">{ this.props.translate('pages.new_event.form.source_url.error')}</span>
+          </div>
+        }
       </div>
     </Fragment>
     ;
@@ -73,6 +98,7 @@ class SourceUrlField extends Component {
 
 function mapStateToProps(state) {
   return {
+    saved: state.newEvent.saved,
     translate: getTranslate(state.locale)
   };
 }

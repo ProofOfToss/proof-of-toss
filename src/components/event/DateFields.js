@@ -1,13 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import Link from 'valuelink'
 import { Select } from 'valuelink/tags'
 import { getTranslate } from 'react-localize-redux';
 import timezones from "timezones.json"
 import Datetime from "react-datetime"
+import config from "../../data/config.json";
 import 'react-datetime/css/react-datetime.css'
 
-export const DEFAULT_TIMEZONE = 10;
 export const DEFAULT_START_TIME = Datetime.moment().add(1, 'hours');
 export const DEFAULT_END_TIME = DEFAULT_START_TIME.clone();
 
@@ -26,7 +25,7 @@ class DateFields extends Component {
         return item.utc
       })),
       formData: {
-        timeZone: DEFAULT_TIMEZONE,
+        timeZone: config.timeZones.default,
         startTime: DEFAULT_START_TIME,
         endTime: DEFAULT_END_TIME
       },
@@ -121,25 +120,19 @@ class DateFields extends Component {
   }
 
   render() {
-    const timeZoneLink = Link.state(this, 'formData').at('timeZone')
-      .check( v => v, this.props.translate('validation.required'))
-      .onChange(v => {
-        this.props.onChange('timeZone', v);
-      })
-    ;
 
     return <Fragment>
-      <div className={"form-group" + (timeZoneLink.error ? ' has-error' : '')}>
+      <div className={"form-group" + (this.props.valueLinkTimeZone.error ? ' has-error' : '')}>
         {this.state.timeZones.length > 0 &&
           <Fragment>
             <label htmlFor="event[time_zone]">{ this.props.translate('pages.new_event.form.time_zone')}*</label>
-            <Select valueLink={timeZoneLink} type='text' id="event[time_zone]" className='form-control'
-                    value={this.state.formData.timeZone}>
+            <Select valueLink={this.props.valueLinkTimeZone} type='text' id="event[time_zone]" className='form-control'
+                    >
               {this.state.timeZones.map((timeZone, key) => {
                 return <option key={key} value={key}>{timeZone}</option>
               }, this)}
             </Select>
-            <span id="helpBlock" className="help-block">{ timeZoneLink.error || '' }</span>
+            <span id="helpBlock" className="help-block">{ this.props.valueLinkTimeZone.error || '' }</span>
           </Fragment>
         }
       </div>

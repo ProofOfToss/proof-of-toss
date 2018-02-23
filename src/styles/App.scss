@@ -1,6 +1,8 @@
 @import "~bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
 @import "./bootstrap/bootstrap";
 
+@import "./components/tags_input";
+
 html {
   position: relative;
   min-height: 100%;

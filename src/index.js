@@ -164,9 +164,9 @@ getWeb3
   .then(() => {
     store.dispatch(refreshBalance());
 
-    setInterval(() => {
-      store.dispatch(refreshBalance());
-    }, 500);
+    // setInterval(() => {
+    //   store.dispatch(refreshBalance());
+    // }, 500);
   })
   .catch(function(e) {
     renderReactDOM();
