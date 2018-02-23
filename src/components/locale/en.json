@@ -32,7 +32,9 @@
         "fee": "Fee",
         "currency_balance": "${ currency } balance",
         "gas_limit": "Gas limit",
-        "gas_price": "Gas price"
+        "gas_price": "Gas price",
+        "unexpected_error": "There have been an unexpected error. Please try again!",
+        "user_denied_tx": "You have denied transaction."
       },
       "info": {
         "your_balance": "Your balance"
