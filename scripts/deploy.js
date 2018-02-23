@@ -7,11 +7,18 @@ const glob = require("glob");
 
 const config = require('../config/deploy_config.js');
 
-// const credentials = new AWS.Credentials(config.accessKeyId, config.secretAccessKey);
+const credentialsParams = process.argv.slice(2);
+if(credentialsParams.length < 2) {
+  console.log('Please provide Access key ID and Secret access key: node scripts/deploy.js accessKeyId secretAccessKey');
+  process.exit();
+}
+
+const credentials = new AWS.Credentials(credentialsParams[0], credentialsParams[1]);
 
 AWS.config.logger = console;
 
 const s3 = new S3({
+  credentials: credentials,
   region: config.region,
   params: {
     Bucket: config.bucketName
