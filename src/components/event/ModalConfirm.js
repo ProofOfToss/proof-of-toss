@@ -46,9 +46,13 @@ class ModalConfirm extends Component {
           this.props.formData.sourceUrls[0], tags, results);
 
       }).then((result) => {
-        const gas = Math.round( Number(result) * 1.5); // x 1.5 to prevent surprise out-of-gas errors
+        const gas = Math.round( Number(result) * 1.5);
+        const price = this.props.web3.fromWei((gas * gasPrices.avg), 'ether');
 
-        this.setState({gasLimit: gas });
+        this.setState({
+          gasLimit: gas.toFixed(0),
+          price: price
+        });
 
 
       }).catch(function() {});
@@ -112,6 +116,9 @@ class ModalConfirm extends Component {
         {this.state.gasLimit && <Fragment>
             <dt>{this.props.translate('pages.new_event.gas_limit')}</dt>
             <dd>{this.state.gasLimit}</dd>
+
+            <dt>{this.props.translate('pages.new_event.gas_price')}</dt>
+            <dd>{this.state.price}</dd>
           </Fragment>
         }
       </dl>

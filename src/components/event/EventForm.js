@@ -9,6 +9,7 @@ import TagsField from './TagsField'
 import DateFields, { DEFAULT_START_TIME, DEFAULT_END_TIME} from './DateFields'
 import SourceUrlField from './SourceUrlField'
 import ResultsField from './ResultsField'
+import Buttons from './Buttons'
 import ModalConfirm from './ModalConfirm'
 import config from "../../data/config.json";
 import { formSaveEvent } from '../../actions/pages/newEvent'
@@ -24,13 +25,12 @@ class EventForm extends Component {
     this.state = {
       showErrors: false,
       showConfirmModal: false,
-      // formData: formData
       formData: {
         language: config.languages.list[0].code,
         category: config.categories.default,
         name: 'test-' + (Math.random()),
         bidType: 'bid type',
-        deposit: 10,
+        deposit: 11,
         tags: ['tag_1', 'tag_2'],
         timeZone: config.timeZones.default,
         startTime: DEFAULT_START_TIME,
@@ -164,9 +164,8 @@ class EventForm extends Component {
 
         <ResultsField onChange={this.handleFieldsChange} showErrors={this.state.showErrors} />
 
-        <button type="submit" className="btn btn-default">
-          { this.props.translate('pages.new_event.form.submit')}
-        </button>
+        <Buttons deposit={this.state.formData.deposit} />
+
       </form>
 
       {this.props.showConfirmModal ? <ModalConfirm /> : null}

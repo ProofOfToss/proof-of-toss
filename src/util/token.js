@@ -1,6 +1,8 @@
+import MainContract from '../../build/contracts/Main.json'
 import TokenContract from '../../build/contracts/Token.json'
 
 const contract = require('truffle-contract');
+const main = contract(MainContract);
 const token = contract(TokenContract);
 
 function getMyBalance(web3) {
@@ -113,4 +115,20 @@ function getMySBTCBalance(web3) {
   return promise;
 }
 
-export { getMyBalance, getMyBlockedBalance, getMySBTCBalance, getMyTransactions };
+function getMyAllowance(web3) {
+  main.setProvider(web3.currentProvider);
+  token.setProvider(web3.currentProvider);
+
+  return main.deployed().then((mainInstance) => {
+    return token.deployed()
+      .then((instance) => {
+        return instance.allowance(web3.eth.accounts[0], mainInstance.address);
+      })
+      .then((allowance) => {
+        return allowance.toNumber();
+      });
+
+  })
+}
+
+export { getMyBalance, getMyAllowance, getMyBlockedBalance, getMySBTCBalance, getMyTransactions };
