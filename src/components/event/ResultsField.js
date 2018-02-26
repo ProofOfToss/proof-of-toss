@@ -5,7 +5,7 @@ import { Input } from 'valuelink/tags'
 import { getTranslate } from 'react-localize-redux';
 
 const MOVE_UP = 1;
-const MOVE_DOWN = 1;
+const MOVE_DOWN = 2;
 
 class ResultsField extends Component {
 
@@ -20,7 +20,7 @@ class ResultsField extends Component {
       result: '',
       resultCoefficient: '',
       showResultErrors: false,
-      results: [{name: 'Result', coefficient: 10}, {name: 'Result 2', coefficient: 30}]
+      results: [{name: 'Result 1', coefficient: 10}, {name: 'Result 2', coefficient: 20},  {name: 'Result 3', coefficient: 30}]
     };
   }
 
@@ -63,8 +63,14 @@ class ResultsField extends Component {
     this.props.onChange({results: results});
   }
 
-  moveResult(key) {
-    console.log(key)
+  moveResult(direction, key) {
+    let results = this.state.results;
+
+    results.splice(direction === MOVE_DOWN ? key + 1 : key - 1, 0, results.splice(key, 1)[0]);
+
+    this.setState({
+      results: results
+    });
   }
 
   render() {
@@ -80,22 +86,39 @@ class ResultsField extends Component {
     return <Fragment>
       <div className="form-group">
         <label htmlFor="event[result]">{ this.props.translate('pages.new_event.form.results.label')}*</label>
-        <ul>
+        <div className="container">
           {this.state.results.map((result, key) => {
-            return <li key={key}>
-              {result.name}&nbsp;{result.coefficient}&nbsp;
-              <a className="btn btn-default btn-xs" onClick={() => {this.removeResult(key)}}>
-                { this.props.translate('pages.new_event.form.results.remove')}
-              </a>&nbsp;
-              <a className="btn btn-default btn-xs" onClick={() => {this.moveResult(MOVE_UP, key)}}>
-                { this.props.translate('pages.new_event.form.results.move_up')}
-              </a>&nbsp;
-              <a className="btn btn-default btn-xs" onClick={() => {this.moveResult(MOVE_DOWN, key)}}>
-                { this.props.translate('pages.new_event.form.results.move_down')}
-              </a>
-            </li>
+            return <div className="row bottom-margin-5" key={key}>
+              <div className="col-xs-1">{result.name}</div>
+              <div className="col-xs-1">{result.coefficient}</div>
+              <div className="col-xs-1">
+                <a className="btn btn-default btn-xs" onClick={() => {this.removeResult(key)}}>
+                  { this.props.translate('pages.new_event.form.results.remove')}
+                </a>
+              </div>
+              <div className="col-xs-1">
+                {key !== 0 &&
+                  <Fragment>
+                    <a className="btn btn-default btn-xs" onClick={() => {
+                      this.moveResult(MOVE_UP, key)
+                    }}>
+                      {this.props.translate('pages.new_event.form.results.move_up')}
+                    </a>&nbsp;
+                  </Fragment>
+                }
+              </div>
+              <div className="col-xs-1">
+                {key !== this.state.results.length - 1 &&
+                  <a className="btn btn-default btn-xs" onClick={() => {
+                    this.moveResult(MOVE_DOWN, key)
+                  }}>
+                    {this.props.translate('pages.new_event.form.results.move_down')}
+                  </a>
+                }
+              </div>
+            </div>
           }, this)}
-        </ul>
+        </div>
         <div className="row">
           <div className={"col-xs-6" + (this.resultLink.error && this.state.showResultErrors ? ' has-error' : '')}>
             <Input valueLink={ this.resultLink } type='text' id="event[result]" className='form-control'
