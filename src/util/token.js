@@ -4,7 +4,7 @@ const contract = require('truffle-contract');
 const token = contract(TokenContract);
 
 function formatBalance(balance, decimals) {
-  return (parseInt(balance) / Math.pow(10, decimals)).toFixed(decimals, 10);
+  return (parseInt(balance, 10) / Math.pow(10, decimals)).toFixed(decimals, 10);
 }
 
 function denormalizeBalance(balance, decimals) {
