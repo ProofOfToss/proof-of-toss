@@ -21,6 +21,9 @@ const logger = log4js.getLogger('elasticsearch');
 
 import AwsEsClient from '../src/util/esClient';
 
+const EVENT_INDEX = 'toss_event_' + appConfig.network;
+const TAG_INDEX = 'toss_tag_' + appConfig.network;
+
 const esClient = new AwsEsClient(
   { log: 'error' },
   appConfig.elasticsearch.esNode,
@@ -86,7 +89,7 @@ const esClient = new AwsEsClient(
     for(let i = 0; i < events.length; i++) {
       try {
         const doc = await convertBlockchainEventToEventDoc(events[i]);
-        body.push({ index: { _index: 'toss_event', _type: 'event', _id: doc.address } });
+        body.push({ index: { _index: EVENT_INDEX, _type: 'event', _id: doc.address } });
         body.push(doc);
       } catch (err) {
         logger.error(err);
@@ -107,7 +110,7 @@ const esClient = new AwsEsClient(
     let body = [];
 
     for(let i = 0; i < tags.length; i++) {
-      body.push({ index: { _index: 'toss_tag', _type: 'tag', _id: new Buffer(`${tags[i].locale} ${tags[i].name}`).toString('base64') } });
+      body.push({ index: { _index: TAG_INDEX, _type: 'tag', _id: new Buffer(`${tags[i].locale} ${tags[i].name}`).toString('base64') } });
       body.push({ name: tags[i].name, locale: tags[i].locale });
     }
 

@@ -3,6 +3,9 @@ import appConfig from '../src/data/config.json';
 import log4js from 'log4js';
 var argv = require('yargs-parser')(process.argv.slice(2));
 
+const EVENT_INDEX = 'toss_event_' + appConfig.network;
+const TAG_INDEX = 'toss_tag_' + appConfig.network;
+
 log4js.configure({
   appenders: {
     elasticsearch: { type: 'stdout' },
@@ -64,20 +67,20 @@ const eventMapping = {
 
   const createIndex = async (force = false) => {
     try {
-      let eventIndexExists = await esClient.indices.exists({index: 'toss_event'});
-      let tagIndexExists = await esClient.indices.exists({index: 'toss_tag'});
+      let eventIndexExists = await esClient.indices.exists({index: EVENT_INDEX});
+      let tagIndexExists = await esClient.indices.exists({index: TAG_INDEX});
 
       if (eventIndexExists && force) {
-        await esClient.indices.delete({index: 'toss_event'});
+        await esClient.indices.delete({index: EVENT_INDEX});
         eventIndexExists = false;
       }
       if (tagIndexExists && force) {
-        await esClient.indices.delete({index: 'toss_tag'});
+        await esClient.indices.delete({index: TAG_INDEX});
         tagIndexExists = false;
       }
 
       eventIndexExists || await esClient.indices.create({
-        index: 'toss_event',
+        index: EVENT_INDEX,
         body: {
           'mappings': {
             'event': eventMapping,
@@ -86,7 +89,7 @@ const eventMapping = {
       });
 
       tagIndexExists || await esClient.indices.create({
-        index: 'toss_tag',
+        index: TAG_INDEX,
         body: {
           'mappings': {
             'tag': tagMapping,
@@ -101,13 +104,13 @@ const eventMapping = {
   const updateMappings = async () => {
     try {
       await esClient.indices.putMapping({
-        index: 'toss_tag',
+        index: TAG_INDEX,
         type: 'tag',
         body: tagMapping,
       });
 
       await esClient.indices.putMapping({
-        index: 'toss_event',
+        index: EVENT_INDEX,
         type: 'event',
         body: eventMapping,
       });
