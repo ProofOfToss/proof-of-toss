@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
+import { formatBalance } from './../../util/token'
 
 class TransactionItem extends Component {
   render() {
@@ -12,7 +13,7 @@ class TransactionItem extends Component {
         <td>{this.props.item.time.toLocaleDateString()} {this.props.item.time.toLocaleTimeString()}</td>
         <td>{type}</td>
         <td>{wallet}</td>
-        <td>{this.props.item.sum}</td>
+        <td>{ formatBalance(this.props.item.sum, this.props.decimals) }</td>
         <td>{this.props.item.fee}</td>
       </tr>
     )
@@ -21,7 +22,8 @@ class TransactionItem extends Component {
 
 function mapPropsToState(state) {
   return {
-    currentAddress: state.web3.currentAddress
+    currentAddress: state.web3.currentAddress,
+    decimals: state.token.decimals
   };
 }
 

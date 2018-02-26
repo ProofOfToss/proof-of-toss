@@ -1,12 +1,13 @@
-import { getMyBalance, getMyBlockedBalance, getMySBTCBalance } from './../util/token'
+import { getMyBalance, getMyBlockedBalance, getMySBTCBalance, getDecimals } from './../util/token'
 
 export const REFRESH_BALANCE = 'REFRESH_BALANCE';
 
-export const refreshBalanceAction = (balance, blockedBalance, sbtcBalance) => ({
+export const refreshBalanceAction = (balance, blockedBalance, sbtcBalance, decimals) => ({
   'type': REFRESH_BALANCE,
   balance,
   blockedBalance,
-  sbtcBalance
+  sbtcBalance,
+  decimals
 });
 
 export const refreshBalance = () => {
@@ -20,20 +21,22 @@ export const refreshBalance = () => {
     let balance, blockedBalance, sbtcBalance;
 
     return getMyBalance(web3).then((_balance) => {
+        balance = _balance;
 
-      balance = _balance;
-      return getMyBlockedBalance(web3);
+        return getMyBlockedBalance(web3);
+      })
+      .then((_blockedBalance) => {
+        blockedBalance = _blockedBalance;
 
-    }).then((_blockedBalance) => {
+        return getMySBTCBalance(web3);
+      })
+      .then((_sbtcBalance) => {
+        sbtcBalance = _sbtcBalance.toNumber();
 
-      blockedBalance = _blockedBalance;
-      return getMySBTCBalance(web3);
-
-    }).then((_sbtcBalance) => {
-
-      sbtcBalance = _sbtcBalance.toNumber();
-      dispatch(refreshBalanceAction(balance, blockedBalance, sbtcBalance));
-
-    });
+        return getDecimals(web3);
+      })
+      .then((decimals) => {
+        dispatch(refreshBalanceAction(balance, blockedBalance, sbtcBalance, decimals));
+      });
   };
 };

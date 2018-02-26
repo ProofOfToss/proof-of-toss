@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import { Link } from 'react-router'
+import Link from './components/routing/Link'
 import { connect } from 'react-redux';
+import initLocale  from './components/locale/init'
 import NavbarUser from './components/navbar_user/NavbarUser'
 import Language from './components/navbar_user/Language'
 import ModalWeb3LostConnection from './components/modal/ModalWeb3LostConnection'
@@ -18,6 +19,8 @@ class App extends Component {
     this._menuLinkClass = this._menuLinkClass.bind(this);
     this.renderHeaderMenu = this.renderHeaderMenu.bind(this);
     this.renderFooterMenu = this.renderFooterMenu.bind(this);
+
+    initLocale(props.dispatch, props.params.locale);
   }
 
   _menuLinkClass(path) {
