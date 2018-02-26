@@ -4,6 +4,7 @@ import { getTranslate } from 'react-localize-redux';
 import TransactionsList from './TransactionsList'
 import ModalDeposit from './ModalDeposit'
 import ModalSend from "./ModalSend";
+import { formatBalance } from './../../util/token'
 
 class Index extends Component {
   constructor(props) {
@@ -44,10 +45,10 @@ class Index extends Component {
         <h1>TOSS</h1>
         <dl className="dl-horizontal">
           <dt>{ this.props.translate('pages.wallet.info.your_balance')}</dt>
-          <dd>{ this.props.balance.toFixed(2) }</dd>
+          <dd>{ formatBalance(this.props.balance, this.props.decimals) }</dd>
 
           <dt>Block sum</dt>
-          <dd>{ this.props.blockedBalance.toFixed(2) }</dd>
+          <dd>{ formatBalance(this.props.blockedBalance, this.props.decimals) }</dd>
 
           <dt />
           <dd>
@@ -70,6 +71,7 @@ function mapPropsToState(state) {
     web3: state.web3.web3,
     balance: state.token.balance,
     blockedBalance: state.token.blockedBalance,
+    decimals: state.token.decimals,
     translate: getTranslate(state.locale)
   };
 }

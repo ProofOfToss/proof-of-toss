@@ -15,15 +15,17 @@
     "event": {
       "name_is_too_short": "Name is too short min 3 symbols",
       "deposit_is_nan": "Deposit should be a number",
-      "deposit_is_too_small": "Deposit should be >= 1 TOSS",
+      "deposit_is_too_small": "Deposit should be >= 0.0001 TOSS",
       "deposit_is_too_big": "Deposit should be < 1 000 000 000 TOSS"
     },
     "token": {
       "sum_is_nan": "Sum should be a number",
-      "sum_is_too_small": "Sum should be >= 1 TOSS",
+      "sum_is_too_small": "Sum should be >= 0.0001 TOSS",
       "sum_is_too_big": "Sum should not exceed your balance",
       "fee_is_nan": "Fee should be a number",
-      "fee_is_too_small": "Fee should be >= "
+      "fee_is_too_small": "Fee should be >= ",
+      "wrong_precision": "Maximum precision of TOSS sum is 4 decimal points.",
+      "invalid_delimiter": "Decimals delimeter must be \".\""
     }
   },
   "pages": {
