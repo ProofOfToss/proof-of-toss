@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import Link/*, { LinkedComponent }*/ from 'valuelink'
-import { Input, TextArea/*, Select, Radio, Checkbox*/ } from 'valuelink/tags'
+import Link from 'valuelink'
+import { Input, TextArea } from 'valuelink/tags'
 import { getTranslate } from 'react-localize-redux';
 import LanguageField from './LanguageField'
 import CategoriesField from './CategoryField'
@@ -12,6 +12,7 @@ import ResultsField from './ResultsField'
 import Buttons from './Buttons'
 import ModalConfirm from './ModalConfirm'
 import config from "../../data/config.json";
+import { denormalizeBalance } from './../../util/token';
 import { formSaveEvent } from '../../actions/pages/newEvent'
 
 class EventForm extends Component {
@@ -30,7 +31,7 @@ class EventForm extends Component {
         category: config.categories.default,
         name: '',
         bidType: '',
-        deposit: '',
+        deposit: 0,
         tags: [],
         timeZone: config.timeZones.default,
         startTime: DEFAULT_START_TIME,
@@ -73,6 +74,8 @@ class EventForm extends Component {
   handleSubmit(event) {
     event.preventDefault();
     if(this.isValid()) {
+      let formData = this.state.formData;
+      formData.deposit = denormalizeBalance(formData.deposit, this.props.decimals);
       this.props.formSaveEvent(this.state.formData);
       return;
     }
@@ -178,6 +181,7 @@ function mapStateToProps(state) {
     saved: state.newEvent.saved,
     showConfirmModal: state.newEvent.showConfirmModal,
     balance: state.token.balance,
+    decimals: state.token.decimals,
     translate: getTranslate(state.locale),
   };
 }

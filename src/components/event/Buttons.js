@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
-import { getMyAllowance } from './../../util/token';
+import { getMyAllowance, formatBalance, denormalizeBalance } from './../../util/token';
 import { approveEvent } from '../../actions/pages/newEvent'
 
 class Buttons extends Component {
@@ -19,10 +19,11 @@ class Buttons extends Component {
 
   componentWillMount() {
     getMyAllowance(this.props.web3).then((value) => {
+      const allowance = formatBalance(value, this.props.decimals);
       this.setState({
         fetchAllowanceValue: false,
-        allowance: value,
-        approved: value >= this.props.deposit
+        allowance: allowance,
+        approved: allowance >= this.props.deposit
       })
     })
   }
@@ -33,17 +34,18 @@ class Buttons extends Component {
     }
 
     getMyAllowance(this.props.web3).then((value) => {
+      const allowance = formatBalance(value, this.props.decimals);
       this.setState({
         fetchAllowanceValue: false,
-        allowance: value,
-        approved: value >= this.props.deposit
+        allowance: allowance,
+        approved: allowance >= this.props.deposit
       })
     })
   }
 
   handleApprove(e) {
     e.preventDefault();
-    this.props.approve(this.props.deposit);
+    this.props.approve(denormalizeBalance(this.props.deposit, this.props.decimals));
   }
 
   render() {
@@ -61,7 +63,9 @@ class Buttons extends Component {
     } else {
       content = <Fragment>
         <div className='alert alert-warning' role='alert'>
-          { this.props.translate('pages.new_event.form.approve.message', {allowance: this.state.allowance})}
+          { this.props.translate('pages.new_event.form.approve.message', {
+            allowance: this.state.allowance})
+          }
         </div>
         <a href="#" className="btn btn-warning" onClick={this.handleApprove} >
           { this.props.translate('pages.new_event.form.approve.label')}
@@ -78,6 +82,7 @@ function mapStateToProps(state) {
     web3: state.web3.web3,
     approving: state.newEvent.approving,
     approved: state.newEvent.approved,
+    decimals: state.token.decimals,
     translate: getTranslate(state.locale)
   };
 }
