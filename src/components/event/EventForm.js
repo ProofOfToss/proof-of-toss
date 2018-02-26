@@ -28,16 +28,16 @@ class EventForm extends Component {
       formData: {
         language: config.languages.list[0].code,
         category: config.categories.default,
-        name: 'test-' + (Math.random()),
-        bidType: 'bid type',
-        deposit: 11,
-        tags: ['tag_1', 'tag_2'],
+        name: '',
+        bidType: '',
+        deposit: '',
+        tags: [],
         timeZone: config.timeZones.default,
         startTime: DEFAULT_START_TIME,
         endTime: DEFAULT_END_TIME,
-        description: 'description',
-        sourceUrls: ['Source url'],
-        results: [{name: 'Result', coefficient: 10}, {name: 'Result 2', coefficient: 30}]
+        description: '',
+        sourceUrls: [],
+        results: []
       }
     }
   }
@@ -107,8 +107,8 @@ class EventForm extends Component {
 
     this.depositLink = Link.state(this, 'formData').at('deposit')
       .check( v => !isNaN(parseFloat(v)), this.props.translate('validation.event.deposit_is_nan'))
-      .check( v => parseFloat(v) >= 1, this.props.translate('validation.event.deposit_is_too_small'))
-      .check( v => parseFloat(v) <= this.props.balance, this.props.translate('validation.event.deposit_is_too_big'));
+      .check( v => parseFloat(v) >= 1, this.props.translate('validation.event.to_small', {value: 1}))
+      .check( v => parseFloat(v) <= this.props.balance, this.props.translate('validation.to_big', {value: this.props.balance}));
 
     this.descriptionLink = Link.state(this, 'formData').at('description')
       .check( v => v, this.props.translate('validation.required'))

@@ -132,22 +132,31 @@ class ModalConfirm extends Component {
   }
 
   _buttons() {
-    let buttons = [{
-      title: 'Cancel',
-      className: 'btn-default',
-      attrs: {
-        'data-dismiss': 'modal'
-      }
-    }];
+    let buttons = [];
 
-    if(this.props.saved === false) {
-      buttons.push({
-        title: 'Create',
+    if(this.props.saved) {
+      buttons = [{
+        title: this.props.translate('buttons.ok'),
+        className: 'btn-default',
+        attrs: {
+          'data-dismiss': 'modal'
+        }
+      }]
+    } else {
+      buttons = [{
+        title: this.props.translate('buttons.cancel'),
+        className: 'btn-default',
+        attrs: {
+          'data-dismiss': 'modal'
+        }
+      },
+      {
+        title: this.props.translate('buttons.create'),
         className: 'btn-primary',
         attrs: {
           onClick: this.props.saveEvent
         }
-      })
+      }];
     }
 
     return buttons;

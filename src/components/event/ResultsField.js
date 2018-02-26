@@ -20,7 +20,7 @@ class ResultsField extends Component {
       result: '',
       resultCoefficient: '',
       showResultErrors: false,
-      results: [{name: 'Result 1', coefficient: 10}, {name: 'Result 2', coefficient: 20},  {name: 'Result 3', coefficient: 30}]
+      results: []
     };
   }
 

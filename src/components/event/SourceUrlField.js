@@ -14,7 +14,7 @@ class SourceUrlField extends Component {
     this.state = {
       sourceUrl: '',
       showSourceUrlErrors: false,
-      sourceUrls: ['Source url']
+      sourceUrls: []
     }
   }
 
