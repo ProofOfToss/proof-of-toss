@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { Provider } from 'react-redux'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { refreshBalance } from './actions/token'
-import initLocale  from './components/locale/init'
+import checkRouteLocale  from './components/routing/checkRouteLocale'
 
 // Layouts
 import App from './App'
@@ -41,8 +41,6 @@ function renderReactDOM(web3) {
     store.dispatch(initWeb3(web3));
   }
 
-  initLocale();
-
   const history = syncHistoryWithStore(browserHistory, store);
 
   const checkAuthorization = function () {
@@ -51,34 +49,47 @@ function renderReactDOM(web3) {
     }
   };
 
+  const routes = (
+    <Fragment>
+      <IndexRoute component={Home} />
+
+      <Route path="sign-in" component={SignIn} />
+
+      <Route path="wallet" component={Wallet} onEnter={ checkAuthorization } />
+      <Route path="wallet/:page" component={Wallet} onEnter={ checkAuthorization } />
+
+
+      <Route path="play" component={Play} onEnter={ checkAuthorization } />
+      <Route path="play/event" component={PlayEvent} onEnter={ checkAuthorization } />
+      <Route path="play/event/bid_confirmation" component={PlayBidConfirmation} onEnter={ checkAuthorization } />
+      <Route path="play/event/contest_result" component={PlayContestResult} onEnter={ checkAuthorization } />
+
+      <Route path="payments" component={Payments} onEnter={ checkAuthorization } />
+      <Route path="payments/withdraw" component={PaymentsWithdraw} onEnter={ checkAuthorization } />
+
+      <Route path="judge" component={Judge} onEnter={ checkAuthorization } />
+
+      <Route path="storage" component={Storage} onEnter={ checkAuthorization } />
+      <Route path='events' component={Events} onEnter={ checkAuthorization } />
+      <Route path='new_event' component={NewEvent} onEnter={ checkAuthorization } />
+      <Route path='event(/:id)' component={Event} onEnter={ checkAuthorization } />
+
+      <Route path='*' component={NotFound} />
+    </Fragment>
+  );
+
   ReactDOM.render((
     <Provider store={store}>
       <Router history={history}>
-        <Route path="/" component={App}>
-          <IndexRoute component={Home} />
+        <Route component={ App }>
 
-          <Route path="sign-in" component={SignIn} />
+          <Route path="/:locale/" >
+            {routes}
+          </Route>
 
-          <Route path="wallet" component={Wallet} onEnter={ checkAuthorization } />
-          <Route path="wallet/:page" component={Wallet} onEnter={ checkAuthorization } />
-
-
-          <Route path="play" component={Play} onEnter={ checkAuthorization } />
-          <Route path="play/event" component={PlayEvent} onEnter={ checkAuthorization } />
-          <Route path="play/event/bid_confirmation" component={PlayBidConfirmation} onEnter={ checkAuthorization } />
-          <Route path="play/event/contest_result" component={PlayContestResult} onEnter={ checkAuthorization } />
-
-          <Route path="payments" component={Payments} onEnter={ checkAuthorization } />
-          <Route path="payments/withdraw" component={PaymentsWithdraw} onEnter={ checkAuthorization } />
-
-          <Route path="judge" component={Judge} onEnter={ checkAuthorization } />
-
-          <Route path="storage" component={Storage} onEnter={ checkAuthorization } />
-          <Route path='events' component={Events} onEnter={ checkAuthorization } />
-          <Route path='new_event' component={NewEvent} onEnter={ checkAuthorization } />
-          <Route path='event(/:id)' component={Event} onEnter={ checkAuthorization } />
-
-          <Route path='*' component={NotFound} />
+          <Route path="/" onEnter={checkRouteLocale} >
+            {routes}
+          </Route>
         </Route>
       </Router>
     </Provider>
