@@ -8,8 +8,9 @@ const glob = require("glob");
 const config = require('../config/deploy_config.js');
 
 const credentialsParams = process.argv.slice(2);
-if(credentialsParams.length < 2) {
-  console.log('Please provide Access key ID and Secret access key: node scripts/deploy.js accessKeyId secretAccessKey');
+if(credentialsParams.length < 3) {
+  console.log('Please provide Access key ID, Secret access key and CloudFront Distribution ID: node ' +
+    'scripts/deploy.js accessKeyId secretAccessKey cloudFrontDistributionID');
   process.exit();
 }
 
@@ -121,7 +122,7 @@ getFilesListFromBasket.then(data => {
       console.log('All files uploaded');
 
       const params = {
-        DistributionId: config.cloudFrontDistributionID,
+        DistributionId: credentialsParams[2],
         InvalidationBatch: {
           CallerReference: Date.now().toString(),
           Paths: {
