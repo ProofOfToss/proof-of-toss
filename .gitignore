@@ -15,4 +15,5 @@ src/images/uport-logo.svg
 npm-debug.log
 build_webpack
 docker/rsk/rsk/testnet.conf
+src/data/config.json
 config/deploy_config.js

@@ -12,6 +12,7 @@ import { Input } from 'valuelink/tags'
 import TokenContract from '../../../build/contracts/Token.json'
 import { refreshBalance } from '../../actions/token'
 import store from '../../store';
+import { formatBalance, denormalizeBalance } from './../../util/token'
 
 class ModalSend extends Component {
 
@@ -102,7 +103,7 @@ class ModalSend extends Component {
 
         return instance.transfer(
           this.state.address,
-          this.state.sum,
+          denormalizeBalance(this.state.sum, this.props.decimals),
           {
             from: this.props.currentAddress,
             gasPrice: Math.round(this.props.web3.toWei(this.state.fee / this.state.gasLimit)),
@@ -126,11 +127,22 @@ class ModalSend extends Component {
         });
 
       }).catch((e) => {
-
+        let msg = '';
         let errors = this.state.errors;
-        errors.push(e);
-        this.setState({ errors: errors, waiting: false });
 
+        if (
+          // firefox do not have normal msg, so trying to check for method name in call stack
+          e.message.indexOf('nsetTxStatusRejected') !== -1
+          // chrome have normal message
+          || e.message.indexOf('User denied transaction signature') !== -1) {
+          msg = this.props.translate('pages.wallet.send.user_denied_tx');
+        } else {
+          msg = this.props.translate('pages.wallet.send.unexpected_error');
+        }
+
+        errors.push(new Error(msg));
+
+        this.setState({ errors: errors, waiting: false });
       });
     });
   }
@@ -158,7 +170,7 @@ class ModalSend extends Component {
 
     token.deployed().then((instance) => {
 
-      return instance.transfer.estimateGas(address, sum);
+      return instance.transfer.estimateGas(address, denormalizeBalance(sum, this.props.decimals));
 
     }).then((result) => {
       const gas = Math.round( Number(result) * 1.5); // x 1.5 to prevent surprise out-of-gas errors
@@ -188,8 +200,28 @@ class ModalSend extends Component {
       sumLink
         .check( v => v, strings().validation.required)
         .check( v => !isNaN(parseFloat(v)), strings().validation.token.sum_is_nan)
-        .check( v => parseFloat(v) >= 1, strings().validation.token.sum_is_too_small)
-        .check( v => parseFloat(v) <= this.props.balance, strings().validation.token.sum_is_too_big);
+        .check( v => v.indexOf(',') === -1, strings().validation.token.invalid_delimiter)
+        .check( v => {
+          let splittedValue = (parseFloat(v) + '').split('.');
+
+          if (splittedValue.length === 1) {
+            // no decimals
+            return parseFloat(splittedValue[0]) === parseFloat(v);
+          }
+
+          if (splittedValue.length === 0 || splittedValue.length > 2) {
+            // something is wrong (0 means no value is supplied, >2 means weird things)
+            return false;
+          }
+
+          // check max decimal points
+          return splittedValue[1].length <= 4;
+        }, strings().validation.token.wrong_precision )
+        .check( v => parseFloat(v) >= config.view.token_min_send_value, strings().validation.token.sum_is_too_small)
+        .check(
+          v => denormalizeBalance(v, this.props.decimals) <= this.props.balance,
+          strings().validation.token.sum_is_too_big
+        );
     }
 
     if (!this.state.formPrestine || !this.state.feePrestine) {
@@ -234,12 +266,12 @@ class ModalSend extends Component {
         </div>
       </div>
       <div className='form-group'>
-        <label>{ this.props.translate('pages.wallet.send.balance') }: { this.props.balance.toFixed(config.view.token_precision) } {config.view.token_symbol}</label>
+        <label>{ this.props.translate('pages.wallet.send.balance') }: { formatBalance(this.props.balance, this.props.decimals) } {config.view.token_symbol}</label>
       </div>
       {(
         this.props.blockedBalance > 0 ?
           <div className='form-group'>
-            <label>{ this.props.translate('pages.wallet.send.block_sum') }: { this.props.blockedBalance.toFixed(config.view.token_precision) } {config.view.token_symbol}</label>
+            <label>{ this.props.translate('pages.wallet.send.block_sum') }: { formatBalance(this.props.blockedBalance, this.props.decimals) } {config.view.token_symbol}</label>
           </div> : ''
       )}
       <div className={ addressLink.error ? 'form-group has-error' : 'form-group' }>
@@ -351,6 +383,7 @@ function mapPropsToState(state) {
     currentAddress: state.user.address,
     balance: state.token.balance,
     blockedBalance: state.token.blockedBalance,
+    decimals: state.token.decimals,
     sbtcBalance: state.token.sbtcBalance,
     translate: getTranslate(state.locale)
   };

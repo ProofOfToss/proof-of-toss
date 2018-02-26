@@ -1,17 +1,26 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { Link } from 'react-router'
+import { withRouter } from 'react-router'
 import { setActiveLanguage, getLanguages } from 'react-localize-redux';
 
 class Language extends Component {
 
   render() {
+    const route = this.props.routes[this.props.routes.length - 1];
+
     return(
       <li className="dropdown">
-        <a href="#" className="dropdown-toggle" data-toggle="dropdown">Language <span className="caret"></span></a>
+        <a href="" className="dropdown-toggle" data-toggle="dropdown">Language <span className="caret"></span></a>
         <ul className="dropdown-menu" role="menu">
           { this.props.languages.map(language =>
-            <li key={language.code}><Link className="pure-menu-link" onClick={ () => this.props.setActiveLanguage(language.code)}>{language.name}</Link></li>
+            <li key={language.code}>
+              <Link className="pure-menu-link" to={`/${language.code}/${route.path}`}
+                    onClick={ () => this.props.setActiveLanguage(language.code)}
+              >
+                {language.name}
+              </Link>
+            </li>
           )}
         </ul>
       </li>
@@ -22,4 +31,4 @@ class Language extends Component {
 const mapStateToProps = state => ({ languages: getLanguages(state.locale) });
 const mapDispatchToProps = { setActiveLanguage };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Language);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Language));
