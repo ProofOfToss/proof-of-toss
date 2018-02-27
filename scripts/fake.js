@@ -84,16 +84,24 @@ logger.level = 'debug';
 
   for(let i = 0; i < 15; i++) {
 
+    const category = faker.random.arrayElement(['sports', 'politics', 'finances', 'other']);
+    const locale = faker.random.arrayElement(['en', 'ru', 'kz']);
+    const startDate = faker.date.future(0.1).getTime()/1000;
+    const endDate = faker.date.future(0.5).getTime()/1000;
+
+    const eventData = `${category}.${locale}.${startDate}.${endDate}`;
+    const tags = `${locale}.${faker.lorem.word()}.${locale}.${faker.lorem.word()}.${locale}.${faker.lorem.word()}`;
+    const results = '"result_description_1.10"';
+
     await main.newEvent(
       faker.lorem.sentence(),  // name
       faker.random.number({min: 10, max: 100}),  // deposit
-      faker.random.arrayElement(['en', 'ru', 'kz']),  // locale
-      faker.random.arrayElement(['sports', 'politics', 'finances', 'other']),  // category
       faker.lorem.sentence(),  // description
       1,  // operatorId
-      faker.date.future(0.1).getTime()/1000,  // startDate
-      faker.date.future(0.5).getTime()/1000,  // endDate
+      eventData, // category // locale // startDate // endDate
       faker.internet.url(),  // sourceUrl
+      tags, // tags
+      results, // results
       {from: accounts[0]}
     );
 
