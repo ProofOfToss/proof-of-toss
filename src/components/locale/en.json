@@ -10,13 +10,19 @@
       "submit": "Submit"
     }
   },
+  "buttons": {
+    "ok": "Ok",
+    "create": "Create",
+    "cancel": "Cancel"
+  },
   "validation": {
     "required": "Is required",
+    "min_length": "This value is too short. It should have ${ min } character or more.",
+    "range": "This value should be between ${ min } and ${ max } or less",
+    "to_small": "This value should be more than ${ value } TOSS",
+    "to_big": "This value should be less than ${ value } TOSS",
     "event": {
-      "name_is_too_short": "Name is too short min 3 symbols",
-      "deposit_is_nan": "Deposit should be a number",
-      "deposit_is_too_small": "Deposit should be >= 1 TOSS",
-      "deposit_is_too_big": "Deposit should be < 1 000 000 000 TOSS"
+      "deposit_is_nan": "Deposit should be a number"
     }
   },
   "pages": {
@@ -46,14 +52,55 @@
       }
     },
     "new_event": {
-      "form":
-      {
+      "saved": "Event successfully saved",
+      "gas_limit": "Gas limit",
+      "gas_price": "Gas price",
+      "form": {
+        "language": "Language",
+        "category": "Category",
         "name": "Name",
+        "bid_type": "Bid type",
         "deposit": "Deposit",
         "submit": "Submit",
-        "tags": "Tags"
+        "approve": {
+          "label": "Approve",
+          "fetching": "Fetching allowance value from blockchain.",
+          "message": "Your current allowance balance: ${ allowance }. It's not enough for creating event. Please approve more tokens."
+        },
+        "tags": {
+          "label": "Tags",
+          "error": "You should add at least one tag"
+        },
+        "time_zone": "Time zone",
+        "date_start": "Start time",
+        "date_end": "End time",
+        "description": "Description",
+        "source_url": {
+          "label": "Source url",
+          "add_new": "Add new",
+          "remove": "Remove",
+          "error": "You should add at least one source"
+        },
+        "results": {
+          "label": "Results",
+          "name": "Name",
+          "coefficient": "Coefficient",
+          "add_new": "Add new",
+          "remove": "Remove",
+          "move_up": "Up",
+          "move_down": "Down",
+          "error": "You should add at least two results"
+        }
+      },
+      "modal": {
+        "submit": "Create"
       }
     }
+  },
+  "categories": {
+    "sport": "Sport",
+    "economy": "Economy",
+    "weather": "Weather"
   }
 
 }

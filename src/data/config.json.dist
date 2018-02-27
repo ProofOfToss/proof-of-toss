@@ -2,11 +2,11 @@
   "network": "test",
   "firstBlock": 1000,
   "elasticsearch": {
-    "esNode": "search-xxx-xxxxxxxxxxxx";
-    "region": "eu-central-1";
-    "accessKeyId": "xxxxxxx";
-    "secretAccessKey": "xxxxxxxxxxxxxxxx";
-    "useSSL": true;
+    "esNode": "search-xxx-xxxxxxxxxxxx",
+    "region": "eu-central-1",
+    "accessKeyId": "xxxxxxx",
+    "secretAccessKey": "xxxxxxxxxxxxxxxx",
+    "useSSL": true
   },
   "view": {
     "token_symbol": "TOSS",
@@ -21,5 +21,16 @@
       {"name": "English", "code": "en"},
       {"name": "Russian", "code": "ru"}
     ]
+  },
+  "categories": {
+    "default": 1,
+    "list": [
+      {"id": 1, "name": "sport"},
+      {"id": 2, "name": "economy"},
+      {"id": 3, "name": "weather"}
+    ]
+  },
+  "timeZones": {
+    "default": 10
   }
 }
