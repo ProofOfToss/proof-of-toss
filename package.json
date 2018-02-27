@@ -107,7 +107,6 @@
     "create_es_index": "babel-node scripts/create_es_index.js",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "deploy": "node scripts/deploy.js",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
