@@ -91,7 +91,7 @@ logger.level = 'debug';
 
     const eventData = `${category}.${locale}.${startDate}.${endDate}`;
     const tags = `${locale}.${faker.lorem.word()}.${locale}.${faker.lorem.word()}.${locale}.${faker.lorem.word()}`;
-    const results = '"result_description_1.10.5.7"';
+    const results = '"result_description_1.10"';
 
     await main.newEvent(
       faker.lorem.sentence(),  // name
