@@ -61,6 +61,15 @@ const esClient = new AwsEsClient(
       const startDate = await event.startDate();
       const endDate = await event.endDate();
       const sourceUrl = await event.sourceUrl();
+      let tags = [];
+
+      for (let i = 0; i < 10; i++) {
+        const tag = (await event.tags(i))[0];
+
+        if (!tag) { break; }
+
+        tags.push({'locale': locale, 'name': tag});
+      }
 
       return {
         'name': /*web3.toUtf8*/(_event.eventName),
@@ -73,12 +82,31 @@ const esClient = new AwsEsClient(
         'startDate': startDate.c,
         'endDate': endDate.c,
         'sourceUrl': /*web3.toUtf8*/(sourceUrl),
-        'tag': [],
+        'tag': tags,
       };
     } catch (err) {
       logger.error(err);
       throw err;
     }
+  };
+
+  const indexTags = async (tags) => {
+    if (tags.length === 0) return;
+
+    let body = [];
+
+    for(let i = 0; i < tags.length; i++) {
+      body.push({ index: { _index: TAG_INDEX, _type: 'tag', _id: new Buffer(`${tags[i].locale} ${tags[i].name}`).toString('base64') } });
+      body.push({ name: tags[i].name, locale: tags[i].locale });
+    }
+
+    logger.trace(body);
+
+    await esClient.bulk({body}).then((result) => {
+      logger.info(result.items);
+    }).catch((error) => {
+      logger.error(error);
+    });
   };
 
   const indexEvents = async (events) => {
@@ -91,28 +119,15 @@ const esClient = new AwsEsClient(
         const doc = await convertBlockchainEventToEventDoc(events[i]);
         body.push({ index: { _index: EVENT_INDEX, _type: 'event', _id: doc.address } });
         body.push(doc);
+
+        indexTags(doc.tag);
       } catch (err) {
         logger.error(err);
         throw err;
       }
     }
 
-    await esClient.bulk({body}).then((result) => {
-      logger.info(result.items);
-    }).catch((error) => {
-      logger.error(error);
-    });
-  };
-
-  const indexTags = async (tags) => {
-    if (tags.length === 0) return;
-
-    let body = [];
-
-    for(let i = 0; i < tags.length; i++) {
-      body.push({ index: { _index: TAG_INDEX, _type: 'tag', _id: new Buffer(`${tags[i].locale} ${tags[i].name}`).toString('base64') } });
-      body.push({ name: tags[i].name, locale: tags[i].locale });
-    }
+    logger.trace(body);
 
     await esClient.bulk({body}).then((result) => {
       logger.info(result.items);
