@@ -29,5 +29,22 @@ deploy_demo:
     - npm run build
     - echo "Deploy to Demo"
     - rsync -hrlv --delete --exclude=.git --exclude=node_modules --exclude=npm-debug.log --exclude=testrpc_db --exclude=nohup.out $CI_PROJECT_DIR/ /srv/www/proof-of-toss-demo.axioma.lv/htdocs/
+
+deploy_production:
+  stage: deploy
+  environment:
+    name: deploy_production
+  tags:
+    - demo
+  when: manual
+  only:
+    - master
+  script:
+    - echo "Deploy to production server"
+    - source /opt/rh/devtoolset-2/enable
+    - npm install
+    - cp truffle.js.example truffle.js
+    - cp src/data/config.json.dist src/data/config.json
+    - npm run build
     - echo "Deloy to production"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
