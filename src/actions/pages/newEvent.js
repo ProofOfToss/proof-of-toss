@@ -27,14 +27,13 @@ export const approveEvent = (deposit) => {
           return getGasCalculation(web3, gasAmount);
         })
         .then((gasCalculation) => {
-          console.log(gasCalculation);
           return tokenInstance.approve(mainInstance.address, deposit, {
             from: getState().user.address,
             gasPrice: gasCalculation.gasPrice,
             gas: gasCalculation.gasLimit
           });
         }).then(() => {
-        dispatch({type: FORM_APPROVE_EVENT_SUCCESS})
+        dispatch({type: FORM_APPROVE_EVENT_SUCCESS});
       });
     });
   }
