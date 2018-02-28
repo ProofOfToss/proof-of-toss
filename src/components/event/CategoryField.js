@@ -25,8 +25,7 @@ class CategoryField extends Component {
       {this.state.categories.length > 0 &&
         <Fragment>
           <label htmlFor="event[category]">{ this.props.translate('pages.new_event.form.category')}*</label>
-          <Select valueLink={this.props.valueLink} type='text' id="event[category]" className='form-control'
-                  >
+          <Select valueLink={this.props.valueLink} type='text' id="event[category]" className='form-control'>
             {this.state.categories.map((category, key) => {
               return <option key={key} value={category.id}>{this.props.translate(`categories.${category.name}`)}</option>
             }, this)}

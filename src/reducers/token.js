@@ -3,8 +3,7 @@ import { REFRESH_BALANCE } from '../actions/token';
 const initialState = {
   'balance': 0,
   'blockedBalance': 0,
-  'sbtcBalance': 0,
-  'decimals': 4
+  'sbtcBalance': 0
 };
 
 const tokenReducer = (state = initialState, action) => {
@@ -13,8 +12,7 @@ const tokenReducer = (state = initialState, action) => {
       return Object.assign({}, state, {
         'balance': action.balance,
         'blockedBalance': action.blockedBalance,
-        'sbtcBalance': action.sbtcBalance,
-        'decimals': action.decimals
+        'sbtcBalance': action.sbtcBalance
       });
     default:
       return state;

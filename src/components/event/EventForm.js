@@ -12,7 +12,6 @@ import ResultsField from './ResultsField'
 import Buttons from './Buttons'
 import ModalConfirm from './ModalConfirm'
 import config from "../../data/config.json";
-import { denormalizeBalance } from './../../util/token';
 import { formSaveEvent } from '../../actions/pages/newEvent'
 
 class EventForm extends Component {
@@ -74,8 +73,6 @@ class EventForm extends Component {
   handleSubmit(event) {
     event.preventDefault();
     if(this.isValid()) {
-      let formData = this.state.formData;
-      formData.deposit = denormalizeBalance(formData.deposit, this.props.decimals);
       this.props.formSaveEvent(this.state.formData);
       return;
     }
@@ -110,7 +107,7 @@ class EventForm extends Component {
 
     this.depositLink = Link.state(this, 'formData').at('deposit')
       .check( v => !isNaN(parseFloat(v)), this.props.translate('validation.event.deposit_is_nan'))
-      .check( v => parseFloat(v) >= 1, this.props.translate('validation.event.to_small', {value: 1}))
+      .check( v => parseFloat(v) >= 1, this.props.translate('validation.to_small', {value: 1}))
       .check( v => parseFloat(v) <= this.props.balance, this.props.translate('validation.to_big', {value: this.props.balance}));
 
     this.descriptionLink = Link.state(this, 'formData').at('description')
@@ -181,7 +178,6 @@ function mapStateToProps(state) {
     saved: state.newEvent.saved,
     showConfirmModal: state.newEvent.showConfirmModal,
     balance: state.token.balance,
-    decimals: state.token.decimals,
     translate: getTranslate(state.locale),
   };
 }

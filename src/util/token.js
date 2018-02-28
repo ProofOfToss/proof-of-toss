@@ -1,16 +1,17 @@
 import MainContract from '../../build/contracts/Main.json'
 import TokenContract from '../../build/contracts/Token.json'
+import config from '../data/config.json'
 
 const contract = require('truffle-contract');
 const main = contract(MainContract);
 const token = contract(TokenContract);
 
-function formatBalance(balance, decimals) {
-  return (parseInt(balance, 10) / Math.pow(10, decimals)).toFixed(decimals, 10);
+function formatBalance(balance) {
+  return +(parseInt(balance, 10) / Math.pow(10, config.view.currency_precision)).toFixed(config.view.currency_precision);
 }
 
-function denormalizeBalance(balance, decimals) {
-  return parseFloat(balance) * Math.pow(10, decimals);
+function denormalizeBalance(balance) {
+  return parseFloat(balance) * Math.pow(10, config.view.currency_precision);
 }
 
 function getMyBalance(web3) {
@@ -147,7 +148,6 @@ function getMyAllowance(web3) {
       .then((allowance) => {
         return allowance.toNumber();
       });
-
   })
 }
 

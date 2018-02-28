@@ -19,11 +19,9 @@ class Buttons extends Component {
 
   componentWillMount() {
     getMyAllowance(this.props.web3).then((value) => {
-      const allowance = formatBalance(value, this.props.decimals);
       this.setState({
         fetchAllowanceValue: false,
-        allowance: allowance,
-        approved: allowance >= this.props.deposit
+        allowance: formatBalance(value)
       })
     })
   }
@@ -34,18 +32,15 @@ class Buttons extends Component {
     }
 
     getMyAllowance(this.props.web3).then((value) => {
-      const allowance = formatBalance(value, this.props.decimals);
       this.setState({
-        fetchAllowanceValue: false,
-        allowance: allowance,
-        approved: allowance >= this.props.deposit
+        allowance: formatBalance(value)
       })
     })
   }
 
   handleApprove(e) {
     e.preventDefault();
-    this.props.approve(denormalizeBalance(this.props.deposit, this.props.decimals));
+    this.props.approve(denormalizeBalance(this.props.deposit));
   }
 
   render() {
@@ -56,7 +51,7 @@ class Buttons extends Component {
       content = <div className='alert alert-danger' role='alert'>
         { this.props.translate('pages.new_event.form.approve.fetching')}
       </div>
-    } else if(this.state.approved || this.props.approved) {
+    } else if(this.state.allowance >= this.props.deposit || this.props.approved) {
       content = <button type="submit" className="btn btn-default">
           { this.props.translate('pages.new_event.form.submit')}
         </button>
@@ -82,7 +77,6 @@ function mapStateToProps(state) {
     web3: state.web3.web3,
     approving: state.newEvent.approving,
     approved: state.newEvent.approved,
-    decimals: state.token.decimals,
     translate: getTranslate(state.locale)
   };
 }
