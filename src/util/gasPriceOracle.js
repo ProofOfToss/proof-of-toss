@@ -1,4 +1,5 @@
 const _ = require('lodash');
+import config from '../data/config.json'
 
 function getBlockTransactions(web3, block) {
   let transactions = [];
@@ -127,4 +128,19 @@ function getGasPrices(web3) {
   return promise;
 }
 
-export { getGasPrices }
+function getGasCalculation(web3, gasAmount) {
+  return new Promise((resolve, reject) => {
+    getGasPrice(web3)
+      .then((gasPrice) => {
+        const gasLimit = Math.round(Number(gasAmount) * 1.5);
+
+        resolve({
+          gasLimit: gasLimit,
+          gasPrice: Math.round(gasPrice),
+          gasPriceStr: Math.round(web3.fromWei(gasPrice, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei'
+        });
+      });
+  })
+}
+
+export { getGasPrices, getGasCalculation }

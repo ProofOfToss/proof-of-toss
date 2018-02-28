@@ -103,7 +103,7 @@ class ModalSend extends Component {
 
         return instance.transfer(
           this.state.address,
-          denormalizeBalance(this.state.sum, this.props.decimals),
+          denormalizeBalance(this.state.sum),
           {
             from: this.props.currentAddress,
             gasPrice: Math.round(this.props.web3.toWei(this.state.fee / this.state.gasLimit)),
@@ -170,7 +170,7 @@ class ModalSend extends Component {
 
     token.deployed().then((instance) => {
 
-      return instance.transfer.estimateGas(address, denormalizeBalance(sum, this.props.decimals));
+      return instance.transfer.estimateGas(address, denormalizeBalance(sum));
 
     }).then((result) => {
       const gas = Math.round( Number(result) * 1.5); // x 1.5 to prevent surprise out-of-gas errors
@@ -219,7 +219,7 @@ class ModalSend extends Component {
         }, strings().validation.token.wrong_precision )
         .check( v => parseFloat(v) >= config.view.token_min_send_value, strings().validation.token.sum_is_too_small)
         .check(
-          v => denormalizeBalance(v, this.props.decimals) <= this.props.balance,
+          v => denormalizeBalance(v) <= this.props.balance,
           strings().validation.token.sum_is_too_big
         );
     }
@@ -266,12 +266,12 @@ class ModalSend extends Component {
         </div>
       </div>
       <div className='form-group'>
-        <label>{ this.props.translate('pages.wallet.send.balance') }: { formatBalance(this.props.balance, this.props.decimals) } {config.view.token_symbol}</label>
+        <label>{ this.props.translate('pages.wallet.send.balance') }: { formatBalance(this.props.balance) } {config.view.token_symbol}</label>
       </div>
       {(
         this.props.blockedBalance > 0 ?
           <div className='form-group'>
-            <label>{ this.props.translate('pages.wallet.send.block_sum') }: { formatBalance(this.props.blockedBalance, this.props.decimals) } {config.view.token_symbol}</label>
+            <label>{ this.props.translate('pages.wallet.send.block_sum') }: { formatBalance(this.props.blockedBalance) } {config.view.token_symbol}</label>
           </div> : ''
       )}
       <div className={ addressLink.error ? 'form-group has-error' : 'form-group' }>

@@ -1,5 +1,8 @@
 import MainContract from '../../../build/contracts/Main.json'
 import TokenContract from '../../../build/contracts/Token.json'
+import { getGasCalculation } from '../../util/gasPriceOracle';
+import { denormalizeBalance } from './../../util/token';
+import { deployed } from '../../util/contracts';
 
 export const FORM_APPROVE_EVENT = 'FORM_APPROVE_EVENT';
 export const FORM_APPROVE_EVENT_SUCCESS = 'FORM_APPROVE_EVENT_SUCCESS';
@@ -12,27 +15,28 @@ export const SAVED_EVENT = 'SAVED_EVENT';
 
 export const approveEvent = (deposit) => {
   return (dispatch, getState) => {
-    dispatch({type: FORM_APPROVE_EVENT, deposit: deposit})
+    dispatch({type: FORM_APPROVE_EVENT, deposit: deposit});
 
     const web3 = getState().web3.web3;
-    let mainContract;
 
-    const contract = require('truffle-contract');
-    const main = contract(MainContract);
-    const token = contract(TokenContract);
-    main.setProvider(web3.currentProvider);
-    token.setProvider(web3.currentProvider);
-
-    main.deployed().then((instance) => {
-
-      mainContract = instance;
-      return token.deployed();
-
-    }).then((tokenInstance) => {
-      return tokenInstance.approve(mainContract.address, deposit, {from: getState().user.address});
-    }).then(() => {
-      dispatch({type: FORM_APPROVE_EVENT_SUCCESS})
-    })
+    deployed(web3, 'main', 'token').then(({mainInstance, tokenInstance}) => {
+      tokenInstance.approve.estimateGas(mainInstance.address, deposit, {
+        from: getState().user.address
+      })
+        .then((gasAmount) => {
+          return getGasCalculation(web3, gasAmount);
+        })
+        .then((gasCalculation) => {
+          console.log(gasCalculation);
+          return tokenInstance.approve(mainInstance.address, deposit, {
+            from: getState().user.address,
+            gasPrice: gasCalculation.gasPrice,
+            gas: gasCalculation.gasLimit
+          });
+        }).then(() => {
+        dispatch({type: FORM_APPROVE_EVENT_SUCCESS})
+      });
+    });
   }
 };
 
@@ -41,7 +45,7 @@ export const formSaveEvent = (formData) => ({
   formData: formData
 });
 
-export const modalSaveEvent = () => {
+export const modalSaveEvent = (gasLimit, gasPrice) => {
 
   return (dispatch, getState) => {
     dispatch({type: MODAL_SAVE_EVENT});
@@ -82,10 +86,13 @@ export const modalSaveEvent = () => {
           return `${previousValue}${currentValue.name}.${currentValue.coefficient}`
         }, '');
 
-        return mainContract.newEvent(formData.name, formData.deposit, formData.description, 1,
+        return mainContract.newEvent(formData.name, denormalizeBalance(formData.deposit), formData.description, 1,
           `${formData.category}.${formData.language}.${formData.startTime.unix()}.${formData.endTime.unix()}`,
-          formData.sourceUrls[0], tags, results,
-          {from: getState().user.address});
+          formData.sourceUrls[0], tags, results, {
+            from: getState().user.address,
+            gasPrice: gasPrice,
+            gas: gasLimit
+        });
 
       }).then(function () {
 

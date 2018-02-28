@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Select } from 'valuelink/tags'
 import { getTranslate } from 'react-localize-redux';
-import timezones from "timezones.json"
+import { TIME_ZONES } from "../../util/timezones";
 import Datetime from "react-datetime"
 import config from "../../data/config.json";
 import 'react-datetime/css/react-datetime.css'
@@ -21,9 +21,7 @@ class DateFields extends Component {
     this.getEndDateInputProps = this.getEndDateInputProps.bind(this);
 
     this.state = {
-      timeZones: [].concat.apply([], timezones.map((item) => {
-        return item.utc
-      })),
+      timeZones: TIME_ZONES,
       formData: {
         timeZone: config.timeZones.default,
         startTime: DEFAULT_START_TIME,

@@ -2,61 +2,61 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import BaseModal from '../modal/BaseModal'
+import { TIME_ZONES } from "../../util/timezones";
 import { modalCloseEvent, modalSaveEvent } from '../../actions/pages/newEvent'
-import { getGasPrices } from '../../util/gasPriceOracle';
-import MainContract from '../../../build/contracts/Main.json'
+import { getGasCalculation } from '../../util/gasPriceOracle';
+import { deployed } from '../../util/contracts';
 
 class ModalConfirm extends Component {
 
   constructor(props) {
     super(props);
 
+    this.saveEventHandler = this.saveEventHandler.bind(this);
+
     this.state = {
-      gasLimit: undefined
+      gasLimit: undefined,
+      gasPrice: undefined,
+      gasPriceStr: ''
     }
   }
 
   componentWillMount() {
-    const contract = require('truffle-contract');
-    const main = contract(MainContract);
-    main.setProvider(this.props.web3.currentProvider);
+    deployed(this.props.web3, 'main').then(({mainInstance}) => {
+      const tags = this.props.formData.tags.reduce((previousValue, currentValue) => {
+        if(previousValue.length > 0) {
+          previousValue += '.';
+        }
 
-    getGasPrices(this.props.web3).then((gasPrices) => {
+        return `${previousValue}${this.props.formData.language}.${currentValue}`
+      }, '');
 
-      main.deployed().then((instance) => {
+      const results = this.props.formData.results.reduce((previousValue, currentValue) => {
+        if(previousValue.length > 0) {
+          previousValue += '.';
+        }
 
-        const tags = this.props.formData.tags.reduce((previousValue, currentValue) => {
-          if(previousValue.length > 0) {
-            previousValue += '.';
-          }
+        return `${previousValue}${currentValue.name}.${currentValue.coefficient}`
+      }, '');
 
-          return `${previousValue}${this.props.formData.language}.${currentValue}`
-        }, '');
-
-        const results = this.props.formData.results.reduce((previousValue, currentValue) => {
-          if(previousValue.length > 0) {
-            previousValue += '.';
-          }
-
-          return `${previousValue}${currentValue.name}.${currentValue.coefficient}`
-        }, '');
-
-        return instance.newEvent.estimateGas(this.props.formData.name, this.props.formData.deposit, this.props.formData.description, 1,
-          `${this.props.formData.category}.${this.props.formData.language}.${this.props.formData.startTime.unix()}.${this.props.formData.endTime.unix()}`,
-          this.props.formData.sourceUrls[0], tags, results);
-
-      }).then((result) => {
-        const gas = Math.round( Number(result) * 1.5);
-        const price = this.props.web3.fromWei((gas * gasPrices.avg), 'ether');
-
+      mainInstance.newEvent.estimateGas(this.props.formData.name, this.props.formData.deposit, this.props.formData.description, 1,
+        `${this.props.formData.category}.${this.props.formData.language}.${this.props.formData.startTime.unix()}.${this.props.formData.endTime.unix()}`,
+        this.props.formData.sourceUrls[0], tags, results)
+      .then((gasAmount) => {
+        return getGasCalculation(this.props.web3, gasAmount);
+      })
+      .then((gasCalculation) => {
         this.setState({
-          gasLimit: gas.toFixed(0),
-          price: price
+          gasLimit: gasCalculation.gasLimit,
+          gasPrice: gasCalculation.gasPrice,
+          gasPriceStr: gasCalculation.gasPriceStr,
         });
-
-
-      }).catch(function() {});
+      });
     });
+  }
+
+  saveEventHandler() {
+    this.props.saveEvent(this.state.gasLimit, this.state.gasPrice);
   }
 
   _confirmContent() {
@@ -88,7 +88,7 @@ class ModalConfirm extends Component {
         <dd>{this.props.formData.tags.join(', ')}</dd>
 
         <dt>{this.props.translate('pages.new_event.form.time_zone')}</dt>
-        <dd>{this.props.formData.timeZone}</dd>
+        <dd>{TIME_ZONES[this.props.formData.timeZone]}</dd>
 
         <dt>{this.props.translate('pages.new_event.form.date_start')}</dt>
         <dd>{this.props.formData.startTime.format('LLL')}</dd>
@@ -118,7 +118,7 @@ class ModalConfirm extends Component {
             <dd>{this.state.gasLimit}</dd>
 
             <dt>{this.props.translate('pages.new_event.gas_price')}</dt>
-            <dd>{this.state.price}</dd>
+            <dd>{this.state.gasPriceStr}</dd>
           </Fragment>
         }
       </dl>
@@ -154,7 +154,7 @@ class ModalConfirm extends Component {
         title: this.props.translate('buttons.create'),
         className: 'btn-primary',
         attrs: {
-          onClick: this.props.saveEvent
+          onClick: this.saveEventHandler
         }
       }];
     }
