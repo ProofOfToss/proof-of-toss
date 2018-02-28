@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import TagsInput from 'react-tagsinput'
 import { getTranslate } from 'react-localize-redux';
@@ -8,11 +8,38 @@ class TagsField extends Component {
   constructor(props) {
     super(props);
 
+    this.onChangeTags = this.onChangeTags.bind(this);
+
     this.state = {
       formData: {
         tags: []
       }
     }
+  }
+
+  onChangeTags(tags) {
+    this.setState({
+      formData: {
+        tags: tags
+      }
+    });
+    this.props.onChange({tags: tags})
+  }
+
+  renderLayoutTags(tagComponents, inputComponent) {
+    return (
+      <Fragment>
+        {tagComponents}
+        {inputComponent}
+      </Fragment>
+    )
+  }
+
+  renderInput(props) {
+    let {onChange, value, addTag, ...other} = props;
+    return (
+      <input type='text' onChange={onChange} value={value} maxLength="16" {...other} />
+    )
   }
 
   _showErrors() {
@@ -22,14 +49,9 @@ class TagsField extends Component {
   render() {
     return <div className={"form-group" + (this._showErrors() ? ' has-error' : '')}>
       <label htmlFor="event[tags]">{ this.props.translate('pages.new_event.form.tags.label')}*</label>
-      <TagsInput value={this.state.formData.tags} onChange={(tags) => {
-        this.setState({
-          formData: {
-            tags: tags
-          }
-        });
-        this.props.onChange({tags: tags})
-      }} maxTags="10" className='react-tagsinput form-control' />
+      <TagsInput value={this.state.formData.tags} onChange={this.onChangeTags} renderLayout={this.renderLayoutTags}
+                 renderInput={this.renderInput}
+                 maxTags="10" className='react-tagsinput form-control' />
       { this._showErrors() &&
         <span id="helpBlock" className="help-block">{ this.props.translate('pages.new_event.form.tags.error') }</span>
       }
