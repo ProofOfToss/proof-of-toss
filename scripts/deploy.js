@@ -27,6 +27,7 @@ const s3 = new S3({
 });
 
 const cloudfront = new Cloudfront({
+  credentials: credentials,
   region: config.region
 });
 
