@@ -119,7 +119,7 @@ class EventForm extends Component {
       .check( v => v, this.props.translate('validation.required'));
 
     return <Fragment>
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleSubmit} className="new-event">
         <LanguageField valueLink={this.languageLink} />
 
         <CategoriesField valueLink={this.categoryLink} />
