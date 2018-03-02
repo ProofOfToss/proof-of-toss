@@ -7,8 +7,22 @@ contract Main {
     Token token;
     uint8 version = 1;
     Event lastEvent;
+    mapping (address => bool) public whitelist;
+    address owner;
+
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function transferOwnership(address newOwner) public onlyOwner {
+        require(newOwner != address(0));
+        owner = newOwner;
+    }
 
     function Main(address _token) {
+        owner = msg.sender;
+
         token = Token(_token);
     }
 
@@ -21,6 +35,7 @@ contract Main {
     function newEvent(string name, uint deposit, string description,
         uint operatorId, string eventData, string sourceUrl, string tags, string results
     ) returns (address) {
+        require(whitelist[msg.sender] == true);
 
         lastEvent = new Event(msg.sender, address(token), name, deposit, description, eventData,
             sourceUrl, tags, results);
@@ -37,5 +52,9 @@ contract Main {
 
     function getLastEvent() constant returns (address) {
         return address(lastEvent);
+    }
+
+    function updateWhitelist(address user, bool whitelisted) public onlyOwner {
+        whitelist[user] = whitelisted;
     }
 }

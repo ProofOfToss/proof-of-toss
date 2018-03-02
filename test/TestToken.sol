@@ -12,9 +12,9 @@ contract TestToken {
     function testInitialBalanceUsingDeployedContract() {
         Token token = Token(DeployedAddresses.Token());
 
-        uint expected = 1000000000;
+        uint expected = 10000000000000;
 
-        Assert.equal(token.balanceOf(tx.origin), expected, "Owner should have 10000000000 tokens initially");
+        Assert.equal(token.balanceOf(tx.origin), expected, "Owner should have 10000000000000 tokens initially");
     }
 
     function testBlocking() {
@@ -22,9 +22,9 @@ contract TestToken {
         BlockingGranter blockingGranter = BlockingGranter(DeployedAddresses.BlockingGranter());
         Blocker blocker = Blocker(DeployedAddresses.Blocker());
 
-        token.generateTokens(address(this), 1000000000);
+        token.generateTokens(address(this), 10000000000000);
 
-        Assert.equal(token.balanceOf(address(this)), 1000000000, "Owner should have 10000000000 tokens initially");
+        Assert.equal(token.balanceOf(address(this)), 10000000000000, "Owner should have 10000000000000 tokens initially");
 
         token.grantToAllowBlocking(address(blockingGranter), true);
 
@@ -32,7 +32,7 @@ contract TestToken {
 
         blockingGranter.grant(address(this), address(blocker));
 
-        blocker.block(address(this), 1000000000);
+        blocker.block(address(this), 10000000000000);
 
         Assert.equal(token.balanceOf(address(this)), 0, "Owner should have 0 tokens after block");
 
