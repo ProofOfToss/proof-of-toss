@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux';
+import { getTranslate } from 'react-localize-redux';
 import EventForm from '../../components/event/EventForm';
+import config from "../../data/config.json";
 
 class NewEvent extends Component {
   constructor(props) {
@@ -17,7 +20,11 @@ class NewEvent extends Component {
           {
             this.state.eventAddress === null && <div className="pure-u-1-1">{}
               <h1>New event</h1>
-              <EventForm ref={ev => this.event = ev} />
+              {
+                config.whitelist.indexOf(this.props.currentAddress) >= 0
+                  ? <EventForm ref={ev => this.event = ev} />
+                  : <p>{this.props.translate('pages.new_event.access_denied')}</p>
+              }
             </div>
           }
           {
@@ -29,4 +36,12 @@ class NewEvent extends Component {
   }
 }
 
-export default NewEvent;
+function mapPropsToState(state) {
+  return {
+    currentAddress: state.user.address,
+    translate: getTranslate(state.locale),
+  };
+}
+
+export default connect(mapPropsToState)(NewEvent)
+
