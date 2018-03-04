@@ -96,6 +96,9 @@
       "modal": {
         "submit": "Create"
       }
+    },
+    "home": {
+      "title": "Good to Go!"
     }
   },
   "categories": {
