@@ -32,5 +32,19 @@
   },
   "timeZones": {
     "default": 10
-  }
+  },
+  "whitelist": [
+    "0x06bc9874f0fe6e31120ab390ac9d99e12bdc5089", // first testrpc address
+    "0x9de32bb33dd4ecab8e2dcb5ad8a0407cb66dd4f3", // last - 2
+    "0x6288bacc584541d921a1e0218ea46f2e26702a41", // last - 1
+    "0xf79d6fd238197971e526390d19466d01ea33dc5e"  // last
+  ],
+  "blacklist": [
+    "0x9407808bb24233d6cbd943a74bb2ef6d9c365de2",
+    "0x54da5e31f204e1d2652c87add4f4f045966feb51",
+    "0x2a984c8c49f15ffa257d7dd7f700f5a193c5b77a",
+    "0x277ef42000668133fe0000eb173fdd05222e53a4",
+    "0x7ab38c0d2a990ceaa93f3e7a5a3d31a33bd21d42",
+    "0x0c1e057003ba8ef98d45c3f642eac55c01e53711"
+  ]
 }

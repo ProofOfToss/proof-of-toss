@@ -42,6 +42,9 @@
         "sum": "Sum",
         "fee": "Fee"
       }
+    },
+    "new_event": {
+      "access_denied": "Доступ запрещен"
     }
   }
 
