@@ -10,7 +10,7 @@ contract('Token', function (accounts) {
 
     return Token.deployed()
       .then(async function (instance) {
-        await expectThrow(instance.block(accounts[0], 1000));
+        await expectThrow(instance.block(accounts[0], 10000000));
       });
 
   });
@@ -19,7 +19,7 @@ contract('Token', function (accounts) {
 
     return Token.deployed()
       .then(async function (instance) {
-        await expectThrow(instance.block(accounts[0], 1000, {from: accounts[1]}));
+        await expectThrow(instance.block(accounts[0], 10000000, {from: accounts[1]}));
       });
 
   });
@@ -66,18 +66,18 @@ contract('Token', function (accounts) {
         return granter.grant(accounts[0], blocker.address, {from: accounts[1]}); // accounts[1] can initiate blocking of accounts[0] tokens by smart-contract
       }).then(async function () {
 
-        return blocker.block(accounts[0], 1000, {from: accounts[1]});
+        return blocker.block(accounts[0], 10000000, {from: accounts[1]});
       }).then(async function() {
 
         return token.balanceOf(accounts[0]);
       }).then(async function(balanceOf) {
-        assert.equal(balanceOf.toNumber(), 1000000000 - 1000);
+        assert.equal(balanceOf.toNumber(), 10000000000000 - 10000000);
 
-        await blocker.unblock(accounts[0], 1000, {from: accounts[1]});
+        await blocker.unblock(accounts[0], 10000000, {from: accounts[1]});
         return token.balanceOf(accounts[0]);
       }).then(function(balanceOf) {
 
-        assert.equal(balanceOf.toNumber(), 1000000000);
+        assert.equal(balanceOf.toNumber(), 10000000000000);
       });
   });
 
@@ -105,23 +105,23 @@ contract('Token', function (accounts) {
         return granter.grant(accounts[0], blocker.address, {from: accounts[1]});
       }).then(async function () {
 
-        await token.generateTokens(accounts[1], 1000);
-        assert.equal(1000, await token.balanceOf(accounts[1]));
-        await expectThrow(blocker.block(accounts[1], 1000, {from: accounts[1]})); // smart-contract was not granted to block tokens of accounts[1]
-        await token.generateTokens(accounts[1], -1000);
+        await token.generateTokens(accounts[1], 10000000);
+        assert.equal(10000000, await token.balanceOf(accounts[1]));
+        await expectThrow(blocker.block(accounts[1], 10000000, {from: accounts[1]})); // smart-contract was not granted to block tokens of accounts[1]
+        await token.generateTokens(accounts[1], -10000000);
 
-        return blocker.block(accounts[0], 1000, {from: accounts[1]});
+        return blocker.block(accounts[0], 10000000, {from: accounts[1]});
       }).then(async function() {
 
         return token.balanceOf(accounts[0]);
       }).then(async function(balanceOf) {
-        assert.equal(balanceOf.toNumber(), 1000000000 - 1000);
+        assert.equal(balanceOf.toNumber(), 10000000000000 - 10000000);
 
-        await blocker.unblock(accounts[0], 1000, {from: accounts[1]});
+        await blocker.unblock(accounts[0], 10000000, {from: accounts[1]});
         return token.balanceOf(accounts[0]);
       }).then(function(balanceOf) {
 
-        assert.equal(balanceOf.toNumber(), 1000000000);
+        assert.equal(balanceOf.toNumber(), 10000000000000);
       });
   });
 
@@ -149,7 +149,7 @@ contract('Token', function (accounts) {
 
   it("should not allow to unblock tokens if user tries to unblock more tokens than is blocked", function() {
 
-    let blockedCount = 1000;
+    let blockedCount = 10000000;
     let ownerBalanceOf;
     let token, granter, blocker;
 

@@ -55,6 +55,7 @@
       "saved": "Event successfully saved",
       "gas_limit": "Gas limit",
       "gas_price": "Gas price",
+      "access_denied": "Access denied",
       "form": {
         "language": "Language",
         "category": "Category",
