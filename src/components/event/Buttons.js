@@ -46,26 +46,28 @@ class Buttons extends Component {
   render() {
 
     let content;
+    const needApprove = (this.state.allowance < this.props.deposit) && false === this.props.approved;
 
     if(this.state.fetchAllowanceValue) {
       content = <div className='alert alert-danger' role='alert'>
-        { this.props.translate('pages.new_event.form.approve.fetching')}
+        {this.props.translate('pages.new_event.form.approve.fetching')}
       </div>
-    } else if(this.state.allowance >= this.props.deposit || this.props.approved) {
-      content = <button type="submit" className="btn btn-default">
-          { this.props.translate('pages.new_event.form.submit')}
-        </button>
     } else {
       content = <Fragment>
-        <div className='alert alert-warning' role='alert'>
-          { this.props.translate('pages.new_event.form.approve.message', {
-            allowance: this.state.allowance})
-          }
-        </div>
-        <a href="#" className="btn btn-warning" onClick={this.handleApprove} >
-          { this.props.translate('pages.new_event.form.approve.label')}
-        </a>
-      </Fragment>;
+        <button type="submit" className="btn btn-default" disabled={needApprove}>
+          { this.props.translate('pages.new_event.form.submit')}
+        </button>
+        { needApprove && <Fragment>
+          <a href="#" className="btn btn-warning" onClick={this.handleApprove} >
+            {this.props.translate('pages.new_event.form.approve.label')}
+          </a>
+          <div className='alert alert-warning' role='alert'>
+            {this.props.translate('pages.new_event.form.approve.message', {
+              allowance: this.state.allowance})
+            }
+          </div>
+        </Fragment> }
+      </Fragment>
     }
 
     return content;
