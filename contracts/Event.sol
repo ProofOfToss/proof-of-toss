@@ -49,9 +49,9 @@ contract Event {
         sourceUrl = _sourceUrl;
         createdTimestamp = block.timestamp;
 
-//        parseData(_data);
-//        parseTags(_tags);
-//        parseResults(_results);
+        parseData(_data);
+        parseTags(_tags);
+        parseResults(_results);
     }
 
     function parseData(string _data) private {
