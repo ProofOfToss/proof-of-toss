@@ -55,6 +55,8 @@ class ModalConfirm extends Component {
           gasPriceStr: gasCalculation.gasPriceStr,
         });
       }).catch((e) => {
+        console.log(e);
+        console.log(e.message);
         this.setState({
           estimateGasError: true
         });
