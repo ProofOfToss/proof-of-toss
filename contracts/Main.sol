@@ -35,7 +35,7 @@ contract Main {
     function newEvent(string name, uint deposit, string description,
         uint operatorId, string eventData, string sourceUrl, string tags, string results
     ) returns (address) {
-        require(whitelist[msg.sender] == true);
+//        require(whitelist[msg.sender] == true);
 
         lastEvent = new Event(msg.sender, address(token), name, deposit, description, eventData,
             sourceUrl, tags, results);
