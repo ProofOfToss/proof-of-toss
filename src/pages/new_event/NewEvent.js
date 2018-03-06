@@ -18,7 +18,7 @@ class NewEvent extends Component {
       <main className="container">
         <div>
           {
-            this.state.eventAddress === null && <div className="pure-u-1-1">{}
+            this.state.eventAddress === null && <div className="pure-u-1-1">
               <h1>New event</h1>
               {
                 config.whitelist.indexOf(this.props.currentAddress) >= 0
