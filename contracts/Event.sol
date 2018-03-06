@@ -36,7 +36,7 @@ contract Event {
     uint createdTimestamp;
 
     Tag[10] public tags;
-    Result[3] possibleResults;
+    Result[3] public possibleResults;
 
     function Event(address _creator, address _token, string _name, uint _deposit,
         string _description, string memory _data, string _sourceUrl, string memory _tags, string memory _results
@@ -60,23 +60,23 @@ contract Event {
 
         //Convert category to bytes32
         bytes32 categoryBytes32;
-        string memory categoryString = dataSlice.split(delimiter).toString();
+        bytes memory categoryString = bytes(dataSlice.split(delimiter).toString());
 
         assembly {
-            categoryBytes32 := mload(add(localeString, 32))
+            categoryBytes32 := mload(add(categoryString, 32))
         }
 
         category = categoryBytes32;
 
         //Convert locale to bytes2
-        bytes2 localeBytes2;
-        string memory localeString = dataSlice.split(delimiter).toString();
+        bytes32 localeBytes32;
+        bytes memory localeString = bytes(dataSlice.split(delimiter).toString());
 
         assembly {
-            localeBytes2 := mload(add(localeString, 2))
+            localeBytes32 := mload(add(localeString, 32))
         }
 
-        locale = localeBytes2;
+        locale = bytes2(localeBytes32);
 
         startDate = uint64(JsmnSolLib.parseInt(dataSlice.split(delimiter).toString()));
         endDate = uint64(JsmnSolLib.parseInt(dataSlice.split(delimiter).toString()));
@@ -85,19 +85,20 @@ contract Event {
     function parseTags(string _tags) private {
         var tagsSlice = _tags.toSlice();
         var delimiter = ".".toSlice();
+
         for(uint i = 0; i < 10; i++) {
 
             if(tagsSlice.len() < 2) break;
 
-            //Convert locale to bytes2
-            bytes2 localeBytes2;
+            //Convert string to bytes32
+            bytes32 localeBytes32;
             string memory localeString = tagsSlice.split(delimiter).toString();
 
             assembly {
-                localeBytes2 := mload(add(localeString, 2))
+                localeBytes32 := mload(add(localeString, 32))
             }
 
-            tags[i] = Tag(tagsSlice.split(delimiter).toString(), localeBytes2);
+            tags[i] = Tag(tagsSlice.split(delimiter).toString(), bytes2(localeBytes32));
         }
     }
 
@@ -106,7 +107,7 @@ contract Event {
         var delimiter = ".".toSlice();
         for(uint i = 0; i < 3; i++) {
 
-            if(resultsSlice.len() < 4) break;
+            if(resultsSlice.len() < 2) break;
 
             possibleResults[i] = Result(
                 resultsSlice.split(delimiter).toString(),

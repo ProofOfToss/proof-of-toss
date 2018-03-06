@@ -21,11 +21,16 @@ contract TestMain {
 
         token.approve(address(main), 10000000);
 
+        uint deposit = 10000000;
+        bytes32 categoryId = 'category_id';
+        bytes2 locale = 'en';
+        uint256 eventStartDate = 1517406195;
+        uint256 eventEndDate = 1580478195;
         main.updateWhitelist(creator, true);
 
-        address eventAddress = main.newEvent('Test event', 10000000, 'description', 1,
+        address eventAddress = main.newEvent('Test event', deposit, 'description', 1,
             'category_id.en.1517406195.1580478195', 'source_url', 'en.tag1_name.en.tag2_name.en.tag3_name',
-            "result_description_1.10"
+            'result_description_1.10.result_description_2.20'
         );
 
 //        Assert.equal(eventAddress != 0, true, "Event should be created");
@@ -35,7 +40,12 @@ contract TestMain {
         Event _event = Event(eventAddress);
         Assert.equal(address(token), _event.getToken(), "Event.token should be the same as token");
         Assert.equal(creator, _event.getCreator(), "Event.creator should match account address");
-//         Assert.equal(now, _event.getCreatedTimestamp(), "Event.createdTimestamp should be now");
+
+        Assert.equal(_event.deposit(), deposit, "Event.deposit invalid");
+        Assert.equal(_event.category(), categoryId, "Event.categoryId invalid");
+        Assert.equal(_event.locale(), locale, "Event.locale invalid");
+        Assert.equal(_event.startDate(), eventStartDate, "Event.startDate invalid");
+        Assert.equal(_event.endDate(), eventEndDate, "Event.endDate invalid");
 
         Assert.equal(token.balanceOf(eventAddress), 10000000, "Event balance should match deposit");
 
