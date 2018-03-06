@@ -96,6 +96,9 @@
       "modal": {
         "submit": "Create"
       }
+    },
+    "login": {
+      "error": "Error while login with this address"
     }
   },
   "categories": {
