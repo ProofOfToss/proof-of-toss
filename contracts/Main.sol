@@ -34,20 +34,22 @@ contract Main {
 
     function newEvent(string name, uint deposit, string description,
         uint operatorId, string eventData, string sourceUrl, string tags, string results
-    ) returns (address) {
+    ) returns (bool) {
 //        require(whitelist[msg.sender] == true);
 
-        lastEvent = new Event(msg.sender, address(token), name, deposit, description, eventData,
-            sourceUrl, tags, results);
+//        lastEvent = new Event(msg.sender, address(token), name, deposit, description, eventData,
+//            sourceUrl, tags, results);
+//
+//        if (token.allowanceToAllowBlocking(msg.sender, address(this))) {
+//            token.allowBlocking(msg.sender, address(lastEvent));
+//        }
+//
+//        token.transferFrom(msg.sender, address(lastEvent), deposit);
+//        NewEvent(name, uint(now), address(lastEvent), msg.sender);
+//
+//        return address(lastEvent);
 
-        if (token.allowanceToAllowBlocking(msg.sender, address(this))) {
-            token.allowBlocking(msg.sender, address(lastEvent));
-        }
-
-        token.transferFrom(msg.sender, address(lastEvent), deposit);
-        NewEvent(name, uint(now), address(lastEvent), msg.sender);
-
-        return address(lastEvent);
+        return true;
     }
 
     function getLastEvent() constant returns (address) {
