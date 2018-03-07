@@ -23,6 +23,9 @@
     "home": {
       "title": "Можно начинать!"
     },
+    "login": {
+      "error": "Ошибка входа под этим аккаунтом"
+    },
     "wallet": {
       "send": {
         "title": "Отправка",
@@ -47,10 +50,10 @@
       }
     },
     "new_event": {
+      "access_denied": "Доступ запрещен",
       "saved": "Event successfully saved",
       "gas_limit": "Gas limit",
       "gas_price": "Gas price",
-      "access_denied": "Доступ запрещен",
       "estimate_gas_error": "Ошибка расчета затрат газа",
       "form": {
         "language": "Language",

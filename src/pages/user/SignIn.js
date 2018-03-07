@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router";
+import { getTranslate } from 'react-localize-redux';
 import { login } from './../../util/auth';
 import { authenticateUser } from '../../actions/user';
 
@@ -60,7 +61,7 @@ class SignIn extends Component {
     if (this.state.loginFailed === true) {
       return (
         <div className="alert alert-danger" role="alert">
-          { this.state.errorMessage }
+          { this.props.translate('pages.login.error') }
         </div>
       );
     }
@@ -206,7 +207,8 @@ function mapPropsToState(state) {
     isWalletLocked: state.web3.isWalletLocked,
     currentAddress: state.web3.currentAddress,
     web3: state.web3.web3,
-    web3HasConnection: state.web3.hasConnection
+    web3HasConnection: state.web3.hasConnection,
+    translate: getTranslate(state.locale),
   };
 }
 

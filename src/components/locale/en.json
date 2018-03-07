@@ -26,6 +26,12 @@
     }
   },
   "pages": {
+    "home": {
+      "title": "Good to Go!"
+    },
+    "login": {
+      "error": "Error while login with this address"
+    },
     "wallet": {
       "send": {
         "title": "Send",
@@ -97,9 +103,6 @@
       "modal": {
         "submit": "Create"
       }
-    },
-    "home": {
-      "title": "Good to Go!"
     }
   },
   "categories": {
