@@ -11,6 +11,7 @@ import Link from 'valuelink'
 import { Input } from 'valuelink/tags'
 import TokenContract from '../../../build/contracts/Token.json'
 import { refreshBalance } from '../../actions/token'
+import { transactionSaved } from '../../actions/pages/wallet'
 import store from '../../store';
 import { formatBalance, denormalizeBalance } from './../../util/token'
 
@@ -124,6 +125,7 @@ class ModalSend extends Component {
           this.setState({ successTransaction: tx, waiting: false });
 
           store.dispatch(refreshBalance());
+          this.props.transactionSaved(tx, denormalizeBalance(this.state.sum));
         });
 
       }).catch((e) => {
@@ -389,4 +391,8 @@ function mapPropsToState(state) {
   };
 }
 
-export default connect(mapPropsToState)(ModalSend);
+const mapDispatchToProps = {
+  transactionSaved
+};
+
+export default connect(mapPropsToState, mapDispatchToProps)(ModalSend);
