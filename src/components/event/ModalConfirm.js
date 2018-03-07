@@ -192,7 +192,7 @@ class ModalConfirm extends Component {
   }
 }
 
-function mapPropsToState(state) {
+function mapStateToProps(state) {
   return {
     web3: state.web3.web3,
     currentAddress: state.user.address,
@@ -208,4 +208,4 @@ const mapDispatchToProps = {
   saveEvent: modalSaveEvent
 };
 
-export default connect(mapPropsToState, mapDispatchToProps)(ModalConfirm);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalConfirm);
