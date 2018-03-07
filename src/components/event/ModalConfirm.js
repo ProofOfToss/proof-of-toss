@@ -17,7 +17,8 @@ class ModalConfirm extends Component {
     this.state = {
       gasLimit: undefined,
       gasPrice: undefined,
-      gasPriceStr: ''
+      gasPriceStr: '',
+      estimateGasError: false
     }
   }
 
@@ -41,7 +42,9 @@ class ModalConfirm extends Component {
 
       mainInstance.newEvent.estimateGas(this.props.formData.name, this.props.formData.deposit, this.props.formData.description, 1,
         `${this.props.formData.category}.${this.props.formData.language}.${this.props.formData.startTime.unix()}.${this.props.formData.endTime.unix()}`,
-        this.props.formData.sourceUrls[0], tags, results)
+        this.props.formData.sourceUrls[0], tags, results, {
+          from: this.props.currentAddress
+        })
       .then((gasAmount) => {
         return getGasCalculation(this.props.web3, gasAmount);
       })
@@ -50,6 +53,12 @@ class ModalConfirm extends Component {
           gasLimit: gasCalculation.gasLimit,
           gasPrice: gasCalculation.gasPrice,
           gasPriceStr: gasCalculation.gasPriceStr,
+        });
+      }).catch((e) => {
+        console.log(e);
+        console.log(e.message);
+        this.setState({
+          estimateGasError: true
         });
       });
     });
@@ -65,6 +74,12 @@ class ModalConfirm extends Component {
       {this.props.save_error &&
         <div className='alert alert-danger' role='alert'>
           {this.props.save_error.message}
+        </div>
+      }
+
+      {this.state.estimateGasError &&
+        <div className='alert alert-danger' role='alert'>
+          {this.props.translate('pages.new_event.estimate_gas_error')}
         </div>
       }
 
@@ -177,7 +192,7 @@ class ModalConfirm extends Component {
   }
 }
 
-function mapPropsToState(state) {
+function mapStateToProps(state) {
   return {
     web3: state.web3.web3,
     currentAddress: state.user.address,
@@ -193,4 +208,4 @@ const mapDispatchToProps = {
   saveEvent: modalSaveEvent
 };
 
-export default connect(mapPropsToState, mapDispatchToProps)(ModalConfirm);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalConfirm);

@@ -20,6 +20,12 @@
     }
   },
   "pages": {
+    "home": {
+      "title": "Можно начинать!"
+    },
+    "login": {
+      "error": "Ошибка входа под этим аккаунтом"
+    },
     "wallet": {
       "send": {
         "title": "Отправка",
@@ -44,10 +50,51 @@
       }
     },
     "new_event": {
-      "access_denied": "Доступ запрещен"
-    },
-    "login": {
-      "error": "Ошибка входа под этим аккантом"
+      "access_denied": "Доступ запрещен",
+      "saved": "Event successfully saved",
+      "gas_limit": "Gas limit",
+      "gas_price": "Gas price",
+      "estimate_gas_error": "Ошибка расчета затрат газа",
+      "form": {
+        "language": "Language",
+        "category": "Category",
+        "name": "Name",
+        "bid_type": "Bid type",
+        "deposit": "Deposit",
+        "submit": "Submit",
+        "approve": {
+          "label": "Approve",
+          "fetching": "Fetching allowance value from blockchain.",
+          "message": "Your current allowance balance: ${ allowance }. It's not enough for creating event. Please approve more tokens."
+        },
+        "tags": {
+          "label": "Tags",
+          "error": "You should add at least one tag"
+        },
+        "time_zone": "Time zone",
+        "date_start": "Start time",
+        "date_end": "End time",
+        "description": "Description",
+        "source_url": {
+          "label": "Source url",
+          "add_new": "Add new",
+          "remove": "Remove",
+          "error": "You should add at least one source"
+        },
+        "results": {
+          "label": "Results",
+          "name": "Name",
+          "coefficient": "Coefficient",
+          "add_new": "Add new",
+          "remove": "Remove",
+          "move_up": "Up",
+          "move_down": "Down",
+          "error": "You should add at least two results"
+        }
+      },
+      "modal": {
+        "submit": "Create"
+      }
     }
   }
 

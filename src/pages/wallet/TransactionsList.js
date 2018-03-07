@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import ReactPaginate from 'react-paginate';
+import { getActiveLanguage } from 'react-localize-redux';
 import { browserHistory } from 'react-router'
 import { connect } from 'react-redux';
 import { strings } from '../../util/i18n';
@@ -11,7 +12,8 @@ class TransactionList extends Component {
   constructor(props) {
     super(props)
 
-    this.handlePageClick = this.handlePageClick.bind(this)
+    this.handlePageClick = this.handlePageClick.bind(this);
+    this.hrefBuilder = this.hrefBuilder.bind(this);
 
     this.state = {
       perPage: 5,
@@ -21,11 +23,11 @@ class TransactionList extends Component {
   }
 
   handlePageClick(data) {
-    browserHistory.push(`/wallet/${data.selected + 1}`);
+    browserHistory.push(`/${this.props.currentLanguage}/wallet/${data.selected + 1}`);
   }
 
   hrefBuilder(page) {
-    return `/wallet/${page}`
+    return `/${this.props.currentLanguage}/wallet/${page}`
   }
 
   componentWillMount() {
@@ -94,7 +96,8 @@ class TransactionList extends Component {
 
 function mapPropsToState(state) {
   return {
-    web3: state.web3.web3
+    web3: state.web3.web3,
+    currentLanguage: getActiveLanguage(state.locale).code
   };
 }
 
