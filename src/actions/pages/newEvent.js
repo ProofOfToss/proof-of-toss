@@ -23,16 +23,16 @@ export const approveEvent = (deposit) => {
       tokenInstance.approve.estimateGas(mainInstance.address, deposit, {
         from: getState().user.address
       })
-        .then((gasAmount) => {
-          return getGasCalculation(web3, gasAmount);
-        })
-        .then((gasCalculation) => {
-          return tokenInstance.approve(mainInstance.address, deposit, {
-            from: getState().user.address,
-            gasPrice: gasCalculation.gasPrice,
-            gas: gasCalculation.gasLimit
-          });
-        }).then(() => {
+      .then((gasAmount) => {
+        return getGasCalculation(web3, gasAmount);
+      })
+      .then((gasCalculation) => {
+        return tokenInstance.approve(mainInstance.address, deposit, {
+          from: getState().user.address,
+          gasPrice: gasCalculation.gasPrice,
+          gas: gasCalculation.gasLimit
+        });
+      }).then(() => {
         dispatch({type: FORM_APPROVE_EVENT_SUCCESS});
       });
     });

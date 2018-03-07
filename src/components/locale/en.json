@@ -56,6 +56,7 @@
       "gas_limit": "Gas limit",
       "gas_price": "Gas price",
       "access_denied": "Access denied",
+      "estimate_gas_error": "Error of calculation estimate gas",
       "form": {
         "language": "Language",
         "category": "Category",
