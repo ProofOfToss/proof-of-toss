@@ -130,14 +130,16 @@ function getGasPrices(web3) {
 
 function getGasCalculation(web3, gasAmount) {
   return new Promise((resolve, reject) => {
-    getGasPrice(web3)
-      .then((gasPrice) => {
+    getGasPrices(web3)
+      .then((gasPrices) => {
         const gasLimit = Math.round(Number(gasAmount) * 1.5);
 
         resolve({
           gasLimit: gasLimit,
-          gasPrice: Math.round(gasPrice),
-          gasPriceStr: Math.round(web3.fromWei(gasPrice, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei'
+          gasPrice: Math.round(gasPrices.avg),
+          minFee: web3.fromWei((gasLimit * gasPrices.min), 'ether'),
+          fee: web3.fromWei((gasLimit * gasPrices.avg), 'ether'),
+          gasPriceStr: Math.round(web3.fromWei(gasPrices.avg, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei'
         });
       });
   })

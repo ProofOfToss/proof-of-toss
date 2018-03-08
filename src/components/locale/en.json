@@ -21,6 +21,15 @@
     "range": "This value should be between ${ min } and ${ max } or less",
     "to_small": "This value should be more than ${ value } TOSS",
     "to_big": "This value should be less than ${ value } TOSS",
+    "token": {
+      "sum_is_nan": "Sum should be a number",
+      "sum_is_too_small": "Sum should be >= 0.0001 TOSS",
+      "sum_is_too_big": "Sum should not exceed your balance",
+      "fee_is_nan": "Fee should be a number",
+      "fee_is_too_small": "Fee should be >= ",
+      "wrong_precision": "Maximum precision of TOSS sum is 4 decimal points.",
+      "invalid_delimiter": "Decimals delimeter must be \".\""
+    },
     "event": {
       "deposit_is_nan": "Deposit should be a number"
     }
@@ -57,6 +66,7 @@
       "gas_price": "Gas price",
       "access_denied": "Access denied",
       "estimate_gas_error": "Error of calculation estimate gas",
+      "fee": "Fee",
       "form": {
         "language": "Language",
         "category": "Category",

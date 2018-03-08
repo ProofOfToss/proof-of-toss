@@ -1,11 +1,14 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
+import Link from 'valuelink'
+import { Input } from 'valuelink/tags'
 import BaseModal from '../modal/BaseModal'
 import { TIME_ZONES } from "../../util/timezones";
 import { modalCloseEvent, modalSaveEvent } from '../../actions/pages/newEvent'
 import { getGasCalculation } from '../../util/gasPriceOracle';
 import { deployed } from '../../util/contracts';
+import config from '../../data/config.json';
 
 class ModalConfirm extends Component {
 
@@ -17,6 +20,7 @@ class ModalConfirm extends Component {
     this.state = {
       gasLimit: undefined,
       gasPrice: undefined,
+      fee: 0,
       gasPriceStr: '',
       estimateGasError: false
     }
@@ -51,12 +55,12 @@ class ModalConfirm extends Component {
       .then((gasCalculation) => {
         this.setState({
           gasLimit: gasCalculation.gasLimit,
-          gasPrice: gasCalculation.gasPrice,
-          gasPriceStr: gasCalculation.gasPriceStr,
+          gasPrice: gasCalculation.price / gasCalculation.gasLimit,
+          gasPriceStr: Number(this.props.web3.toWei(gasCalculation.price / gasCalculation.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei',
+          minFee: gasCalculation.minFee,
+          fee: gasCalculation.fee
         });
       }).catch((e) => {
-        console.log(e);
-        console.log(e.message);
         this.setState({
           estimateGasError: true
         });
@@ -65,11 +69,12 @@ class ModalConfirm extends Component {
   }
 
   saveEventHandler() {
-    this.props.saveEvent(this.state.gasLimit, this.state.gasPrice);
+    this.props.saveEvent(this.state.gasLimit, Math.round(this.props.web3.toWei(this.state.fee / this.state.gasLimit)));
   }
 
   _confirmContent() {
-    return <div>
+
+    return <div className="modal-confirm-new-event">
 
       {this.props.save_error &&
         <div className='alert alert-danger' role='alert'>
@@ -128,13 +133,24 @@ class ModalConfirm extends Component {
           </ul>
         </dd>
 
-        {this.state.gasLimit && <Fragment>
+        {this.state.gasLimit && <div className="fees-block">
+            <dt className="fees-block-fee-label">{ this.props.translate('pages.wallet.send.fee') } ({config.view.currency_symbol})</dt>
+            <dd className="fees-block-fee-field">
+              <div className={ this.feeLink.error ? 'form-group has-error' : 'form-group' }>
+                <Input valueLink={ this.feeLink } type='number' className='form-control' id='event[fee]' placeholder={ this.props.translate('pages.new_event.fee') } />
+                <span className='help-block'>{ this.feeLink.error || '' }</span>
+              </div>
+            </dd>
+
+            <dt>{this.props.translate('pages.wallet.send.currency_balance', {currency: config.view.currency_symbol})}</dt>
+            <dd>{this.props.sbtcBalance.toFixed(config.view.currency_precision)}</dd>
+
             <dt>{this.props.translate('pages.new_event.gas_limit')}</dt>
             <dd>{this.state.gasLimit}</dd>
 
             <dt>{this.props.translate('pages.new_event.gas_price')}</dt>
-            <dd>{this.state.gasPriceStr}</dd>
-          </Fragment>
+            <dd>{Number(this.props.web3.toWei(this.state.fee / this.state.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei'}</dd>
+          </div>
         }
       </dl>
     </div>
@@ -169,7 +185,8 @@ class ModalConfirm extends Component {
         title: this.props.translate('buttons.create'),
         className: 'btn-primary',
         attrs: {
-          onClick: this.saveEventHandler
+          onClick: this.saveEventHandler,
+          disabled: this.feeLink.error
         }
       }];
     }
@@ -178,6 +195,11 @@ class ModalConfirm extends Component {
   }
 
   render() {
+    
+    this.feeLink = Link.state(this, 'fee')
+      .check( v => v, this.props.translate('validation.required'))
+      .check( v => !isNaN(parseFloat(v)), this.props.translate('validation.token.fee_is_nan'))
+      .check( v => parseFloat(v) >= this.state.minFee, this.props.translate('validation.token.fee_is_too_small') + this.state.minFee + ' ' + config.view.currency_symbol);
 
     return(
 
@@ -199,6 +221,7 @@ function mapStateToProps(state) {
     saved: state.newEvent.saved,
     save_error: state.newEvent.save_error,
     formData: state.newEvent.formData,
+    sbtcBalance: state.token.sbtcBalance,
     translate: getTranslate(state.locale),
   };
 }
