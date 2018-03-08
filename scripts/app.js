@@ -1,4 +1,5 @@
 import appConfig from '../src/data/config.json';
+import appPrivateConfig from '../src/data/private_config.json';
 
 import _ from 'lodash';
 import fs from 'fs';
@@ -21,15 +22,15 @@ const logger = log4js.getLogger('elasticsearch');
 
 import AwsEsClient from '../src/util/esClient';
 
-const EVENT_INDEX = 'toss_event_' + appConfig.network;
-const TAG_INDEX = 'toss_tag_' + appConfig.network;
+const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
+const TAG_INDEX = 'toss_tag_' + appConfig.elasticsearch.indexPostfix;
 
 const esClient = new AwsEsClient(
   { log: 'error' },
   appConfig.elasticsearch.esNode,
   appConfig.elasticsearch.region,
-  appConfig.elasticsearch.accessKeyId,
-  appConfig.elasticsearch.secretAccessKey,
+  appPrivateConfig.elasticsearch.accessKeyId,
+  appPrivateConfig.elasticsearch.secretAccessKey,
   appConfig.elasticsearch.useSSL
 );
 
@@ -58,6 +59,14 @@ const esClient = new AwsEsClient(
       const locale = await event.locale();
       const category = await event.category();
       const description = await event.description();
+      const bidType = '';
+
+      const bidSum = (await Promise.all([
+        event.possibleResults(0),
+        event.possibleResults(1),
+        event.possibleResults(2),
+      ])).reduce((accumulator, result) => accumulator + parseInt(result[3]), 0);
+
       const startDate = await event.startDate();
       const endDate = await event.endDate();
       const sourceUrl = await event.sourceUrl();
@@ -74,6 +83,8 @@ const esClient = new AwsEsClient(
       return {
         'name': /*web3.toUtf8*/(_event.eventName),
         'description': /*web3.toUtf8*/(description),
+        'bidType': bidType,
+        'bidSum': bidSum,
         'address': _event.eventAddress,
         'createdBy': _event.eventCreator,
         'createdAt': _event.createdTimestamp.c,

@@ -1,10 +1,11 @@
 import appConfig from '../src/data/config.json';
+import appPrivateConfig from '../src/data/private_config.json';
 
 import log4js from 'log4js';
 var argv = require('yargs-parser')(process.argv.slice(2));
 
-const EVENT_INDEX = 'toss_event_' + appConfig.network;
-const TAG_INDEX = 'toss_tag_' + appConfig.network;
+const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
+const TAG_INDEX = 'toss_tag_' + appConfig.elasticsearch.indexPostfix;
 
 log4js.configure({
   appenders: {
@@ -21,8 +22,8 @@ const esClient = new AwsEsClient(
   { log: 'error' },
   appConfig.elasticsearch.esNode,
   appConfig.elasticsearch.region,
-  appConfig.elasticsearch.accessKeyId,
-  appConfig.elasticsearch.secretAccessKey,
+  appPrivateConfig.elasticsearch.accessKeyId,
+  appPrivateConfig.elasticsearch.secretAccessKey,
   appConfig.elasticsearch.useSSL
 );
 
@@ -37,6 +38,7 @@ const eventMapping = {
   'properties': {
     'name': {'type': 'text'},
     'description': {'type': 'text'},
+    'bidType': {'type': 'keyword'},
     'address': {'type': 'keyword'},
     'createdBy': {'type': 'keyword'},
     'createdAt': {'type': 'date'},
@@ -45,6 +47,7 @@ const eventMapping = {
     'startDate': {'type': 'date'},
     'endDate': {'type': 'date'},
     'sourceUrl': {'type': 'text'},
+    'bidSum': {'type': 'integer'},
     'tag': {'type': 'nested'},
   }
 };

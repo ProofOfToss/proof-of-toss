@@ -16,3 +16,4 @@ npm-debug.log
 build_webpack
 docker/rsk/rsk/testnet.conf
 src/data/config.json
+src/data/private_config.json

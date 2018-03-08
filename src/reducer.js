@@ -4,6 +4,7 @@ import { localeReducer } from 'react-localize-redux';
 import web3Reducer from './reducers/web3';
 import userReducer from './reducers/user';
 import tokenReducer from './reducers/token';
+import elasticReducer from './reducers/elastic';
 import newEventReducer from './reducers/pages/newEvent';
 import WalletReducer from './reducers/pages/wallet';
 
@@ -14,7 +15,8 @@ const reducer = combineReducers({
   token: tokenReducer,
   locale: localeReducer,
   newEvent: newEventReducer,
-  wallet: WalletReducer
+  elastic: elasticReducer,
+  wallet: WalletReducer,
 });
 
 export default reducer
