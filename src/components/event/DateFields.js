@@ -26,50 +26,29 @@ class DateFields extends Component {
         timeZone: config.timeZones.default,
         startTime: DEFAULT_START_TIME,
         endTime: DEFAULT_END_TIME
-      },
-      startTimeConstraints: {
-        hours: {
-          min: DEFAULT_START_TIME.hours()
-        }
-      },
-      endTimeConstraints: {
-        hours: {
-          min: DEFAULT_START_TIME.hours()
-        }
       }
     }
   }
 
   onChangeStartTime(currentDate) {
-
-    const timeConstraints = this.calculateStartTimeConstraints(currentDate);
-
     this.setState({
       formData: {
         ...this.state.formData,
         startTime: currentDate,
         endTime: currentDate.clone()
-      },
-      startTimeConstraints: timeConstraints,
-      endTimeConstraints: timeConstraints
+      }
     });
 
     this.props.onChange('startTime', currentDate);
   }
 
   onChangeEndTime(currentDate) {
-
-    let endTime = currentDate;
-
     this.setState({
       formData: {
         ...this.state.formData,
-        endTime: endTime
-      },
-      endTimeConstraints: this.calculateEndTimeConstraints(currentDate)
+        endTime: currentDate.clone()
+      }
     });
-
-    this.props.onChange('endTime', endTime);
   }
 
   isValidStartDate(currentDate) {
@@ -80,8 +59,8 @@ class DateFields extends Component {
     return currentDate.isSameOrAfter(this.state.formData.startTime, 'day');
   }
 
-  calculateStartTimeConstraints(currentDate) {
-    if(currentDate.isSame(Datetime.moment(), 'day')) {
+  calculateStartTimeConstraints() {
+    if(this.state.formData.startTime.isSame(Datetime.moment(), 'day')) {
       return {
         hours: {
           min: Datetime.moment().hours() + 1
@@ -92,8 +71,8 @@ class DateFields extends Component {
     return {};
   }
 
-  calculateEndTimeConstraints(currentDate) {
-    if(currentDate.isSame(this.state.formData.startTime, 'day')) {
+  calculateEndTimeConstraints() {
+    if(this.state.formData.endTime.isSame(this.state.formData.startTime, 'day')) {
       return {
         hours: {
           min: this.state.formData.startTime.hours()
@@ -113,7 +92,6 @@ class DateFields extends Component {
   }
 
   render() {
-
     return <Fragment>
       <div className={"form-group" + (this.props.valueLinkTimeZone.error ? ' has-error' : '')}>
         {this.state.timeZones.length > 0 &&
@@ -133,14 +111,14 @@ class DateFields extends Component {
       <div className="form-group">
         <label htmlFor="event[date_start]">{ this.props.translate('pages.new_event.form.date_start')}*</label>
         <Datetime isValidDate={this.isValidStartDate} onChange={this.onChangeStartTime}
-          timeConstraints={this.state.startTimeConstraints} timeFormat="H:mm"
+          timeConstraints={this.calculateStartTimeConstraints()} timeFormat="H:mm"
                   value={this.state.formData.startTime}/>
       </div>
 
       <div className="form-group">
         <label htmlFor="event[date_start]">{ this.props.translate('pages.new_event.form.date_end')}*</label>
         <Datetime isValidDate={this.isValidEndDate} onChange={this.onChangeEndTime}
-            timeConstraints={this.state.endTimeConstraints} timeFormat="H:mm" inputProps={this.getEndDateInputProps()}
+            timeConstraints={this.calculateEndTimeConstraints()} timeFormat="H:mm" inputProps={this.getEndDateInputProps()}
             value={this.state.formData.endTime}
          />
       </div>
