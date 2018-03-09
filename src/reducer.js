@@ -5,6 +5,7 @@ import web3Reducer from './reducers/web3';
 import userReducer from './reducers/user';
 import tokenReducer from './reducers/token';
 import newEventReducer from './reducers/pages/newEvent';
+import WalletReducer from './reducers/pages/wallet';
 
 const reducer = combineReducers({
   routing: routerReducer,
@@ -12,7 +13,8 @@ const reducer = combineReducers({
   user: userReducer,
   token: tokenReducer,
   locale: localeReducer,
-  newEvent: newEventReducer
+  newEvent: newEventReducer,
+  wallet: WalletReducer
 });
 
 export default reducer

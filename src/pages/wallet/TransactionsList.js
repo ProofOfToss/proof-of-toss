@@ -4,13 +4,13 @@ import { getActiveLanguage } from 'react-localize-redux';
 import { browserHistory } from 'react-router'
 import { connect } from 'react-redux';
 import { strings } from '../../util/i18n';
-import { getMyTransactions } from './../../util/token'
 import TransactionItem from './TransactionItem'
+import { fetchTransactions } from '../../actions/pages/wallet'
 
 class TransactionList extends Component {
 
   constructor(props) {
-    super(props)
+    super(props);
 
     this.handlePageClick = this.handlePageClick.bind(this);
     this.hrefBuilder = this.hrefBuilder.bind(this);
@@ -30,22 +30,26 @@ class TransactionList extends Component {
     return `/${this.props.currentLanguage}/wallet/${page}`
   }
 
-  componentWillMount() {
-    getMyTransactions(this.props.web3).then(transactions => {
+  componentDidMount() {
+    this.props.fetchTransactions();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(this.state.transactions.length !== nextProps.transactions.length) {
       this.setState({
-        pageCount: transactions.length / this.state.perPage,
-        transactions: transactions
+        hasTransactions: nextProps.transactions.length > 0,
+        showPagination: nextProps.transactions.length > this.state.perPage,
+        pageCount: nextProps.transactions.length / this.state.perPage,
+        transactions: nextProps.transactions
       })
-    });
+    }
   }
 
   render() {
     const page = parseInt(this.props.page, 10) - 1 || 0;
-    const hasTransactions = this.state.transactions.length > 0;
-    const showPagination = this.state.transactions.length > this.state.perPage;
     let content;
 
-    if(hasTransactions) {
+    if(this.state.hasTransactions) {
       const pageTransactions = this.state.transactions.slice(page * this.state.perPage, page * this.state.perPage + this.state.perPage);
       content =
         <Fragment>
@@ -66,7 +70,7 @@ class TransactionList extends Component {
             </tbody>
           </table>
 
-          {showPagination &&
+          {this.state.showPagination &&
             <ReactPaginate
                breakLabel={<a href="">...</a>}
                breakClassName={"break-me"}
@@ -94,11 +98,16 @@ class TransactionList extends Component {
   }
 }
 
-function mapPropsToState(state) {
+function mapStateToProps(state) {
   return {
     web3: state.web3.web3,
+    transactions: state.wallet.transactions,
     currentLanguage: getActiveLanguage(state.locale).code
   };
 }
 
-export default connect(mapPropsToState)(TransactionList);
+const mapDispatchToProps = {
+  fetchTransactions
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionList);

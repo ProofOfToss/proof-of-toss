@@ -159,5 +159,6 @@ export {
   getMyTransactions,
   getDecimals,
   formatBalance,
-  denormalizeBalance
+  denormalizeBalance,
+  calculateGasPrice
 };
