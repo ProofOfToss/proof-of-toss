@@ -61,11 +61,6 @@ class DateFields extends Component {
 
     let endTime = currentDate;
 
-    if(currentDate.isSame(this.state.formData.startTime, 'day')) {
-      endTime = currentDate.hours(this.state.formData.startTime.hours())
-        .minutes(this.state.formData.startTime.minutes());
-    }
-
     this.setState({
       formData: {
         ...this.state.formData,
