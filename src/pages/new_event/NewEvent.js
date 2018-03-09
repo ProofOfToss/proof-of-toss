@@ -49,7 +49,6 @@ class NewEvent extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <main className="container">
         <div>
