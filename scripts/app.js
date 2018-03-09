@@ -56,8 +56,22 @@ const esClient = new AwsEsClient(
     try {
       const event = Event.at(_event.eventAddress);
 
-      const locale = await event.locale();
-      const category = await event.category();
+      const localeBytes = await event.locale(); // 0x656e
+      const locale = String.fromCharCode(parseInt('0x' + localeBytes.substr(2, 2))) + String.fromCharCode(parseInt('0x' + localeBytes.substr(4, 2)));
+
+      const categoryBytes = await event.category();
+      let category = '', charCode;
+
+      for (let i = 2; i < categoryBytes.length; i += 2) {
+        charCode = parseInt('0x' + categoryBytes.substr(i, 2));
+
+        if (charCode === 0) break;
+
+        category += String.fromCharCode(charCode);
+      }
+
+      category = parseInt(category);
+
       const description = await event.description();
       const bidType = '';
 

@@ -140,11 +140,11 @@ class Index extends Component {
 
     history.replaceState({}, '', `/${this.props.locale}/play?${this.getUrlParams()}`);
 
-    /*conditions.push({
+    conditions.push({
       term: {
         locale: this.props.locale
       }
-    });*/
+    });
 
     conditions.push({
       range: {
