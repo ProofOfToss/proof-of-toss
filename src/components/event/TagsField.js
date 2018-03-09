@@ -36,7 +36,7 @@ class TagsField extends Component {
   }
 
   renderInput(props) {
-    let {onChange, value, ...other} = props;
+    let {onChange, value, addTag, ...other} = props;
     return (
       <input type='text' onChange={onChange} value={value} maxLength="16" {...other} />
     )
@@ -50,7 +50,7 @@ class TagsField extends Component {
     return <div className={"form-group" + (this._showErrors() ? ' has-error' : '')}>
       <label htmlFor="event[tags]">{ this.props.translate('pages.new_event.form.tags.label')}*</label>
       <TagsInput value={this.state.formData.tags} onChange={this.onChangeTags} renderLayout={this.renderLayoutTags}
-                 renderInput={this.renderInput}
+                 renderInput={this.renderInput} onlyUnique={true}
                  maxTags="10" className='react-tagsinput form-control' />
       { this._showErrors() &&
         <span id="helpBlock" className="help-block">{ this.props.translate('pages.new_event.form.tags.error') }</span>
