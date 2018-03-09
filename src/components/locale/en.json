@@ -71,6 +71,7 @@
       "gas_limit": "Gas limit",
       "gas_price": "Gas price",
       "access_denied": "Access denied",
+      "sync_whitelist": "Please sync whitelist",
       "estimate_gas_error": "Error of calculation estimate gas",
       "fee": "Fee",
       "form": {
