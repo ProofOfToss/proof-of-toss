@@ -35,11 +35,11 @@ class DateFields extends Component {
       formData: {
         ...this.state.formData,
         startTime: currentDate,
-        endTime: currentDate.clone()
+        endTime: (this.state.formData.endTime < currentDate || !this.state.formData.endTime) ? currentDate.clone() : this.state.formData.endTime,
       }
     });
 
-    this.props.onChange('startTime', currentDate);
+    this.props.onChange({'startTime': currentDate});
   }
 
   onChangeEndTime(currentDate) {
@@ -49,6 +49,8 @@ class DateFields extends Component {
         endTime: currentDate.clone()
       }
     });
+
+    this.props.onChange({'endTime': currentDate});
   }
 
   isValidStartDate(currentDate) {
