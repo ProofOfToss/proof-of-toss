@@ -36,7 +36,8 @@ class TagsField extends Component {
   }
 
   renderInput(props) {
-    let {onChange, value, addTag, ...other} = props;
+    let {onChange, value, ...other} = props;
+    delete other.addTag;
     return (
       <input type='text' onChange={onChange} value={value} maxLength="16" {...other} />
     )
