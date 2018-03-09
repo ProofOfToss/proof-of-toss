@@ -1,11 +1,12 @@
 # Technologies
 
-- node.js
-- babel-cli
-- truffle 4.x
-- solc 0.4.15
-
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+* [node.js](https://nodejs.org)
+* [babel-cli](https://babeljs.io/docs/usage/cli/)
+* [truffle 4.x](http://truffleframework.com/)
+* [solc 0.4.x](http://solidity.readthedocs.io)
+* [reactjs](https://reactjs.org/)
+* [redux](https://redux.js.org/)
+* [elasticsearch-js](https://github.com/elastic/elasticsearch-js)
 
 # How to install
 
@@ -43,6 +44,15 @@ $ npm install -g ganache-cli
     ```
     
 After that open `localhost:3000` in a browser
+
+# Metamask
+
+It is necessary to use metamask browser extension to work with a wallet. It is possible to use 
+[original metamask](https://metamask.io/), but there are few problems with it:
+* Invalid currency name. Should be SBTC
+* Invalid exchange rate
+
+This problems solved in [our fork](https://github.com/ProofOfToss/metamask-rsk) of the original metamask.
 
 # Elastic search
 
