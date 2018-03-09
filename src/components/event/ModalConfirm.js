@@ -104,7 +104,7 @@ class ModalConfirm extends Component {
         <dt>{this.props.translate('pages.new_event.form.deposit')}</dt>
         <dd>{this.props.formData.deposit}</dd>
 
-        <dt>{this.props.translate('pages.new_event.form.tags')}</dt>
+        <dt>{this.props.translate('pages.new_event.form.tags.label')}</dt>
         <dd>{this.props.formData.tags.join(', ')}</dd>
 
         <dt>{this.props.translate('pages.new_event.form.time_zone')}</dt>

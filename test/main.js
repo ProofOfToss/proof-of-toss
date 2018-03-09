@@ -10,12 +10,13 @@ contract('Main', function(accounts) {
   const eventDeposit = 10000000;
   const eventDescription = 'description';
 
+  const bidType = 'bid_type';
   const eventCategory = 'category_id';
   const eventLocale = 'en';
   const eventStartDate = '1517406195';
   const eventEndDate = '1580478195';
 
-  const eventData = `${eventCategory}.${eventLocale}.${eventStartDate}.${eventEndDate}`;
+  const eventData = `${bidType}.${eventCategory}.${eventLocale}.${eventStartDate}.${eventEndDate}`;
   const eventSourceUrl = 'source_url';
   const eventTags = 'en.tag1_name.en.tag2_name.en.tag3_name';
   const eventResults = 'result_description_1.10.result_description_2.20';
@@ -118,18 +119,19 @@ contract('Main', function(accounts) {
     }).then(function(share) {
       assert.equal(share.toNumber(), 0, "deposit wasn't withdrawn");
 
-      return Promise.all([event.name(), event.deposit(), event.description(),
+      return Promise.all([event.name(), event.deposit(), event.description(), event.bidType(),
         event.category(), event.locale(), event.startDate(), event.endDate(), event.sourceUrl()]);
     }).then((eventData) => {
 
       assert.equal(eventData[0], eventName, `Name is invalid`);
       assert.equal(eventData[1], eventDeposit, `Deposit is invalid`);
       assert.equal(eventData[2], eventDescription, `Description is invalid`);
-      assert.equal(web3.toAscii(eventData[3]).replace(/\0/g, ''), eventCategory, `Category is invalid`);
-      assert.equal(web3.toAscii(eventData[4]), eventLocale, `Locale is invalid`);
-      assert.equal(eventData[5], eventStartDate, `Start date is invalid`);
-      assert.equal(eventData[6], eventEndDate, `End date is invalid`);
-      assert.equal(eventData[7], eventSourceUrl, `Source url is invalid`);
+      assert.equal(web3.toAscii(eventData[3]).replace(/\0/g, ''), bidType, `Bid type is invalid`);
+      assert.equal(web3.toAscii(eventData[4]).replace(/\0/g, ''), eventCategory, `Category is invalid`);
+      assert.equal(web3.toAscii(eventData[5]), eventLocale, `Locale is invalid`);
+      assert.equal(eventData[6], eventStartDate, `Start date is invalid`);
+      assert.equal(eventData[7], eventEndDate, `End date is invalid`);
+      assert.equal(eventData[8], eventSourceUrl, `Source url is invalid`);
 
       return Promise.all([event.tags(0), event.tags(1), event.tags(2)]);
     }).then((tags) => {
