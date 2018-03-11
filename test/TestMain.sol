@@ -22,6 +22,7 @@ contract TestMain {
         token.approve(address(main), 10000000);
 
         uint deposit = 10000000;
+        bytes32 bidType = 'bid_type';
         bytes32 categoryId = 'category_id';
         bytes2 locale = 'en';
         uint256 eventStartDate = 1517406195;
@@ -29,7 +30,7 @@ contract TestMain {
         main.updateWhitelist(creator, true);
 
         address eventAddress = main.newEvent('Test event', deposit, 'description', 1,
-            'category_id.en.1517406195.1580478195', 'source_url', 'en.tag1_name.en.tag2_name.en.tag3_name',
+            'bid_type.category_id.en.1517406195.1580478195', 'source_url', 'en.tag1_name.en.tag2_name.en.tag3_name',
             'result_description_1.10.result_description_2.20'
         );
 
@@ -42,6 +43,7 @@ contract TestMain {
         Assert.equal(creator, _event.getCreator(), "Event.creator should match account address");
 
         Assert.equal(_event.deposit(), deposit, "Event.deposit invalid");
+        Assert.equal(_event.bidType(), bidType, "Event.bidType invalid");
         Assert.equal(_event.category(), categoryId, "Event.categoryId invalid");
         Assert.equal(_event.locale(), locale, "Event.locale invalid");
         Assert.equal(_event.startDate(), eventStartDate, "Event.startDate invalid");

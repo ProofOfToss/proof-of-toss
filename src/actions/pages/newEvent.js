@@ -86,7 +86,7 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
         }, '');
 
         return mainContract.newEvent(formData.name, denormalizeBalance(formData.deposit), formData.description, 1,
-          `${formData.category}.${formData.language}.${formData.startTime.unix()}.${formData.endTime.unix()}`,
+          `${formData.bidType}.${formData.category}.${formData.language}.${formData.startTime.unix()}.${formData.endTime.unix()}`,
           formData.sourceUrls[0], tags, results, {
             from: getState().user.address,
             gasPrice: gasPrice,

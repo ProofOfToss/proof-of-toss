@@ -26,6 +26,7 @@ contract Event {
     address public creator;
     Statuses public status = Statuses.Published;
     bytes2 public locale;
+    bytes32 public bidType;
     bytes32 public category;
     string public name;
     uint public deposit;
@@ -58,22 +59,32 @@ contract Event {
         var dataSlice = _data.toSlice();
         var delimiter = ".".toSlice();
 
-        //Convert category to bytes32
-        bytes32 categoryBytes32;
-        bytes memory categoryString = bytes(dataSlice.split(delimiter).toString());
+        //Convert bidType to bytes32
+        bytes32 bidType32;
+        bytes memory bidTypeBytes = bytes(dataSlice.split(delimiter).toString());
 
         assembly {
-            categoryBytes32 := mload(add(categoryString, 32))
+            bidType32 := mload(add(bidTypeBytes, 32))
+        }
+
+        bidType = bidType32;
+
+        //Convert category to bytes32
+        bytes32 categoryBytes32;
+        bytes memory categoryBytes = bytes(dataSlice.split(delimiter).toString());
+
+        assembly {
+            categoryBytes32 := mload(add(categoryBytes, 32))
         }
 
         category = categoryBytes32;
 
         //Convert locale to bytes2
         bytes32 localeBytes32;
-        bytes memory localeString = bytes(dataSlice.split(delimiter).toString());
+        bytes memory localeBytes = bytes(dataSlice.split(delimiter).toString());
 
         assembly {
-            localeBytes32 := mload(add(localeString, 32))
+            localeBytes32 := mload(add(localeBytes, 32))
         }
 
         locale = bytes2(localeBytes32);
