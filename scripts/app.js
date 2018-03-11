@@ -52,28 +52,27 @@ const esClient = new AwsEsClient(
     process.exit(1);
   };
 
+  const parseBytes = (byteString) => {
+    let result = '', charCode;
+
+    for (let i = 2; i < byteString.length; i += 2) {
+      charCode = parseInt('0x' + byteString.substr(i, 2));
+
+      if (charCode === 0) break;
+
+      result += String.fromCharCode(charCode);
+    }
+
+    return result;
+  };
+
   const convertBlockchainEventToEventDoc = async (_event) => {
     try {
       const event = Event.at(_event.eventAddress);
-
-      const localeBytes = await event.locale(); // 0x656e
-      const locale = String.fromCharCode(parseInt('0x' + localeBytes.substr(2, 2))) + String.fromCharCode(parseInt('0x' + localeBytes.substr(4, 2)));
-
-      const categoryBytes = await event.category();
-      let category = '', charCode;
-
-      for (let i = 2; i < categoryBytes.length; i += 2) {
-        charCode = parseInt('0x' + categoryBytes.substr(i, 2));
-
-        if (charCode === 0) break;
-
-        category += String.fromCharCode(charCode);
-      }
-
-      category = parseInt(category);
-
+      const locale = parseBytes(await event.locale());
+      const category = parseInt(parseBytes(await event.category()));
+      const bidType = parseBytes(await event.bidType());
       const description = await event.description();
-      const bidType = '';
 
       const bidSum = (await Promise.all([
         event.possibleResults(0),

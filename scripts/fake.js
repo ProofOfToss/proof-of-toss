@@ -86,8 +86,9 @@ logger.level = 'debug';
     const locale = faker.random.arrayElement(['en', 'ru', 'kz']);
     const startDate = parseInt(faker.date.future(0.1).getTime()/1000);
     const endDate = parseInt(faker.date.future(0.5).getTime()/1000);
+    const bidType = faker.lorem.words();
 
-    const eventData = `${category}.${locale}.${startDate}.${endDate}`;
+    const eventData = `${bidType}.${category}.${locale}.${startDate}.${endDate}`;
     const tags = `${locale}.${faker.lorem.word()}.${locale}.${faker.lorem.word()}.${locale}.${faker.lorem.word()}`;
     const results = 'result_description_1.10.result_description_2.20';
 
@@ -108,6 +109,6 @@ logger.level = 'debug';
     const name = await event.name({from: accounts[1]});
     const description = await event.description({from: accounts[1]});
 
-    logger.info(`Created Event at address ${eventAddress} - { name: ${name}, description: ${description} }`);
+    logger.info(`Created Event at address ${eventAddress} - { name: ${name}, description: ${description}, bidType: ${bidType} }`);
   }
 })(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error); });
