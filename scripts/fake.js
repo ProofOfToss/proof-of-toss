@@ -73,25 +73,24 @@ logger.level = 'debug';
   }
 
   // await token.grantToAllowBlocking(main.address, true, {from: accounts[0]});
-
   await token.generateTokens(accounts[1], 1000000000, {from: accounts[0]});
 
-  await token.approve(main.address, 1000, {from: accounts[0]});
+  await token.approve(main.address, 1500, {from: accounts[1]});
+  await main.updateWhitelist(accounts[1], true);
 
   /*await main.newEvent('Test event', 100, 'en', 'category_id', 'description', 1,
     1517406195, 1580478195, 'source_url', {from: accounts[0]});*/
 
-
   for(let i = 0; i < 15; i++) {
-
-    const category = faker.random.arrayElement(['sports', 'politics', 'finances', 'other']);
+    const category = faker.random.arrayElement([1, 2, 3]);
     const locale = faker.random.arrayElement(['en', 'ru', 'kz']);
-    const startDate = faker.date.future(0.1).getTime()/1000;
-    const endDate = faker.date.future(0.5).getTime()/1000;
+    const startDate = parseInt(faker.date.future(0.1).getTime()/1000);
+    const endDate = parseInt(faker.date.future(0.5).getTime()/1000);
+    const bidType = faker.lorem.words();
 
-    const eventData = `${category}.${locale}.${startDate}.${endDate}`;
+    const eventData = `${bidType}.${category}.${locale}.${startDate}.${endDate}`;
     const tags = `${locale}.${faker.lorem.word()}.${locale}.${faker.lorem.word()}.${locale}.${faker.lorem.word()}`;
-    const results = '"result_description_1.10"';
+    const results = 'result_description_1.10.result_description_2.20';
 
     await main.newEvent(
       faker.lorem.sentence(),  // name
@@ -102,14 +101,14 @@ logger.level = 'debug';
       faker.internet.url(),  // sourceUrl
       tags, // tags
       results, // results
-      {from: accounts[0]}
+      {from: accounts[1]}
     );
 
-    const eventAddress = await main.getLastEvent({from: accounts[0]});
+    const eventAddress = await main.getLastEvent({from: accounts[1]});
     const event = Event.at(eventAddress);
-    const name = await event.name({from: accounts[0]});
-    const description = await event.description({from: accounts[0]});
+    const name = await event.name({from: accounts[1]});
+    const description = await event.description({from: accounts[1]});
 
-    logger.info(`Created Event at address ${eventAddress} - { name: ${name}, description: ${description} }`);
+    logger.info(`Created Event at address ${eventAddress} - { name: ${name}, description: ${description}, bidType: ${bidType} }`);
   }
 })(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error); });

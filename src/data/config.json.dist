@@ -4,9 +4,8 @@
   "elasticsearch": {
     "esNode": "search-xxx-xxxxxxxxxxxx",
     "region": "eu-central-1",
-    "accessKeyId": "xxxxxxx",
-    "secretAccessKey": "xxxxxxxxxxxxxxxx",
-    "useSSL": true
+    "useSSL": true,
+    "indexPostfix": "test"
   },
   "view": {
     "token_symbol": "TOSS",

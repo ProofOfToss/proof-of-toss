@@ -114,9 +114,25 @@
       "modal": {
         "submit": "Create"
       }
+    },
+    "play": {
+      "header": "Play",
+      "more": "More",
+      "empty": "No results",
+      "loading": "Loading...",
+      "search": "Search for...",
+      "columns": {
+        "name": "Name",
+        "bid_type": "Bid Type",
+        "start_date": "Start Date",
+        "bid_sum": "Bid Sum",
+        "date_start": "Start time",
+        "date_end": "End time"
+      }
     }
   },
   "categories": {
+    "all": "All categories",
     "sport": "Sport",
     "economy": "Economy",
     "weather": "Weather"
