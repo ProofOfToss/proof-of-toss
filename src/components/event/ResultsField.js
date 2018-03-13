@@ -89,7 +89,7 @@ class ResultsField extends Component {
         <div className="container">
           {this.state.results.map((result, key) => {
             return <div className="row bottom-margin-5" key={key}>
-              <div className="col-xs-1">{result.name}</div>
+              <div className="col-xs-2 text-overflow-ellipsis">{result.name}</div>
               <div className="col-xs-1">{result.coefficient}</div>
               <div className="col-xs-1">
                 <a className="btn btn-default btn-xs" onClick={() => {this.removeResult(key)}}>
