@@ -34,13 +34,13 @@ class Index extends Component {
 
       q: parsed.q,
       category: parsed.category,
-      fromDate: parsed.fromTimestamp ? Datetime.moment(new Date(parseInt(parsed.fromTimestamp) * 1000)) : null,
-      toDate: parsed.toTimestamp ? Datetime.moment(new Date(parseInt(parsed.toTimestamp) * 1000)) : null,
-      fromTimestamp: parsed.fromTimestamp && parseInt(parsed.fromTimestamp),
-      toTimestamp: parsed.toTimestamp && parseInt(parsed.toTimestamp),
+      fromDate: parsed.fromTimestamp ? Datetime.moment(new Date(parseInt(parsed.fromTimestamp, 10) * 1000)) : null,
+      toDate: parsed.toTimestamp ? Datetime.moment(new Date(parseInt(parsed.toTimestamp, 10) * 1000)) : null,
+      fromTimestamp: parsed.fromTimestamp && parseInt(parsed.fromTimestamp, 10),
+      toTimestamp: parsed.toTimestamp && parseInt(parsed.toTimestamp, 10),
 
-      pageSize: parseInt(localStorage.getItem(LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE)) || 10,
-      page: parseInt(parsed.page) || 1,
+      pageSize: parseInt(localStorage.getItem(LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE), 10) || 10,
+      page: parseInt(parsed.page, 10) || 1,
       total: 0,
       sortField: parsed.sortField || 'bidSum',
       sortOrder: parsed.sortOrder || 'desc',
@@ -102,7 +102,7 @@ class Index extends Component {
   onChangeFromDate(fromDate) {
     this.setState({
       fromDate,
-      fromTimestamp: fromDate ? parseInt(fromDate.unix()) : null,
+      fromTimestamp: fromDate ? parseInt(fromDate.unix(), 10) : null,
       page: 1,
     }, this.update);
   }
@@ -110,7 +110,7 @@ class Index extends Component {
   onChangeToDate(toDate) {
     this.setState({
       toDate,
-      toTimestamp: toDate ? parseInt(toDate.unix()) : null,
+      toTimestamp: toDate ? parseInt(toDate.unix(), 10) : null,
       page: 1,
     }, this.update);
   }
@@ -149,7 +149,7 @@ class Index extends Component {
     conditions.push({
       range: {
         startDate: {
-          gte: parseInt(Datetime.moment().add(BIDDING_END_MINUTES, 'minute').unix()),
+          gte: parseInt(Datetime.moment().add(BIDDING_END_MINUTES, 'minute').unix(), 10),
         }
       }
     });
@@ -287,7 +287,7 @@ class Index extends Component {
                   dataField: "startDate",
                   sort: true,
                   width: 200,
-                  formatter: (cell) => Datetime.moment(new Date(parseInt(cell) * 1000)).format('LLL'),
+                  formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
                 },
                 {
                   text: this.props.translate('pages.play.columns.bid_sum'),
