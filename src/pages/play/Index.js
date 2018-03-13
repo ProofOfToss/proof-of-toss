@@ -215,7 +215,7 @@ class Index extends Component {
   }
 
   render() {
-    const { data, pages, loading, categories } = this.state;
+    const { data, categories } = this.state;
 
     return(
       <main className="container">
