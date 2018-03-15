@@ -230,7 +230,7 @@ class Index extends Component {
           <h1>{ this.props.translate('pages.play.header') }</h1>
 
           <div>
-            <a className={this.state.category && this.state.category !== null ? 'btn btn-link' : 'btn btn-default'} onClick={this.onChangeCategory.bind(this, null)}>{this.props.translate(`categories.all`)}</a>
+            <a className={this.state.category ? 'btn btn-link' : 'btn btn-default'} onClick={this.onChangeCategory.bind(this, null)}>{this.props.translate(`categories.all`)}</a>
             {
               categories.map((category, key) => <a
                 key={key}
