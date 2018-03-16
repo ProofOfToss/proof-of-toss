@@ -75,11 +75,19 @@ class DateFields extends Component {
 
   calculateEndTimeConstraints() {
     if(this.state.formData.endTime.isSame(this.state.formData.startTime, 'day')) {
-      return {
+      let timeConstraints = {
         hours: {
           min: this.state.formData.startTime.hours()
         }
+      };
+
+      if(this.state.formData.endTime.isSame(this.state.formData.startTime, 'hour')) {
+        timeConstraints.minutes = {
+          min: this.state.formData.startTime.minutes()
+        }
       }
+
+      return timeConstraints;
     }
 
     return {};
