@@ -9,7 +9,7 @@ deploy_demo:
 # the following configuration will deploy every commit of master branch
   # when: manual
   only:
-    - master
+    - test1
 # actual deployment commands starts here
 # need a testrpc running on localhost
 # mkdir testrpc_db

@@ -55,8 +55,8 @@ const esClient = new AwsEsClient(
   const parseBytes = (byteString) => {
     let result = '', charCode;
 
-    for (let i = 2; i < byteString.length; i += 2) {
-      charCode = parseInt('0x' + byteString.substr(i, 2));
+    for (let i = 4; i < byteString.length; i += 4) {
+      charCode = parseInt('0x' + byteString.substr(i, 4));
 
       if (charCode === 0) break;
 
