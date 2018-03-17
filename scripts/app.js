@@ -56,14 +56,14 @@ const esClient = new AwsEsClient(
     let result = '', charCode;
 
     for (let i = 2; i < byteString.length; i += 2) {
-      charCode = parseInt('0x' + byteString.substr(i, 2));
+      charCode = parseInt(byteString.substr(i, 2), 16);
 
       if (charCode === 0) break;
 
       result += String.fromCharCode(charCode);
     }
 
-    return result;
+    return decodeURIComponent(escape(result));
   };
 
   const convertBlockchainEventToEventDoc = async (_event) => {
