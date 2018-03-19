@@ -145,6 +145,7 @@ class Index extends Component {
 
   async update() {
     const conditions = [];
+    const shouldConditions = [];
 
     history.replaceState({}, '', `/${this.props.locale}/play?${this.getUrlParams()}`);
 
@@ -163,11 +164,23 @@ class Index extends Component {
     });
 
     if (this.state.q) {
-      conditions.push({
-        query_string: {
-          query: `name:(${this.state.q}) OR tag.name:(${this.state.q})`
+      shouldConditions.push({
+        wildcard: {'name': `*${this.state.q}*`}
+      });
+
+      shouldConditions.push({
+        wildcard: {'description': `*${this.state.q}*`}
+      });
+
+      shouldConditions.push({
+        "nested": {
+          "path": "tag",
+          "query": {
+            wildcard: {'tag.name': `*${this.state.q}*`}
+          }
         }
       });
+
     }
 
     if (this.state.category) {
@@ -202,6 +215,11 @@ class Index extends Component {
           query: {
             bool: {
               must: conditions,
+              "filter": {
+                "bool": {
+                  "should": shouldConditions
+                }
+              }
             }
           }
         }
@@ -261,11 +279,6 @@ class Index extends Component {
               <div className="col-md-6">
                 <div className="input-group">
                   <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
-                  <span className="input-group-btn">
-                    <button className="btn btn-default" type="submit">
-                      <span className="glyphicon glyphicon-search" />
-                    </button>
-                  </span>
                 </div>
               </div>
             </div>
@@ -282,6 +295,12 @@ class Index extends Component {
                   text: this.props.translate('pages.play.columns.name'),
                   dataField: "name",
                   sort: false,
+                },
+                {
+                  text: this.props.translate('pages.play.columns.tags'),
+                  dataField: "tag",
+                  sort: false,
+                  formatter: (tags) => _.map(tags, 'name').join(', '),
                 },
                 {
                   text: this.props.translate('pages.play.columns.bid_type'),

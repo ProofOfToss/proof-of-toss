@@ -123,6 +123,7 @@
       "search": "Search for...",
       "columns": {
         "name": "Name",
+        "tags": "Tags",
         "bid_type": "Bid Type",
         "start_date": "Start Date",
         "bid_sum": "Bid Sum",
