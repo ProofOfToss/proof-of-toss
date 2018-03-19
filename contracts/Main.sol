@@ -2,8 +2,9 @@ pragma solidity ^0.4.2;
 
 import "./Token.sol";
 import "./Event.sol";
+import "./ERC223ReceivingContract.sol";
 
-contract Main {
+contract Main is ERC223ReceivingContract {
     Token token;
     uint8 version = 1;
     Event lastEvent;
@@ -31,6 +32,10 @@ contract Main {
     }
 
     event NewEvent(string eventName, uint256 indexed createdTimestamp, address indexed eventAddress, address indexed eventCreator);
+
+    function tokenFallback(address _from, uint _value, bytes _data) {
+
+    }
 
     function newEvent(string name, uint deposit, string description,
         uint operatorId, string eventData, string sourceUrl, string tags, string results
