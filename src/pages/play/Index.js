@@ -75,7 +75,7 @@ class Index extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(this.getStateFromQueryString(nextProps));
+    this.setState(this.getStateFromQueryString(nextProps), this.update);
   }
 
   componentDidMount() {
