@@ -79,7 +79,9 @@ class Index extends Component {
   }
 
   componentDidMount() {
-    this.update();
+    // @todo: we use defaultSorted prop for BootstrapTable which triggers table change which triggers elastic search query
+    // if we uncomment this.update() below there will be two identical queries to elastic search at the initial page loading
+    //this.update();
   }
 
   handleTableChange(type, state) {
@@ -312,6 +314,8 @@ class Index extends Component {
                   }
                 }
               ] }
+              // @todo: defaultSorted triggers table to change which triggers query to elasticsearch
+              // if remove defaultSorted, do not forget to uncomment this.update() in componentDidMount() function!!!
               defaultSorted={[
                 {
                   dataField: 'bidSum',
