@@ -1,8 +1,10 @@
 pragma solidity ^0.4.2;
 
 import "../installed_contracts/Seriality/Seriality.sol";
+import "../installed_contracts/SerialityLib.sol";
 import "../Token.sol";
 import "../ERC223ReceivingContract.sol";
+import "./TestEventBase.sol";
 
 library EventLib {
     enum Statuses { Created, Published, Accepted, Started, Judging, Finished }
@@ -41,93 +43,80 @@ library EventLib {
             data.status = Statuses.Published;
         }
     }
+
+    function getShare(EventData storage data, address user) internal returns (uint256) {
+        if (user == data.creator) {
+            return TestEventBase(this).token().balanceOf(address(this));
+        } else {
+            return 0;
+        }
+    }
+
+    function withdraw(EventData storage data) internal {
+        bytes memory empty;
+        TestEventBase(this).token().transfer(msg.sender, getShare(data, msg.sender), empty);
+    }
 }
 
-// Consumes more gas in current version
-/*contract TestEvent {
+/*// Consumes more gas in current version
+contract TestEvent is ERC223ReceivingContract {
     using EventLib for EventLib.EventData;
 
     uint constant public meta_version = 1;
     address public owner;
     EventLib.EventData public data;
 
-    function TestEvent(address _creator, uint64 _deposit, uint64 _startDate, uint64 _endDate, uint8 _resultsCount) {
-        owner = msg.sender;
-
-        data.initEvent(_creator, _deposit, _startDate, _endDate, _resultsCount);
-    }
-
-    function addResult(uint64 customCoefficient) public {
-        require(msg.sender == owner);
-
-        data.addResult(customCoefficient);
-    }
-}*/
-
-contract TestEvent is ERC223ReceivingContract {
-    enum Statuses { Created, Published, Accepted, Started, Judging, Finished }
-
-    struct Result {
-        uint64 customCoefficient;
-        uint32 betCount;
-        uint64 betSum;
-    }
-
-    Token token;
-    address creator;
-
-    uint64 deposit;
-    uint64 startDate;
-    uint64 endDate;
-    bytes32 bidType;
-    uint8 resultsCount;
-
-    Statuses status;
-    Result[] possibleResults;
-
-    uint constant public meta_version = 1;
-    address public owner;
+    Token public token;
 
     function TestEvent(address _token, address _creator, uint64 _deposit, uint64 _startDate, uint64 _endDate, uint8 _resultsCount) {
         owner = msg.sender;
 
         token = Token(_token);
-        creator = _creator;
-        deposit = _deposit;
-        startDate = _startDate;
-        endDate = _endDate;
-        resultsCount = _resultsCount;
+
+        data.initEvent(_creator, _deposit, _startDate, _endDate, _resultsCount);
     }
 
-    function addResult(uint64 customCoefficient) public {
+    function addResult(uint32 customCoefficient) public {
         require(msg.sender == owner);
 
-        possibleResults.push(Result(customCoefficient, 0, 0));
+        data.addResult(customCoefficient);
+    }
 
-        if (possibleResults.length == resultsCount) {
-            status = Statuses.Published;
-        }
+    function getShare(address user) constant returns (uint256) {
+        return data.getShare(user);
+    }
+
+    function withdraw() {
+        data.withdraw();
     }
 
     function tokenFallback(address _from, uint _value, bytes _data) {
 
     }
+}*/
 
-    function getShare(address user) constant returns (uint256) {
-        if (user == creator) {
-            return token.balanceOf(address(this));
-        } else {
-            return 0;
-        }
+contract TestEvent {
+    TestEventBase public base;
+    address public owner;
+
+    function TestEvent(address _base) {
+        owner = msg.sender;
+        base = TestEventBase(_base);
     }
 
-    function withdraw() {
-        bytes memory empty;
-        token.transfer(msg.sender, getShare(msg.sender), empty);
+    function() public {
+        assembly {
+            let _target := sload(0)
+            calldatacopy(0x0, 0x0, calldatasize)
+            let retval := delegatecall(gas, _target, 0x0, calldatasize, 0x0, 0)
+            let returnsize := returndatasize
+            returndatacopy(0x0, 0x0, returnsize)
+            switch retval case 0 {revert(0, 0)} default {return (0, returnsize)}
+        }
     }
 }
 
-contract SerialityTest is Seriality {
+contract SerialityTest {
     using EventLib for EventLib.EventData;
 
     uint constant public meta_version = 1;
@@ -136,15 +125,16 @@ contract SerialityTest is Seriality {
     event NewEvent(address indexed eventAddress, bytes eventData);
 
     Token token;
+    TestEventBase eventBase;
 
-    function SerialityTest(address _token) {
+    function SerialityTest(address _token, address _eventBase) {
         token = Token(_token);
+        eventBase = TestEventBase(_eventBase);
     }
 
     function tokenFallback(address _from, uint _value, bytes memory _data) {
-        address lastEvent = testSampleEvent(_data);
         bytes memory empty;
-        token.transfer(lastEvent, _value, empty);
+        token.transfer(testSampleEvent(_data), _value, empty);
     }
 
     // Mapping:
@@ -155,7 +145,7 @@ contract SerialityTest is Seriality {
     // string name
     // bytes32 bidType
     // bytes2 locale
-    // ... | uint result_3Coefficient | uint result_2Coefficient | uint result_1Coefficient
+    // ... | uint64 result_3Coefficient | uint64 result_2Coefficient | uint64 result_1Coefficient
     // uint8 tagsCount | uint8 resultsCount | uint64 endDate | uint64 startDate | uint64 deposit
     function testSampleEvent(bytes memory buffer) public returns (address) {
         uint64 _deposit;
@@ -164,36 +154,40 @@ contract SerialityTest is Seriality {
         uint8 _resultsCount;
         uint64 _resultCoefficient;
 
-        uint nameLength;
-        string memory name;
-
         uint offset = buffer.length;
 
-        _deposit = bytesToUint64(offset, buffer);
-        offset -= 8; // sizeOfUint(64);
+        _deposit = SerialityLib.bytesToUint64(offset, buffer);
+        offset -= 8; // SerialityLib.sizeOfUint(64);
 
-        _startDate = bytesToUint64(offset, buffer);
-        offset -= 8; // sizeOfUint(64);
+        _startDate = SerialityLib.bytesToUint64(offset, buffer);
+        offset -= 8; // SerialityLib.sizeOfUint(64);
 
-        _endDate = bytesToUint64(offset, buffer);
-        offset -= 8; // sizeOfUint(64);
+        _endDate = SerialityLib.bytesToUint64(offset, buffer);
+        offset -= 8; // SerialityLib.sizeOfUint(64);
 
-        _resultsCount = bytesToUint8(offset, buffer);
-        offset -= 1; // sizeOfUint(8);
+        _resultsCount = SerialityLib.bytesToUint8(offset, buffer);
+        offset -= 1; // SerialityLib.sizeOfUint(8);
 
         // bypass tagsCount
-        offset -= 1; // sizeOfUint(8);
+        offset -= 1; // SerialityLib.sizeOfUint(8);
 
-        TestEvent lastEvent = new TestEvent(address(token), msg.sender, _deposit, _startDate, _endDate, _resultsCount);
+        // TestEvent lastEvent = new TestEvent(address(token), msg.sender, _deposit, _startDate, _endDate, _resultsCount);
+
+        TestEventBase lastEvent = TestEventBase(address(new TestEvent(address(eventBase))));
+
+        lastEvent.init(address(token), msg.sender, _deposit, _startDate, _endDate, _resultsCount);
 
         for (uint i = 0; i < _resultsCount; i++) {
-            _resultCoefficient = bytesToUint64(offset, buffer);
-            offset -= 8; // sizeOfUint(64);
+            _resultCoefficient = SerialityLib.bytesToUint64(offset, buffer);
+            offset -= 8; // SerialityLib.sizeOfUint(64);
 
             lastEvent.addResult(_resultCoefficient);
         }
 
-        NewEvent(address(lastEvent), buffer);
+        NewEvent(
+            address(lastEvent),
+            buffer
+        );
 
         return address(lastEvent);
     }
@@ -201,7 +195,7 @@ contract SerialityTest is Seriality {
     function testEmptyEvent() public {
         bytes memory buffer = new  bytes(200);
 
-        TestEvent lastEvent = new TestEvent(0, msg.sender, 0, 0, 0, 0);
+        TestEvent lastEvent = new TestEvent(0/*, msg.sender, 0, 0, 0, 0*/);
 
         for (uint i = 0; i < 3; i++) {
             //lastEvent.addResult(1);
@@ -222,27 +216,27 @@ contract SerialityTest is Seriality {
 
         uint offset = buffer.length;
 
-        _deposit = bytesToUint64(offset, buffer);
-        offset -= 8; // sizeOfUint(64);
+        _deposit = SerialityLib.bytesToUint64(offset, buffer);
+        offset -= 8; // SerialityLib.sizeOfUint(64);
 
-        _startDate = bytesToUint64(offset, buffer);
-        offset -= 8; // sizeOfUint(64);
+        _startDate = SerialityLib.bytesToUint64(offset, buffer);
+        offset -= 8; // SerialityLib.sizeOfUint(64);
 
-        _endDate = bytesToUint64(offset, buffer);
-        offset -= 8; // sizeOfUint(64);
+        _endDate = SerialityLib.bytesToUint64(offset, buffer);
+        offset -= 8; // SerialityLib.sizeOfUint(64);
 
-        _resultsCount = bytesToUint8(offset, buffer);
-        offset -= 1; // sizeOfUint(8);
+        _resultsCount = SerialityLib.bytesToUint8(offset, buffer);
+        offset -= 1; // SerialityLib.sizeOfUint(8);
 
         // bypass tagsCount
-        offset -= 1; // sizeOfUint(8);
+        offset -= 1; // SerialityLib.sizeOfUint(8);
 
         EventLib.EventData storage lastEvent;
         lastEvent.initEvent(msg.sender, _deposit, _startDate, _endDate, _resultsCount);
 
         for (uint i = 0; i < _resultsCount; i++) {
-            _resultCoefficient = bytesToUint64(offset, buffer);
-            offset -= 8; // sizeOfUint(64);
+            _resultCoefficient = SerialityLib.bytesToUint64(offset, buffer);
+            offset -= 8; // SerialityLib.sizeOfUint(64);
 
             lastEvent.addResult(_resultCoefficient);
         }
@@ -271,20 +265,20 @@ contract SerialityTest is Seriality {
         // Serializing
         uint offset = 200;
 
-        intToBytes(offset, out2, buffer);
-        offset -= sizeOfInt(8);
+        SerialityLib.intToBytes(offset, out2, buffer);
+        offset -= SerialityLib.sizeOfInt(8);
 
-        uintToBytes(offset, out3, buffer);
-        offset -= sizeOfUint(24);
+        SerialityLib.uintToBytes(offset, out3, buffer);
+        offset -= SerialityLib.sizeOfUint(24);
 
-        stringToBytes(offset, bytes(out5), buffer);
-        offset -= sizeOfString(out5);
+        SerialityLib.stringToBytes(offset, bytes(out5), buffer);
+        offset -= SerialityLib.sizeOfString(out5);
 
-        stringToBytes(offset, bytes(out4), buffer);
-        offset -= sizeOfString(out4);
+        SerialityLib.stringToBytes(offset, bytes(out4), buffer);
+        offset -= SerialityLib.sizeOfString(out4);
 
-        intToBytes(offset, out1, buffer);
-        offset -= sizeOfInt(256);
+        SerialityLib.intToBytes(offset, out1, buffer);
+        offset -= SerialityLib.sizeOfInt(256);
 
         Sample1Serializing(buffer);
     }
@@ -305,19 +299,19 @@ contract SerialityTest is Seriality {
         // Deserializing
         uint offset = 200;
 
-        n2 = bytesToInt8(offset, buffer);
-        offset -= sizeOfInt(8);
+        n2 = SerialityLib.bytesToInt8(offset, buffer);
+        offset -= SerialityLib.sizeOfInt(8);
 
-        n3 = bytesToUint24(offset, buffer);
-        offset -= sizeOfUint(24);
+        n3 = SerialityLib.bytesToUint24(offset, buffer);
+        offset -= SerialityLib.sizeOfUint(24);
 
-        bytesToString(offset, buffer, bytes(n5));
-        offset -= sizeOfString(out5);
+        SerialityLib.bytesToString(offset, buffer, bytes(n5));
+        offset -= SerialityLib.sizeOfString(out5);
 
-        bytesToString(offset, buffer, bytes(n4));
-        offset -= sizeOfString(out4);
+        SerialityLib.bytesToString(offset, buffer, bytes(n4));
+        offset -= SerialityLib.sizeOfString(out4);
 
-        n1 = bytesToInt256(offset, buffer);
+        n1 = SerialityLib.bytesToInt256(offset, buffer);
 
         Sample1(n1, n2, n3, n4, n5);
     }
@@ -337,22 +331,22 @@ contract SerialityTest is Seriality {
         // Deserializing
         uint offset = 64;
 
-        n1 = bytesToInt8(offset, buffer);
-        offset -= sizeOfInt(8);
+        n1 = SerialityLib.bytesToInt8(offset, buffer);
+        offset -= SerialityLib.sizeOfInt(8);
 
-        n2 = bytesToInt24(offset, buffer);
-        offset -= sizeOfUint(24);
+        n2 = SerialityLib.bytesToInt24(offset, buffer);
+        offset -= SerialityLib.sizeOfUint(24);
 
-        n3 = bytesToUint8(offset, buffer);
-        offset -= sizeOfInt(32);
+        n3 = SerialityLib.bytesToUint8(offset, buffer);
+        offset -= SerialityLib.sizeOfInt(32);
 
-        n4 = bytesToInt128(offset, buffer);
-        offset -= sizeOfUint(128);
+        n4 = SerialityLib.bytesToInt128(offset, buffer);
+        offset -= SerialityLib.sizeOfUint(128);
 
-        n5 = bytesToAddress(offset, buffer);
-        offset -= sizeOfAddress();
+        n5 = SerialityLib.bytesToAddress(offset, buffer);
+        offset -= SerialityLib.sizeOfAddress();
 
-        n6 = bytesToAddress(offset, buffer);
+        n6 = SerialityLib.bytesToAddress(offset, buffer);
 
         Sample2(n1, n2, n3, n4, n5, n6);
     }
@@ -363,7 +357,7 @@ contract SerialityTest is Seriality {
     function testSample3(bytes memory buffer) public returns(address n1) {
         uint offset = 20;
 
-        n1 = bytesToAddress(offset, buffer);
+        n1 = SerialityLib.bytesToAddress(offset, buffer);
 
         Sample3(n1, buffer);
     }

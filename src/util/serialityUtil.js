@@ -1,7 +1,13 @@
 import {decToHex} from './hexToDec'
 import {BigNumber} from 'bignumber.js';
 
-const _bytesToBytes = (value) => {
+/**
+ * Converts serialized bytes from any format to strings-array format
+ *
+ * @param value
+ * @returns {Array}
+ */
+function bytesToByteStringsArray(value) {
   if (Array.isArray(value)) {
 
     return value;
@@ -46,7 +52,7 @@ function toByteStringsArray() {
       typeof value !== 'object'
       || typeof value.type !== 'string'
       || (
-        (value.type === 'int' || value.type === 'uint' || value.type === 'string')
+        (value.type === 'int' || value.type === 'uint')
         && typeof value.size !== 'number'
         && value.size <= 0
       )
@@ -135,7 +141,7 @@ function toByteStringsArray() {
       case 'address':
         return _addressToBytes(value.value);
       case 'bytes':
-        return _bytesToBytes(value.value);
+        return bytesToByteStringsArray(value.value);
       default:
         throw new Error('invalid type');
     }
@@ -170,6 +176,117 @@ function toByteStringsArray() {
 }
 
 /**
+ * First argument: bytes to parse
+ * Second argument (optional): bytes offset
+ * Next arguments – objects in format: {type: 'uint', size: 64, key: 'deposit'}, {type: 'string', key: 'name'}
+ * Result format: {offset: 128, parsedData: {deposit: 10, name: 'test name'}}
+ *
+ * @returns {Object}
+ */
+function fromBytes() {
+  if (arguments.length < 2) {
+    throw new Error('invalid arguments');
+  }
+
+  const bytes = bytesToByteStringsArray(arguments[0]).join('');
+  const result = {};
+  let offset = typeof arguments[1] === 'number' ? arguments[1] : bytes.length;
+
+  const _checkValue = (value) => {
+    if (
+      typeof value !== 'object'
+      || typeof value.type !== 'string'
+      || typeof value.key !== 'string'
+      || (
+        (value.type === 'int' || value.type === 'uint')
+        && typeof value.size !== 'number'
+        && value.size <= 0
+      )
+    ) {
+      throw new Error('invalid value');
+    }
+  };
+
+  const _nextChunk = (value) => {
+    _checkValue(value);
+
+    let size;
+
+    switch (value.type) {
+      case 'int': case 'uint':
+        size = value.size / 8;
+        break;
+      case 'string':
+        if (typeof value.size === 'number') {
+          size = value.size;
+        } else {
+          offset -= 32;
+          size = parseInt(bytes.substr(offset, 64), 16);
+        }
+        break;
+      case 'address':
+        size = 20;
+        break;
+      case 'bytes':
+        // Must be the last element. Gets all remaining bytes
+        size = offset / 2;
+        break;
+      default:
+        throw new Error('invalid type');
+    }
+
+    offset -= size * 2;
+
+    return bytes.substr(offset, size * 2);
+  }
+
+  const _parseChunk = (chunk, value) => {
+    switch (value.type) {
+      case 'int':
+        const maxPositiveNumber = Math.pow(2, value.size / 2) - 1;
+        let n = parseInt(chunk, 16);
+
+        if (n > maxPositiveNumber) {
+          n = - (2 * maxPositiveNumber - n + 1);
+        }
+
+        return n;
+      case 'uint':
+        return parseInt(chunk, 16);
+      case 'string':
+        let result = '', charCode;
+
+        for (let i = 0; i < chunk.length; i += 2) {
+          charCode = parseInt(chunk.substr(i, 2), 16);
+
+          if (charCode === 0) break;
+
+          result += String.fromCharCode(charCode);
+        }
+
+        return result;
+      case 'address':
+        return '0x' + chunk;
+      case 'bytes':
+        return chunk;
+      default:
+        throw new Error('invalid type');
+    }
+  }
+
+  const values = arguments;
+
+  for (let i = typeof arguments[1] === 'number' ? 2 : 1; i < values.length; i++) {
+    result[values[i].key] = _parseChunk(_nextChunk(values[i]), values[i]);
+  }
+
+  return {
+    offset: offset,
+    parsedData: result,
+  };
+}
+
+/**
  * Result format: ['0x1c', '0xb5', '0xcf', '0x01', '0x0e', ... ]
  *
  * @returns {Array}
@@ -196,4 +313,4 @@ function toBytesBuffer() {
   return new Uint8Array(toByteStringsArray.apply(this, arguments).map((s) => parseInt(s, 16)));
 }
 
-export {toBytesWeb, toBytesTruffle, toBytesBuffer, _bytesToBytes};
+export {toBytesWeb, toBytesTruffle, toBytesBuffer, fromBytes, bytesToByteStringsArray};

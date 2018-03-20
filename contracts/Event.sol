@@ -154,6 +154,7 @@ contract Event {
     }
 
     function withdraw() {
-        token.transfer(msg.sender, getShare(msg.sender));
+        bytes memory empty;
+        token.transfer(msg.sender, getShare(msg.sender), empty);
     }
 }

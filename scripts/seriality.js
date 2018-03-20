@@ -4,7 +4,7 @@ import _ from 'lodash';
 import Web3 from 'web3';
 import Config from 'truffle-config';
 import Resolver from 'truffle-resolver';
-import {toBytesTruffle as toBytes, toBytesWeb, toBytesBuffer, _bytesToBytes} from '../src/util/toBytes';
+import {toBytesTruffle as toBytes, toBytesWeb, fromBytes, toBytesBuffer, bytesToByteStringsArray} from '../src/util/serialityUtil';
 
 import compressjs from 'compressjs';
 
@@ -42,14 +42,17 @@ const logger = log4js.getLogger('out');
   const provider = config.provider;
 
   const SerialityTest = resolver.require("../contracts/test/SerialityTest.sol");
+  const TestEventBase = resolver.require("../contracts/test/TestEventBase.sol");
   const Token = resolver.require("../contracts/Token.sol");
 
   web3.setProvider(provider);
 
   SerialityTest.setProvider(provider);
   Token.setProvider(provider);
+  TestEventBase.setProvider(provider);
   SerialityTest.defaults({from: web3.eth.coinbase});
   Token.defaults({from: web3.eth.coinbase});
+  TestEventBase.defaults({from: web3.eth.coinbase});
 
   web3.eth.defaultAccount = web3.eth.coinbase;
 
@@ -163,7 +166,7 @@ const logger = log4js.getLogger('out');
   // string name
   // bytes32 bidType
   // bytes2 locale
-  // ... | uint result_3Coefficient | uint result_2Coefficient | uint result_1Coefficient
+  // ... | uint64 result_3Coefficient | uint64 result_2Coefficient | uint64 result_1Coefficient
   // uint8 tagsCount | uint8 resultsCount | uint64 endDate | uint64 startDate | uint64 deposit
 
   const now = Math.floor((new Date()).getTime() / 1000);
@@ -183,13 +186,13 @@ const logger = log4js.getLogger('out');
     {type: 'string', value: 'Tag 2 name'}, // tagName_2
   );
 
-  logger.info(`Event Info Bytes:`, eventInfo.length, _bytesToBytes(eventInfo).join(''));
+  logger.info(`Event Info Bytes:`, eventInfo.length, bytesToByteStringsArray(eventInfo).join(''));
 
   const algorithm = compressjs.BWTC;
   const data = new Buffer(eventInfo, 'utf8');
   const compressed = algorithm.compressFile(data);
 
-  logger.info(`Event Compressed Info Bytes:`, compressed.length, _bytesToBytes(compressed).join(''));
+  logger.info(`Event Compressed Info Bytes:`, compressed.length, bytesToByteStringsArray(compressed).join(''));
 
   let deposit = 10;
 
@@ -200,9 +203,9 @@ const logger = log4js.getLogger('out');
     {type: 'uint', size: 8, value: 3}, // resultsCount
     {type: 'uint', size: 8, value: 2}, // tagsCount
 
-    {type: 'uint', size: 256, value: 1}, // result_1Coefficient
-    {type: 'uint', size: 256, value: 2}, // result_2Coefficient
-    {type: 'uint', size: 256, value: 3}, // result_3Coefficient
+    {type: 'uint', size: 64, value: 1}, // result_1Coefficient
+    {type: 'uint', size: 64, value: 2}, // result_2Coefficient
+    {type: 'uint', size: 64, value: 3}, // result_3Coefficient
 
     {type: 'bytes', value: compressed},
   );
@@ -231,19 +234,52 @@ const logger = log4js.getLogger('out');
   // logger.info(`Logs:`, result.receipt.logs);
   logger.info(`Event Result:`, n);
 
-  let offset = 2 * (32 + 8 + 8 + 2);
-  let resultsCount = parseInt(n.eventData.substr(n.eventData.length - offset, 2 * 2), 16);
-  logger.info(`Event Result [resultsCount]:`, resultsCount);
+  let parsed = fromBytes(
+    n.eventData,
+    {type: 'uint', size: 64, key: 'deposit'},
+    {type: 'uint', size: 64, key: 'startDate'},
+    {type: 'uint', size: 64, key: 'endDate'},
+    {type: 'uint', size: 8, key: 'resultsCount'},
+    {type: 'uint', size: 8, key: 'tagsCount'},
+  );
+  let offset = parsed.offset, parsedData = parsed.parsedData;
 
-  offset += resultsCount * 32;
-  let compressedData = n.eventData.substr(0, n.eventData.length - offset);
+  let fromBytesArgs = [n.eventData, offset];
+
+  logger.info(`Event Result [resultsCount]:`, parsedData.resultsCount);
+
+  for(let i = 0; i < parsedData.resultsCount; i++) {
+    fromBytesArgs.push({type: 'uint', size: 64, key: `result_${i + 1}Coefficient`});
+  }
+
+  parsed = fromBytes.apply(this, fromBytesArgs);
+  offset = parsed.offset;
+  Object.assign(parsedData, parsed.parsedData);
+
+  logger.info(`Event Result [parsedData]:`, parsed.parsedData);
+
+  let compressedData = n.eventData.substr(0, offset);
   let compressedBuffer = toBytesBuffer({type: 'bytes', value: compressedData});
   const decompressed = algorithm.decompressFile(compressedBuffer);
 
   logger.info(`Event Compressed Info Bytes:`, compressedData.length / 2, compressedData);
-  logger.info(`Event Decompressed Info Bytes:`, decompressed.length, _bytesToBytes(decompressed).join(''));
+  logger.info(`Event Decompressed Info Bytes:`, decompressed.length, bytesToByteStringsArray(decompressed).join(''));
+
+  let eventInstance = TestEventBase.at(n.eventAddress);
+
+  await eventInstance.setToken('0xef55bfac4228981e850936aaf042951f7b146e41');
+  //await eventInstance.setDeposit(100500);
+  logger.info(`Event Owner token:`, (await eventInstance.token()));
+  logger.info(`Event Owner share:`, (await eventInstance.getShare(accounts[0])).toNumber());
+  logger.info(`Event Possible results:`, [
+    (await eventInstance.deposit()).toNumber(),
+    (await eventInstance.creator()),
+    // await eventInstance.possibleResults(1),
+    // await eventInstance.possibleResults(2),
+  ]);
 
 
+  // Empty event
   result = await serialityTest.testEmptyEvent({account: accounts[0], gas: 6721975});
   logger.info(`Empty Event Result:`, result);
 
