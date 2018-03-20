@@ -116,7 +116,7 @@ contract TestEvent {
     }
 }
 
-contract SerialityTest {
+contract SerialityTest is Seriality {
     using EventLib for EventLib.EventData;
 
     uint constant public meta_version = 1;
@@ -134,7 +134,7 @@ contract SerialityTest {
 
     function tokenFallback(address _from, uint _value, bytes memory _data) {
         bytes memory empty;
-        token.transfer(testSampleEvent(_data), _value, empty);
+        token.transfer(testSampleEvent(_from, _data), _value, empty);
     }
 
     // Mapping:
@@ -147,7 +147,7 @@ contract SerialityTest {
     // bytes2 locale
     // ... | uint64 result_3Coefficient | uint64 result_2Coefficient | uint64 result_1Coefficient
     // uint8 tagsCount | uint8 resultsCount | uint64 endDate | uint64 startDate | uint64 deposit
-    function testSampleEvent(bytes memory buffer) public returns (address) {
+    function testSampleEvent(address _creator, bytes memory buffer) public returns (address) {
         uint64 _deposit;
         uint64 _startDate;
         uint64 _endDate;
@@ -156,30 +156,30 @@ contract SerialityTest {
 
         uint offset = buffer.length;
 
-        _deposit = SerialityLib.bytesToUint64(offset, buffer);
-        offset -= 8; // SerialityLib.sizeOfUint(64);
+        _deposit = bytesToUint64(offset, buffer);
+        offset -= 8; // sizeOfUint(64);
 
-        _startDate = SerialityLib.bytesToUint64(offset, buffer);
-        offset -= 8; // SerialityLib.sizeOfUint(64);
+        _startDate = bytesToUint64(offset, buffer);
+        offset -= 8; // sizeOfUint(64);
 
-        _endDate = SerialityLib.bytesToUint64(offset, buffer);
-        offset -= 8; // SerialityLib.sizeOfUint(64);
+        _endDate = bytesToUint64(offset, buffer);
+        offset -= 8; // sizeOfUint(64);
 
-        _resultsCount = SerialityLib.bytesToUint8(offset, buffer);
-        offset -= 1; // SerialityLib.sizeOfUint(8);
+        _resultsCount = bytesToUint8(offset, buffer);
+        offset -= 1; // sizeOfUint(8);
 
         // bypass tagsCount
-        offset -= 1; // SerialityLib.sizeOfUint(8);
+        offset -= 1; // sizeOfUint(8);
 
         // TestEvent lastEvent = new TestEvent(address(token), msg.sender, _deposit, _startDate, _endDate, _resultsCount);
 
         TestEventBase lastEvent = TestEventBase(address(new TestEvent(address(eventBase))));
 
-        lastEvent.init(address(token), msg.sender, _deposit, _startDate, _endDate, _resultsCount);
+        lastEvent.init(address(token), _creator, _deposit, _startDate, _endDate, _resultsCount);
 
         for (uint i = 0; i < _resultsCount; i++) {
-            _resultCoefficient = SerialityLib.bytesToUint64(offset, buffer);
-            offset -= 8; // SerialityLib.sizeOfUint(64);
+            _resultCoefficient = bytesToUint64(offset, buffer);
+            offset -= 8; // sizeOfUint(64);
 
             lastEvent.addResult(_resultCoefficient);
         }

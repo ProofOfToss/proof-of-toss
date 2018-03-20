@@ -85,7 +85,7 @@ const logger = log4js.getLogger('out');
     {type: 'address', value: "0x1cb5cf010e407afc6249627bfd769d82d8dbbf71"}
   );
 
-  result = await serialityTest.testSample3(arr, {account: accounts[0]});
+  result = await serialityTest.testSample3(arr, {from: accounts[0]});
 
   logger.info(`Sample 3 Bytes:`, arr.length, arr);
 
@@ -111,7 +111,7 @@ const logger = log4js.getLogger('out');
   // 128 chars: 1cb5cf010e407afc6249627bfd769d82d8dbbf7115b7926835a7c2fd6d297e3adecc5b45f7309f59fffffffffffffffffffffff5a6e798e413de43550cccccf4
   logger.info(`Sample 2 Bytes:`, arr.length, arr);
 
-  result  = await serialityTest.testSample2(arr, {account: accounts[0]});
+  result  = await serialityTest.testSample2(arr, {from: accounts[0]});
 
   n = result.logs[0].args;
 
@@ -140,7 +140,7 @@ const logger = log4js.getLogger('out');
   // 400 chars: 0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020d949d436f7079206b6f6e206c61736869000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e42696120696e6a6120646168616e2073657276696365000000000000000000000000000000000000000000000000000000000000000000000000000000000016012b0157
   logger.info(`Sample 1 Bytes:`, arr.length, arr);
 
-  result = await serialityTest.testSample1(arr, {account: accounts[0], gas: 6721975});
+  result = await serialityTest.testSample1(arr, {from: accounts[0], gas: 6721975});
 
   logger.info(result);
 
@@ -213,9 +213,9 @@ const logger = log4js.getLogger('out');
   logger.info(`Event Bytes:`, arr.length / 2, arr);
   // logger.info(`Event Bytes Web:`, arr.length / 2, JSON.stringify(toBytesWeb({type: 'bytes', value: arr})));
 
-  // result = await serialityTest.testSampleEvent(arr, {account: accounts[0], gas: 6721975});
+  // result = await serialityTest.testSampleEvent(accounts[0], arr, {from: accounts[0], gas: 6721975});
   // n = result.logs[0];
-  result = await token.transfer(serialityTest.address, deposit, arr, {account: accounts[0], gas: 6721975});
+  result = await token.transfer(serialityTest.address, deposit, arr, {from: accounts[0], gas: 6721975});
 
   const events = await new Promise((resolve, reject) => {
     serialityTest.NewEvent({}, {fromBlock: result.receipt.blockNumber, toBlock: result.receipt.blockNumber, topics: result.receipt.logs[0].topics}).get((error, log) => {
@@ -267,10 +267,10 @@ const logger = log4js.getLogger('out');
 
   let eventInstance = TestEventBase.at(n.eventAddress);
 
-  await eventInstance.setToken('0xef55bfac4228981e850936aaf042951f7b146e41');
-  //await eventInstance.setDeposit(100500);
   logger.info(`Event Owner token:`, (await eventInstance.token()));
+  logger.info(`Event Owner creator:`, (await eventInstance.creator()), accounts[0]);
   logger.info(`Event Owner share:`, (await eventInstance.getShare(accounts[0])).toNumber());
+  logger.info(`Event Event's balance:`, (await token.balanceOf(eventInstance.address)).toNumber());
   logger.info(`Event Possible results:`, [
     (await eventInstance.deposit()).toNumber(),
     (await eventInstance.creator()),
@@ -280,7 +280,7 @@ const logger = log4js.getLogger('out');
 
 
   // Empty event
-  result = await serialityTest.testEmptyEvent({account: accounts[0], gas: 6721975});
+  result = await serialityTest.testEmptyEvent({from: accounts[0], gas: 6721975});
   logger.info(`Empty Event Result:`, result);
 
 })(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error); });

@@ -2,10 +2,13 @@ pragma solidity ^0.4.2;
 
 import "./Token.sol";
 import "./Event.sol";
+import "./EventBase.sol";
 import "./ERC223ReceivingContract.sol";
+import "./installed_contracts/Seriality/Seriality.sol";
 
-contract Main is ERC223ReceivingContract {
+contract Main is ERC223ReceivingContract, Seriality {
     Token token;
+    EventBase eventBase;
     uint8 version = 1;
     Event lastEvent;
     mapping (address => bool) public whitelist;
@@ -21,39 +24,77 @@ contract Main is ERC223ReceivingContract {
         owner = newOwner;
     }
 
-    function Main(address _token) {
+    function Main(address _token, address _eventBase) {
         owner = msg.sender;
 
         token = Token(_token);
+        eventBase = EventBase(_eventBase);
     }
 
     function getToken() constant returns (address) {
         return address(token);
     }
 
-    event NewEvent(string eventName, uint256 indexed createdTimestamp, address indexed eventAddress, address indexed eventCreator);
+    event NewEvent(address indexed eventAddress, bytes eventData);
 
-    function tokenFallback(address _from, uint _value, bytes _data) {
-
+    function tokenFallback(address _from, uint _value, bytes memory _data) {
+        bytes memory empty;
+        token.transfer(newEvent(_from, _data), _value, empty);
     }
 
-    function newEvent(string name, uint deposit, string description,
-        uint operatorId, string eventData, string sourceUrl, string tags, string results
-    ) returns (address) {
-        require(whitelist[msg.sender] == true);
+    // Mapping:
+    // ... | string tagName_2 | string tagName_1
+    // ... | string result_3Description | string result_2Description | string result_1Description
+    // string sourceUrl
+    // string description
+    // string name
+    // bytes32 bidType
+    // bytes2 locale
+    // ... | uint64 result_3Coefficient | uint64 result_2Coefficient | uint64 result_1Coefficient
+    // uint8 tagsCount | uint8 resultsCount | uint64 endDate | uint64 startDate | uint64 deposit
+    function newEvent(address _creator, bytes memory buffer) internal returns (address) {
+        uint64 _deposit;
+        uint64 _startDate;
+        uint64 _endDate;
+        uint8 _resultsCount;
+        uint64 _resultCoefficient;
 
-        lastEvent = new Event(msg.sender, address(token), name, deposit, description, eventData,
-            sourceUrl, tags, results);
+        uint offset = buffer.length;
 
-        if (token.allowanceToAllowBlocking(msg.sender, address(this))) {
-            token.allowBlocking(msg.sender, address(lastEvent));
+        _deposit = bytesToUint64(offset, buffer);
+        offset -= 8; // sizeOfUint(64);
+
+        _startDate = bytesToUint64(offset, buffer);
+        offset -= 8; // sizeOfUint(64);
+
+        _endDate = bytesToUint64(offset, buffer);
+        offset -= 8; // sizeOfUint(64);
+
+        _resultsCount = bytesToUint8(offset, buffer);
+        offset -= 1; // sizeOfUint(8);
+
+        // bypass tagsCount
+        offset -= 1; // sizeOfUint(8);
+
+        EventBase lastEvent = EventBase(address(new Event(address(eventBase))));
+
+        lastEvent.init(address(token), _creator, _deposit, _startDate, _endDate, _resultsCount);
+
+        for (uint i = 0; i < _resultsCount; i++) {
+            _resultCoefficient = bytesToUint64(offset, buffer);
+            offset -= 8; // sizeOfUint(64);
+
+            lastEvent.addResult(_resultCoefficient);
         }
 
-        token.transferFrom(msg.sender, address(lastEvent), deposit);
-        NewEvent(name, uint(now), address(lastEvent), msg.sender);
+        NewEvent(
+            address(lastEvent),
+            buffer
+        );
 
         return address(lastEvent);
     }
+
 
     function getLastEvent() constant returns (address) {
         return address(lastEvent);
