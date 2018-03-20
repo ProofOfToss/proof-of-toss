@@ -165,18 +165,20 @@ class Index extends Component {
 
     if (this.state.q) {
       shouldConditions.push({
-        wildcard: {'name': `*${this.state.q}*`}
-      });
-
-      shouldConditions.push({
-        wildcard: {'description': `*${this.state.q}*`}
+        query_string: {
+          fields: ['name', 'description'],
+          query: this.state.q
+        }
       });
 
       shouldConditions.push({
         "nested": {
           "path": "tag",
           "query": {
-            wildcard: {'tag.name': `*${this.state.q}*`}
+            query_string: {
+              fields: ['tag.name'],
+              query: this.state.q
+            }
           }
         }
       });
