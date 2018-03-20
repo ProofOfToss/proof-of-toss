@@ -22,6 +22,13 @@ contract Event {
         uint betSum;
     }
 
+    struct Bet {
+        uint timestamp;
+        address bettor;
+        uint result;
+        uint amount;
+    }
+
     uint constant public meta_version = 1;
     address public creator;
     Statuses public status = Statuses.Published;
@@ -38,6 +45,7 @@ contract Event {
 
     Tag[10] public tags;
     Result[3] public possibleResults;
+    Bet[] public bets;
 
     function Event(address _creator, address _token, string _name, uint _deposit,
         string _description, string memory _data, string _sourceUrl, string memory _tags, string memory _results
@@ -139,6 +147,22 @@ contract Event {
 
     function getName() constant returns (string) {
         return name;
+    }
+
+    function newBet(uint result, uint amount) constant returns (uint, uint) {
+
+        require(status == Statuses.Published || status == Statuses.Accepted);
+        require(result >= 0 && result < possibleResults.length);
+        require(now < endDate - 10 minutes);
+
+        bets.push(Bet(now, msg.sender, result, amount));
+
+        possibleResults[result].betCount += 1;
+        possibleResults[result].betSum += amount;
+
+        token.transferFrom(msg.sender, address(this), amount);
+
+        return (possibleResults[result].betCount, possibleResults[result].betSum);
     }
 
     function getCreatedTimestamp() constant returns (uint) {

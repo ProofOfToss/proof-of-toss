@@ -6,6 +6,26 @@ var BlockingGranter = artifacts.require("./test/BlockingGranter.sol");
 
 contract('Token', function (accounts) {
 
+  it("should add initial balance to msg.sender", async () => {
+    const token = await Token.deployed();
+    const balance = await token.balanceOf(accounts[0]);
+    assert.equal(balance, 10000000000000, "1000000000 tokens wasn't on balance");
+  });
+
+  it("should transfer tokens between accounts", async () => {
+    const token = await Token.deployed();
+
+    //Transfer from accounts[0] to accounts[1]
+    await token.transfer(accounts[1], 5000000000000, {from: accounts[0]});
+    assert.equal(await token.balanceOf(accounts[1], {from: accounts[1]}), 5000000000000,
+      "5000000000000 tokens wasn't on balance");
+
+    //Transfer from accounts[1] to accounts[0]
+    await token.transfer(accounts[0], 5000000000000, {from: accounts[1]});
+    assert.equal(await token.balanceOf(accounts[1], {from: accounts[1]}), 0,
+      "0 tokens wasn't on balance");
+  });
+
   it("should not allow to block tokens for the same address as msg.sender", function() {
 
     return Token.deployed()
