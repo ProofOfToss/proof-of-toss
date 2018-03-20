@@ -12,6 +12,7 @@ import overlayFactory from 'react-bootstrap-table2-overlay';
 import '../../styles/components/play_table.scss';
 
 import appConfig from "../../data/config.json"
+import { getLanguageAnalyzerByCode } from '../../util/i18n';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -166,6 +167,7 @@ class Index extends Component {
     if (this.state.q) {
       shouldConditions.push({
         query_string: {
+          analyzer: getLanguageAnalyzerByCode(this.props.locale),
           fields: ['name', 'description'],
           query: this.state.q
         }
@@ -176,6 +178,7 @@ class Index extends Component {
           "path": "tag",
           "query": {
             query_string: {
+              analyzer: getLanguageAnalyzerByCode(this.props.locale),
               fields: ['tag.name'],
               query: this.state.q
             }
