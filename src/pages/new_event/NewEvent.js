@@ -2,7 +2,7 @@ import 'babel-polyfill';
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
-import EventForm from '../../components/event/EventForm';
+import EventForm from '../../components/new_event/EventForm';
 import config from "../../data/config.json";
 
 import { deployed } from '../../util/contracts';

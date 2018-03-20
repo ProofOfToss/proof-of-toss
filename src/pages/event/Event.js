@@ -1,59 +1,58 @@
-import React, { Component } from 'react'
-import getWeb3 from '../../util/getWeb3'
-import EventContract from '../../../build/contracts/Event.json'
+import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux';
+import { getTranslate } from 'react-localize-redux';
+import { fetchEvent } from '../../util/event';
+
+import ResultsList from '../../components/event/ResultsList';
 
 class Event extends Component {
   constructor(props) {
     super(props);
-    this.state = { id: this.props.params.id, web3: null, timestamp: null, creator: null };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({ id: nextProps.params.id })
+    this.state = {
+      eventInstance: null
+    };
   }
 
   componentWillMount() {
-    // Get network provider and web3 instance.
-    // See utils/getWeb3 for more info.
+    this.setState({
+      eventInstance: fetchEvent(this.props.web3, this.props.params.id)
+    })
+  }
 
-    getWeb3
-      .then(results => {
-        this.setState({
-          web3: results.web3
-        })
-
-        const contract = require('truffle-contract');
-        const _event = contract(EventContract);
-        _event.setProvider(this.state.web3.currentProvider);
-
-        var eventInstance = _event.at(this.state.id);
-
-        eventInstance.getCreatedTimestamp().then((timestamp) => {
-          this.setState({
-            timestamp: timestamp.toNumber()
-          });
-        });
-
-        eventInstance.getCreator().then((creator) => {
-          this.setState({
-            creator: creator
-          });
-        });
-      })
-      .catch((e) => {
-        console.log('Error finding web3.', e)
-      })
+  renderEvent() {
+    return( <Fragment>
+        <dl className="dl-horizontal">
+          <dt>Event</dt>
+          <dd>{this.props.params.id}</dd>
+        </dl>
+        <ResultsList eventInstance={this.state.eventInstance}/>
+      </Fragment>
+    )
   }
 
   render() {
+    let content = <div className='alert alert-info' role='alert'>
+      {this.props.translate('pages.event.fetching')}
+    </div>;
+
+    if(this.state.eventInstance) {
+      content = this.renderEvent();
+    }
+
     return(
-      <div>
-        <p>Event: {this.state.id}</p>
-        <p>Created at: {this.state.timestamp}</p>
-        <p>Created by: {this.state.creator}</p>
-      </div>
+      <main className="container event">
+        {content}
+      </main>
     )
   }
 }
 
-export default Event
+function mapStateToProps(state) {
+  return {
+    web3: state.web3.web3,
+    currentAddress: state.user.address,
+    translate: getTranslate(state.locale),
+  };
+}
+
+export default connect(mapStateToProps)(Event)

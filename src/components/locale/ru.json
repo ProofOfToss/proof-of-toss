@@ -105,6 +105,10 @@
       "modal": {
         "submit": "Create"
       }
+    },
+    "event": {
+      "fetching": "Загрузка события...",
+      "newBet": "Сделать ставку"
     }
   }
 

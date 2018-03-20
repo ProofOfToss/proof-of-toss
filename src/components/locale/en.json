@@ -129,6 +129,10 @@
         "date_start": "Start time",
         "date_end": "End time"
       }
+    },
+    "event": {
+      "fetching": "Loading event information...",
+      "newBet": "Add bet"
     }
   },
   "categories": {
