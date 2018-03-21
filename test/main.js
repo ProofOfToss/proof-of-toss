@@ -39,34 +39,20 @@ contract('Main', function(accounts) {
 
       assert.equal(tokenAddress, token.address, "mainSC token address not equals token address");
 
-      return token.balanceOf(accounts[0], {from: accounts[1]});
+    }).then(() => {
 
-    }).then(function(balance) {
-
-      assert.equal(balance, 10000000000000, "1000000000 tokens wasn't on balance");
-
-      return token.transfer(accounts[1], 10000000000000, {from: accounts[0]});
-
-    }).then(function() {
-
-      return token.balanceOf(accounts[1], {from: accounts[1]});
-
-    }).then(function(balance) {
-
-      assert.equal(balance.toNumber(), 10000000000000, "1000000000 tokens wasn't on account[1] balance");
-
-      return token.approve(main.address, 10000000, {from: accounts[1]});
+      return token.approve(main.address, 10000000, {from: accounts[0]});
 
     }).then(async function() {
 
       try {
-        await main.updateWhitelist(accounts[1], true);
+        await main.updateWhitelist(accounts[0], true);
       } catch (e) {
         assert.isUndefined(e);
       }
 
       return main.newEvent(eventName, eventDeposit, eventDescription, 1, eventData,
-        eventSourceUrl, eventTags, eventResults, {from: accounts[1]});
+        eventSourceUrl, eventTags, eventResults, {from: accounts[0]});
 
     }).then(function(eventAddress) {
 
@@ -90,31 +76,31 @@ contract('Main', function(accounts) {
 
     }).then(function(creator) {
 
-      assert.equal(creator, accounts[1], "wrong creator");
+      assert.equal(creator, accounts[0], "wrong creator");
 
-      return event.getShare(accounts[1], {from: accounts[1]})
+      return event.getShare(accounts[0], {from: accounts[0]})
 
     }).then(function(share) {
 
       assert.equal(share.toNumber(), 10000000, "1000 tokens wasn't on deposit");
 
-      return token.balanceOf(accounts[1], {from: accounts[1]});
+      return token.balanceOf(accounts[0], {from: accounts[0]});
 
     }).then(function(balance) {
 
-      assert.equal(balance.toNumber(), 9999990000000, "creator balance wasn't 999999000 tokens");
+      assert.equal(balance.toNumber(), 9999980000000, "creator balance wasn't 9999980000000 tokens");
 
-      return event.withdraw({from: accounts[1]});
+      return event.withdraw({from: accounts[0]});
 
     }).then(function() {
 
-      return token.balanceOf(accounts[1], {from: accounts[1]});
+      return token.balanceOf(accounts[0], {from: accounts[0]});
 
     }).then(function(balance) {
 
-      assert.equal(balance.toNumber(), 10000000000000, "1000000000 tokens wasn't on balance");
+      assert.equal(balance.toNumber(), 9999990000000, "1000000000 tokens wasn't on balance");
 
-      return event.getShare(accounts[1], {from: accounts[1]})
+      return event.getShare(accounts[0], {from: accounts[0]})
 
     }).then(function(share) {
       assert.equal(share.toNumber(), 0, "deposit wasn't withdrawn");
@@ -168,7 +154,7 @@ contract('Main', function(accounts) {
     const main = await Main.deployed();
 
     try {
-      await token.approve(main.address, 10000000, {from: accounts[1]});
+      await token.approve(main.address, 10000000, {from: accounts[0]});
     } catch (e) {
       assert.isUndefined(e);
     }
@@ -176,16 +162,16 @@ contract('Main', function(accounts) {
     await expectThrow(main.updateWhitelist(accounts[1], true, {from: accounts[1]})); // Non owner can't change whitelist
 
     try {
-      await main.updateWhitelist(accounts[1], true);
+      await main.updateWhitelist(accounts[0], true);
 
       await main.newEvent('Test event 3', 10000000, 'description', 1, eventData,
-        'source_url', eventTags, eventResults, {from: accounts[1]});
+        'source_url', eventTags, eventResults, {from: accounts[0]});
 
       const eventAddress = await main.getLastEvent();
       const event = Event.at(eventAddress);
       const creator = await event.getCreator();
 
-      assert.equal(creator, accounts[1], "wrong creator");
+      assert.equal(creator, accounts[0], "wrong creator");
     } catch (e) {
       assert.isUndefined(e);
     }
