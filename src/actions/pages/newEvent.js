@@ -7,6 +7,7 @@ import { deployed } from '../../util/contracts';
 export const FORM_APPROVE_EVENT = 'FORM_APPROVE_EVENT';
 export const FORM_APPROVE_EVENT_SUCCESS = 'FORM_APPROVE_EVENT_SUCCESS';
 export const FORM_APPROVE_EVENT_ERROR = 'FORM_APPROVE_EVENT_ERROR';
+export const FORM_NEED_TO_REAPPROVE_EVENT = 'FORM_NEED_TO_REAPPROVE_EVENT';
 export const FORM_SAVE_EVENT = 'FORM_SAVE_EVENT';
 export const MODAL_SAVE_EVENT = 'MODAL_SAVE_EVENT';
 export const MODAL_CLOSE_EVENT = 'MODAL_CLOSE_EVENT';
@@ -114,4 +115,8 @@ export const modalCloseEvent = () => ({
 
 export const savedEvent = () => ({
   'type': SAVED_EVENT
+});
+
+export const needToReapproveEvent = () => ({
+  type: FORM_NEED_TO_REAPPROVE_EVENT
 });
