@@ -1,5 +1,5 @@
 import compressjs from 'compressjs';
-import {toBytesTruffle as toBytes, fromBytes, toBytesBuffer, bytesToByteStringsArray} from '../src/util/serialityUtil';
+import {toBytesTruffle as toBytes, fromBytes, toBytesBuffer, bytesToByteStringsArray} from './serialityUtil';
 
 function serializeEvent(eventData) {
   let toBytesArgs = [

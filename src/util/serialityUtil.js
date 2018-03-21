@@ -1,4 +1,3 @@
-import {decToHex} from './hexToDec'
 import {BigNumber} from 'bignumber.js';
 
 /**
