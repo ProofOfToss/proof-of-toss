@@ -51,11 +51,31 @@ contract('Event', function(accounts) {
   });
 
   it("should add new bet", async () => {
-    await token.approve(event.address, 10100000, {from: accounts[0]});
+    await token.approve(event.address, 10000000, {from: accounts[0]});
+    await event.newBet(0, 1000000, {from: accounts[0]});
 
-    const result = await event.newBet(0, 5000000, {from: accounts[0]});
-    assert.equal(result[0], 1, 'Amount of bets is invalid');
-    assert.equal(result[1], 5000000, 'Sum of bets is invalid');
-    assert(token.balanceOf(event.address), 15000000, 'Event balance is invalid');
-  })
+    assert.equal((await event.possibleResults(0))[2], 1, 'Amount of bets is invalid');
+    assert.equal((await event.possibleResults(0))[3], 1000000, 'Sum of bets is invalid');
+    assert(token.balanceOf(event.address), 11000000, 'Event balance is invalid');
+
+    await event.newBet(1, 500000, {from: accounts[0]});
+
+    const userBets = await event.getUserBets({from: accounts[0]});
+    assert.equal(userBets.length, 2, 'Count of user bets is invalid');
+
+    let promiseUserBets = [];
+    for(let i = 0; i < userBets.length; i++) {
+      promiseUserBets.push(event.bets(i))
+    }
+
+    Promise.all(promiseUserBets).then((bets) => {
+      assert.equal(bets[0][1], accounts[0], 'Address of better is invalid');
+      assert.equal(bets[0][2], 0, 'Result of the bet is invalid');
+      assert.equal(bets[0][3], 1000000, 'Amount of the bet is invalid');
+      
+      assert.equal(bets[1][1], accounts[0], 'Address of better is invalid');
+      assert.equal(bets[1][2], 1, 'Result of the bet is invalid');
+      assert.equal(bets[1][3], 500000, 'Amount of the bet is invalid');
+    })
+  });
 });

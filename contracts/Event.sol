@@ -46,6 +46,7 @@ contract Event {
     Tag[10] public tags;
     Result[3] public possibleResults;
     Bet[] public bets;
+    mapping (address => uint[]) private usersBets;
 
     function Event(address _creator, address _token, string _name, uint _deposit,
         string _description, string memory _data, string _sourceUrl, string memory _tags, string memory _results
@@ -149,8 +150,7 @@ contract Event {
         return name;
     }
 
-    function newBet(uint result, uint amount) constant returns (uint, uint) {
-
+    function newBet(uint result, uint amount) public {
         require(status == Statuses.Published || status == Statuses.Accepted);
         require(result >= 0 && result < possibleResults.length);
         require(now < endDate - 10 minutes);
@@ -160,9 +160,13 @@ contract Event {
         possibleResults[result].betCount += 1;
         possibleResults[result].betSum += amount;
 
-        token.transferFrom(msg.sender, address(this), amount);
+        usersBets[msg.sender].push(bets.length - 1);
 
-        return (possibleResults[result].betCount, possibleResults[result].betSum);
+        token.transferFrom(msg.sender, address(this), amount);
+    }
+
+    function getUserBets() view returns (uint[]) {
+        return usersBets[msg.sender];
     }
 
     function getCreatedTimestamp() constant returns (uint) {
