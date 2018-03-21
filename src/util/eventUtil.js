@@ -110,3 +110,5 @@ function deserializeEvent(bytes) {
     parsedData.tags.push(parsed.parsedData.tag);
   }
 }
+
+export {serializeEvent, deserializeEvent};

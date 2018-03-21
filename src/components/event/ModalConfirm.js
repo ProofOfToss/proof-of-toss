@@ -30,11 +30,7 @@ class ModalConfirm extends Component {
   componentWillMount() {
     let tokenInstance;
 
-    deployed(this.props.web3, 'token').then(({instance}) => {
-      tokenInstance = instance;
-
-      return deployed(this.props.web3, 'main');
-    }).then(({mainInstance}) => {
+    deployed(this.props.web3, 'token', 'main').then(({tokenInstance, mainInstance}) => {
       const bytes = serializeEvent({
         name: this.props.formData.name,
         description: this.props.formData.description,
