@@ -7,6 +7,7 @@ import Web3 from 'web3';
 import contract from 'truffle-contract';
 import Config from 'truffle-config';
 import Resolver from 'truffle-resolver';
+import { deserializeEvent } from '../src/util/eventUtil';
 
 import log4js from 'log4js';
 
@@ -52,60 +53,33 @@ const esClient = new AwsEsClient(
     process.exit(1);
   };
 
-  const parseBytes = (byteString) => {
-    let result = '', charCode;
-
-    for (let i = 2; i < byteString.length; i += 2) {
-      charCode = parseInt('0x' + byteString.substr(i, 2));
-
-      if (charCode === 0) break;
-
-      result += String.fromCharCode(charCode);
-    }
-
-    return result;
-  };
-
   const convertBlockchainEventToEventDoc = async (_event) => {
     try {
-      const event = Event.at(_event.eventAddress);
-      const locale = parseBytes(await event.locale());
-      const category = parseInt(parseBytes(await event.category()));
-      const bidType = parseBytes(await event.bidType());
-      const description = await event.description();
+      const eventData = deserializeEvent(_event.eventData);
+      const event = EventBase.at(_event.eventAddress);
+
+      const creator = await event.creator();
 
       const bidSum = (await Promise.all([
         event.possibleResults(0),
         event.possibleResults(1),
         event.possibleResults(2),
-      ])).reduce((accumulator, result) => accumulator + parseInt(result[3]), 0);
+      ])).reduce((accumulator, result) => accumulator + parseInt(result[3], 10), 0);
 
-      const startDate = await event.startDate();
-      const endDate = await event.endDate();
-      const sourceUrl = await event.sourceUrl();
-      let tags = [];
-
-      for (let i = 0; i < 10; i++) {
-        const tag = (await event.tags(i))[0];
-
-        if (!tag) { break; }
-
-        tags.push({'locale': locale, 'name': tag});
-      }
+      let tags = eventData.tags.map((tag) => { return {'locale': eventData.locale, 'name': tag}});
 
       return {
-        'name': /*web3.toUtf8*/(_event.eventName),
-        'description': /*web3.toUtf8*/(description),
-        'bidType': bidType,
+        'name': /*web3.toUtf8*/(eventData.name),
+        'description': /*web3.toUtf8*/(eventData.description),
+        'bidType': eventData.bidType,
         'bidSum': bidSum,
         'address': _event.eventAddress,
-        'createdBy': _event.eventCreator,
-        'createdAt': _event.createdTimestamp.c,
-        'locale': /*web3.toUtf8*/(locale),
-        'category': /*web3.toUtf8*/(category),
-        'startDate': startDate.c,
-        'endDate': endDate.c,
-        'sourceUrl': /*web3.toUtf8*/(sourceUrl),
+        'createdBy': creator,
+        'locale': /*web3.toUtf8*/(eventData.locale),
+        'category': /*web3.toUtf8*/(eventData.category),
+        'startDate': eventData.startDate,
+        'endDate': eventData.endDate,
+        'sourceUrl': /*web3.toUtf8*/(eventData.sourceUrl),
         'tag': tags,
       };
     } catch (err) {
@@ -140,7 +114,11 @@ const esClient = new AwsEsClient(
 
     for(let i = 0; i < events.length; i++) {
       try {
-        const doc = await convertBlockchainEventToEventDoc(events[i]);
+        const doc = await convertBlockchainEventToEventDoc(events[i].args);
+
+        const block = await web3.eth.getBlock(events[i].blockNumber);
+        doc.createdAt = block.timestamp;
+
         body.push({ index: { _index: EVENT_INDEX, _type: 'event', _id: doc.address } });
         body.push(doc);
 
@@ -183,17 +161,17 @@ const esClient = new AwsEsClient(
   // Это НЕ РАБОТАЕТ – дичайшие глюки
 
   const Main = resolver.require("../contracts/Main.sol");
-  const Event = resolver.require("../contracts/Event.sol");
+  const EventBase = resolver.require("../contracts/EventBase.sol");
   const Token = resolver.require("../contracts/Token.sol");
 
   web3.setProvider(provider);
 
   Token.setProvider(provider);
   Main.setProvider(provider);
-  Event.setProvider(provider);
+  EventBase.setProvider(provider);
   Token.defaults({from: web3.eth.coinbase});
   Main.defaults({from: web3.eth.coinbase});
-  Event.defaults({from: web3.eth.coinbase});
+  EventBase.defaults({from: web3.eth.coinbase});
 
   web3.eth.defaultAccount = web3.eth.coinbase;
 
@@ -248,7 +226,7 @@ const esClient = new AwsEsClient(
       }
 
       try {
-        await indexEvents(_.map(log, 'args'));
+        await indexEvents(log);
       } catch (err) {
         fatal(err);
       }

@@ -5,6 +5,7 @@ function serializeEvent(eventData) {
   let toBytesArgs = [
     {type: 'string', size: 2, value: eventData.locale}, // locale
     {type: 'string', size: 32, value: eventData.bidType}, // bidType
+    {type: 'string', size: 32, value: eventData.category}, // category
     {type: 'string', value: eventData.name}, // name
     {type: 'string', value: eventData.description}, // description
     {type: 'string', value: eventData.sourceUrl}, // sourceUrl
@@ -15,7 +16,7 @@ function serializeEvent(eventData) {
   });
 
   eventData.tags.forEach((tag) => {
-    toBytesArgs.push({type: 'string', value: tag.name});
+    toBytesArgs.push({type: 'string', value: tag});
   });
 
   let eventInfo = toBytesBuffer.apply(this, toBytesArgs);
@@ -78,6 +79,7 @@ function deserializeEvent(bytes) {
     bytes,
     {type: 'string', size: 2, key: 'locale'},
     {type: 'string', size: 32, key: 'bidType'},
+    {type: 'string', size: 32, key: 'category'},
     {type: 'string', key: 'name'},
     {type: 'string', key: 'description'},
     {type: 'string', key: 'sourceUrl'},
@@ -101,10 +103,10 @@ function deserializeEvent(bytes) {
     parsed = fromBytes(
       bytes,
       offset,
-      {type: 'string', key: `name`},
+      {type: 'string', key: `tag`},
     );
 
     offset = parsed.offset;
-    parsedData.tags.push({name: parsed.parsedData.name});
+    parsedData.tags.push(parsed.parsedData.tag);
   }
 }

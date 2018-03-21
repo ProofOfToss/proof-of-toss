@@ -8,6 +8,7 @@ import { TIME_ZONES } from "../../util/timezones";
 import { modalCloseEvent, modalSaveEvent } from '../../actions/pages/newEvent'
 import { getGasCalculation } from '../../util/gasPriceOracle';
 import { deployed } from '../../util/contracts';
+import { serializeEvent } from '../../util/eventUtil';
 import config from '../../data/config.json';
 
 class ModalConfirm extends Component {
@@ -27,26 +28,28 @@ class ModalConfirm extends Component {
   }
 
   componentWillMount() {
-    deployed(this.props.web3, 'main').then(({mainInstance}) => {
-      const tags = this.props.formData.tags.reduce((previousValue, currentValue) => {
-        if(previousValue.length > 0) {
-          previousValue += '.';
-        }
+    let tokenInstance;
 
-        return `${previousValue}${this.props.formData.language}.${currentValue}`
-      }, '');
+    deployed(this.props.web3, 'token').then(({instance}) => {
+      tokenInstance = instance;
 
-      const results = this.props.formData.results.reduce((previousValue, currentValue) => {
-        if(previousValue.length > 0) {
-          previousValue += '.';
-        }
+      return deployed(this.props.web3, 'main');
+    }).then(({mainInstance}) => {
+      const bytes = serializeEvent({
+        name: this.props.formData.name,
+        description: this.props.formData.description,
+        deposit: this.props.formData.deposit,
+        bidType: this.props.formData.bidType,
+        category: this.props.formData.category,
+        locale: this.props.formData.language,
+        startDate: this.props.formData.startTime.unix(),
+        endDate: this.props.formData.endTime.unix(),
+        sourceUrl: this.props.formData.sourceUrls.join(','),
+        tags: this.props.formData.tags,
+        results: this.props.formData.results.map((result) => { return {'coefficient': result.coefficient, 'description': result.name}; }),
+      });
 
-        return `${previousValue}${currentValue.name}.${currentValue.coefficient}`
-      }, '');
-
-      mainInstance.newEvent.estimateGas(this.props.formData.name, this.props.formData.deposit, this.props.formData.description, 1,
-        `${this.props.formData.category}.${this.props.formData.language}.${this.props.formData.startTime.unix()}.${this.props.formData.endTime.unix()}`,
-        this.props.formData.sourceUrls[0], tags, results, {
+      tokenInstance.transfer.estimateGas(mainInstance.address, this.props.formData.deposit, bytes, {
           from: this.props.currentAddress
         })
       .then((gasAmount) => {
