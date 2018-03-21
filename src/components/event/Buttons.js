@@ -31,7 +31,6 @@ class Buttons extends Component {
       return;
     }
 
-
     getMyAllowance(this.props.web3).then((value) => {
       const allowance = formatBalance(value);
       this.setState({allowance: allowance});

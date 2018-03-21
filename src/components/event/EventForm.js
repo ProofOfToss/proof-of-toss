@@ -72,14 +72,15 @@ class EventForm extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    if(this.isValid()) {
+
+    if (this.isValid()) {
       this.props.formSaveEvent(this.state.formData);
+      this.setState({showErrors: false});
+
       return;
     }
 
-    this.setState({
-      showErrors: true
-    })
+    this.setState({showErrors: true});
   }
 
   isValid() {
@@ -148,7 +149,7 @@ class EventForm extends Component {
           }
         </div>
 
-        <TagsField onChange={this.handleFieldsChange} showErrors={this.state.showErrors} />
+        <TagsField needToClear={this.props.saved} onChange={this.handleFieldsChange} showErrors={this.state.showErrors} />
 
         <DateFields valueLinkTimeZone={this.timeZoneLink} onChange={this.handleFieldsChange} />
 
@@ -178,7 +179,7 @@ function mapStateToProps(state) {
     saved: state.newEvent.saved,
     showConfirmModal: state.newEvent.showConfirmModal,
     balance: state.token.balance,
-    translate: getTranslate(state.locale),
+    translate: getTranslate(state.locale)
   };
 }
 

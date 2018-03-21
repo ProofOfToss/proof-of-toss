@@ -23,7 +23,18 @@ class TagsField extends Component {
         tags: tags
       }
     });
+
     this.props.onChange({tags: tags})
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.needToClear) {
+      for (let i = 0; i < this.refs.tagsinput.props.value.length; i++) {
+        this.refs.tagsinput.handleRemove(i);
+      }
+
+      this.setState({formData: {tags: []}});
+    }
   }
 
   renderLayoutTags(tagComponents, inputComponent) {
@@ -50,9 +61,14 @@ class TagsField extends Component {
   render() {
     return <div className={"form-group" + (this._showErrors() ? ' has-error' : '')}>
       <label htmlFor="event[tags]">{ this.props.translate('pages.new_event.form.tags.label')}*</label>
-      <TagsInput value={this.state.formData.tags} onChange={this.onChangeTags} renderLayout={this.renderLayoutTags}
-                 renderInput={this.renderInput} onlyUnique={true}
-                 maxTags="10" className='react-tagsinput form-control' />
+      <TagsInput ref="tagsinput"
+                 value={this.state.formData.tags}
+                 onChange={this.onChangeTags}
+                 renderLayout={this.renderLayoutTags}
+                 renderInput={this.renderInput}
+                 onlyUnique={true}
+                 maxTags="10"
+                 className='react-tagsinput form-control' />
       { this._showErrors() &&
         <span id="helpBlock" className="help-block">{ this.props.translate('pages.new_event.form.tags.error') }</span>
       }
