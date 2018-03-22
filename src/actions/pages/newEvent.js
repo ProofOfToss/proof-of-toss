@@ -95,12 +95,14 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
       }).then(async function (transactionResult) {
 
         const events = await new Promise((resolve, reject) => {
-          mainContract.NewEvent({}, {fromBlock: transactionResult.receipt.blockNumber, toBlock: transactionResult.receipt.blockNumber, topics: transactionResult.receipt.logs[0].topics}).get((error, log) => {
+          mainContract.NewEvent({}, {fromBlock: transactionResult.receipt.blockNumber, toBlock: 'pending', topics: transactionResult.receipt.logs[0].topics}).get((error, log) => {
             if (error) {
               reject(error);
             }
 
-            resolve(log);
+            if (log.transactionHash === transactionResult.tx) {
+              resolve(log);
+            }
           });
         });
 
