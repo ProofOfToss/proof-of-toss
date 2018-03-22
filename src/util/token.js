@@ -7,7 +7,7 @@ const main = contract(MainContract);
 const token = contract(TokenContract);
 
 function formatBalance(balance) {
-  return +(parseInt(balance, 10) / Math.pow(10, config.view.currency_precision)).toFixed(config.view.currency_precision);
+  return (parseInt(balance, 10) / Math.pow(10, config.view.currency_precision)).toFixed(config.view.currency_precision).replace(/\.?0+$/, '');
 }
 
 function denormalizeBalance(balance) {

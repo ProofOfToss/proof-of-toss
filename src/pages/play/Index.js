@@ -23,28 +23,7 @@ class Index extends Component {
 
     window.Index = this;
 
-    const parsed = queryString.parse(props.location.search);
-
-    this.state = {
-      categories: appConfig.categories.list,
-      data: [],
-
-      loading: true,
-      error: null,
-
-      q: parsed.q,
-      category: parsed.category,
-      fromDate: parsed.fromTimestamp ? Datetime.moment(new Date(parseInt(parsed.fromTimestamp, 10) * 1000)) : null,
-      toDate: parsed.toTimestamp ? Datetime.moment(new Date(parseInt(parsed.toTimestamp, 10) * 1000)) : null,
-      fromTimestamp: parsed.fromTimestamp && parseInt(parsed.fromTimestamp, 10),
-      toTimestamp: parsed.toTimestamp && parseInt(parsed.toTimestamp, 10),
-
-      pageSize: parseInt(localStorage.getItem(LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE), 10) || 10,
-      page: parseInt(parsed.page, 10) || 1,
-      total: 0,
-      sortField: parsed.sortField || 'bidSum',
-      sortOrder: parsed.sortOrder || 'desc',
-    };
+    this.state = this.getStateFromQueryString(props);
 
     this.handleTableChange = this.handleTableChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -70,8 +49,39 @@ class Index extends Component {
     return queryString.stringify(params);
   }
 
+  getStateFromQueryString(props) {
+    const parsed = queryString.parse(props.location.search);
+
+    return {
+      categories: appConfig.categories.list,
+      data: [],
+
+      loading: true,
+      error: null,
+
+      q: parsed.q,
+      category: parsed.category ? parseInt(parsed.category, 10) : null,
+      fromDate: parsed.fromTimestamp ? Datetime.moment(new Date(parseInt(parsed.fromTimestamp, 10) * 1000)) : null,
+      toDate: parsed.toTimestamp ? Datetime.moment(new Date(parseInt(parsed.toTimestamp, 10) * 1000)) : null,
+      fromTimestamp: parsed.fromTimestamp && parseInt(parsed.fromTimestamp, 10),
+      toTimestamp: parsed.toTimestamp && parseInt(parsed.toTimestamp, 10),
+
+      pageSize: parseInt(localStorage.getItem(LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE), 10) || 10,
+      page: parseInt(parsed.page, 10) || 1,
+      total: 0,
+      sortField: parsed.sortField || 'bidSum',
+      sortOrder: parsed.sortOrder || 'desc'
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState(this.getStateFromQueryString(nextProps), this.update);
+  }
+
   componentDidMount() {
-    this.update();
+    // @todo: we use defaultSorted prop for BootstrapTable which triggers table change which triggers elastic search query
+    // if we uncomment this.update() below there will be two identical queries to elastic search at the initial page loading
+    //this.update();
   }
 
   handleTableChange(type, state) {
@@ -216,7 +226,6 @@ class Index extends Component {
 
   render() {
     const { data, categories } = this.state;
-
     return(
       <main className="container">
         <div>
@@ -253,7 +262,7 @@ class Index extends Component {
             <div className="row">
               <div className="col-md-6">
                 <div className="input-group">
-                  <input type="text" className="form-control" placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
+                  <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
                   <span className="input-group-btn">
                     <button className="btn btn-default" type="submit">
                       <span className="glyphicon glyphicon-search" />
@@ -305,6 +314,8 @@ class Index extends Component {
                   }
                 }
               ] }
+              // @todo: defaultSorted triggers table to change which triggers query to elasticsearch
+              // if remove defaultSorted, do not forget to uncomment this.update() in componentDidMount() function!!!
               defaultSorted={[
                 {
                   dataField: 'bidSum',
