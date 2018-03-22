@@ -58,7 +58,7 @@ contract('Event', function(accounts) {
 
       return token.transferERC223(main.address, eventDeposit, bytes, {
         from: accounts[0]
-      })
+      });
 
     }).then(async function(transactionResult) {
 

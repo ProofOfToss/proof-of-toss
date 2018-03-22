@@ -107,6 +107,8 @@ function deserializeEvent(bytes) {
     offset = parsed.offset;
     parsedData.tags.push(parsed.parsedData.tag);
   }
+
+  return parsedData;
 }
 
 export {serializeEvent, deserializeEvent};

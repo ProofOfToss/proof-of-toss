@@ -230,20 +230,22 @@ const esClient = new AwsEsClient(
     logger.info(`Caching events from block #${i}`);
 
     const events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: cacheState.lastBlock + step});
-    events.get(async (error, log) => {
-      if (error) {
-        fatal(error);
-      }
 
-      try {
-        await indexEvents(log);
-      } catch (err) {
-        fatal(err);
-      }
-    });
+    ((idx) => {
+      events.get(async (error, log) => {
+        if (error) {
+          fatal(error);
+        }
 
-    cacheState.lastBlock = i;
-    writeCacheState(cacheState);
+        try {
+          await indexEvents(log);
+          cacheState.lastBlock = idx;
+          writeCacheState(cacheState);
+        } catch (err) {
+          fatal(err);
+        }
+      });
+    })(i);
   }
 
   logger.info(`Watching for new events`);
@@ -272,7 +274,7 @@ const esClient = new AwsEsClient(
         }
 
         try {
-          await indexEvents([response.args]);
+          await indexEvents([response]);
         } catch (err) {
           logger.error(err, `Error while indexing new event at block #${response.blockNumber}`);
           return retry();

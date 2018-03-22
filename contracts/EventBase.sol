@@ -27,6 +27,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     Token public token;
 
     address public creator;
+    address public operatorId = 1;
     uint64 public deposit;
     uint64 public startDate;
     uint64 public endDate;
