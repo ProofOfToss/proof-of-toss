@@ -60,12 +60,15 @@ const esClient = new AwsEsClient(
       const event = EventBase.at(_event.eventAddress);
 
       const creator = await event.creator();
+      const resultsCount = await event.resultsCount();
 
-      const bidSum = (await Promise.all([
-        event.possibleResults(0),
-        event.possibleResults(1),
-        event.possibleResults(2),
-      ])).reduce((accumulator, result) => accumulator + parseInt(result[3], 10), 0);
+      const promises = [];
+
+      for (let i = 0; i < resultsCount; i++) {
+        promises.push(event.possibleResults(i));
+      }
+
+      const bidSum = (await Promise.all(promises)).reduce((accumulator, result) => accumulator + parseInt(result[3], 10), 0);
 
       let tags = eventData.tags.map((tag) => { return {'locale': eventData.locale, 'name': tag}});
 

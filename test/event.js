@@ -1,8 +1,9 @@
 import expectThrow from './helpers/expectThrow';
 import { serializeEvent } from '../src/util/eventUtil';
+import {toBytesTruffle as toBytes} from '../src/util/serialityUtil';
 
 var Main = artifacts.require("./Main.sol");
-var Event = artifacts.require("./Event.sol");
+var EventBase = artifacts.require("./EventBase.sol");
 var Token = artifacts.require("./Token.sol");
 
 contract('Event', function(accounts) {
@@ -55,28 +56,64 @@ contract('Event', function(accounts) {
         assert.isUndefined(e);
       }
 
-      token.transferERC223.estimateGas(main.address, eventDeposit, bytes, {
+      return token.transferERC223(main.address, eventDeposit, bytes, {
         from: accounts[0]
       })
 
+    }).then(async function(transactionResult) {
+
+      const events = await new Promise((resolve, reject) => {
+        main.NewEvent({}, {fromBlock: transactionResult.receipt.blockNumber, toBlock: 'pending', topics: transactionResult.receipt.logs[0].topics}).get((error, log) => {
+          if (error) {
+            reject(error);
+          }
+
+          if (log[0].transactionHash === transactionResult.tx) {
+            resolve(log);
+          }
+        });
+      });
+
+      return events[0].args.eventAddress;
+
     }).then(function(eventAddress) {
-      return main.getLastEvent(eventAddress);
-    }).then(function(eventAddress) {
-      event = Event.at(eventAddress);
+      event = EventBase.at(eventAddress);
     });
   });
 
   it("should add new bet", async () => {
-    await token.approve(event.address, 10000000, {from: accounts[0]});
-    await event.newBet(0, 1000000, {from: accounts[0]});
 
-    assert.equal((await event.possibleResults(0))[2], 1, 'Amount of bets is invalid');
-    assert.equal((await event.possibleResults(0))[3], 1000000, 'Sum of bets is invalid');
-    assert(token.balanceOf(event.address), 11000000, 'Event balance is invalid');
+    const bytes = toBytes(
+      {type: 'uint', size: 8, value: 1}, // action – bet
+      {type: 'uint', size: 8, value: 0}, // result index
+    );
 
-    await event.newBet(1, 500000, {from: accounts[0]});
+    await token.transferERC223(
+      event.address,
+      1000000,
+      toBytes(
+        {type: 'uint', size: 8, value: 1}, // action – bet
+        {type: 'uint', size: 8, value: 0}, // result index
+      ),
+      {from: accounts[0]}
+    );
+
+    assert.equal((await event.possibleResults(0))[1].toNumber(), 1, 'Amount of bets is invalid');
+    assert.equal((await event.possibleResults(0))[2].toNumber(), 1000000, 'Sum of bets is invalid');
+    assert.equal((await token.balanceOf(event.address)).toNumber(), 11000000, 'Event balance is invalid');
+
+    await token.transferERC223(
+      event.address,
+      500000,
+      toBytes(
+        {type: 'uint', size: 8, value: 1}, // action – bet
+        {type: 'uint', size: 8, value: 1}, // result index
+      ),
+      {from: accounts[0]}
+    );
 
     const userBets = await event.getUserBets({from: accounts[0]});
+
     assert.equal(userBets.length, 2, 'Count of user bets is invalid');
 
     let promiseUserBets = [];
@@ -86,12 +123,12 @@ contract('Event', function(accounts) {
 
     Promise.all(promiseUserBets).then((bets) => {
       assert.equal(bets[0][1], accounts[0], 'Address of better is invalid');
-      assert.equal(bets[0][2], 0, 'Result of the bet is invalid');
-      assert.equal(bets[0][3], 1000000, 'Amount of the bet is invalid');
+      assert.equal(bets[0][2].toNumber(), 0, 'Result of the bet is invalid');
+      assert.equal(bets[0][3].toNumber(), 1000000, 'Amount of the bet is invalid');
       
       assert.equal(bets[1][1], accounts[0], 'Address of better is invalid');
-      assert.equal(bets[1][2], 1, 'Result of the bet is invalid');
-      assert.equal(bets[1][3], 500000, 'Amount of the bet is invalid');
+      assert.equal(bets[1][2].toNumber(), 1, 'Result of the bet is invalid');
+      assert.equal(bets[1][3].toNumber(), 500000, 'Amount of the bet is invalid');
     })
   });
 });

@@ -35,11 +35,11 @@ contract Main is ERC223ReceivingContract, Seriality {
         return address(token);
     }
 
-    event NewEvent(address indexed eventAddress, bytes eventData);
+    event NewEvent(address indexed eventAddress, uint64 deposit, bytes eventData);
 
     function tokenFallback(address _from, uint _value, bytes memory _data) {
         bytes memory empty;
-        token.transferERC223(newEvent(_from, _data), _value, empty);
+        token.transferERC223(newEvent(_from, uint64(_value), _data), _value, empty);
     }
 
     // Mapping:
@@ -52,18 +52,14 @@ contract Main is ERC223ReceivingContract, Seriality {
     // bytes32 bidType
     // bytes2 locale
     // ... | uint64 result_3Coefficient | uint64 result_2Coefficient | uint64 result_1Coefficient
-    // uint8 tagsCount | uint8 resultsCount | uint64 endDate | uint64 startDate | uint64 deposit
-    function newEvent(address _creator, bytes memory buffer) internal returns (address) {
-        uint64 _deposit;
+    // uint8 tagsCount | uint8 resultsCount | uint64 endDate | uint64 startDate
+    function newEvent(address _creator, uint64 _deposit, bytes memory buffer) internal returns (address) {
         uint64 _startDate;
         uint64 _endDate;
         uint8 _resultsCount;
         uint64 _resultCoefficient;
 
         uint offset = buffer.length;
-
-        _deposit = bytesToUint64(offset, buffer);
-        offset -= 8; // sizeOfUint(64);
 
         _startDate = bytesToUint64(offset, buffer);
         offset -= 8; // sizeOfUint(64);
@@ -90,6 +86,7 @@ contract Main is ERC223ReceivingContract, Seriality {
 
         NewEvent(
             address(_lastEvent),
+            _deposit,
             buffer
         );
 

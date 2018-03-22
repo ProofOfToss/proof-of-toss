@@ -2,58 +2,69 @@ pragma solidity ^0.4.2;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
+import "../contracts/installed_contracts/Seriality/Seriality.sol";
 import "../contracts/Token.sol";
-import "../contracts/Main.sol";
-import "../contracts/Event.sol";
+import "../contracts/test/TestMainSC.sol";
+import "../contracts/EventBase.sol";
 
-contract TestMain {
+contract TestMain is Seriality {
+
+    TestMainSC main;
+    Token token;
+    EventBase eventBase;
+
+    function tokenFallback(address _from, uint _value, bytes _data) public {}
 
     function testEventCreation() {
-        Token token = Token(DeployedAddresses.Token());
-        Main main = new Main(token);
+        token = Token(DeployedAddresses.Token());
+        eventBase = EventBase(DeployedAddresses.EventBase());
+        main = new TestMainSC(token, eventBase);
 
-        address creator = address(this); // tx.origin ?
-        token.generateTokens(creator, 10000000000000);
+        token.generateTokens(address(this), 10000000000000);
 
         Assert.equal(address(token), main.getToken(), "Main.token should be the same as token");
-
-        Assert.equal(token.balanceOf(creator), 10000000000000, "Owner should have 10000000000000 tokens initially");
-
-        token.approve(address(main), 10000000);
+        Assert.equal(token.balanceOf(address(this)), 10000000000000, "Owner should have 10000000000000 tokens initially");
 
         uint deposit = 10000000;
-        bytes32 bidType = 'bid_type';
-        bytes32 categoryId = 'category_id';
-        bytes2 locale = 'en';
-        uint256 eventStartDate = 1517406195;
-        uint256 eventEndDate = 1580478195;
-        main.updateWhitelist(creator, true);
+        uint64 startDate = 1517406195;
+        uint64 endDate = 1580478195;
+        uint8 resultsCount = 2;
+        uint8 tagsCount = 3;
+        uint64 result_1Coefficient = 10;
+        uint64 result_2Coefficient = 20;
 
-        address eventAddress = main.newEvent('Test event', deposit, 'description', 1,
-            'bid_type.category_id.en.1517406195.1580478195', 'source_url', 'en.tag1_name.en.tag2_name.en.tag3_name',
-            'result_description_1.10.result_description_2.20'
-        );
+        bytes memory buffer = new bytes(200);
+        uint offset = 200;
 
-//        Assert.equal(eventAddress != 0, true, "Event should be created");
+        uintToBytes(offset, startDate, buffer); offset -= sizeOfInt(64);
+        uintToBytes(offset, endDate, buffer); offset -= sizeOfInt(64);
+        uintToBytes(offset, resultsCount, buffer); offset -= sizeOfInt(8);
+        uintToBytes(offset, tagsCount, buffer); offset -= sizeOfInt(8);
+        uintToBytes(offset, result_1Coefficient, buffer); offset -= sizeOfInt(64);
+        uintToBytes(offset, result_2Coefficient, buffer); offset -= sizeOfInt(64);
 
-        Assert.equal(token.balanceOf(creator), 9999990000000, "Owner should have 999999000 tokens after event deposit");
 
-        Event _event = Event(eventAddress);
-        Assert.equal(address(token), _event.getToken(), "Event.token should be the same as token");
-        Assert.equal(creator, _event.getCreator(), "Event.creator should match account address");
+        token.transferERC223(address(main), deposit, buffer);
 
-        Assert.equal(_event.deposit(), deposit, "Event.deposit invalid");
-        Assert.equal(_event.bidType(), bidType, "Event.bidType invalid");
-        Assert.equal(_event.category(), categoryId, "Event.categoryId invalid");
-        Assert.equal(_event.locale(), locale, "Event.locale invalid");
-        Assert.equal(_event.startDate(), eventStartDate, "Event.startDate invalid");
-        Assert.equal(_event.endDate(), eventEndDate, "Event.endDate invalid");
+        Assert.equal(main.getLastEvent() != 0, true, "Event should be created");
 
-        Assert.equal(token.balanceOf(eventAddress), 10000000, "Event balance should match deposit");
+        Assert.equal(token.balanceOf(address(this)), 9999990000000, "Owner should have 999999000 tokens after event deposit");
+
+        EventBase _event = EventBase(main.getLastEvent());
+        Assert.equal(address(token), _event.token(), "Event.token should be the same as token");
+        Assert.equal(address(this), _event.creator(), "Event.creator should match account address");
+
+        Assert.equal(uint(_event.deposit()), deposit, "Event.deposit invalid");
+        Assert.equal(uint(_event.startDate()), uint(startDate), "Event.startDate invalid");
+        Assert.equal(uint(_event.endDate()), uint(endDate), "Event.endDate invalid");
+
+        Assert.equal(token.balanceOf(address(_event)), 10000000, "Event balance should match deposit");
+
+        Assert.equal(_event.getShare(address(this)), 10000000, "Creator's share should match deposit");
 
         _event.withdraw();
 
-        Assert.equal(token.balanceOf(creator), 10000000000000, "Owner should have 10000000000000 tokens after withdraw");
-        Assert.equal(token.balanceOf(eventAddress), 0, "Event balance should be 0 after withdraw");
+        Assert.equal(token.balanceOf(address(this)), 10000000000000, "Owner should have 10000000000000 tokens after withdraw");
+        Assert.equal(token.balanceOf(address(_event)), 0, "Event balance should be 0 after withdraw");
     }
 }

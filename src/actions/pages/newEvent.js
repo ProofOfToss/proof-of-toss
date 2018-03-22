@@ -100,7 +100,7 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
               reject(error);
             }
 
-            if (log.transactionHash === transactionResult.tx) {
+            if (log[0].transactionHash === transactionResult.tx) {
               resolve(log);
             }
           });

@@ -107,12 +107,12 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         require(result >= 0 && result < resultsCount);
         require(now < endDate - 10 minutes);
 
-        bets.push(Bet(now, msg.sender, result, amount));
+        bets.push(Bet(now, tx.origin, result, amount));
 
         possibleResults[result].betCount += 1;
         possibleResults[result].betSum += amount;
 
-        usersBets[msg.sender].push(bets.length - 1);
+        usersBets[tx.origin].push(bets.length - 1);
         status = Statuses.Accepted;
     }
 

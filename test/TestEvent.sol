@@ -4,13 +4,13 @@ import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
 import "../contracts/installed_contracts/Seriality/Seriality.sol";
 import "../contracts/Token.sol";
-import "../contracts/test/TestMain.sol";
+import "../contracts/test/TestMainSC.sol";
 import "../contracts/EventBase.sol";
 import "../contracts/Event.sol";
 
 contract TestEvent is Seriality {
 
-    TestMain main;
+    TestMainSC main;
     Token token;
     EventBase eventBase;
     EventBase _event;
@@ -18,7 +18,7 @@ contract TestEvent is Seriality {
     function beforeEach() {
         token = Token(DeployedAddresses.Token());
         eventBase = EventBase(DeployedAddresses.EventBase());
-        main = new TestMain(token, eventBase);
+        main = new TestMainSC(token, eventBase);
 
         token.generateTokens(address(this), 10000000000000);
         main.updateWhitelist(address(this), true);
@@ -35,10 +35,9 @@ contract TestEvent is Seriality {
         bytes32 category = bytes32('category_id');
         string memory str;
 
-        bytes memory buffer = new bytes(300);
-        uint offset = 300;
+        bytes memory buffer = new bytes(1000);
+        uint offset = 1000;
 
-        uintToBytes(offset, deposit, buffer); offset -= sizeOfInt(64);
         uintToBytes(offset, startDate, buffer); offset -= sizeOfInt(64);
         uintToBytes(offset, endDate, buffer); offset -= sizeOfInt(64);
         uintToBytes(offset, resultsCount, buffer); offset -= sizeOfInt(8);
@@ -49,6 +48,17 @@ contract TestEvent is Seriality {
         bytes2ToBytes(offset, locale, buffer); offset -= 34;
         bytes32ToBytes(offset, bidType, buffer); offset -= 64;
         bytes32ToBytes(offset, category, buffer); offset -= 64;
+
+        str = 'Test event'; stringToBytes(offset, bytes(str), buffer); offset -= sizeOfString(str);
+        str = 'Description'; stringToBytes(offset, bytes(str), buffer); offset -= sizeOfString(str);
+        str = 'source_url'; stringToBytes(offset, bytes(str), buffer); offset -= sizeOfString(str);
+
+        str = 'result_description_1'; stringToBytes(offset, bytes(str), buffer); offset -= sizeOfString(str);
+        str = 'result_description_2'; stringToBytes(offset, bytes(str), buffer); offset -= sizeOfString(str);
+
+        str = 'tag1_name'; stringToBytes(offset, bytes(str), buffer); offset -= sizeOfString(str);
+        str = 'tag2_name'; stringToBytes(offset, bytes(str), buffer); offset -= sizeOfString(str);
+        str = 'tag3_name'; stringToBytes(offset, bytes(str), buffer); offset -= sizeOfString(str);
 
         token.transferERC223(address(main), deposit, buffer);
 

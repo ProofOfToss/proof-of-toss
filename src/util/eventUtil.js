@@ -26,7 +26,6 @@ function serializeEvent(eventData) {
   const compressed = algorithm.compressFile(data);
 
   toBytesArgs = [
-    {type: 'uint', size: 64, value: eventData.deposit}, // deposit
     {type: 'uint', size: 64, value: eventData.startDate}, // startDate
     {type: 'uint', size: 64, value: eventData.endDate}, // endDate
     {type: 'uint', size: 8, value: eventData.results.length}, // resultsCount
@@ -47,7 +46,6 @@ function deserializeEvent(bytes) {
 
   let parsed = fromBytes(
     bytes,
-    {type: 'uint', size: 64, key: 'deposit'},
     {type: 'uint', size: 64, key: 'startDate'},
     {type: 'uint', size: 64, key: 'endDate'},
     {type: 'uint', size: 8, key: 'resultsCount'},
