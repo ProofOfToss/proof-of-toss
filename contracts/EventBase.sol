@@ -69,7 +69,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
     // Data mapping:
     //                                uint8 action (0 - deposit/operator's pledge)
-    // uint64 amount | uint8 result | uint8 action (1 - bet)
+    //                 uint8 result | uint8 action (1 - bet)
     // TODO                         | uint8 action (2 - vote)
     // TODO                         | uint8 action (3 - claim)
     function tokenFallback(address _from, uint _value, bytes _data) public {
@@ -87,14 +87,11 @@ contract EventBase is ERC223ReceivingContract, Seriality {
             return;
         } else if (action == 1) { // Bet
             uint8 result;
-            uint64 amount;
 
             result = bytesToUint8(offset, _data);
             offset -= 1; // sizeOfUint(8);
 
-            amount = bytesToUint64(offset, _data);
-
-            newBet(result, amount);
+            newBet(result, uint64(_value));
 
         } else if (action == 2) {
             throw; // Not implemented

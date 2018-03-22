@@ -1,4 +1,5 @@
 import expectThrow from './helpers/expectThrow';
+import { serializeEvent } from '../src/util/eventUtil';
 
 var Main = artifacts.require("./Main.sol");
 var Event = artifacts.require("./Event.sol");
@@ -13,13 +14,27 @@ contract('Event', function(accounts) {
   const bidType = 'bid_type';
   const eventCategory = 'category_id';
   const eventLocale = 'en';
-  const eventStartDate = '1517406195';
-  const eventEndDate = '1580478195';
+  const eventStartDate = 1517406195;
+  const eventEndDate = 1580478195;
 
-  const eventData = `${bidType}.${eventCategory}.${eventLocale}.${eventStartDate}.${eventEndDate}`;
   const eventSourceUrl = 'source_url';
-  const eventTags = 'en.tag1_name.en.tag2_name.en.tag3_name';
-  const eventResults = 'result_description_1.10.result_description_2.20';
+  const eventTags = ['tag1_name', 'tag2_name', 'tag3_name'];
+  const eventResults = [{description: 'result_description_1', coefficient: 10}, {description: 'result_description_2', coefficient: 20}];
+
+  const bytes = serializeEvent({
+    name: eventName,
+    description: eventDescription,
+    deposit: eventDeposit,
+    bidType: bidType,
+    category: eventCategory,
+    locale: eventLocale,
+    startDate: eventStartDate,
+    endDate: eventEndDate,
+    sourceUrl: eventSourceUrl,
+    tags: eventTags,
+    results: eventResults,
+  });
+
 
   let main, token, event;
 
@@ -40,8 +55,9 @@ contract('Event', function(accounts) {
         assert.isUndefined(e);
       }
 
-      return main.newEvent(eventName, eventDeposit, eventDescription, 1, eventData,
-        eventSourceUrl, eventTags, eventResults, {from: accounts[0]});
+      token.transferERC223.estimateGas(main.address, eventDeposit, bytes, {
+        from: accounts[0]
+      })
 
     }).then(function(eventAddress) {
       return main.getLastEvent(eventAddress);

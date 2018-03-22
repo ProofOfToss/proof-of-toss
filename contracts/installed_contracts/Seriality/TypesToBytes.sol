@@ -25,6 +25,14 @@ contract TypesToBytes {
             mstore(add(add(_output, _offst),32), add(_input,32))
         }
     }
+
+    function bytes2ToBytes(uint _offst, bytes2 _input, bytes memory _output) internal pure {
+        assembly {
+            mstore(add(_output, _offst), _input)
+            mstore8(add(add(_output, _offst),1), add(_input,1))
+            mstore8(add(add(_output, _offst),2), add(_input,2))
+        }
+    }
     
     function boolToBytes(uint _offst, bool _input, bytes memory _output) internal pure {
         uint8 x = _input == false ? 0 : 1;

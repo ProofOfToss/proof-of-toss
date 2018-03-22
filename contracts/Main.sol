@@ -10,7 +10,7 @@ contract Main is ERC223ReceivingContract, Seriality {
     Token token;
     EventBase eventBase;
     uint8 version = 1;
-    Event lastEvent;
+
     mapping (address => bool) public whitelist;
     address owner;
 
@@ -77,28 +77,23 @@ contract Main is ERC223ReceivingContract, Seriality {
         // bypass tagsCount
         offset -= 1; // sizeOfUint(8);
 
-        EventBase lastEvent = EventBase(address(new Event(address(eventBase))));
+        EventBase _lastEvent = EventBase(address(new Event(address(eventBase))));
 
-        lastEvent.init(address(token), _creator, _deposit, _startDate, _endDate, _resultsCount);
+        _lastEvent.init(address(token), _creator, _deposit, _startDate, _endDate, _resultsCount);
 
         for (uint i = 0; i < _resultsCount; i++) {
             _resultCoefficient = bytesToUint64(offset, buffer);
             offset -= 8; // sizeOfUint(64);
 
-            lastEvent.addResult(_resultCoefficient);
+            _lastEvent.addResult(_resultCoefficient);
         }
 
         NewEvent(
-            address(lastEvent),
+            address(_lastEvent),
             buffer
         );
 
-        return address(lastEvent);
-    }
-
-
-    function getLastEvent() constant returns (address) {
-        return address(lastEvent);
+        return address(_lastEvent);
     }
 
     function updateWhitelist(address user, bool whitelisted) public onlyOwner {
