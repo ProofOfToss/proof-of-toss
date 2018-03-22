@@ -14,12 +14,12 @@ function denormalizeBalance(balance) {
   return parseFloat(balance) * Math.pow(10, config.view.currency_precision);
 }
 
-function getMyBalance(web3) {
+function getMyBalance(web3, address) {
   token.setProvider(web3.currentProvider);
 
   return token.deployed()
     .then((instance) => {
-      return instance.balanceOf(web3.eth.accounts[0]);
+      return instance.balanceOf(address);
     })
     .then((balance) => {
       return balance.toNumber();
@@ -121,9 +121,9 @@ function getMyBlockedBalance(/*web3*/) {
   return Promise.resolve(1); // TODO Real logic after smart-contract implementation
 }
 
-function getMySBTCBalance(web3) {
+function getMySBTCBalance(web3, address) {
   const promise = new Promise((resolve, reject) => {
-    web3.eth.getBalance(web3.eth.accounts[0], (error, balance) => {
+    web3.eth.getBalance(address, (error, balance) => {
       if (error) {
         reject(error);
         return;
@@ -136,14 +136,14 @@ function getMySBTCBalance(web3) {
   return promise;
 }
 
-function getMyAllowance(web3) {
+function getMyAllowance(web3, address) {
   main.setProvider(web3.currentProvider);
   token.setProvider(web3.currentProvider);
 
   return main.deployed().then((mainInstance) => {
     return token.deployed()
       .then((instance) => {
-        return instance.allowance(web3.eth.accounts[0], mainInstance.address);
+        return instance.allowance(address, mainInstance.address);
       })
       .then((allowance) => {
         return allowance.toNumber();
