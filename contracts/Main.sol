@@ -39,7 +39,7 @@ contract Main is ERC223ReceivingContract, Seriality {
 
     function tokenFallback(address _from, uint _value, bytes memory _data) {
         bytes memory empty;
-        token.transfer(newEvent(_from, _data), _value, empty);
+        token.transferERC223(newEvent(_from, _data), _value, empty);
     }
 
     // Mapping:

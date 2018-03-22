@@ -17,6 +17,13 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         uint64 betSum;
     }
 
+    struct Bet {
+        uint64 timestamp;
+        address bettor;
+        uint8 result;
+        uint64 amount;
+    }
+
     Token public token;
 
     address public creator;
@@ -28,6 +35,8 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
     Statuses public status;
     Result[] public possibleResults;
+    Bet[] public bets;
+    mapping (address => uint[]) private usersBets;
 
     uint constant public meta_version = 1;
 
@@ -58,8 +67,60 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         }
     }
 
-    function tokenFallback(address _from, uint _value, bytes _data) {
+    // Data mapping:
+    //                                uint8 action (0 - deposit/operator's pledge)
+    // uint64 amount | uint8 result | uint8 action (1 - bet)
+    // TODO                         | uint8 action (2 - vote)
+    // TODO                         | uint8 action (3 - claim)
+    function tokenFallback(address _from, uint _value, bytes _data) public {
+        uint8 action;
+        uint offset = _data.length;
 
+        if (offset == 0) { // Empty data, same as action == 0
+            return;
+        }
+
+        action = bytesToUint8(offset, buffer);
+        offset -= 1; // sizeOfUint(8);
+
+        if (action == 0) {
+            return;
+        } else if (action == 1) { // Bet
+            uint8 result;
+            uint64 amount;
+
+            result = bytesToUint8(offset, buffer);
+            offset -= 1; // sizeOfUint(8);
+
+            amount = bytesToUint64(offset, buffer);
+
+            newBet(result, amount);
+
+        } else if (action == 2) {
+            throw; // Not implemented
+        } else if (action == 3) {
+            throw; // Not implemented
+        } else {
+            throw; // Invalid action
+        }
+    }
+
+    function newBet(uint8 result, uint64 amount) internal {
+        require(status == Statuses.Published || status == Statuses.Accepted);
+        require(result >= 0 && result < resultsCount);
+        require(now < endDate - 10 minutes);
+
+        bets.push(Bet(now, msg.sender, result, amount));
+
+        possibleResults[result].betCount += 1;
+        possibleResults[result].betSum += amount;
+
+        usersBets[msg.sender].push(bets.length - 1);
+        status = Statuses.Accepted;
+    }
+
+    function getUserBets() view returns (uint[]) {
+        return usersBets[msg.sender];
     }
 
     function getShare(address user) constant returns (uint256) {
@@ -71,7 +132,6 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     }
 
     function withdraw() {
-        bytes memory empty;
-        token.transfer(msg.sender, getShare(msg.sender), empty);
+        token.transfer(msg.sender, getShare(msg.sender));
     }
 }

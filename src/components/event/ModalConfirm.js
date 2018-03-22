@@ -45,7 +45,7 @@ class ModalConfirm extends Component {
         results: this.props.formData.results.map((result) => { return {'coefficient': result.coefficient, 'description': result.name}; }),
       });
 
-      tokenInstance.transfer.estimateGas(mainInstance.address, this.props.formData.deposit, bytes, {
+      tokenInstance.transferERC223.estimateGas(mainInstance.address, this.props.formData.deposit, bytes, {
           from: this.props.currentAddress
         })
       .then((gasAmount) => {

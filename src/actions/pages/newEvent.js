@@ -86,7 +86,7 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
           results: formData.results.map((result) => { return {'coefficient': result.coefficient, 'description': result.name}; }),
         });
 
-        return tokenContract.transfer(mainContract.address, deposit, bytes, {
+        return tokenContract.transferERC223(mainContract.address, deposit, bytes, {
             from: getState().user.address,
             gasPrice: gasPrice,
             gas: gasLimit

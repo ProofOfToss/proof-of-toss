@@ -23,8 +23,7 @@ contract Crowdsale {
         require(msg.sender == owner);
         require(now > start && now < start + period*24*60*60);
 
-        bytes memory empty;
-        token.transfer(to, value, empty);
+        token.transfer(to, value);
     }
 
     function getToken() constant returns (address) {

@@ -45,7 +45,7 @@ contract Token {
     event TokenOperationEvent(string operation, address indexed from, address indexed to, uint256 value, address indexed _contract);
 
     // Function that is called when a user or another contract wants to transfer funds .
-    function transfer(address to, uint value, bytes memory data) presaleEnded {
+    function transferERC223(address to, uint value, bytes memory data) presaleEnded {
         // Standard function transfer similar to ERC20 transfer with no _data .
         // Added due to backwards compatibility reasons .
         uint codeLength;
@@ -69,12 +69,12 @@ contract Token {
     // Standard function transfer similar to ERC20 transfer with no _data .
     // Added due to backwards compatibility reasons .
     // Commented because truffle doesn't support function overloading https://github.com/trufflesuite/truffle/issues/737
-    /*function transfer(address to, uint value) presaleEnded {
+    function transfer(address to, uint value) presaleEnded {
         uint codeLength;
 
         assembly {
-        // Retrieve the size of the code on target address, this needs assembly .
-                codeLength := extcodesize(to)
+            // Retrieve the size of the code on target address, this needs assembly .
+            codeLength := extcodesize(to)
         }
 
         balanceOf[msg.sender] = balanceOf[msg.sender].sub(value);
@@ -87,7 +87,7 @@ contract Token {
         }
 
         Transfer(msg.sender, to, value);
-    }*/
+    }
 
     // @brief Send coins
     // @param _from source of coins
@@ -100,8 +100,6 @@ contract Token {
         balanceOf[_from] -= _value;
         balanceOf[_to] += _value;
         allowed[_from][msg.sender] -= _value;
-
-        bytes memory empty;
 
         Transfer(_from, _to, _value);
         TokenOperationEvent('transfer', _from, _to, _value, 0);

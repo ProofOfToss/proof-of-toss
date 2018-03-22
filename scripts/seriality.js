@@ -215,7 +215,7 @@ const logger = log4js.getLogger('out');
 
   // result = await serialityTest.testSampleEvent(accounts[0], arr, {from: accounts[0], gas: 6721975});
   // n = result.logs[0];
-  result = await token.transfer(serialityTest.address, deposit, arr, {from: accounts[0], gas: 6721975});
+  result = await token.transferERC223(serialityTest.address, deposit, arr, {from: accounts[0], gas: 6721975});
 
   const events = await new Promise((resolve, reject) => {
     serialityTest.NewEvent({}, {fromBlock: result.receipt.blockNumber, toBlock: result.receipt.blockNumber, topics: result.receipt.logs[0].topics}).get((error, log) => {

@@ -53,8 +53,7 @@ library EventLib {
     }
 
     function withdraw(EventData storage data) internal {
-        bytes memory empty;
-        TestEventBase(this).token().transfer(msg.sender, getShare(data, msg.sender), empty);
+        TestEventBase(this).token().transfer(msg.sender, getShare(data, msg.sender));
     }
 }
 
@@ -133,8 +132,7 @@ contract SerialityTest is Seriality {
     }
 
     function tokenFallback(address _from, uint _value, bytes memory _data) {
-        bytes memory empty;
-        token.transfer(testSampleEvent(_from, _data), _value, empty);
+        token.transfer(testSampleEvent(_from, _data), _value);
     }
 
     // Mapping:

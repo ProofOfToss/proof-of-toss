@@ -80,7 +80,6 @@ contract TestEventBase is Seriality {
     }
 
     function withdraw() {
-        bytes memory empty;
-        token.transfer(msg.sender, getShare(msg.sender), empty);
+        token.transfer(msg.sender, getShare(msg.sender));
     }
 }
