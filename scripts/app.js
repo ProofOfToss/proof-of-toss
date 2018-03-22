@@ -3,6 +3,7 @@ import appPrivateConfig from '../src/data/private_config.json';
 
 import _ from 'lodash';
 import fs from 'fs';
+import path from 'path';
 import Web3 from 'web3';
 import contract from 'truffle-contract';
 import Config from 'truffle-config';
@@ -218,11 +219,17 @@ const esClient = new AwsEsClient(
     fatal(error);
   }
 
-  const cacheStateFile = './cache_state.json';
+  const cacheStateFile = path.resolve(__dirname, 'cache_state.json');
 
   function readCacheState(defaultState) {
     if (fs.existsSync(cacheStateFile)) {
-      return JSON.parse(fs.readFileSync(cacheStateFile, {encoding: "utf8"}));
+      try {
+        const state = JSON.parse(fs.readFileSync(cacheStateFile, {encoding: "utf8"}));
+        return state;
+      } catch (e) {
+        logger.error(e);
+        return defaultState;
+      }
     } else {
       return defaultState;
     }

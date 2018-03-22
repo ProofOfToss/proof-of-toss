@@ -29,6 +29,7 @@ deploy_demo:
     - ./node_modules/truffle/build/cli.bundled.js --network test migrate
     - npm run build
     - echo "Deploy to Demo"
+    - rm -rf /srv/www/proof-of-toss-demo.axioma.lv/htdocs/scripts/cache_state.json
     - rsync -hrlv --delete --exclude=.git --exclude=node_modules --exclude=npm-debug.log --exclude=testrpc_db --exclude=nohup.out $CI_PROJECT_DIR/ /srv/www/proof-of-toss-demo.axioma.lv/htdocs/
 
 deploy_production:
