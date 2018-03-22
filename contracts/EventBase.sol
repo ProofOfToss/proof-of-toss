@@ -18,7 +18,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     }
 
     struct Bet {
-        uint64 timestamp;
+        uint timestamp;
         address bettor;
         uint8 result;
         uint64 amount;
@@ -80,7 +80,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
             return;
         }
 
-        action = bytesToUint8(offset, buffer);
+        action = bytesToUint8(offset, _data);
         offset -= 1; // sizeOfUint(8);
 
         if (action == 0) {
@@ -89,10 +89,10 @@ contract EventBase is ERC223ReceivingContract, Seriality {
             uint8 result;
             uint64 amount;
 
-            result = bytesToUint8(offset, buffer);
+            result = bytesToUint8(offset, _data);
             offset -= 1; // sizeOfUint(8);
 
-            amount = bytesToUint64(offset, buffer);
+            amount = bytesToUint64(offset, _data);
 
             newBet(result, amount);
 
