@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
+import ModalNewBet from './ModalNewBet';
+import { newBet } from '../../actions/pages/event';
 
 class ResultsList extends Component {
   constructor(props) {
@@ -12,6 +14,10 @@ class ResultsList extends Component {
   }
 
   componentWillMount() {
+    this.fetchResults();
+  }
+
+  fetchResults() {
     let promises = [];
     for (let i = 0; i < 3; i++) {
       promises.push(this.props.eventInstance.possibleResults(i));
@@ -32,30 +38,33 @@ class ResultsList extends Component {
     });
   }
 
-  addBet() {
-    console.log('Add bet...');
-  }
-
   render() {
-    return <table className="table table-striped results"><tbody>
+    return <Fragment><table className="table table-striped results"><tbody>
       {this.state.results.map((result, key) => {
         return <tr key={key}>
           <td>{result[0]}</td>
           <td>{result[1].toString()}</td>
           <td>
-            <span className="btn btn-primary" onClick={this.addBet}>{this.props.translate('pages.event.newBet')}</span>
+            <span className="btn btn-primary" onClick={() => this.props.newBet(key)}>{this.props.translate('pages.event.newBet')}</span>
           </td>
         </tr>
       }, this)}
     </tbody></table>
+    {this.props.showNewBetModal ? <ModalNewBet eventInstance={this.props.eventInstance} /> : null}
+  </Fragment>
     ;
   }
 }
 
 function mapStateToProps(state) {
   return {
+    showNewBetModal: state.event.showNewBetModal,
     translate: getTranslate(state.locale)
   }
 }
 
-export default connect(mapStateToProps)(ResultsList);
+const mapDispatchToProps = {
+  newBet
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ResultsList);

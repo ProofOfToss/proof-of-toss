@@ -13,6 +13,7 @@
   "buttons": {
     "ok": "Ok",
     "create": "Create",
+    "add": "Add",
     "cancel": "Cancel"
   },
   "validation": {
@@ -132,7 +133,8 @@
     },
     "event": {
       "fetching": "Loading event information...",
-      "newBet": "Add bet"
+      "newBet": "Add bet",
+      "bet_amount": "Amount of the bet"
     }
   },
   "categories": {

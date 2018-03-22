@@ -10,6 +10,12 @@
       "submit": "Submit"
     }
   },
+  "buttons": {
+    "ok": "Ok",
+    "create": "Создать",
+    "add": "Добавить",
+    "cancel": "Отмена"
+  },
   "validation": {
     "required": "Is required",
     "min_length": "This value is too short. It should have ${ min } character or more.",
@@ -108,7 +114,8 @@
     },
     "event": {
       "fetching": "Загрузка события...",
-      "newBet": "Сделать ставку"
+      "newBet": "Сделать ставку",
+      "bet_amount": "Сумма ставки"
     }
   }
 

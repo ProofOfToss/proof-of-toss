@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
-import { fetchEvent } from '../../util/event';
+import { fetchEvent } from '../../actions/pages/event';
 
 import ResultsList from '../../components/event/ResultsList';
 
@@ -14,9 +14,7 @@ class Event extends Component {
   }
 
   componentWillMount() {
-    this.setState({
-      eventInstance: fetchEvent(this.props.web3, this.props.params.id)
-    })
+    this.props.fetchEvent(this.props.params.id);
   }
 
   renderEvent() {
@@ -25,7 +23,7 @@ class Event extends Component {
           <dt>Event</dt>
           <dd>{this.props.params.id}</dd>
         </dl>
-        <ResultsList eventInstance={this.state.eventInstance}/>
+        <ResultsList eventInstance={this.props.eventInstance}/>
       </Fragment>
     )
   }
@@ -35,7 +33,7 @@ class Event extends Component {
       {this.props.translate('pages.event.fetching')}
     </div>;
 
-    if(this.state.eventInstance) {
+    if(this.props.eventInstance) {
       content = this.renderEvent();
     }
 
@@ -52,7 +50,12 @@ function mapStateToProps(state) {
     web3: state.web3.web3,
     currentAddress: state.user.address,
     translate: getTranslate(state.locale),
+    eventInstance: state.event.eventInstance
   };
 }
 
-export default connect(mapStateToProps)(Event)
+const mapDispatchToProps = {
+  fetchEvent
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Event)
