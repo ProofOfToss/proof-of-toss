@@ -1,81 +1,114 @@
 import expectThrow from './helpers/expectThrow';
+import {toBytesTruffle as toBytes} from '../src/util/serialityUtil';
 
-var Main = artifacts.require("./Main.sol");
-var Event = artifacts.require("./Event.sol");
-var Token = artifacts.require("./Token.sol");
+var SerialityTest = artifacts.require("./test/SerialityTest.sol");
 
-contract('Event', function(accounts) {
+contract('SerialityUtil', function(accounts) {
 
-  const eventName = 'Test event';
-  const eventDeposit = 10000000;
-  const eventDescription = 'description';
+  let serialityTest;
+  let arr, result, n;
 
-  const bidType = 'bid_type';
-  const eventCategory = 'category_id';
-  const eventLocale = 'en';
-  const eventStartDate = '1517406195';
-  const eventEndDate = '1580478195';
+  it("should serialize data the same way that smart-contract do", async () => {
 
-  const eventData = `${bidType}.${eventCategory}.${eventLocale}.${eventStartDate}.${eventEndDate}`;
-  const eventSourceUrl = 'source_url';
-  const eventTags = 'en.tag1_name.en.tag2_name.en.tag3_name';
-  const eventResults = 'result_description_1.10.result_description_2.20';
+    serialityTest = await SerialityTest.deployed();
 
-  let main, token, event;
+    arr = toBytes(
+      {type: 'int', size: 8, value: 87},
+      {type: 'uint', size: 24, value: 76545},
+      {type: 'string', value: 'Bia inja dahan service'},
+      {type: 'string', value: 'Copy kon lashi'},
+      {type: 'int', size: 256, value: 34444445},
+      200
+    );
 
-  beforeEach(function() {
-    Token.deployed().then(function(instance) {
-      token = instance;
-    });
+    result = await serialityTest.testSample1Serializing({from: accounts[0], gas: 6721975});
 
-    return Main.deployed().then(function(instance) {
-      main = instance;
-      return main.getToken();
-    }).then(function() {
-      return token.approve(main.address, 10000000, {from: accounts[0]});
-    }).then(async function() {
-      try {
-        await main.updateWhitelist(accounts[0], true);
-      } catch (e) {
-        assert.isUndefined(e);
-      }
+    n = result.logs[0].args;
 
-      return main.newEvent(eventName, eventDeposit, eventDescription, 1, eventData,
-        eventSourceUrl, eventTags, eventResults, {from: accounts[0]});
+    assert.equal(arr, n.buffer);
 
-    }).then(function(eventAddress) {
-      return main.getLastEvent(eventAddress);
-    }).then(function(eventAddress) {
-      event = Event.at(eventAddress);
-    });
   });
 
-  it("should add new bet", async () => {
-    await token.approve(event.address, 10000000, {from: accounts[0]});
-    await event.newBet(0, 1000000, {from: accounts[0]});
+  it("should correctly serialize numbers and strings for SerialityTest.testSample1", async () => {
 
-    assert.equal((await event.possibleResults(0))[2], 1, 'Amount of bets is invalid');
-    assert.equal((await event.possibleResults(0))[3], 1000000, 'Sum of bets is invalid');
-    assert(token.balanceOf(event.address), 11000000, 'Event balance is invalid');
+    serialityTest = await SerialityTest.deployed();
 
-    await event.newBet(1, 500000, {from: accounts[0]});
+    arr = toBytes(
+      {type: 'int', size: 8, value: 87},
+      {type: 'uint', size: 24, value: 76545},
+      {type: 'string', value: 'Bia inja dahan service'},
+      {type: 'string', value: 'Copy kon lashi'},
+      {type: 'int', size: 256, value: 34444445},
+      200
+    );
 
-    const userBets = await event.getUserBets({from: accounts[0]});
-    assert.equal(userBets.length, 2, 'Count of user bets is invalid');
+    result = await serialityTest.testSample1(arr, {from: accounts[0], gas: 6721975});
 
-    let promiseUserBets = [];
-    for(let i = 0; i < userBets.length; i++) {
-      promiseUserBets.push(event.bets(i))
-    }
+    n = result.logs[0].args;
 
-    Promise.all(promiseUserBets).then((bets) => {
-      assert.equal(bets[0][1], accounts[0], 'Address of better is invalid');
-      assert.equal(bets[0][2], 0, 'Result of the bet is invalid');
-      assert.equal(bets[0][3], 1000000, 'Amount of the bet is invalid');
-      
-      assert.equal(bets[1][1], accounts[0], 'Address of better is invalid');
-      assert.equal(bets[1][2], 1, 'Result of the bet is invalid');
-      assert.equal(bets[1][3], 500000, 'Amount of the bet is invalid');
-    })
+    assert.equal(34444445, n.n1.toNumber());
+    assert.equal(87, n.n2.toNumber());
+    assert.equal(76545, n.n3.toNumber());
+    assert.equal("Copy kon lashi", n.n4);
+    assert.equal("Bia inja dahan service", n.n5);
+
+  });
+
+  it("should fail if bytes not match what smart-contract expects", async () => {
+
+    serialityTest = await SerialityTest.deployed();
+
+    arr = toBytes(
+      {type: 'int', size: 8, value: 87},
+      {type: 'uint', size: 24, value: 76545},
+      {type: 'uint', size: 24, value: 76545},
+    );
+
+    await expectThrow(serialityTest.testSample1(arr, {from: accounts[0], gas: 6721975}));
+
+  });
+
+  it("should correctly serialize positive and negative int, uint of different sizes for SerialityTest.testSample2", async () => {
+
+    serialityTest = await SerialityTest.deployed();
+
+    arr = toBytes(
+      {type: 'int', size: 8, value: -12},
+      {type: 'int', size: 24, value: 838860},
+      {type: 'uint', size: 32, value: 85},
+      {type: 'int', size: 128, value: -44444444444},
+      {type: 'address', value: "0x15b7926835a7c2fd6d297e3adecc5b45f7309f59"},
+      {type: 'address', value: "0x1cb5cf010e407afc6249627bfd769d82d8dbbf71"}
+    );
+
+    result  = await serialityTest.testSample2(arr, {from: accounts[0]});
+
+    n = result.logs[0].args;
+
+    assert.equal(-12, n.n1.toNumber());
+    assert.equal(838860, n.n2.toNumber());
+    assert.equal(85, n.n3.toNumber());
+    assert.equal(-44444444444, n.n4.toNumber());
+    assert.equal("0x15b7926835a7c2fd6d297e3adecc5b45f7309f59", n.n5);
+    assert.equal("0x1cb5cf010e407afc6249627bfd769d82d8dbbf71", n.n6);
+
+  });
+
+  it("should correctly serialize address for SerialityTest.testSample3", async () => {
+
+    serialityTest = await SerialityTest.deployed();
+
+    const address = "0x1cb5cf010e407afc6249627bfd769d82d8dbbf71";
+
+    arr = toBytes(
+      {type: 'address', value: address}
+    );
+
+    result = await serialityTest.testSample3(arr, {from: accounts[0]});
+
+    n = result.logs[0].args;
+
+    assert.equal(address, n.n1);
+
   });
 });
