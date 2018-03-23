@@ -18,7 +18,7 @@ class Buttons extends Component {
   }
 
   componentWillMount() {
-    getMyAllowance(this.props.web3).then((value) => {
+    getMyAllowance(this.props.web3, this.props.address).then((value) => {
       this.setState({
         fetchAllowanceValue: false,
         allowance: formatBalance(value)
@@ -31,7 +31,7 @@ class Buttons extends Component {
       return;
     }
 
-    getMyAllowance(this.props.web3).then((value) => {
+    getMyAllowance(this.props.web3, this.props.address).then((value) => {
       this.setState({
         allowance: formatBalance(value)
       })
@@ -79,7 +79,8 @@ function mapStateToProps(state) {
     web3: state.web3.web3,
     approving: state.newEvent.approving,
     approved: state.newEvent.approved,
-    translate: getTranslate(state.locale)
+    translate: getTranslate(state.locale),
+    address: state.user.address
   };
 }
 
