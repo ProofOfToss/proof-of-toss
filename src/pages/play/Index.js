@@ -39,7 +39,8 @@ class Index extends Component {
 
   static defaultProps = {
     header: 'pages.play.header',
-    routeName: 'play'
+    routeName: 'play',
+    refreshInterval: false
   };
 
   getUrlParams() {
@@ -87,6 +88,16 @@ class Index extends Component {
     // @todo: we use defaultSorted prop for BootstrapTable which triggers table change which triggers elastic search query
     // if we uncomment this.update() below there will be two identical queries to elastic search at the initial page loading
     //this.update();
+
+    if (this.props.refreshInterval !== false) {
+      this.refreshIntervalId = setInterval(this.update, parseInt(this.props.refreshInterval, 10));
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.refreshInterval !== false) {
+      clearInterval(this.refreshIntervalId);
+    }
   }
 
   handleTableChange(type, state) {

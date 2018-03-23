@@ -10,6 +10,7 @@ class EventResults extends Component {
     return (<Index
       header="pages.event_results.header"
       routeName="event_results"
+      refreshInterval="5000"
     />);
   }
 
