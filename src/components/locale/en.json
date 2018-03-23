@@ -128,6 +128,7 @@
         "name": "Name",
         "bid_type": "Bid Type",
         "start_date": "Start Date",
+        "end_date": "End Date",
         "bid_sum": "Bid Sum",
         "date_start": "Start time",
         "date_end": "End time"

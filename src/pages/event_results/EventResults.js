@@ -11,6 +11,9 @@ class EventResults extends Component {
       header="pages.event_results.header"
       routeName="event_results"
       refreshInterval="5000"
+      includeEndDateColumn="true"
+      defaultSortField="endDate"
+      defaultSortOrder="asc"
     />);
   }
 

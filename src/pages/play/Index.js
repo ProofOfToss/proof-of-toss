@@ -40,7 +40,10 @@ class Index extends Component {
   static defaultProps = {
     header: 'pages.play.header',
     routeName: 'play',
-    refreshInterval: false
+    refreshInterval: false,
+    includeEndDateColumn: false,
+    defaultSortField: 'startDate',
+    defaultSortOrder: 'desc'
   };
 
   getUrlParams() {
@@ -242,6 +245,54 @@ class Index extends Component {
 
   render() {
     const { data, categories } = this.state;
+    let columns = [
+      {
+        text: this.props.translate('pages.play.columns.name'),
+        dataField: "name",
+        sort: false,
+      },
+      {
+        text: this.props.translate('pages.play.columns.bid_type'),
+        dataField: "bidType",
+        sort: false,
+        width: 200,
+      },
+      {
+        text: this.props.translate('pages.play.columns.start_date'),
+        dataField: "startDate",
+        sort: true,
+        width: 200,
+        formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
+      }
+    ];
+
+    if (this.props.includeEndDateColumn + '' === 'true') {
+      columns.push({
+        text: this.props.translate('pages.play.columns.end_date'),
+        dataField: "endDate",
+        sort: true,
+        width: 200,
+        formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
+      });
+    }
+
+    columns.push({
+      text: this.props.translate('pages.play.columns.bid_sum'),
+      dataField: "bidSum",
+      sort: true,
+      width: 150,
+    });
+
+    columns.push({
+      text: '',
+      dataField: 'address',
+      sort: false,
+      width: 100,
+      formatter: (cell) => {
+        return <Link to={`/${this.props.locale}/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link>
+      }
+    });
+
     return(
       <main className="container">
         <div>
@@ -295,47 +346,13 @@ class Index extends Component {
               ref="table"
               keyField="address"
               data={ data }
-              columns={ [
-                {
-                  text: this.props.translate('pages.play.columns.name'),
-                  dataField: "name",
-                  sort: false,
-                },
-                {
-                  text: this.props.translate('pages.play.columns.bid_type'),
-                  dataField: "bidType",
-                  sort: false,
-                  width: 200,
-                },
-                {
-                  text: this.props.translate('pages.play.columns.start_date'),
-                  dataField: "startDate",
-                  sort: true,
-                  width: 200,
-                  formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
-                },
-                {
-                  text: this.props.translate('pages.play.columns.bid_sum'),
-                  dataField: "bidSum",
-                  sort: true,
-                  width: 150,
-                },
-                {
-                  text: '',
-                  dataField: 'address',
-                  sort: false,
-                  width: 100,
-                  formatter: (cell) => {
-                    return <Link to={`/${this.props.locale}/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link>
-                  }
-                }
-              ] }
+              columns={ columns }
               // @todo: defaultSorted triggers table to change which triggers query to elasticsearch
               // if remove defaultSorted, do not forget to uncomment this.update() in componentDidMount() function!!!
               defaultSorted={[
                 {
-                  dataField: 'bidSum',
-                  order: 'desc'
+                  dataField: this.props.defaultSortField,
+                  order: this.props.defaultSortOrder
                 }
               ]}
               onTableChange={ this.handleTableChange }
