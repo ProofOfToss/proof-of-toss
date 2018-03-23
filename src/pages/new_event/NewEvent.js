@@ -4,8 +4,6 @@ import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import EventForm from '../../components/event/EventForm';
 
-import { deployed } from '../../util/contracts';
-
 class NewEvent extends Component {
   constructor(props) {
     super(props);
