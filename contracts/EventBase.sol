@@ -46,6 +46,20 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
     uint constant public meta_version = 1;
 
+    event Updated(address _contract);
+
+    function updated(address _contract) public {
+        uint codeLength;
+
+        assembly {
+            codeLength := extcodesize(_contract)
+        }
+
+        require(codeLength > 0 && msg.sender == _contract);
+
+        Updated(_contract);
+    }
+
     function EventBase(address _token) {
         owner = msg.sender;
         token = Token(_token);
@@ -158,6 +172,8 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
         usersBets[tx.origin].push(bets.length - 1);
         state = States.Accepted;
+
+        base.updated(address(this));
     }
 
     function resolve(uint8 result) stateTransitions {
@@ -167,6 +183,8 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
         resolvedResult = result;
         state = States.Closed;
+
+        base.updated(address(this));
     }
 
     function getUserBets() view returns (uint[]) {

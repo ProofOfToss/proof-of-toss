@@ -40,11 +40,12 @@ contract('Event', function(accounts) {
   });
 
 
-  let main, token, event, whitelist;
+  let main, token, event, whitelist, eventBase;
 
   beforeEach(async function() {
     token = await Token.deployed();
     whitelist = await Whitelist.deployed();
+    eventBase = await EventBase.deployed();
 
     return Main.deployed().then(function(instance) {
       main = instance;
@@ -172,9 +173,12 @@ contract('Event', function(accounts) {
     await event.setEndDate(now - 60);
     assert.equal(await event.getState(), 4, 'Event state must be Finished');
 
-    await event.resolve(1);
+    const txResult = await event.resolve(1);
     assert.equal(await event.resolvedResult(), 1, 'Event result must be 1');
     assert.equal(await event.getState(), 5, 'Event state must be Closed');
+
+    assert.equal(txResult.logs[0].event, 'Updated', 'Updated event should be raised');
+    assert.equal(txResult.logs[0].args._contract, event.address, 'Updated event should contain event address');
   });
 
   it("should not receive result from non-administrator", async () => {

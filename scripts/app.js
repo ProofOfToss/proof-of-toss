@@ -39,6 +39,34 @@ const esClient = new AwsEsClient(
 (async (callback) => {
   const web3 = new Web3();
 
+  const config = Config.detect({'network': appConfig.network});
+  const resolver = new Resolver(config);
+  const provider = config.provider;
+
+  // Import our contract artifacts and turn them into usable abstractions.
+  // const token_artifacts = require('../build/contracts/Token.json');
+  // const main_artifacts = require('../build/contracts/Main.json');
+  // const event_artifacts = require('../build/contracts/Event.json');
+  // const Token = contract(token_artifacts);
+  // const Main = contract(main_artifacts);
+  // const Event = contract(event_artifacts);
+  // Это НЕ РАБОТАЕТ – дичайшие глюки
+
+  const Main = resolver.require("../contracts/Main.sol");
+  const EventBase = resolver.require("../contracts/EventBase.sol");
+  const Token = resolver.require("../contracts/Token.sol");
+
+  web3.setProvider(provider);
+
+  Token.setProvider(provider);
+  Main.setProvider(provider);
+  EventBase.setProvider(provider);
+  Token.defaults({from: web3.eth.coinbase});
+  Main.defaults({from: web3.eth.coinbase});
+  EventBase.defaults({from: web3.eth.coinbase});
+
+  web3.eth.defaultAccount = web3.eth.coinbase;
+
   const fatal = function() {
     let _fatal = logger.fatal.bind(logger);
 
@@ -54,6 +82,7 @@ const esClient = new AwsEsClient(
     process.exit(1);
   };
 
+
   const convertBlockchainEventToEventDoc = async (_event) => {
     try {
       const eventData = deserializeEvent(_event.eventData);
@@ -61,6 +90,7 @@ const esClient = new AwsEsClient(
 
       const creator = await event.creator();
       const resultsCount = await event.resultsCount();
+      const result = await event.resolvedResult();
 
       const promises = [];
 
@@ -85,6 +115,7 @@ const esClient = new AwsEsClient(
         'endDate': eventData.endDate,
         'sourceUrl': /*web3.toUtf8*/(eventData.sourceUrl),
         'tag': tags,
+        'result': result,
       };
     } catch (err) {
       logger.error(err);
@@ -143,6 +174,51 @@ const esClient = new AwsEsClient(
     });
   };
 
+  const updateEvents = async (events) => {
+    if (events.length === 0) return;
+
+    let body = [];
+
+    for(let i = 0; i < events.length; i++) {
+      try {
+        const address = events[i].args._contract;
+        const event = EventBase.at(address);
+
+        const resultsCount = await event.resultsCount();
+        const result = await event.resolvedResult();
+
+        const promises = [];
+
+        for (let i = 0; i < resultsCount; i++) {
+          promises.push(event.possibleResults(i));
+        }
+
+        const bidSum = (await Promise.all(promises)).reduce((accumulator, result) => accumulator + parseInt(result[3], 10), 0);
+
+        const doc = {
+          'bidSum': bidSum,
+          'result': result,
+        };
+
+        body.push({ update: { _index: EVENT_INDEX, _type: 'event', _id: doc.address } });
+        body.push(doc);
+
+      } catch (err) {
+        logger.error(err);
+        throw err;
+      }
+    }
+
+    logger.trace(body);
+
+    await esClient.bulk({body}).then((result) => {
+      logger.info(result.items);
+    }).catch((error) => {
+      logger.error(error);
+      throw error;
+    });
+  };
+
   await esClient.ping({
     // ping usually has a 3000ms timeout
     requestTimeout: 5000
@@ -152,35 +228,11 @@ const esClient = new AwsEsClient(
     fatal(error, 'elasticsearch cluster is down! exiting');
   });
 
-  const config = Config.detect({'network': appConfig.network});
-  const resolver = new Resolver(config);
-  const provider = config.provider;
 
-  // Import our contract artifacts and turn them into usable abstractions.
-  // const token_artifacts = require('../build/contracts/Token.json');
-  // const main_artifacts = require('../build/contracts/Main.json');
-  // const event_artifacts = require('../build/contracts/Event.json');
-  // const Token = contract(token_artifacts);
-  // const Main = contract(main_artifacts);
-  // const Event = contract(event_artifacts);
-  // Это НЕ РАБОТАЕТ – дичайшие глюки
 
-  const Main = resolver.require("../contracts/Main.sol");
-  const EventBase = resolver.require("../contracts/EventBase.sol");
-  const Token = resolver.require("../contracts/Token.sol");
 
-  web3.setProvider(provider);
 
-  Token.setProvider(provider);
-  Main.setProvider(provider);
-  EventBase.setProvider(provider);
-  Token.defaults({from: web3.eth.coinbase});
-  Main.defaults({from: web3.eth.coinbase});
-  EventBase.defaults({from: web3.eth.coinbase});
-
-  web3.eth.defaultAccount = web3.eth.coinbase;
-
-  let main, token, accounts;
+  let main, token, accounts, eventBase;
 
   web3.eth.getAccounts((err, accs) => {
     if (err !== null) {
@@ -197,6 +249,7 @@ const esClient = new AwsEsClient(
   try {
     main = await Main.deployed();
     token = await Token.deployed();
+    eventBase = await EventBase.deployed();
   } catch (error) {
     fatal(error);
   }
@@ -207,7 +260,7 @@ const esClient = new AwsEsClient(
     if (fs.existsSync(cacheStateFile)) {
       try {
         const state = JSON.parse(fs.readFileSync(cacheStateFile, {encoding: "utf8"}));
-        return state;
+        return Object.assign({}, defaultState, state);
       } catch (e) {
         logger.error(e);
         return defaultState;
@@ -221,7 +274,7 @@ const esClient = new AwsEsClient(
     return fs.writeFileSync(cacheStateFile, JSON.stringify(cacheState) + '\n');
   }
 
-  let cacheState = readCacheState({lastBlock: appConfig.firstBlock});
+  let cacheState = readCacheState({lastBlock: appConfig.firstBlock, lastUpdateBlock: appConfig.firstBlock});
 
   logger.info(`Caching events starting from block #${cacheState.lastBlock} to block #${web3.eth.blockNumber}`);
 
@@ -249,10 +302,11 @@ const esClient = new AwsEsClient(
     })(i);
   }
 
-  logger.info(`Watching for new events`);
 
-  let events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
   const watchEvents = () => {
+    let events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
+    logger.info(`Watching for new events`);
+
     const retry = () => {
       try {
 
@@ -282,6 +336,49 @@ const esClient = new AwsEsClient(
         }
 
         cacheState.lastBlock = response.blockNumber - 1;
+        writeCacheState(cacheState);
+      });
+
+    } catch (err) {
+      logger.error(err);
+      return setTimeout(retry, 1000);
+    }
+  };
+
+
+  const watchEventUpdates = () => {
+    let events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: 'latest'});
+    logger.info(`Watching for event updates`);
+
+    const retry = () => {
+      try {
+
+        events.stopWatching();
+        events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: 'latest'});
+      } catch (err) {
+        logger.error(err);
+        return setTimeout(retry, 1000);
+      }
+
+      setTimeout(watchEventUpdates, 1000);
+    };
+
+    try {
+
+      events.watch(async (error, response) => {
+        if (error) {
+          logger.error(error, `Error while watching for events updates starting from block #${cacheState.lastUpdateBlock}`);
+          return retry();
+        }
+
+        try {
+          await updateEvents([response]);
+        } catch (err) {
+          logger.error(err, `Error while indexing event update at block #${response.blockNumber}`);
+          return retry();
+        }
+
+        cacheState.lastUpdateBlock = response.blockNumber - 1;
         writeCacheState(cacheState);
       });
 

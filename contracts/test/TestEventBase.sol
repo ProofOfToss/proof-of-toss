@@ -12,4 +12,6 @@ contract TestEventBase is EventBase {
     function setEndDate(uint64 _endDate) public {
         endDate = _endDate;
     }
+
+    event Updated(address _contract);
 }
