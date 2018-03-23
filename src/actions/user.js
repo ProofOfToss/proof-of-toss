@@ -20,6 +20,10 @@ export const logoutUser = () => ({
 
 export const checkWhitelist = (address) => {
   return async (dispatch, getState) => {
+    if (!getState().web3 || !getState().web3.web3) {
+      return Promise.resolve();
+    }
+    
     const main = (await deployed(getState().web3.web3, 'main')).mainInstance;
     const isWhitelisted = await main.whitelist(address);
     const isWhitelistedLocally = config.whitelist.indexOf(address) >= 0;
