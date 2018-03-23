@@ -1,5 +1,6 @@
 import { refreshBalance } from './token'
 import { deployed } from '../util/contracts';
+import config from "../data/config.json";
 
 export const AUTHENTICATE_USER = 'AUTHENTICATE_USER';
 export const LOGOUT_USER = 'LOGOUT_USER';
@@ -21,6 +22,11 @@ export const checkWhitelist = (address) => {
   return async (dispatch, getState) => {
     const main = (await deployed(getState().web3.web3, 'main')).mainInstance;
     const isWhitelisted = await main.whitelist(address);
+    const isWhitelistedLocally = config.whitelist.indexOf(address) >= 0;
+
+    if (isWhitelistedLocally !== isWhitelisted) {
+      console.log('Sync whitelist!');
+    }
 
     dispatch({type: CHECK_WHITELIST, is_whitelisted: isWhitelisted});
   }
