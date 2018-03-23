@@ -35,12 +35,7 @@ import store from './store';
 import { initWeb3, lockWallet, unlockWallet, changeAddress, web3LostConnection } from './actions/web3';
 
 // Put ReactDOM.render() to a function because we need to wrap the rendering with web3 detection
-function renderReactDOM(web3) {
-
-  if (typeof web3 !== 'undefined') {
-    store.dispatch(initWeb3(web3));
-  }
-
+function renderReactDOM() {
   const history = syncHistoryWithStore(browserHistory, store);
 
   const checkAuthorization = function () {
@@ -121,6 +116,8 @@ getWeb3
     var currentAddress = null;
     var hasConnection = null;
 
+    store.dispatch(initWeb3(results.web3));
+
     // There are some problems with getting accounts through the public property,
     // but still try to get accounts and double check the same thing within setInterval() function below.
     if (results.web3.eth.accounts.length > 0) {
@@ -170,7 +167,7 @@ getWeb3
       });
     }, 500);
 
-    renderReactDOM(results.web3);
+    renderReactDOM();
   })
   .catch(function(e) {
     renderReactDOM();
