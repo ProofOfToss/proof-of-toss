@@ -134,7 +134,17 @@
     "event": {
       "fetching": "Loading event information...",
       "newBet": "Add bet",
-      "bet_amount": "Amount of the bet"
+      "bet_amount": "Amount of the bet",
+      "approve": "Approve",
+      "your_bet": "Your bet",
+      "allowance_balance": "Your current allowance balance: ${ allowance }",
+      "saved": "Bet successfully added",
+      "estimate_gas_error": "Error of calculation estimate gas",
+      "result": {
+        "name": "Result",
+        "coefficient": "Coefficient",
+        "bet_sum": "Bet sum"
+      }
     }
   },
   "categories": {

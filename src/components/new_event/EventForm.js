@@ -28,16 +28,16 @@ class EventForm extends Component {
       formData: {
         language: config.languages.list[0].code,
         category: config.categories.default,
-        name: '123',
-        bidType: 'bid_type',
-        deposit: 5,
-        tags: ['sadf'],
+        name: '',
+        bidType: '',
+        deposit: 0,
+        tags: [],
         timeZone: config.timeZones.default,
         startTime: DEFAULT_START_TIME,
         endTime: DEFAULT_END_TIME,
-        description: 'sadfsadf',
-        sourceUrls: ['sdafsadf'],
-        results: [{name: 'sfdsadf', coefficient: 1}, {name: 'sfdsadf12', coefficient: 1}]
+        description: '',
+        sourceUrls: [],
+        results: []
       }
     }
   }

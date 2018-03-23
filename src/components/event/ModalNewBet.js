@@ -4,8 +4,9 @@ import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
 import { Input } from 'valuelink/tags'
 import BaseModal from '../modal/BaseModal'
-import { modalCloseEvent, modalSaveEvent } from '../../actions/pages/newEvent'
+import { modalAddNewBetClose, modalAddNewBetAdd } from '../../actions/pages/event'
 import { getGasCalculation } from '../../util/gasPriceOracle';
+import { denormalizeBalance } from './../../util/token';
 import config from '../../data/config.json';
 
 class ModalNewBet extends Component {
@@ -25,38 +26,34 @@ class ModalNewBet extends Component {
     }
   }
 
-  componentWillMount() {
-      // this.props.eventInstance.newBet.estimateGas('qwe', {
-      //     from: this.props.currentAddress
-      //   })
-      // .then((gasAmount) => {
-      //   return getGasCalculation(this.props.web3, gasAmount);
-      // })
-      // .then((gasCalculation) => {
-      //   this.setState({
-      //     gasLimit: gasCalculation.gasLimit,
-      //     gasPrice: gasCalculation.price / gasCalculation.gasLimit,
-      //     gasPriceStr: Number(this.props.web3.toWei(gasCalculation.price / gasCalculation.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei',
-      //     minFee: gasCalculation.minFee,
-      //     fee: gasCalculation.fee
-      //   });
-      // }).catch((e) => {
-      //   this.setState({
-      //     estimateGasError: true
-      //   });
-      // });
+  async componentWillMount() {
+    try {
+      const gasAmount = await this.props.eventInstance.newBet.estimateGas(this.props.newBetData.resultIndex,
+        denormalizeBalance(this.props.newBetData.amount), {from: this.props.currentAddress});
+
+      const gasCalculation = await getGasCalculation(this.props.web3, gasAmount);
+
+      this.setState({
+        gasLimit: gasCalculation.gasLimit,
+        gasPrice: gasCalculation.price / gasCalculation.gasLimit,
+        gasPriceStr: Number(this.props.web3.toWei(gasCalculation.price / gasCalculation.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei',
+        minFee: gasCalculation.minFee,
+        fee: gasCalculation.fee
+      });
+    } catch (e) {
+      this.setState({
+        estimateGasError: true
+      });
+    }
   }
 
   addBetHandler() {
-    this.props.addBet(this.state.gasLimit, Math.round(this.props.web3.toWei(this.state.fee / this.state.gasLimit)));
+    this.props.modalAddNewBetAdd(this.state.gasLimit, Math.round(this.props.web3.toWei(this.state.fee / this.state.gasLimit)));
   }
 
   _confirmContent() {
 
-    console.log(this.links);
-
     return <div className="modal-new-bet">
-
       {this.props.save_error &&
         <div className='alert alert-danger' role='alert'>
           {this.props.save_error.message}
@@ -65,20 +62,27 @@ class ModalNewBet extends Component {
 
       {this.state.estimateGasError &&
         <div className='alert alert-danger' role='alert'>
-          {this.props.translate('pages.new_event.estimate_gas_error')}
+          {this.props.translate('pages.event.estimate_gas_error')}
         </div>
       }
 
       <dl className="dl-horizontal">
-        <dt>{ this.props.translate('pages.event.bet_amount') }</dt>
-        <dd>
-          <div className={ this.links.betAmount.error ? 'form-group has-error' : 'form-group' }>
-            <Input valueLink={ this.links.betAmount } type='number' className='form-control' id='event[bet_amount]' />
-            <span className='help-block'>{ this.links.betAmount.error || '' }</span>
-          </div>
-        </dd>
 
-        {!this.links.betAmount.error && this.state.gasLimit && <div className="fees-block">
+        <dt>{this.props.translate('pages.event.result.name')}</dt>
+        <dd>{this.props.newBetData.result[0]}</dd>
+
+        <dt>{this.props.translate('pages.event.result.coefficient')}</dt>
+        <dd>{this.props.newBetData.result[1].toNumber()}</dd>
+
+        <dt>{this.props.translate('pages.event.result.bet_sum')}</dt>
+        <dd>{this.props.newBetData.result[3].toNumber()}</dd>
+
+        <dt>{this.props.translate('pages.event.your_bet')}</dt>
+        <dd>{this.props.newBetData.amount}</dd>
+
+        <br />
+
+        {this.state.gasLimit && <div className="fees-block">
             <dt className="fees-block-fee-label">{ this.props.translate('pages.wallet.send.fee') } ({config.view.currency_symbol})</dt>
             <dd className="fees-block-fee-field">
               <div className={ this.links.fee.error ? 'form-group has-error' : 'form-group' }>
@@ -98,6 +102,12 @@ class ModalNewBet extends Component {
           </div>
         }
       </dl>
+    </div>
+  }
+
+  _savedContent() {
+    return <div className='alert alert-success' role='alert'>
+      {this.props.translate('pages.event.saved')}
     </div>
   }
 
@@ -135,16 +145,7 @@ class ModalNewBet extends Component {
 
   render() {
 
-    const betAmountLink = Link.state(this, 'betAmount')
-      .check( v => v, this.props.translate('validation.required'))
-      .check( v => !isNaN(parseFloat(v)), this.props.translate('validation.token.fee_is_nan'))
-      .check( v => parseFloat(v) >= 10, this.props.translate('validation.to_small', {value: 10}))
-      .onChange(v => {
-        console.log(v);
-      })
-    ;
-
-    const feeLink = Link.state(this, 'fee')
+    Link.state(this, 'fee')
       .check( v => v, this.props.translate('validation.required'))
       .check( v => !isNaN(parseFloat(v)), this.props.translate('validation.token.fee_is_nan'))
       .check( v => parseFloat(v) >= this.state.minFee, this.props.translate('validation.token.fee_is_too_small') + this.state.minFee + ' ' + config.view.currency_symbol);
@@ -153,8 +154,8 @@ class ModalNewBet extends Component {
 
       <main className='container'>
         <div>
-          <BaseModal handleHideModal={this.props.modalClose} buttons={this._buttons()} title={ this.props.translate('pages.new_event.modal.submit')} >
-            { this.props.saved ? this._savedContent() : this._confirmContent() }
+          <BaseModal handleHideModal={this.props.modalAddNewBetClose} buttons={this._buttons()} title={ this.props.translate('pages.new_event.modal.submit')} >
+            { this.props.newBetSaved ? this._savedContent() : this._confirmContent() }
           </BaseModal>
         </div>
       </main>
@@ -166,17 +167,17 @@ function mapStateToProps(state) {
   return {
     web3: state.web3.web3,
     currentAddress: state.user.address,
-    saved: state.newEvent.saved,
-    save_error: state.newEvent.save_error,
-    formData: state.newEvent.formData,
+    allowance: state.event.allowance,
+    newBetData: state.event.newBetData,
+    newBetSaved: state.event.newBetSaved,
     sbtcBalance: state.token.sbtcBalance,
     translate: getTranslate(state.locale),
   };
 }
 
 const mapDispatchToProps = {
-  modalClose: modalCloseEvent,
-  saveEvent: modalSaveEvent
+  modalAddNewBetClose,
+  modalAddNewBetAdd
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalNewBet);

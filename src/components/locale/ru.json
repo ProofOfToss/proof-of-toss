@@ -115,7 +115,16 @@
     "event": {
       "fetching": "Загрузка события...",
       "newBet": "Сделать ставку",
-      "bet_amount": "Сумма ставки"
+      "bet_amount": "Сумма ставки",
+      "approve": "Approve",
+      "your_bet": "Ваша ставка",
+      "allowance_balance": "Your current allowance balance: ${ allowance }",
+      "saved": "Ставка добавлена",
+      "result": {
+        "name": "Результат",
+        "coefficient": "Коэффициент",
+        "bet_sum": "Сумма ставок"
+      }
     }
   }
 

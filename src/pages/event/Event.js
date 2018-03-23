@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { getTranslate } from 'react-localize-redux';
 import { fetchEvent } from '../../actions/pages/event';
 
@@ -22,6 +23,10 @@ class Event extends Component {
         <dl className="dl-horizontal">
           <dt>Event</dt>
           <dd>{this.props.params.id}</dd>
+        </dl>
+        <dl className="dl-horizontal">
+          <dt>End date</dt>
+          <dd>{moment(this.props.eventData.endDate).format('LLL')}</dd>
         </dl>
         <ResultsList eventInstance={this.props.eventInstance}/>
       </Fragment>
@@ -50,7 +55,8 @@ function mapStateToProps(state) {
     web3: state.web3.web3,
     currentAddress: state.user.address,
     translate: getTranslate(state.locale),
-    eventInstance: state.event.eventInstance
+    eventInstance: state.event.eventInstance,
+    eventData: state.event.eventData
   };
 }
 
