@@ -37,6 +37,7 @@ logger.level = 'debug';
   const Main = resolver.require("../contracts/Main.sol");
   const EventBase = resolver.require("../contracts/EventBase.sol");
   const Token = resolver.require("../contracts/Token.sol");
+  const Whitelist = resolver.require("../contracts/Whitelist.sol");
 
   const web3 = new Web3();
   web3.setProvider(provider);
@@ -44,13 +45,15 @@ logger.level = 'debug';
   Token.setProvider(provider);
   Main.setProvider(provider);
   EventBase.setProvider(provider);
+  Whitelist.setProvider(provider);
   Token.defaults({from: web3.eth.coinbase});
   Main.defaults({from: web3.eth.coinbase});
   EventBase.defaults({from: web3.eth.coinbase});
+  Whitelist.defaults({from: web3.eth.coinbase});
 
   web3.eth.defaultAccount = web3.eth.coinbase;
 
-  let main, token, accounts;
+  let main, token, accounts, whitelist;
 
   await new Promise((resolve, reject) => {
     web3.eth.getAccounts((err, accs) => {
@@ -71,6 +74,7 @@ logger.level = 'debug';
   try {
     main = await Main.deployed();
     token = await Token.deployed();
+    whitelist = await Whitelist.deployed();
   } catch (error) {
     fatal(error);
   }
@@ -79,7 +83,7 @@ logger.level = 'debug';
   await token.generateTokens(accounts[1], 1000000000, {from: accounts[0]});
 
   await token.approve(main.address, 1500, {from: accounts[1]});
-  await main.updateWhitelist(accounts[1], true);
+  await whitelist.updateWhitelist(accounts[1], true);
 
   /*await main.newEvent('Test event', 100, 'en', 'category_id', 'description', 1,
     1517406195, 1580478195, 'source_url', {from: accounts[0]});*/
@@ -88,7 +92,7 @@ logger.level = 'debug';
     const category = faker.random.arrayElement([1, 2, 3]);
     const locale = faker.random.arrayElement(['en', 'ru', 'kz']);
     const startDate = parseInt(faker.date.future(0.1).getTime()/1000);
-    const endDate = parseInt(faker.date.future(0.5).getTime()/1000);
+    const endDate = startDate + 100500;
     const bidType = faker.lorem.words();
 
     const tags = [faker.lorem.word(), faker.lorem.word(), faker.lorem.word()];

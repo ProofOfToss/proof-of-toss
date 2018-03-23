@@ -28,19 +28,19 @@ logger.level = 'debug';
   const resolver = new Resolver(config);
   const provider = config.provider;
 
-  const Main = resolver.require("../contracts/Main.sol");
+  const Whitelist = resolver.require("../contracts/Whitelist.sol");
 
   const web3 = new Web3();
   web3.setProvider(provider);
 
-  Main.setProvider(provider);
-  Main.defaults({from: web3.eth.coinbase});
+  Whitelist.setProvider(provider);
+  Whitelist.defaults({from: web3.eth.coinbase});
   web3.eth.defaultAccount = web3.eth.coinbase;
 
-  let main;
+  let whitelistInstance;
 
   try {
-    main = await Main.deployed();
+    whitelistInstance = await Whitelist.deployed();
   } catch (error) {
     fatal(error);
   }
@@ -51,7 +51,7 @@ logger.level = 'debug';
   for(let i = 0; i < blacklist.length; i++) {
 
     try {
-      await main.updateWhitelist(blacklist[i], false);
+      await whitelistInstance.updateWhitelist(blacklist[i], false);
     } catch (error) {
       fatal(error);
     }
@@ -61,7 +61,7 @@ logger.level = 'debug';
   for(let i = 0; i < whitelist.length; i++) {
 
     try {
-      await main.updateWhitelist(whitelist[i], true);
+      await whitelistInstance.updateWhitelist(whitelist[i], true);
     } catch (error) {
       fatal(error);
     }
