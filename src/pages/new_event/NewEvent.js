@@ -31,9 +31,6 @@ class NewEvent extends Component {
               }
             </div>
           }
-          {
-            this.state.eventAddress !== null && this.state.eventAddress
-          }
         </div>
       </main>
     );
@@ -42,8 +39,6 @@ class NewEvent extends Component {
 
 function mapPropsToState(state) {
   return {
-    web3: state.web3.web3,
-    currentAddress: state.user.address,
     translate: getTranslate(state.locale),
     isWhitelisted: state.user.isWhitelisted,
   };
