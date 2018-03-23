@@ -25,7 +25,7 @@ contract('Token', function (accounts) {
 
       }).then(function(balanceOf) {
 
-        assert.equal(1000000000, balanceOf.toNumber());
+        assert.equal(10000000000000, balanceOf.toNumber());
         return crowdsale.transferPreSaleTokens(accounts[0], 1000, {from: accounts[0]});
 
       }).then(async function() {
@@ -39,7 +39,7 @@ contract('Token', function (accounts) {
 
       }).then(async function(balanceOf) {
 
-        assert.equal(1000000000 - 1000, balanceOf.toNumber());
+        assert.equal(10000000000000 - 1000, balanceOf.toNumber());
 
       });
 
@@ -59,7 +59,7 @@ contract('Token', function (accounts) {
         token = Token.at(address);
         return token.balanceOf(crowdsale.address);
       }).then(async function(balanceOf) {
-        assert.equal(1000000000, balanceOf.toNumber());
+        assert.equal(10000000000000, balanceOf.toNumber());
 
         await expectThrow(crowdsale.transferPreSaleTokens(accounts[0], 1000, {from: accounts[0]}));
       });
@@ -79,7 +79,7 @@ contract('Token', function (accounts) {
         token = Token.at(address);
         return token.balanceOf(crowdsale.address);
       }).then(async function(balanceOf) {
-        assert.equal(1000000000, balanceOf.toNumber());
+        assert.equal(10000000000000, balanceOf.toNumber());
 
         await expectThrow(crowdsale.transferPreSaleTokens(accounts[0], 1000, {from: accounts[0]}));
       });
@@ -98,7 +98,7 @@ contract('Token', function (accounts) {
         token = Token.at(address);
         return token.balanceOf(crowdsale.address);
       }).then(async function(balanceOf) {
-        assert.equal(1000000000, balanceOf.toNumber());
+        assert.equal(10000000000000, balanceOf.toNumber());
 
         await expectThrow(crowdsale.transferPreSaleTokens(accounts[0], 1000, {from: accounts[0]}));
       });
@@ -122,14 +122,14 @@ contract('Token', function (accounts) {
 
       }).then(async function(balanceOf) {
 
-        assert.equal(1000000000, balanceOf.toNumber());
+        assert.equal(10000000000000, balanceOf.toNumber());
 
         await crowdsale.transferPreSaleTokens(accounts[0], 1000, {from: accounts[0]});
         await crowdsale.transferPreSaleTokens(accounts[1], 1000, {from: accounts[0]});
 
         assert.equal(1000, (await token.balanceOf(accounts[0])).toNumber());
         assert.equal(1000, (await token.balanceOf(accounts[1])).toNumber());
-        assert.equal(1000000000 - 2000, (await token.balanceOf(crowdsale.address)).toNumber());
+        assert.equal(10000000000000 - 2000, (await token.balanceOf(crowdsale.address)).toNumber());
 
         await expectThrow(token.transfer(accounts[1], 1000, {from: accounts[0]}));
 
@@ -153,7 +153,7 @@ contract('Token', function (accounts) {
 
       }).then(async function(balanceOf) {
 
-        assert.equal(1000000000, balanceOf.toNumber());
+        assert.equal(10000000000000, balanceOf.toNumber());
 
         await crowdsale.transferPreSaleTokens(accounts[0], 1000, {from: accounts[0]});
         await crowdsale.transferPreSaleTokens(accounts[1], 1000, {from: accounts[0]});
@@ -163,7 +163,7 @@ contract('Token', function (accounts) {
             try {
               assert.equal(1000, (await token.balanceOf(accounts[0])).toNumber());
               assert.equal(1000, (await token.balanceOf(accounts[1])).toNumber());
-              assert.equal(1000000000 - 2000, (await token.balanceOf(crowdsale.address)).toNumber());
+              assert.equal(10000000000000 - 2000, (await token.balanceOf(crowdsale.address)).toNumber());
 
               await token.transfer(accounts[1], 1000, {from: accounts[0]});
               assert.equal(2000, (await token.balanceOf(accounts[1])).toNumber());
@@ -174,7 +174,7 @@ contract('Token', function (accounts) {
               reject(e);
             }
 
-          }, 6000);
+          }, 10000);
         });
 
       });
