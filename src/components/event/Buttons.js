@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import { getMyAllowance, formatBalance, denormalizeBalance } from './../../util/token';
-import { approveEvent } from '../../actions/pages/newEvent'
+import { approveEvent, needToReapproveEvent } from '../../actions/pages/newEvent'
 
 class Buttons extends Component {
   constructor(props) {
@@ -27,14 +27,17 @@ class Buttons extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.deposit === this.props.deposit) {
+    if (nextProps.deposit === this.props.deposit) {
       return;
     }
 
     getMyAllowance(this.props.web3).then((value) => {
-      this.setState({
-        allowance: formatBalance(value)
-      })
+      const allowance = formatBalance(value);
+      this.setState({allowance: allowance});
+
+      if (parseFloat(nextProps.deposit) > parseFloat(allowance)) {
+        this.props.reapprove();
+      }
     })
   }
 
@@ -46,7 +49,10 @@ class Buttons extends Component {
   render() {
 
     let content;
-    const needApprove = (this.state.allowance < this.props.deposit) && false === this.props.approved;
+
+    const needApprove =
+      parseFloat(this.state.allowance) < parseFloat(this.props.deposit)
+      && false === this.props.approved;
 
     if(this.state.fetchAllowanceValue) {
       content = <div className='alert alert-danger' role='alert'>
@@ -84,7 +90,8 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  approve: approveEvent
+  approve: approveEvent,
+  reapprove: needToReapproveEvent
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Buttons);

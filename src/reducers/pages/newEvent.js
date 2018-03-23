@@ -1,4 +1,4 @@
-import { FORM_APPROVE_EVENT, FORM_APPROVE_EVENT_SUCCESS, FORM_APPROVE_EVENT_ERROR,
+import { FORM_APPROVE_EVENT, FORM_APPROVE_EVENT_SUCCESS, FORM_APPROVE_EVENT_ERROR, FORM_NEED_TO_REAPPROVE_EVENT,
   FORM_SAVE_EVENT, MODAL_SAVE_EVENT, MODAL_CLOSE_EVENT, SAVE_ERROR_EVENT, SAVED_EVENT
 } from '../../actions/pages/newEvent';
 
@@ -32,6 +32,11 @@ const newEventReducer = (state = initialState, action) => {
         ...state,
         approving: false,
         approved: true
+      };
+    case FORM_NEED_TO_REAPPROVE_EVENT:
+      return {
+        ...state,
+        approved: false
       };
     case FORM_SAVE_EVENT:
       return {
