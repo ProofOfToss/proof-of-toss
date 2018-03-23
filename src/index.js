@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { Provider } from 'react-redux'
 import { syncHistoryWithStore } from 'react-router-redux'
-import { refreshBalance } from './actions/token'
 import checkRouteLocale  from './components/routing/checkRouteLocale'
 
 // Layouts
