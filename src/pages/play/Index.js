@@ -12,6 +12,7 @@ import overlayFactory from 'react-bootstrap-table2-overlay';
 import '../../styles/components/play_table.scss';
 
 import appConfig from "../../data/config.json"
+import { getLanguageAnalyzerByCode } from '../../util/i18n';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -149,6 +150,7 @@ class Index extends Component {
 
   async update() {
     const conditions = [];
+    const shouldConditions = [];
 
     history.replaceState({}, '', `/${this.state.locale}/play?${this.getUrlParams()}`);
 
@@ -167,11 +169,27 @@ class Index extends Component {
     });
 
     if (this.state.q) {
-      conditions.push({
+      shouldConditions.push({
         query_string: {
-          query: `name:(${this.state.q}) OR tag.name:(${this.state.q})`
+          analyzer: getLanguageAnalyzerByCode(this.props.locale),
+          fields: ['name', 'description'],
+          query: this.state.q
         }
       });
+
+      shouldConditions.push({
+        "nested": {
+          "path": "tag",
+          "query": {
+            query_string: {
+              analyzer: getLanguageAnalyzerByCode(this.props.locale),
+              fields: ['tag.name'],
+              query: this.state.q
+            }
+          }
+        }
+      });
+
     }
 
     if (this.state.category) {
@@ -206,6 +224,11 @@ class Index extends Component {
           query: {
             bool: {
               must: conditions,
+              "filter": {
+                "bool": {
+                  "should": shouldConditions
+                }
+              }
             }
           }
         }
@@ -265,11 +288,6 @@ class Index extends Component {
               <div className="col-md-6">
                 <div className="input-group">
                   <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
-                  <span className="input-group-btn">
-                    <button className="btn btn-default" type="submit">
-                      <span className="glyphicon glyphicon-search" />
-                    </button>
-                  </span>
                 </div>
               </div>
             </div>
@@ -286,6 +304,12 @@ class Index extends Component {
                   text: this.props.translate('pages.play.columns.name'),
                   dataField: "name",
                   sort: false,
+                },
+                {
+                  text: this.props.translate('pages.play.columns.tags'),
+                  dataField: "tag",
+                  sort: false,
+                  formatter: (tags) => _.map(tags, 'name').join(', '),
                 },
                 {
                   text: this.props.translate('pages.play.columns.bid_type'),
