@@ -37,6 +37,11 @@ class Index extends Component {
     this.updateDebounce = this.updateDebounce.bind(this);
   }
 
+  static defaultProps = {
+    header: 'pages.play.header',
+    routeName: 'play'
+  };
+
   getUrlParams() {
     let params = {};
 
@@ -50,7 +55,7 @@ class Index extends Component {
   }
 
   getStateFromQueryString(props) {
-    const parsed = queryString.parse(props.location.search);
+    const parsed = props.location && props.location.search ? queryString.parse(props.location.search) : {};
 
     return {
       categories: appConfig.categories.list,
@@ -148,7 +153,7 @@ class Index extends Component {
   async update() {
     const conditions = [];
 
-    history.replaceState({}, '', `/${this.props.locale}/play?${this.getUrlParams()}`);
+    history.replaceState({}, '', `/${this.props.locale}/${this.props.routeName}?${this.getUrlParams()}`);
 
     conditions.push({
       term: {
@@ -229,7 +234,7 @@ class Index extends Component {
     return(
       <main className="container">
         <div>
-          <h1>{ this.props.translate('pages.play.header') }</h1>
+          <h1>{ this.props.translate(this.props.header) }</h1>
 
           <div>
             <a className={this.state.category ? 'btn btn-link' : 'btn btn-default'} onClick={this.onChangeCategory.bind(this, null)}>{this.props.translate(`categories.all`)}</a>

@@ -67,6 +67,9 @@
         "fee": "Fee"
       }
     },
+    "event_results": {
+      "header": "Event results"
+    },
     "new_event": {
       "saved": "Event successfully saved",
       "gas_limit": "Gas limit",
