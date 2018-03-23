@@ -139,6 +139,7 @@ const esClient = new AwsEsClient(
       logger.info(result.items);
     }).catch((error) => {
       logger.error(error);
+      throw error;
     });
   };
 

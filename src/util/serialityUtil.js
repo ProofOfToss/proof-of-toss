@@ -99,23 +99,19 @@ function toByteStringsArray() {
   };
 
   const _stringToBytes = (value, size) => {
-    const bytes = [], length = value.length, fixedSize = typeof size === 'number';
+    const bytes = [], fixedSize = typeof size === 'number';
     let char;
+
+    const buffer = new Buffer(value.toString(), 'utf-8');
+    const length = buffer.length;
 
     if (!fixedSize) {
       size = Math.ceil(length / 32) * 32;
     }
 
-    for (let i = 0; i < size; i++) {
-      char = i < length ? value.charCodeAt(i).toString(16) : '0';
-
-      if (char.length > 2) {
-        char = char.length === 3 ? '0' + char : char;
-        bytes.push(char.substr(0, 2));
-        bytes.push(char.substr(2, 2));
-      } else {
-        bytes.push(`${char.length === 1 ? '0' : ''}${char}`);
-      }
+    for (let i = 0; i < length; i++) {
+      char = buffer[i].toString(16);
+      bytes.push(`${char.length === 1 ? '0' : ''}${char}`);
     }
 
     for (let i = bytes.length; i < size; i++) {
@@ -219,8 +215,10 @@ function fromBytes() {
         if (typeof value.size === 'number') {
           size = value.size;
         } else {
-          offset -= 32;
-          size = parseInt(bytes.substr(offset, 64), 16);
+          offset -= 32 * 2;
+          size = parseInt(bytes.substr(offset, 32 * 2), 16);
+
+          size = Math.ceil(size / 32) * 32;
         }
         break;
       case 'address':
@@ -253,17 +251,13 @@ function fromBytes() {
       case 'uint':
         return parseInt(chunk, 16);
       case 'string':
-        let result = '', charCode;
+        let bytes = [];
 
         for (let i = 0; i < chunk.length; i += 2) {
-          charCode = parseInt(chunk.substr(i, 2), 16);
-
-          if (charCode === 0) break;
-
-          result += String.fromCharCode(charCode);
+          bytes.push(parseInt(chunk.substr(i, 2), 16));
         }
 
-        return result;
+        return (new Buffer(bytes)).toString().replace(/\0/g, '');
       case 'address':
         return '0x' + chunk;
       case 'bytes':
