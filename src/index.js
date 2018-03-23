@@ -27,6 +27,7 @@ import Storage from './pages/storage/Storage'
 import NotFound from './pages/not_found/NotFound';
 import Events from './pages/events/Events';
 import NewEvent from './pages/new_event/NewEvent';
+import EventResults from './pages/event_results/EventResults';
 import Event from './pages/event/Event';
 
 // Redux Store
@@ -66,6 +67,7 @@ function renderReactDOM() {
       <Route path="storage" component={Storage} onEnter={ checkAuthorization } />
       <Route path='events' component={Events} onEnter={ checkAuthorization } />
       <Route path='new_event' component={NewEvent} onEnter={ checkAuthorization } />
+      <Route path='event_results' component={EventResults} onEnter={ checkAuthorization } />
       <Route path='event(/:id)' component={Event} onEnter={ checkAuthorization } />
 
       <Route path='*' component={NotFound} />
