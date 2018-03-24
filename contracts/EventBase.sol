@@ -187,8 +187,8 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         base.updated(address(this));
     }
 
-    function getUserBets() view returns (uint[]) {
-        return usersBets[msg.sender];
+    function getUserBets(address _user) view returns (uint[]) {
+        return usersBets[_user];
     }
 
     function getShare(address user) constant returns (uint256) {
