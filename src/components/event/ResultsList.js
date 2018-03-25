@@ -2,51 +2,25 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
+import moment from 'moment';
+
 import BootstrapInput from '../../components/form/BootstrapInput'
+
+import { STATUS_PUBLISHED, STATUS_ACCEPTED } from '../../util/eventUtil';
 import ModalNewBet from './ModalNewBet';
-import { fetchAllowance, approve, newBet } from '../../actions/pages/event';
+import { newBet } from '../../actions/pages/event';
 
 class ResultsList extends Component {
   constructor(props) {
     super(props);
 
-    this.handleApprove = this.handleApprove.bind(this);
-
     this.state = {
-      results: [],
       betAmount_0: 0,
       betAmount_1: 0,
       betAmount_2: 0,
       showErrors: false,
-      errors: {},
-      allowance: 0
+      errors: {}
     }
-  }
-
-  async componentWillMount() {
-    this.fetchResults();
-    this.props.fetchAllowance();
-  }
-
-  fetchResults() {
-    let promises = [];
-    for (let i = 0; i < 3; i++) {
-      promises.push(this.props.eventInstance.possibleResults(i));
-    }
-
-    Promise.all(promises).then((results) => {
-      const filterResults = results.filter((result) => {
-        if (result[0] === '') {
-          return false;
-        }
-
-        return true;
-      });
-
-      this.setState({
-        results: filterResults
-      });
-    });
   }
 
   newBet(resultIndex) {
@@ -62,49 +36,30 @@ class ResultsList extends Component {
         errors: errors
       })
     } else {
-      let result = this.state.results[resultIndex];
+      let result = this.props.results[resultIndex];
       this.props.newBet(result, resultIndex, valueLink.value)
     }
   }
 
-  handleApprove(resultIndex) {
-    this.props.approve(this.links[`betAmount_${resultIndex}`].value);
+  allowBidding() {
+    return (
+      moment.unix(this.props.endTime) > moment() &&
+      [STATUS_PUBLISHED, STATUS_ACCEPTED].indexOf(this.props.status)
+    )
   }
 
-  render() {
-    //Create valueLinks for new bet field
-    this.state.results.forEach((result, key) => {
-      Link.state(this, `betAmount_${key}`)
-        .check(v => v, this.props.translate('validation.required'))
-        .check(v => !isNaN(parseFloat(v)), this.props.translate('validation.token.fee_is_nan'))
-        .check(v => parseFloat(v) >= 1, this.props.translate('validation.to_small', {value: 1}))
-      ;
-    });
-
+  renderAllowBidding() {
     return <Fragment>
-      <div className='alert alert-info' role='alert'>
-        {this.props.translate('pages.event.allowance_balance', {
-          allowance: this.props.allowance})
-        }
-      </div>
-
       <table className="table table-striped results"><tbody>
-        <tr>
-          <th>{this.props.translate('pages.event.result.name')}</th>
-          <th>{this.props.translate('pages.event.result.coefficient')}</th>
-          <th />
-        </tr>
-      {this.state.results.map((result, key) => {
-
+      <tr>
+        <th>{this.props.translate('pages.event.result.name')}</th>
+        <th>{this.props.translate('pages.event.result.coefficient')}</th>
+        <th>{this.props.translate('pages.event.result.bet_count')}</th>
+        <th>{this.props.translate('pages.event.result.bet_sum')}</th>
+        <th />
+      </tr>
+      {this.props.results.map((result, key) => {
         const betAmountLink = this.links[`betAmount_${key}`];
-
-        let button = <span className="btn btn-warning" onClick={() => this.handleApprove(key)}>
-          {this.props.translate('pages.event.approve')}</span>;
-
-        if(this.props.allowance >= betAmountLink.value) {
-          button = <span className="btn btn-primary" onClick={() => this.newBet(key)}>
-            {this.props.translate('pages.event.newBet')}</span>
-        }
 
         const inputAttr = {
           type: 'number',
@@ -114,20 +69,48 @@ class ResultsList extends Component {
         };
 
         return <tr key={key}>
-          <td>{result[0]}</td>
-          <td>{result[1].toString()}</td>
+          <td>{result.description}</td>
+          <td>{result.coefficient}</td>
+          <td>{result.betCount}</td>
+          <td>{result.betSum}</td>
           <td>
             <form className="form-inline">
               <BootstrapInput valueLink={betAmountLink} showError={this.state.errors[`betAmount_${key}`]} attr={inputAttr} />
-              {button}
+              <span className="btn btn-primary" onClick={() => this.newBet(key)}>
+                {this.props.translate('pages.event.newBet')}</span>
             </form>
           </td>
         </tr>
       }, this)}
-    </tbody></table>
-    {this.props.showNewBetModal ? <ModalNewBet eventInstance={this.props.eventInstance} /> : null}
-  </Fragment>
-    ;
+      </tbody></table>
+      {this.props.showNewBetModal ? <ModalNewBet eventInstance={this.props.eventInstance} /> : null}
+    </Fragment>
+  }
+
+  renderDisallowBidding() {
+    return <div className="alert alert-warning" role="alert">{this.props.translate('pages.event.disallow_betting')}</div>
+  }
+
+  render() {
+    //Create valueLinks for new bet field
+    this.props.results.forEach((result, key) => {
+      Link.state(this, `betAmount_${key}`)
+        .check(v => v, this.props.translate('validation.required'))
+        .check(v => !isNaN(parseFloat(v)), this.props.translate('validation.token.fee_is_nan'))
+        .check(v => parseFloat(v) >= 1, this.props.translate('validation.to_small', {value: 1}))
+      ;
+    });
+
+    let content = '';
+    if(this.allowBidding()) {
+      content = this.renderAllowBidding();
+    } else {
+      content = this.renderDisallowBidding();
+    }
+
+    return <div>
+      {content}
+    </div>
   }
 }
 
@@ -141,8 +124,6 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  fetchAllowance,
-  approve,
   newBet
 };
 

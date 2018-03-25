@@ -7,6 +7,8 @@ import BaseModal from '../modal/BaseModal'
 import { modalAddNewBetClose, modalAddNewBetAdd } from '../../actions/pages/event'
 import { getGasCalculation } from '../../util/gasPriceOracle';
 import { denormalizeBalance } from './../../util/token';
+import { deployed } from "../../util/contracts";
+import { toBytesTruffle as toBytes } from '../../util/serialityUtil';
 import config from '../../data/config.json';
 
 class ModalNewBet extends Component {
@@ -28,8 +30,18 @@ class ModalNewBet extends Component {
 
   async componentWillMount() {
     try {
-      const gasAmount = await this.props.eventInstance.newBet.estimateGas(this.props.newBetData.resultIndex,
-        denormalizeBalance(this.props.newBetData.amount), {from: this.props.currentAddress});
+      const tokenInstance = (await deployed(this.props.web3, 'token')).tokenInstance;
+
+      const gasAmount = await tokenInstance.transferERC223.estimateGas(
+        this.props.eventData.address,
+        denormalizeBalance(this.props.newBetData.amount),
+        toBytes(
+          {type: 'uint', size: 8, value: 1}, // action – bet
+          {type: 'uint', size: 8, value: this.props.newBetData.resultIndex}, // result index
+        ),
+        {from: this.props.currentAddress}
+      );
+
 
       const gasCalculation = await getGasCalculation(this.props.web3, gasAmount);
 
@@ -69,13 +81,13 @@ class ModalNewBet extends Component {
       <dl className="dl-horizontal">
 
         <dt>{this.props.translate('pages.event.result.name')}</dt>
-        <dd>{this.props.newBetData.result[0]}</dd>
+        <dd>{this.props.newBetData.result.description}</dd>
 
         <dt>{this.props.translate('pages.event.result.coefficient')}</dt>
-        <dd>{this.props.newBetData.result[1].toNumber()}</dd>
+        <dd>{this.props.newBetData.result.coefficient}</dd>
 
         <dt>{this.props.translate('pages.event.result.bet_sum')}</dt>
-        <dd>{this.props.newBetData.result[3].toNumber()}</dd>
+        <dd>{this.props.newBetData.result.betSum}</dd>
 
         <dt>{this.props.translate('pages.event.your_bet')}</dt>
         <dd>{this.props.newBetData.amount}</dd>
@@ -114,7 +126,7 @@ class ModalNewBet extends Component {
   _buttons() {
     let buttons = [];
 
-    if(this.props.saved) {
+    if(this.props.newBetSaved) {
       buttons = [{
         title: this.props.translate('buttons.ok'),
         className: 'btn-default',
@@ -167,7 +179,7 @@ function mapStateToProps(state) {
   return {
     web3: state.web3.web3,
     currentAddress: state.user.address,
-    allowance: state.event.allowance,
+    eventData: state.event.eventData,
     newBetData: state.event.newBetData,
     newBetSaved: state.event.newBetSaved,
     sbtcBalance: state.token.sbtcBalance,

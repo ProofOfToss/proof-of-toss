@@ -84,7 +84,7 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
           endDate: formData.endTime.unix(),
           sourceUrl: formData.sourceUrls.join(','),
           tags: formData.tags,
-          results: formData.results.map((result) => { return {'coefficient': result.coefficient, 'description': result.name}; }),
+          results: formData.results.map((result) => { return {'coefficient': result.coefficient, 'description': result.description}; }),
         });
 
         return tokenContract.transferERC223(mainContract.address, deposit, bytes, {

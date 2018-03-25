@@ -1,6 +1,10 @@
 import compressjs from 'compressjs';
 import {toBytesTruffle as toBytes, fromBytes, toBytesBuffer, bytesToByteStringsArray} from './serialityUtil';
 
+export const STATUS_CREATED = 0;
+export const STATUS_PUBLISHED = 1;
+export const STATUS_ACCEPTED = 2;
+
 function serializeEvent(eventData) {
   let toBytesArgs = [
     {type: 'string', size: 2, value: eventData.locale}, // locale

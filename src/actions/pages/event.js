@@ -1,73 +1,66 @@
-import EventContract from '../../../build/contracts/Event.json';
-import { getGasCalculation } from '../../util/gasPriceOracle';
-import { deployed } from '../../util/contracts';
+import EventBaseContract from '../../../build/contracts/EventBase.json';
+import { deployed } from "../../util/contracts";
 import { formatBalance, denormalizeBalance } from './../../util/token';
+import { toBytesTruffle as toBytes } from '../../util/serialityUtil';
+import appConfig from "../../data/config.json"
 
 export const FETCHED_EVENT = 'FETCHED_EVENT';
-
-export const FETCHING_ALLOWANCE = 'FETCHING_ALLOWANCE';
-export const FETCHED_ALLOWANCE = 'FETCHED_ALLOWANCE';
-
-export const APPROVING_EVENT = 'APPROVING_EVENT';
-export const APPROVED_SUCCESS_EVENT = 'APPROVED_SUCCESS_EVENT';
-export const APPROVED_ERROR_EVENT = 'APPROVED_ERROR_EVENT';
+export const FETCHING_ERROR_EVENT = 'FETCHING_ERROR_EVENT';
 
 export const MODAL_NEW_BET_SHOW_EVENT = 'MODAL_NEW_BET_SHOW_EVENT';
 export const MODAL_ADD_NEW_BET_CLOSE_EVENT = 'MODAL_ADD_NEW_BET_CLOSE_EVENT';
 export const ADD_NEW_BET_ADDING_EVENT = 'ADD_NEW_BET_ADDING_EVENT';
 export const ADD_NEW_BET_ADDED_EVENT = 'ADD_NEW_BET_ADDED_EVENT';
 
+const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
+
 export const fetchEvent = (address) => {
   return async (dispatch, getState) => {
-    const contract = require('truffle-contract');
-    const event = contract(EventContract);
-    event.setProvider(getState().web3.web3.currentProvider);
-    const eventInstance = event.at(address);
 
-    const endDate = await eventInstance.endDate();
-    let eventData = {
-      endDate: endDate
-    };
+    try {
+      const eventEs = await getState().elastic.client.get({
+        index: EVENT_INDEX,
+        type: 'event',
+        id: address
+      });
 
-    dispatch({type: FETCHED_EVENT, eventInstance: eventInstance, eventData: eventData});
-  }
-};
+      if(false === eventEs.found) {
+        dispatch({type: FETCHING_ERROR_EVENT, error: eventEs});
+      }
 
-export const fetchAllowance = () => {
-  return async (dispatch, getState) => {
+      let eventData = eventEs._source;
 
-    dispatch({type: FETCHING_ALLOWANCE});
+      //Load results from blockchain and merge them to eventData object
+      const contract = require('truffle-contract');
+      const eventBase = contract(EventBaseContract);
+      eventBase.setProvider(getState().web3.web3.currentProvider);
+      const eventBaseInstance = eventBase.at(address);
 
-    const {tokenInstance} = await deployed(getState().web3.web3, 'token');
-    const allowance = await tokenInstance.allowance(getState().user.address, getState().event.eventInstance.address);
+      let resultsPromises = [];
+      const countResults = (await eventBaseInstance.resultsCount()).toNumber();
+      for(let i = 0; i < countResults; i++) {
+        resultsPromises.push(eventBaseInstance.possibleResults(i));
+      }
 
-    dispatch({type: FETCHED_ALLOWANCE, allowance: formatBalance(allowance)});
-  }
-};
+      eventData.status = (await eventBaseInstance.status()).toNumber();
 
-export const approve = (amount) => {
-  return async (dispatch, getState) => {
-    const denormalizeAmount = denormalizeBalance(amount);
+      eventData.results = [];
+      Promise.all(resultsPromises).then((results) => {
+        for(let i = 0; i < results.length; i++) {
+          eventData.results.push({
+            description: `Result ${i}. Need fix this name`,
+            coefficient: results[i][0].toNumber(),
+            betCount: results[i][1].toNumber(),
+            betSum: formatBalance(results[i][2].toNumber())
+          });
+        }
 
-    dispatch({type: APPROVING_EVENT, amount: amount});
-
-    const web3 = getState().web3.web3;
-
-    const tokenInstance = (await deployed(web3, 'token')).tokenInstance;
-
-    const gasAmount = await tokenInstance.approve.estimateGas(getState().event.eventInstance.address, denormalizeAmount, {
-      from: getState().user.address
-    });
-
-    const gasCalculation = await getGasCalculation(web3, gasAmount);
-
-    await tokenInstance.approve(getState().event.eventInstance.address, denormalizeAmount, {
-      from: getState().user.address,
-      gasPrice: gasCalculation.gasPrice,
-      gas: gasCalculation.gasLimit
-    });
-
-    dispatch({type: APPROVED_SUCCESS_EVENT, allowance: amount});
+        dispatch({type: FETCHED_EVENT, eventData: eventData});
+      });
+    } catch (e) {
+      console.log(e);
+      dispatch({type: FETCHING_ERROR_EVENT, error: e});
+    }
   }
 };
 
@@ -85,16 +78,26 @@ export const modalAddNewBetAdd = (gasLimit, gasPrice) => {
   return async (dispatch, getState) => {
     dispatch({type: ADD_NEW_BET_ADDING_EVENT});
 
-    await getState().event.eventInstance.newBet(
-      getState().event.newBetData.resultIndex,
-      denormalizeBalance(getState().event.newBetData.amount),
-      {
-        from: getState().user.address,
-        gasPrice: gasPrice,
-        gas: gasLimit
-      }
-    );
+    const tokenInstance = (await deployed(getState().web3.web3, 'token')).tokenInstance;
 
-    dispatch({type: ADD_NEW_BET_ADDED_EVENT});
+    try {
+      await tokenInstance.transferERC223(
+        getState().event.eventData.address,
+        denormalizeBalance(getState().event.newBetData.amount),
+        toBytes(
+          {type: 'uint', size: 8, value: 1}, // action – bet
+          {type: 'uint', size: 8, value: getState().event.newBetData.resultIndex}, // result index
+        ),
+        {
+          from: getState().user.address,
+          gasPrice: gasPrice,
+          gas: gasLimit
+        }
+      );
+
+      dispatch({type: ADD_NEW_BET_ADDED_EVENT});
+    } catch (e) {
+      console.log(e);
+    }
   }
 };
