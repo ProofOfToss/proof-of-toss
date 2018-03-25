@@ -1,6 +1,11 @@
 pragma solidity ^0.4.2;
 
+import "./installed_contracts/SafeMath.sol";
+import "./ERC223ReceivingContract.sol";
+
 contract Token {
+    using SafeMath for uint;
+
     // Pre-sale tokens transfer
 
     address owner;
@@ -13,7 +18,7 @@ contract Token {
         _;
     }
 
-    // ERC20
+    // ERC223
 
     string public standard = 'Token 0.1';
     string public name = 'TOSS';                        //!< name for display purporses
@@ -39,17 +44,49 @@ contract Token {
     event Transfer(address indexed from, address indexed to, uint256 value);
     event TokenOperationEvent(string operation, address indexed from, address indexed to, uint256 value, address indexed _contract);
 
-    // @brief Send coins
-    // @param _to recipient of coins
-    // @param _value amount of coins for send
-    function transfer(address _to, uint256 _value) presaleEnded {
-        if (balanceOf[msg.sender] < _value || _value <= 0) throw;
+    // Function that is called when a user or another contract wants to transfer funds .
+    function transferERC223(address to, uint value, bytes memory data) presaleEnded {
+        // Standard function transfer similar to ERC20 transfer with no _data .
+        // Added due to backwards compatibility reasons .
+        uint codeLength;
 
-        balanceOf[msg.sender] -= _value;
-        balanceOf[_to] += _value;
+        assembly {
+            // Retrieve the size of the code on target address, this needs assembly .
+            codeLength := extcodesize(to)
+        }
 
-        Transfer(msg.sender, _to, _value);
-        TokenOperationEvent('transfer', msg.sender, _to, _value, 0);
+        balanceOf[msg.sender] = balanceOf[msg.sender].sub(value);
+        balanceOf[to] = balanceOf[to].add(value);
+
+        if(codeLength > 0) {
+            ERC223ReceivingContract receiver = ERC223ReceivingContract(to);
+            receiver.tokenFallback(msg.sender, value, data);
+        }
+
+        Transfer(msg.sender, to, value);
+    }
+
+    // Standard function transfer similar to ERC20 transfer with no _data .
+    // Added due to backwards compatibility reasons .
+    // Commented because truffle doesn't support function overloading https://github.com/trufflesuite/truffle/issues/737
+    function transfer(address to, uint value) presaleEnded {
+        uint codeLength;
+
+        assembly {
+            // Retrieve the size of the code on target address, this needs assembly .
+            codeLength := extcodesize(to)
+        }
+
+        balanceOf[msg.sender] = balanceOf[msg.sender].sub(value);
+        balanceOf[to] = balanceOf[to].add(value);
+
+        if(codeLength > 0) {
+            ERC223ReceivingContract receiver = ERC223ReceivingContract(to);
+            bytes memory empty;
+            receiver.tokenFallback(msg.sender, value, empty);
+        }
+
+        Transfer(msg.sender, to, value);
     }
 
     // @brief Send coins

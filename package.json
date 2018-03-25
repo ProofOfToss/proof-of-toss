@@ -76,7 +76,10 @@
   },
   "dependencies": {
     "aws-sdk": "^2.192.0",
+    "babel-cli": "^6.26.0",
+    "bignumber.js": "^6.0.0",
     "bootstrap-tagsinput": "^0.7.1",
+    "compressjs": "^1.0.3",
     "elasticsearch": "^14.1.0",
     "eth-sig-util": "^1.2.0",
     "ethereumjs-util": "^5.1.1",

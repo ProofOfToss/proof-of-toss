@@ -24,7 +24,7 @@ logger.level = 'debug';
     process.exit(1);
   };
 
-  const config = Config.detect({'network': 'test'});
+  const config = Config.detect({'network': app_config.network});
   const resolver = new Resolver(config);
   const provider = config.provider;
 
