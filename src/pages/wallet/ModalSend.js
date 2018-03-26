@@ -124,7 +124,7 @@ class ModalSend extends Component {
 
           this.setState({ successTransaction: tx, waiting: false });
 
-          store.dispatch(refreshBalance());
+          store.dispatch(refreshBalance(this.props.currentAddress));
           this.props.transactionSaved(tx, denormalizeBalance(this.state.sum));
         });
 

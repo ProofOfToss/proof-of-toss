@@ -9,7 +9,7 @@ export const refreshBalanceAction = (balance, blockedBalance, sbtcBalance) => ({
   sbtcBalance
 });
 
-export const refreshBalance = () => {
+export const refreshBalance = (address) => {
   return function (dispatch, getState) {
     if (!getState().web3 || !getState().web3.web3) {
       return Promise.resolve();
@@ -19,15 +19,15 @@ export const refreshBalance = () => {
 
     let balance, blockedBalance;
 
-    return getMyBalance(web3).then((_balance) => {
+    return getMyBalance(web3, address).then((_balance) => {
         balance = _balance;
 
-        return getMyBlockedBalance(web3);
+        return getMyBlockedBalance(web3, address);
       })
       .then((_blockedBalance) => {
         blockedBalance = _blockedBalance;
 
-        return getMySBTCBalance(web3);
+        return getMySBTCBalance(web3, address);
       })
       .then((sbtcBalance) => {
         dispatch(refreshBalanceAction(balance, blockedBalance, sbtcBalance));
