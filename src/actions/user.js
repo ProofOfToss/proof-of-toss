@@ -12,8 +12,8 @@ export const checkWhitelist = (address) => {
       return Promise.resolve();
     }
 
-    const main = (await deployed(getState().web3.web3, 'main')).mainInstance;
-    const isWhitelisted = await main.whitelist(address);
+    const whitelistInstance = (await deployed(getState().web3.web3, 'whitelist')).whitelistInstance;
+    const isWhitelisted = await whitelistInstance.whitelist(address);
     const isWhitelistedLocally = config.whitelist.indexOf(address) >= 0;
 
     if (isWhitelistedLocally !== isWhitelisted) {
