@@ -16,6 +16,7 @@ const logger = log4js.getLogger('elasticsearch');
 
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix + '_test';
 const TAG_INDEX = 'toss_tag_' + appConfig.elasticsearch.indexPostfix + '_test';
+const BET_INDEX = 'toss_bet_' + appConfig.elasticsearch.indexPostfix + '_test';
 
 var Main = artifacts.require("./test/TestMainSC.sol");
 var EventBase = artifacts.require("./test/TestEventBase.sol");
@@ -32,6 +33,7 @@ const esClient = new AwsEsPublicClient(
 const indexingUtil = new IndexingUtil(
   EVENT_INDEX,
   TAG_INDEX,
+  BET_INDEX,
   esClient,
   logger,
   Main.web3,
@@ -39,7 +41,8 @@ const indexingUtil = new IndexingUtil(
     Token,
     Main,
     EventBase,
-  }
+  },
+  true
 );
 
 contract('Event', function(accounts) {
@@ -243,8 +246,7 @@ contract('Event', function(accounts) {
   it("should index bets", async () => {
     await token.generateTokens(accounts[1], 10000000);
 
-    await indexingUtil.createEventsIndex(true);
-    await indexingUtil.createTagsIndex(true);
+    await indexingUtil.syncIndeces(true);
 
     let events = main.NewEvent({}, {fromBlock: 0});
     events.get(async (error, log) => {
@@ -299,17 +301,16 @@ contract('Event', function(accounts) {
     await new Promise((resolve) => setTimeout(resolve, 6000));
     events.stopWatching();
 
-    let result = await esClient.search(Object.assign({
+    let eventsResult = await esClient.search(Object.assign({
       index: EVENT_INDEX,
+      _source_exclude: ['bettor'],
       body: {
         query: {
           bool: {
             must: [
               {
                 term: {
-                  // 'bet.amount': 98765,
-                  // 'address': event.address,
-                  'bet.bettor': accounts[1],
+                  'bettor': accounts[1],
                 }
               }
             ],
@@ -320,12 +321,32 @@ contract('Event', function(accounts) {
       assert.equal(error, null, error.toString());
     });
 
-    assert.equal(result.hits.total, 1, 'Invalid hits count');
-    assert.equal(result.hits.hits[0]._id, event.address, 'Invalid event found');
-    assert.equal(result.hits.hits[0]._source.bet.length, 2, 'Invalid bets count');
-    assert.equal(result.hits.hits[0]._source.bet[0].bettor, accounts[0], 'Invalid bet');
-    assert.equal(result.hits.hits[0]._source.bet[0].amount, 98765, 'Invalid bet');
-    assert.equal(result.hits.hits[0]._source.bet[1].bettor, accounts[1], 'Invalid bet');
-    assert.equal(result.hits.hits[0]._source.bet[1].amount, 43210, 'Invalid bet');
+    logger.trace(eventsResult);
+
+    assert.equal(eventsResult.hits.total, 1, 'Invalid hits count');
+    assert.equal(eventsResult.hits.hits[0]._id, event.address, 'Invalid event found');
+
+    let bidsResult = await esClient.search(Object.assign({
+      index: BET_INDEX,
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                terms: {
+                  'event': eventsResult.hits.hits.map((hit) => hit._id),
+                }
+              }
+            ]
+          }
+        }
+      }
+    }))
+
+    assert.equal(bidsResult.hits.hits.length, 2, 'Invalid bets count');
+    assert.equal(bidsResult.hits.hits[0]._source.bettor, accounts[0], 'Invalid bet');
+    assert.equal(bidsResult.hits.hits[0]._source.amount, 98765, 'Invalid bet');
+    assert.equal(bidsResult.hits.hits[1]._source.bettor, accounts[1], 'Invalid bet');
+    assert.equal(bidsResult.hits.hits[1]._source.amount, 43210, 'Invalid bet');
   });
 });

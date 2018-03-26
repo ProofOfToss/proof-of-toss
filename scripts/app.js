@@ -21,17 +21,16 @@ log4js.configure({
 
 const logger = log4js.getLogger('elasticsearch');
 
-import AwsEsClient from '../src/util/esClient';
+import {AwsEsPublicClient} from '../src/util/esClient';
 
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
 const TAG_INDEX = 'toss_tag_' + appConfig.elasticsearch.indexPostfix;
+const BET_INDEX = 'toss_bet_' + appConfig.elasticsearch.indexPostfix;
 
-const esClient = new AwsEsClient(
+const esClient = new AwsEsPublicClient(
   { log: 'error' },
   appConfig.elasticsearch.esNode,
   appConfig.elasticsearch.region,
-  appPrivateConfig.elasticsearch.accessKeyId,
-  appPrivateConfig.elasticsearch.secretAccessKey,
   appConfig.elasticsearch.useSSL
 );
 
@@ -70,6 +69,7 @@ const esClient = new AwsEsClient(
   const indexingUtil = new IndexingUtil(
     EVENT_INDEX,
     TAG_INDEX,
+    BET_INDEX,
     esClient,
     logger,
     web3,

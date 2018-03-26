@@ -7,6 +7,7 @@ const argv = require('yargs-parser')(process.argv.slice(2));
 
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
 const TAG_INDEX = 'toss_tag_' + appConfig.elasticsearch.indexPostfix;
+const BET_INDEX = 'toss_bet_' + appConfig.elasticsearch.indexPostfix;
 
 log4js.configure({
   appenders: {
@@ -47,6 +48,7 @@ const esClient = new AwsEsClient(
   const indexingUtil = new IndexingUtil(
     EVENT_INDEX,
     TAG_INDEX,
+    BET_INDEX,
     esClient,
     logger,
     null,
@@ -55,19 +57,9 @@ const esClient = new AwsEsClient(
 
   const createIndex = async (force = false) => {
     try {
-      await indexingUtil.createEventsIndex(force);
-      await indexingUtil.createTagsIndex(force);
+      await indexingUtil.syncIndeces(force);
     } catch (error) {
-      fatal(error, 'failed to create index! exiting');
-    }
-  };
-
-  const updateMappings = async () => {
-    try {
-      await indexingUtil.updateTagsIndex();
-      await indexingUtil.updateEventsIndex();
-    } catch (error) {
-      fatal(error, 'failed to update mappings! exiting');
+      fatal(error, 'failed to create/update index! exiting');
     }
   };
 
@@ -81,6 +73,5 @@ const esClient = new AwsEsClient(
   });
 
   await createIndex(argv['force'] === true);
-  await updateMappings();
 
 })(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error); });

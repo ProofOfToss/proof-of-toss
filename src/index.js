@@ -30,6 +30,8 @@ import NewEvent from './pages/new_event/NewEvent';
 import EventResults from './pages/event_results/EventResults';
 import Event from './pages/event/Event';
 
+import MyBets from './pages/user/MyBets';
+
 // Redux Store
 import store from './store';
 import { initWeb3, lockWallet, unlockWallet, changeAddress, web3LostConnection } from './actions/web3';
@@ -69,6 +71,8 @@ function renderReactDOM() {
       <Route path='new_event' component={NewEvent} onEnter={ checkAuthorization } />
       <Route path='event_results' component={EventResults} onEnter={ checkAuthorization } />
       <Route path='event(/:id)' component={Event} onEnter={ checkAuthorization } />
+
+      <Route path='cabinet/my_bets' component={MyBets} onEnter={ checkAuthorization } />
 
       <Route path='*' component={NotFound} />
     </Fragment>
