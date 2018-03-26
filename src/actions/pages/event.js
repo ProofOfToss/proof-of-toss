@@ -36,23 +36,29 @@ export const fetchEvent = (address) => {
       eventBase.setProvider(getState().web3.web3.currentProvider);
       const eventBaseInstance = eventBase.at(address);
 
+      //Fetch state
+      eventData.status = (await eventBaseInstance.state()).toNumber();
+
+      //Fetch results
       let resultsPromises = [];
       const countResults = (await eventBaseInstance.resultsCount()).toNumber();
       for(let i = 0; i < countResults; i++) {
         resultsPromises.push(eventBaseInstance.possibleResults(i));
       }
 
-      eventData.status = (await eventBaseInstance.status()).toNumber();
-
-      eventData.results = [];
       Promise.all(resultsPromises).then((results) => {
         for(let i = 0; i < results.length; i++) {
-          eventData.results.push({
-            description: `Result ${i}. Need fix this name`,
+          let esResult = eventData.possibleResults.find((result) => {
+            return result.index === i;
+          });
+
+          Object.assign(esResult, {
             coefficient: results[i][0].toNumber(),
             betCount: results[i][1].toNumber(),
             betSum: formatBalance(results[i][2].toNumber())
           });
+
+          delete(esResult.customCoefficient);
         }
 
         dispatch({type: FETCHED_EVENT, eventData: eventData});
