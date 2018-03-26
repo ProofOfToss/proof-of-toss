@@ -1,10 +1,50 @@
 import expectThrow from './helpers/expectThrow';
+import { serializeEvent } from '../src/util/eventUtil';
+import {toBytesTruffle as toBytes} from '../src/util/serialityUtil';
+import {AwsEsPublicClient} from '../src/util/esClient';
+import {IndexingUtil} from '../src/util/indexingUtil';
+import appConfig from '../src/data/config.json';
+import log4js from 'log4js';
 
-var Main = artifacts.require("./Main.sol");
-var Event = artifacts.require("./Event.sol");
+log4js.configure({
+  appenders: {
+    elasticsearch: { type: 'stdout' },
+  },
+  categories: { default: { appenders: ['elasticsearch'], level: 'debug' } }
+});
+const logger = log4js.getLogger('elasticsearch');
+
+const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix + '_test';
+const TAG_INDEX = 'toss_tag_' + appConfig.elasticsearch.indexPostfix + '_test';
+
+var Main = artifacts.require("./test/TestMainSC.sol");
+var EventBase = artifacts.require("./test/TestEventBase.sol");
 var Token = artifacts.require("./Token.sol");
+var Whitelist = artifacts.require("./Whitelist.sol");
+
+const esClient = new AwsEsPublicClient(
+  { log: 'error' },
+  appConfig.elasticsearch.esNode,
+  appConfig.elasticsearch.region,
+  appConfig.elasticsearch.useSSL
+);
+
+const indexingUtil = new IndexingUtil(
+  EVENT_INDEX,
+  TAG_INDEX,
+  esClient,
+  logger,
+  Main.web3,
+  {
+    Token,
+    Main,
+    EventBase,
+  }
+);
 
 contract('Event', function(accounts) {
+
+  const now = Math.floor((new Date()).getTime() / 1000);
 
   const eventName = 'Test event';
   const eventDeposit = 10000000;
@@ -13,20 +53,34 @@ contract('Event', function(accounts) {
   const bidType = 'bid_type';
   const eventCategory = 'category_id';
   const eventLocale = 'en';
-  const eventStartDate = '1517406195';
-  const eventEndDate = '1580478195';
+  const eventStartDate = now + 7 * 24 * 3600;
+  const eventEndDate = eventStartDate + 3600;
 
-  const eventData = `${bidType}.${eventCategory}.${eventLocale}.${eventStartDate}.${eventEndDate}`;
   const eventSourceUrl = 'source_url';
-  const eventTags = 'en.tag1_name.en.tag2_name.en.tag3_name';
-  const eventResults = 'result_description_1.10.result_description_2.20';
+  const eventTags = ['tag1_name', 'tag2_name', 'tag3_name'];
+  const eventResults = [{description: 'result_description_1', coefficient: 10}, {description: 'result_description_2', coefficient: 20}];
 
-  let main, token, event;
+  const bytes = serializeEvent({
+    name: eventName,
+    description: eventDescription,
+    deposit: eventDeposit,
+    bidType: bidType,
+    category: eventCategory,
+    locale: eventLocale,
+    startDate: eventStartDate,
+    endDate: eventEndDate,
+    sourceUrl: eventSourceUrl,
+    tags: eventTags,
+    results: eventResults,
+  });
 
-  beforeEach(function() {
-    Token.deployed().then(function(instance) {
-      token = instance;
-    });
+
+  let main, token, event, whitelist, eventBase;
+
+  beforeEach(async function() {
+    token = await Token.deployed();
+    whitelist = await Whitelist.deployed();
+    eventBase = await EventBase.deployed();
 
     return Main.deployed().then(function(instance) {
       main = instance;
@@ -35,32 +89,64 @@ contract('Event', function(accounts) {
       return token.approve(main.address, 10000000, {from: accounts[0]});
     }).then(async function() {
       try {
-        await main.updateWhitelist(accounts[0], true);
+        await whitelist.updateWhitelist(accounts[0], true);
       } catch (e) {
         assert.isUndefined(e);
       }
 
-      return main.newEvent(eventName, eventDeposit, eventDescription, 1, eventData,
-        eventSourceUrl, eventTags, eventResults, {from: accounts[0]});
+      return token.transferERC223(main.address, eventDeposit, bytes, {
+        from: accounts[0]
+      });
+
+    }).then(async function(transactionResult) {
+
+      const events = await new Promise((resolve, reject) => {
+        main.NewEvent({}, {fromBlock: transactionResult.receipt.blockNumber, toBlock: 'pending', topics: transactionResult.receipt.logs[0].topics}).get((error, log) => {
+          if (error) {
+            reject(error);
+          }
+
+          if (log[0].transactionHash === transactionResult.tx) {
+            resolve(log);
+          }
+        });
+      });
+
+      return events[0].args.eventAddress;
 
     }).then(function(eventAddress) {
-      return main.getLastEvent(eventAddress);
-    }).then(function(eventAddress) {
-      event = Event.at(eventAddress);
+      event = EventBase.at(eventAddress);
     });
   });
 
   it("should add new bet", async () => {
-    await token.approve(event.address, 10000000, {from: accounts[0]});
-    await event.newBet(0, 1000000, {from: accounts[0]});
 
-    assert.equal((await event.possibleResults(0))[2], 1, 'Amount of bets is invalid');
-    assert.equal((await event.possibleResults(0))[3], 1000000, 'Sum of bets is invalid');
-    assert(token.balanceOf(event.address), 11000000, 'Event balance is invalid');
+    await token.transferERC223(
+      event.address,
+      1000000,
+      toBytes(
+        {type: 'uint', size: 8, value: 1}, // action – bet
+        {type: 'uint', size: 8, value: 0}, // result index
+      ),
+      {from: accounts[0]}
+    );
 
-    await event.newBet(1, 500000, {from: accounts[0]});
+    assert.equal((await event.possibleResults(0))[1].toNumber(), 1, 'Amount of bets is invalid');
+    assert.equal((await event.possibleResults(0))[2].toNumber(), 1000000, 'Sum of bets is invalid');
+    assert.equal((await token.balanceOf(event.address)).toNumber(), 11000000, 'Event balance is invalid');
 
-    const userBets = await event.getUserBets({from: accounts[0]});
+    await token.transferERC223(
+      event.address,
+      500000,
+      toBytes(
+        {type: 'uint', size: 8, value: 1}, // action – bet
+        {type: 'uint', size: 8, value: 1}, // result index
+      ),
+      {from: accounts[0]}
+    );
+
+    const userBets = await event.getUserBets(accounts[0]);
+
     assert.equal(userBets.length, 2, 'Count of user bets is invalid');
 
     let promiseUserBets = [];
@@ -70,12 +156,176 @@ contract('Event', function(accounts) {
 
     Promise.all(promiseUserBets).then((bets) => {
       assert.equal(bets[0][1], accounts[0], 'Address of better is invalid');
-      assert.equal(bets[0][2], 0, 'Result of the bet is invalid');
-      assert.equal(bets[0][3], 1000000, 'Amount of the bet is invalid');
+      assert.equal(bets[0][2].toNumber(), 0, 'Result of the bet is invalid');
+      assert.equal(bets[0][3].toNumber(), 1000000, 'Amount of the bet is invalid');
       
       assert.equal(bets[1][1], accounts[0], 'Address of better is invalid');
-      assert.equal(bets[1][2], 1, 'Result of the bet is invalid');
-      assert.equal(bets[1][3], 500000, 'Amount of the bet is invalid');
-    })
+      assert.equal(bets[1][2].toNumber(), 1, 'Result of the bet is invalid');
+      assert.equal(bets[1][3].toNumber(), 500000, 'Amount of the bet is invalid');
+    });
+
+    await event.setStartDate(now + 120);
+    await expectThrow(token.transferERC223(
+      event.address,
+      1000000,
+      toBytes(
+        {type: 'uint', size: 8, value: 1}, // action – bet
+        {type: 'uint', size: 8, value: 0}, // result index
+      ),
+      {from: accounts[0]}
+    ));
+  });
+
+  it("should receive result from administrator", async () => {
+    await whitelist.updateWhitelist(accounts[0], true);
+
+    assert.equal(await event.getState(), 1, 'Event state must be Published');
+    assert.equal(await event.resolvedResult(), 255, 'Event result must be empty');
+
+    await token.transferERC223(
+      event.address,
+      1000000,
+      toBytes(
+        {type: 'uint', size: 8, value: 1}, // action – bet
+        {type: 'uint', size: 8, value: 0}, // result index
+      ),
+      {from: accounts[0]}
+    );
+
+    assert.equal((await event.possibleResults(0))[1].toNumber(), 1, 'Amount of bets is invalid');
+    assert.equal((await event.possibleResults(0))[2].toNumber(), 1000000, 'Sum of bets is invalid');
+    assert.equal((await token.balanceOf(event.address)).toNumber(), 11000000, 'Event balance is invalid');
+
+    assert.equal(await event.getState(), 2, 'Event state must be Accepted');
+
+    await expectThrow(event.resolve(1));
+
+    await event.setStartDate(now - 120);
+    assert.equal(await event.getState(), 3, 'Event state must be Started');
+
+    await expectThrow(event.resolve(1));
+
+    await event.setEndDate(now - 60);
+    assert.equal(await event.getState(), 4, 'Event state must be Finished');
+
+    const txResult = await event.resolve(1);
+    assert.equal(await event.resolvedResult(), 1, 'Event result must be 1');
+    assert.equal(await event.getState(), 5, 'Event state must be Closed');
+
+    assert.equal(txResult.logs[0].event, 'Updated', 'Updated event should be raised');
+    assert.equal(txResult.logs[0].args._contract, event.address, 'Updated event should contain event address');
+  });
+
+  it("should not receive result from non-administrator", async () => {
+    await whitelist.updateWhitelist(accounts[0], false);
+
+    assert.equal(await event.getState(), 1, 'Event state must be Published');
+    assert.equal(await event.resolvedResult(), 255, 'Event result must be empty');
+
+    await token.transferERC223(
+      event.address,
+      1000000,
+      toBytes(
+        {type: 'uint', size: 8, value: 1}, // action – bet
+        {type: 'uint', size: 8, value: 0}, // result index
+      ),
+      {from: accounts[0]}
+    );
+
+    await event.setStartDate(now - 120);
+    await event.setEndDate(now - 60);
+    assert.equal(await event.getState(), 4, 'Event state must be Finished');
+
+    await expectThrow(event.resolve(1));
+  });
+
+
+  it("should index bets", async () => {
+    await token.generateTokens(accounts[1], 10000000);
+
+    await indexingUtil.createEventsIndex(true);
+    await indexingUtil.createTagsIndex(true);
+
+    let events = main.NewEvent({}, {fromBlock: 0});
+    events.get(async (error, log) => {
+      if (error) {
+        assert.equal(error, null, error.toString());
+      }
+
+      try {
+        await indexingUtil.indexEvents(log);
+      } catch (err) {
+        assert.equal(err, null, err.toString());
+      }
+    });
+
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    events = eventBase.Updated({}, {fromBlock: 0});
+
+    events.watch(async (error, response) => {
+      if (error) {
+        assert.equal(error, null, error.toString());
+      }
+
+      try {
+        await indexingUtil.updateEvents([response]);
+      } catch (err) {
+        assert.equal(err, null, err.toString());
+      }
+    });
+
+
+    await token.transferERC223(
+      event.address,
+      98765,
+      toBytes(
+        {type: 'uint', size: 8, value: 1}, // action – bet
+        {type: 'uint', size: 8, value: 0}, // result index
+      ),
+      {from: accounts[0]}
+    );
+
+    await token.transferERC223(
+      event.address,
+      43210,
+      toBytes(
+        {type: 'uint', size: 8, value: 1}, // action – bet
+        {type: 'uint', size: 8, value: 0}, // result index
+      ),
+      {from: accounts[1]}
+    );
+
+    await new Promise((resolve) => setTimeout(resolve, 6000));
+    events.stopWatching();
+
+    let result = await esClient.search(Object.assign({
+      index: EVENT_INDEX,
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                term: {
+                  // 'bet.amount': 98765,
+                  // 'address': event.address,
+                  'bet.bettor': accounts[1],
+                }
+              }
+            ],
+          }
+        }
+      }
+    })).catch((error) => {
+      assert.equal(error, null, error.toString());
+    });
+
+    assert.equal(result.hits.total, 1, 'Invalid hits count');
+    assert.equal(result.hits.hits[0]._id, event.address, 'Invalid event found');
+    assert.equal(result.hits.hits[0]._source.bet.length, 2, 'Invalid bets count');
+    assert.equal(result.hits.hits[0]._source.bet[0].bettor, accounts[0], 'Invalid bet');
+    assert.equal(result.hits.hits[0]._source.bet[0].amount, 98765, 'Invalid bet');
+    assert.equal(result.hits.hits[0]._source.bet[1].bettor, accounts[1], 'Invalid bet');
+    assert.equal(result.hits.hits[0]._source.bet[1].amount, 43210, 'Invalid bet');
   });
 });
