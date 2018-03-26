@@ -49,6 +49,7 @@ const eventMapping = {
     'sourceUrl': {'type': 'text'},
     'bidSum': {'type': 'integer'},
     'tag': {'type': 'nested'},
+    'result': {'type': 'integer'},
   }
 };
 

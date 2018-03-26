@@ -3,15 +3,16 @@ pragma solidity ^0.4.2;
 import "./Token.sol";
 import "./Event.sol";
 import "./EventBase.sol";
+import "./Whitelist.sol";
 import "./ERC223ReceivingContract.sol";
 import "./installed_contracts/Seriality/Seriality.sol";
 
 contract Main is ERC223ReceivingContract, Seriality {
     Token token;
+    Whitelist whitelist;
     EventBase eventBase;
     uint8 version = 1;
 
-    mapping (address => bool) public whitelist;
     address owner;
 
     modifier onlyOwner() {
@@ -24,10 +25,11 @@ contract Main is ERC223ReceivingContract, Seriality {
         owner = newOwner;
     }
 
-    function Main(address _token, address _eventBase) {
+    function Main(address _token, address _whitelist, address _eventBase) {
         owner = msg.sender;
 
         token = Token(_token);
+        whitelist = Whitelist(_whitelist);
         eventBase = EventBase(_eventBase);
     }
 
@@ -54,6 +56,8 @@ contract Main is ERC223ReceivingContract, Seriality {
     // ... | uint64 result_3Coefficient | uint64 result_2Coefficient | uint64 result_1Coefficient
     // uint8 tagsCount | uint8 resultsCount | uint64 endDate | uint64 startDate
     function newEvent(address _creator, uint64 _deposit, bytes memory buffer) internal returns (address) {
+        require(whitelist.whitelist(tx.origin) == true);
+
         uint64 _startDate;
         uint64 _endDate;
         uint8 _resultsCount;
@@ -75,7 +79,7 @@ contract Main is ERC223ReceivingContract, Seriality {
 
         EventBase _lastEvent = EventBase(address(new Event(address(eventBase))));
 
-        _lastEvent.init(address(token), _creator, _deposit, _startDate, _endDate, _resultsCount);
+        _lastEvent.init(address(token), address(whitelist), _creator, _deposit, _startDate, _endDate, _resultsCount);
 
         for (uint i = 0; i < _resultsCount; i++) {
             _resultCoefficient = bytesToUint64(offset, buffer);
@@ -91,9 +95,5 @@ contract Main is ERC223ReceivingContract, Seriality {
         );
 
         return address(_lastEvent);
-    }
-
-    function updateWhitelist(address user, bool whitelisted) public onlyOwner {
-        whitelist[user] = whitelisted;
     }
 }

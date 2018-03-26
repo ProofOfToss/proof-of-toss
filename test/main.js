@@ -4,6 +4,7 @@ import { serializeEvent } from '../src/util/eventUtil';
 var Main = artifacts.require("./Main.sol");
 var EventBase = artifacts.require("./EventBase.sol");
 var Token = artifacts.require("./Token.sol");
+var Whitelist = artifacts.require("./Whitelist.sol");
 
 contract('Main', function(accounts) {
 
@@ -35,12 +36,12 @@ contract('Main', function(accounts) {
     results: eventResults,
   };
 
-  it("should create new event and tranfer deposit. then deposit should returns", function() {
-    var main, token, event;
+  it("should create new event and tranfer deposit. then deposit should returns", async function() {
+    var main, token, event, whitelist;
 
-    Token.deployed().then(function(instance) {
-      token = instance;
-    });
+    whitelist = await Whitelist.deployed();
+    token = await Token.deployed();
+
 
     return Main.deployed().then(function(instance) {
 
@@ -55,7 +56,7 @@ contract('Main', function(accounts) {
     }).then(async function() {
 
       try {
-        await main.updateWhitelist(accounts[0], true);
+        await whitelist.updateWhitelist(accounts[0], true);
       } catch (e) {
         assert.isUndefined(e);
       }
@@ -145,10 +146,11 @@ contract('Main', function(accounts) {
   it("should not allow to create event to users not in whitelist", async function() {
     const token = await Token.deployed();
     const main = await Main.deployed();
+    const whitelist = await Whitelist.deployed();
 
     try {
       await token.approve(main.address, 10000000, {from: accounts[1]});
-      await main.updateWhitelist(accounts[1], false);
+      await whitelist.updateWhitelist(accounts[1], false);
     } catch (e) {
       assert.isUndefined(e);
     }
@@ -161,6 +163,7 @@ contract('Main', function(accounts) {
   it("should allow to create event to users in whitelist", async function() {
     const token = await Token.deployed();
     const main = await Main.deployed();
+    const whitelist = await Whitelist.deployed();
 
     try {
       await token.approve(main.address, 10000000, {from: accounts[0]});
@@ -168,10 +171,10 @@ contract('Main', function(accounts) {
       assert.isUndefined(e);
     }
 
-    await expectThrow(main.updateWhitelist(accounts[1], true, {from: accounts[1]})); // Non owner can't change whitelist
+    await expectThrow(whitelist.updateWhitelist(accounts[1], true, {from: accounts[1]})); // Non owner can't change whitelist
 
     try {
-      await main.updateWhitelist(accounts[0], true);
+      await whitelist.updateWhitelist(accounts[0], true);
 
       eventData.name = 'Test event 3';
 

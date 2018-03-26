@@ -6,11 +6,13 @@ import "../contracts/installed_contracts/Seriality/Seriality.sol";
 import "../contracts/Token.sol";
 import "../contracts/test/TestMainSC.sol";
 import "../contracts/EventBase.sol";
+import "../contracts/Whitelist.sol";
 
 contract TestMain is Seriality {
 
     TestMainSC main;
     Token token;
+    Whitelist whitelist;
     EventBase eventBase;
 
     function tokenFallback(address _from, uint _value, bytes _data) public {}
@@ -18,7 +20,8 @@ contract TestMain is Seriality {
     function testEventCreation() {
         token = Token(DeployedAddresses.Token());
         eventBase = EventBase(DeployedAddresses.EventBase());
-        main = new TestMainSC(token, eventBase);
+        whitelist = Whitelist(DeployedAddresses.Whitelist());
+        main = new TestMainSC(token, whitelist, eventBase);
 
         token.generateTokens(address(this), 10000000000000);
 

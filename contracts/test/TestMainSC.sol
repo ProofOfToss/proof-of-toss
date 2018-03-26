@@ -5,7 +5,7 @@ import "../Main.sol";
 contract TestMainSC is Main {
     address lastEvent;
 
-    function TestMainSC(address _token, address _eventBase) Main(_token, _eventBase) {}
+    function TestMainSC(address _token, address _whitelist, address _eventBase) Main(_token, _whitelist, _eventBase) {}
 
     function tokenFallback(address _from, uint _value, bytes memory _data) {
         bytes memory empty;

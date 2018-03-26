@@ -2,6 +2,7 @@ pragma solidity ^0.4.2;
 
 import "./installed_contracts/Seriality/Seriality.sol";
 import "./Token.sol";
+import "./Whitelist.sol";
 import "./ERC223ReceivingContract.sol";
 
 contract EventBase is ERC223ReceivingContract, Seriality {
@@ -9,7 +10,8 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     EventBase base;
     address public owner;
 
-    enum Statuses { Created, Published, Accepted, Started, Judging, Finished }
+    // enum States { Created, Published, Accepted, Started, Finished, Resolved, Dispute, Judging, Closed, Distributed } // Full
+    enum States { Created, Published, Accepted, Started, Finished, Closed, Distributed } // Simplified
 
     struct Result {
         uint64 customCoefficient;
@@ -25,6 +27,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     }
 
     Token public token;
+    Whitelist public whitelist;
 
     address public creator;
     address public operatorId = 1;
@@ -34,37 +37,59 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     bytes32 public bidType;
     uint8 public resultsCount;
 
-    Statuses public status;
+    States public state;
     Result[] public possibleResults;
     Bet[] public bets;
     mapping (address => uint[]) private usersBets;
 
+    uint8 public resolvedResult; // 255 - not set; 254 – different result; 253 – undefined result; 232 – event was canceled; etc ... todo
+
     uint constant public meta_version = 1;
+
+    event Updated(address _contract);
+
+    function updated(address _contract) public {
+        uint codeLength;
+
+        assembly {
+            codeLength := extcodesize(_contract)
+        }
+
+        require(codeLength > 0 && msg.sender == _contract);
+
+        Updated(_contract);
+    }
 
     function EventBase(address _token) {
         owner = msg.sender;
         token = Token(_token);
     }
 
-    function init(address _token, address _creator, uint64 _deposit, uint64 _startDate, uint64 _endDate, uint8 _resultsCount) public {
+    function init(address _token, address _whitelist, address _creator, uint64 _deposit, uint64 _startDate, uint64 _endDate, uint8 _resultsCount) public {
         require(msg.sender == owner);
+        require(_resultsCount < 220); // 220 - 255 reserved for special results
+        require(_startDate <= _endDate);
 
         token = Token(_token);
+        whitelist = Whitelist(_whitelist);
 
         creator = _creator;
         deposit = _deposit;
         startDate = _startDate;
         endDate = _endDate;
         resultsCount = _resultsCount;
+
+        resolvedResult = 255;
     }
 
     function addResult(uint64 customCoefficient) public {
         require(msg.sender == owner);
+        require(state == States.Created);
 
         possibleResults.push(Result(customCoefficient, 0, 0));
 
         if (possibleResults.length == resultsCount) {
-            status = Statuses.Published;
+            state = States.Published;
         }
     }
 
@@ -103,10 +128,42 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         }
     }
 
-    function newBet(uint8 result, uint64 amount) internal {
-        require(status == Statuses.Published || status == Statuses.Accepted);
+    function getState() constant returns (States) {
+        if(now < startDate) { // time.checkTime(startDate)
+            if(bets.length > 0) {
+                return States.Accepted;
+            } else {
+                return States.Published;
+            }
+        } else { // now >= startDate
+            if(bets.length > 0) {
+                if(now < endDate) { // time.checkTime(endDate)
+                    return States.Started;
+                }
+
+                if(resolvedResult == 255) {
+                    return States.Finished;
+                }
+            }
+
+            // Final check:
+            if(token.balanceOf(address(this)) == 0) {
+                return States.Distributed;
+            } else {
+                return States.Closed;
+            }
+        }
+    }
+
+    modifier stateTransitions() {
+        state = getState();
+        _;
+    }
+
+    function newBet(uint8 result, uint64 amount) stateTransitions internal {
+        require(state == States.Published || state == States.Accepted);
         require(result >= 0 && result < resultsCount);
-        require(now < endDate - 10 minutes);
+        require(now < startDate - (10 minutes));
 
         bets.push(Bet(now, tx.origin, result, amount));
 
@@ -114,7 +171,20 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         possibleResults[result].betSum += amount;
 
         usersBets[tx.origin].push(bets.length - 1);
-        status = Statuses.Accepted;
+        state = States.Accepted;
+
+        base.updated(address(this));
+    }
+
+    function resolve(uint8 result) stateTransitions {
+        require(whitelist.whitelist(msg.sender) == true);
+        require(state == States.Finished);
+        require(result < resultsCount || result >= 220);
+
+        resolvedResult = result;
+        state = States.Closed;
+
+        base.updated(address(this));
     }
 
     function getUserBets() view returns (uint[]) {

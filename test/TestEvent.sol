@@ -7,25 +7,28 @@ import "../contracts/Token.sol";
 import "../contracts/test/TestMainSC.sol";
 import "../contracts/EventBase.sol";
 import "../contracts/Event.sol";
+import "../contracts/Whitelist.sol";
 
 contract TestEvent is Seriality {
 
     TestMainSC main;
     Token token;
+    Whitelist whitelist;
     EventBase eventBase;
     EventBase _event;
 
     function beforeEach() {
         token = Token(DeployedAddresses.Token());
         eventBase = EventBase(DeployedAddresses.EventBase());
-        main = new TestMainSC(token, eventBase);
+        whitelist = Whitelist(DeployedAddresses.Whitelist());
+        main = new TestMainSC(token, whitelist, eventBase);
 
         token.generateTokens(address(this), 10000000000000);
-        main.updateWhitelist(address(this), true);
+        whitelist.updateWhitelist(address(this), true);
 
         uint deposit = 10000000;
-        uint64 startDate = 1517406195;
-        uint64 endDate = 1580478195;
+        uint64 startDate = 2517406195;
+        uint64 endDate = 2580478195;
         uint8 resultsCount = 2;
         uint8 tagsCount = 3;
         uint64 result_1Coefficient = 10;
