@@ -33,8 +33,8 @@ class NewEvent extends Component {
   async checkAccess() {
     if (config.whitelist.indexOf(this.props.currentAddress) >= 0) {
       try {
-        const mainInstance = (await deployed(this.props.web3, 'main')).mainInstance;
-        const inWhitelist = await mainInstance.whitelist(this.props.currentAddress);
+        const whitelistInstance = (await deployed(this.props.web3, 'whitelist')).whitelistInstance;
+        const inWhitelist = await whitelistInstance.whitelist(this.props.currentAddress);
 
         this.setState({
           hasAccess: inWhitelist,

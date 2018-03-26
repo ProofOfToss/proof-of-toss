@@ -1,11 +1,13 @@
 import contract from 'truffle-contract';
 import MainContract from '../../build/contracts/Main.json'
 import TokenContract from '../../build/contracts/Token.json'
+import WhitelistContract from '../../build/contracts/Whitelist.json'
 
 function contractsHash () {
   return {
     main: MainContract,
-    token: TokenContract
+    token: TokenContract,
+    whitelist: WhitelistContract,
   }
 }
 

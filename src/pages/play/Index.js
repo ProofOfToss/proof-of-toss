@@ -54,6 +54,8 @@ class Index extends Component {
     const parsed = queryString.parse(props.location.search);
 
     return {
+      locale: props.locale,
+
       categories: appConfig.categories.list,
       data: [],
 
@@ -150,11 +152,11 @@ class Index extends Component {
     const conditions = [];
     const shouldConditions = [];
 
-    history.replaceState({}, '', `/${this.props.locale}/play?${this.getUrlParams()}`);
+    history.replaceState({}, '', `/${this.state.locale}/play?${this.getUrlParams()}`);
 
     conditions.push({
       term: {
-        locale: this.props.locale
+        locale: this.state.locale
       }
     });
 
@@ -334,7 +336,7 @@ class Index extends Component {
                   sort: false,
                   width: 100,
                   formatter: (cell) => {
-                    return <Link to={`/${this.props.locale}/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link>
+                    return <Link to={`/${this.state.locale}/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link>
                   }
                 }
               ] }
@@ -369,7 +371,7 @@ class Index extends Component {
 function mapStateToProps(state) {
   return {
     translate: getTranslate(state.locale),
-    locale: _.first(state.locale.languages, (l) => l.active).code,
+    locale: _.find(state.locale.languages, (l) => l.active).code,
     esClient: state.elastic.client,
   };
 }

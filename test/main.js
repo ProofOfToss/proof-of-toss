@@ -1,8 +1,10 @@
 import expectThrow from './helpers/expectThrow';
+import { serializeEvent } from '../src/util/eventUtil';
 
 var Main = artifacts.require("./Main.sol");
-var Event = artifacts.require("./Event.sol");
+var EventBase = artifacts.require("./EventBase.sol");
 var Token = artifacts.require("./Token.sol");
+var Whitelist = artifacts.require("./Whitelist.sol");
 
 contract('Main', function(accounts) {
 
@@ -13,21 +15,33 @@ contract('Main', function(accounts) {
   const bidType = 'bid_type';
   const eventCategory = 'category_id';
   const eventLocale = 'en';
-  const eventStartDate = '1517406195';
-  const eventEndDate = '1580478195';
+  const eventStartDate = 1517406195;
+  const eventEndDate = 1580478195;
 
-  const eventData = `${bidType}.${eventCategory}.${eventLocale}.${eventStartDate}.${eventEndDate}`;
   const eventSourceUrl = 'source_url';
-  const eventTags = 'en.tag1_name.en.tag2_name.en.tag3_name';
-  const eventResults = 'result_description_1.10.result_description_2.20';
+  const eventTags = ['tag1_name', 'tag2_name', 'tag3_name'];
+  const eventResults = [{description: 'result_description_1', coefficient: 10}, {description: 'result_description_2', coefficient: 20}];
 
-  it("should create new event and tranfer deposit. then deposit should returns", function() {
-    var main, token, event;
+  const eventData = {
+    name: eventName,
+    description: eventDescription,
+    deposit: eventDeposit,
+    bidType: bidType,
+    category: eventCategory,
+    locale: eventLocale,
+    startDate: eventStartDate,
+    endDate: eventEndDate,
+    sourceUrl: eventSourceUrl,
+    tags: eventTags,
+    results: eventResults,
+  };
 
+  it("should create new event and tranfer deposit. then deposit should returns", async function() {
+    var main, token, event, whitelist;
 
-    Token.deployed().then(function(instance) {
-      token = instance;
-    });
+    whitelist = await Whitelist.deployed();
+    token = await Token.deployed();
+
 
     return Main.deployed().then(function(instance) {
 
@@ -39,40 +53,46 @@ contract('Main', function(accounts) {
 
       assert.equal(tokenAddress, token.address, "mainSC token address not equals token address");
 
-    }).then(() => {
-
-      return token.approve(main.address, 10000000, {from: accounts[0]});
-
     }).then(async function() {
 
       try {
-        await main.updateWhitelist(accounts[0], true);
+        await whitelist.updateWhitelist(accounts[0], true);
       } catch (e) {
         assert.isUndefined(e);
       }
 
-      return main.newEvent(eventName, eventDeposit, eventDescription, 1, eventData,
-        eventSourceUrl, eventTags, eventResults, {from: accounts[0]});
+      const transactionResult = await token.transferERC223(main.address, eventDeposit, serializeEvent(eventData), {
+        from: accounts[0]
+      });
+
+      return transactionResult;
+    }).then(async function(transactionResult) {
+
+      const events = await new Promise((resolve, reject) => {
+        main.NewEvent({}, {fromBlock: transactionResult.receipt.blockNumber, toBlock: 'pending', topics: transactionResult.receipt.logs[0].topics}).get((error, log) => {
+          if (error) {
+            reject(error);
+          }
+
+          if (log[0].transactionHash === transactionResult.tx) {
+            resolve(log);
+          }
+        });
+      });
+
+      return events[0].args.eventAddress;
 
     }).then(function(eventAddress) {
 
-      return main.getLastEvent(eventAddress);
+      event = EventBase.at(eventAddress);
 
-    }).then(function(eventAddress) {
-
-      event = Event.at(eventAddress);
-
-      return event.getToken();
+      return event.token();
 
     }).then(function(tokenAddress) {
 
       assert.equal(tokenAddress, token.address, "event token address not equals token address");
 
-      return event.getCreatedTimestamp();
-
-    }).then(function(timestamp) {
-
-      return event.getCreator();
+      return event.creator();
 
     }).then(function(creator) {
 
@@ -88,7 +108,7 @@ contract('Main', function(accounts) {
 
     }).then(function(balance) {
 
-      assert.equal(balance.toNumber(), 9999980000000, "creator balance wasn't 9999980000000 tokens");
+      assert.equal(balance.toNumber(), 9999990000000, "creator balance wasn't 9999980000000 tokens");
 
       return event.withdraw({from: accounts[0]});
 
@@ -98,60 +118,52 @@ contract('Main', function(accounts) {
 
     }).then(function(balance) {
 
-      assert.equal(balance.toNumber(), 9999990000000, "1000000000 tokens wasn't on balance");
+      assert.equal(balance.toNumber(), 10000000000000, "1000000000 tokens wasn't on balance");
 
       return event.getShare(accounts[0], {from: accounts[0]})
 
     }).then(function(share) {
       assert.equal(share.toNumber(), 0, "deposit wasn't withdrawn");
 
-      return Promise.all([event.name(), event.deposit(), event.description(), event.bidType(),
-        event.category(), event.locale(), event.startDate(), event.endDate(), event.sourceUrl()]);
+      return Promise.all([event.deposit(), event.startDate(), event.endDate(), event.resultsCount()]);
     }).then((eventData) => {
 
-      assert.equal(eventData[0], eventName, `Name is invalid`);
-      assert.equal(eventData[1], eventDeposit, `Deposit is invalid`);
-      assert.equal(eventData[2], eventDescription, `Description is invalid`);
-      assert.equal(web3.toAscii(eventData[3]).replace(/\0/g, ''), bidType, `Bid type is invalid`);
-      assert.equal(web3.toAscii(eventData[4]).replace(/\0/g, ''), eventCategory, `Category is invalid`);
-      assert.equal(web3.toAscii(eventData[5]), eventLocale, `Locale is invalid`);
-      assert.equal(eventData[6], eventStartDate, `Start date is invalid`);
-      assert.equal(eventData[7], eventEndDate, `End date is invalid`);
-      assert.equal(eventData[8], eventSourceUrl, `Source url is invalid`);
+      assert.equal(eventData[0], eventDeposit, `Deposit is invalid`);
+      assert.equal(eventData[1], eventStartDate, `Start date is invalid`);
+      assert.equal(eventData[2], eventEndDate, `End date is invalid`);
+      assert.equal(eventData[3].toNumber(), 2, `Results count is invalid`);
 
-      return Promise.all([event.tags(0), event.tags(1), event.tags(2)]);
-    }).then((tags) => {
-      for(let i = 0; i < 3; i++) {
-        assert.equal(tags[i][0], `tag${i+1}_name`, `tag ${i} name is invalid`);
-        assert.equal(web3.toAscii(tags[i][1]), `en`, `tag ${i} locale name is invalid`);
-      }
-    }).then(() => {
       return Promise.all([event.possibleResults(0), event.possibleResults(1)]);
     }).then((possibleResults) => {
+
       for(let i = 0; i < 2; i++) {
-        assert.equal(possibleResults[i][0], `result_description_${i+1}`, `possible result ${i} description is invalid`);
-        assert.equal(possibleResults[i][1], (i+1)*10, `possible result  ${i} coefficient is invalid`);
+        assert.equal(eventResults[i].coefficient, possibleResults[i][0], `result ${i} coefficient is invalid`);
       }
+
     });
   });
 
   it("should not allow to create event to users not in whitelist", async function() {
     const token = await Token.deployed();
     const main = await Main.deployed();
+    const whitelist = await Whitelist.deployed();
 
     try {
       await token.approve(main.address, 10000000, {from: accounts[1]});
-      await main.updateWhitelist(accounts[1], false);
+      await whitelist.updateWhitelist(accounts[1], false);
     } catch (e) {
       assert.isUndefined(e);
     }
 
-    await expectThrow(main.newEvent('Test event 2', 10000000, 'description', 1, eventData, 'source_url', eventTags, eventResults, {from: accounts[1]}));
+    eventData.name = 'Test event 2';
+
+    await expectThrow(token.transferERC223(main.address, eventDeposit, serializeEvent(eventData), {from: accounts[1]}));
   });
 
   it("should allow to create event to users in whitelist", async function() {
     const token = await Token.deployed();
     const main = await Main.deployed();
+    const whitelist = await Whitelist.deployed();
 
     try {
       await token.approve(main.address, 10000000, {from: accounts[0]});
@@ -159,17 +171,30 @@ contract('Main', function(accounts) {
       assert.isUndefined(e);
     }
 
-    await expectThrow(main.updateWhitelist(accounts[1], true, {from: accounts[1]})); // Non owner can't change whitelist
+    await expectThrow(whitelist.updateWhitelist(accounts[1], true, {from: accounts[1]})); // Non owner can't change whitelist
 
     try {
-      await main.updateWhitelist(accounts[0], true);
+      await whitelist.updateWhitelist(accounts[0], true);
 
-      await main.newEvent('Test event 3', 10000000, 'description', 1, eventData,
-        'source_url', eventTags, eventResults, {from: accounts[0]});
+      eventData.name = 'Test event 3';
 
-      const eventAddress = await main.getLastEvent();
-      const event = Event.at(eventAddress);
-      const creator = await event.getCreator();
+      const transactionResult = await token.transferERC223(main.address, eventDeposit, serializeEvent(eventData), {from: accounts[0]});
+
+      const events = await new Promise((resolve, reject) => {
+        main.NewEvent({}, {fromBlock: transactionResult.receipt.blockNumber, toBlock: 'pending', topics: transactionResult.receipt.logs[0].topics}).get((error, log) => {
+          if (error) {
+            reject(error);
+          }
+
+          if (log[0].transactionHash === transactionResult.tx) {
+            resolve(log);
+          }
+        });
+      });
+
+      const eventAddress = events[0].args.eventAddress;
+      const event = EventBase.at(eventAddress);
+      const creator = await event.creator();
 
       assert.equal(creator, accounts[0], "wrong creator");
     } catch (e) {

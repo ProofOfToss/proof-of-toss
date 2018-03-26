@@ -49,6 +49,7 @@ const eventMapping = {
     'sourceUrl': {'type': 'text'},
     'bidSum': {'type': 'integer'},
     'tag': {'type': 'nested'},
+    'result': {'type': 'integer'},
   }
 };
 
@@ -76,10 +77,12 @@ const eventMapping = {
       if (eventIndexExists && force) {
         await esClient.indices.delete({index: EVENT_INDEX});
         eventIndexExists = false;
+        logger.info('event index deleted');
       }
       if (tagIndexExists && force) {
         await esClient.indices.delete({index: TAG_INDEX});
         tagIndexExists = false;
+        logger.info('tag index deleted');
       }
 
       eventIndexExists || await esClient.indices.create({
@@ -90,6 +93,7 @@ const eventMapping = {
           }
         },
       });
+      eventIndexExists ? logger.info('event index exists') : logger.info('event index created');
 
       tagIndexExists || await esClient.indices.create({
         index: TAG_INDEX,
@@ -99,6 +103,7 @@ const eventMapping = {
           }
         },
       });
+      eventIndexExists ? logger.info('tag index exists') : logger.info('tag index created');
     } catch (error) {
       fatal(error, 'failed to create index! exiting');
     }
