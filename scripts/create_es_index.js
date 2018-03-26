@@ -1,8 +1,9 @@
 import appConfig from '../src/data/config.json';
 import appPrivateConfig from '../src/data/private_config.json';
+import {IndexingUtil} from '../src/util/indexingUtil';
 
 import log4js from 'log4js';
-var argv = require('yargs-parser')(process.argv.slice(2));
+const argv = require('yargs-parser')(process.argv.slice(2));
 
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
 const TAG_INDEX = 'toss_tag_' + appConfig.elasticsearch.indexPostfix;
@@ -27,31 +28,6 @@ const esClient = new AwsEsClient(
   appConfig.elasticsearch.useSSL
 );
 
-const tagMapping = {
-  'properties': {
-    'name': {'type': 'text'},
-    'locale': {'type': 'keyword'},
-  }
-};
-
-const eventMapping = {
-  'properties': {
-    'name': {'type': 'text'},
-    'description': {'type': 'text'},
-    'bidType': {'type': 'keyword'},
-    'address': {'type': 'keyword'},
-    'createdBy': {'type': 'keyword'},
-    'createdAt': {'type': 'date'},
-    'locale': {'type': 'keyword'},
-    'category': {'type': 'keyword'},
-    'startDate': {'type': 'date'},
-    'endDate': {'type': 'date'},
-    'sourceUrl': {'type': 'text'},
-    'bidSum': {'type': 'integer'},
-    'tag': {'type': 'nested'},
-  }
-};
-
 (async (callback) => {
   const fatal = function() {
     let _fatal = logger.fatal.bind(logger);
@@ -68,41 +44,19 @@ const eventMapping = {
     process.exit(1);
   };
 
+  const indexingUtil = new IndexingUtil(
+    EVENT_INDEX,
+    TAG_INDEX,
+    esClient,
+    logger,
+    null,
+    {}
+  );
+
   const createIndex = async (force = false) => {
     try {
-      let eventIndexExists = await esClient.indices.exists({index: EVENT_INDEX});
-      let tagIndexExists = await esClient.indices.exists({index: TAG_INDEX});
-
-      if (eventIndexExists && force) {
-        await esClient.indices.delete({index: EVENT_INDEX});
-        eventIndexExists = false;
-        logger.info('event index deleted');
-      }
-      if (tagIndexExists && force) {
-        await esClient.indices.delete({index: TAG_INDEX});
-        tagIndexExists = false;
-        logger.info('tag index deleted');
-      }
-
-      eventIndexExists || await esClient.indices.create({
-        index: EVENT_INDEX,
-        body: {
-          'mappings': {
-            'event': eventMapping,
-          }
-        },
-      });
-      eventIndexExists ? logger.info('event index exists') : logger.info('event index created');
-
-      tagIndexExists || await esClient.indices.create({
-        index: TAG_INDEX,
-        body: {
-          'mappings': {
-            'tag': tagMapping,
-          }
-        },
-      });
-      eventIndexExists ? logger.info('tag index exists') : logger.info('tag index created');
+      await indexingUtil.createEventsIndex(force);
+      await indexingUtil.createTagsIndex(force);
     } catch (error) {
       fatal(error, 'failed to create index! exiting');
     }
@@ -110,17 +64,8 @@ const eventMapping = {
 
   const updateMappings = async () => {
     try {
-      await esClient.indices.putMapping({
-        index: TAG_INDEX,
-        type: 'tag',
-        body: tagMapping,
-      });
-
-      await esClient.indices.putMapping({
-        index: EVENT_INDEX,
-        type: 'event',
-        body: eventMapping,
-      });
+      await indexingUtil.updateTagsIndex();
+      await indexingUtil.updateEventsIndex();
     } catch (error) {
       fatal(error, 'failed to update mappings! exiting');
     }
