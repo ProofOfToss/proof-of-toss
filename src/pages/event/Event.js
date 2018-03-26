@@ -61,7 +61,7 @@ class Event extends Component {
         </dl>
         <TagsList tags={this.props.eventData.tag} />
         <ResultsList status={this.props.eventData.status} endTime={this.props.eventData.endDate}
-                     results={this.props.eventData.results} />
+                     results={this.props.eventData.possibleResults} />
       </Fragment>
     )
   }

@@ -119,7 +119,10 @@
       "your_bet": "Ваша ставка",
       "saved": "Ставка добавлена",
       "estimate_gas_error": "Error of calculation estimate gas",
-      "disallow_betting": "You can't add new bet",
+      "allow_bidding_errors": {
+        "time_is_over": "Time is over",
+        "invalid_status": "Invalid status"
+      },
       "labels": {
         "name": "Названеи события",
         "bid_type": "Тип ставки",
