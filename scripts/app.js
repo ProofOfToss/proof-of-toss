@@ -1,14 +1,13 @@
 import appConfig from '../src/data/config.json';
 import appPrivateConfig from '../src/data/private_config.json';
 
-import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
 import Web3 from 'web3';
 import contract from 'truffle-contract';
 import Config from 'truffle-config';
 import Resolver from 'truffle-resolver';
-import { deserializeEvent } from '../src/util/eventUtil';
+import {IndexingUtil} from '../src/util/indexingUtil';
 
 import log4js from 'log4js';
 
@@ -67,6 +66,23 @@ const esClient = new AwsEsClient(
 
   web3.eth.defaultAccount = web3.eth.coinbase;
 
+
+  const indexingUtil = new IndexingUtil(
+    EVENT_INDEX,
+    TAG_INDEX,
+    esClient,
+    logger,
+    web3,
+    {
+      Token,
+      Main,
+      EventBase,
+    }
+  );
+
+  /**
+   * Emergency stop
+   */
   const fatal = function() {
     let _fatal = logger.fatal.bind(logger);
 
@@ -82,142 +98,7 @@ const esClient = new AwsEsClient(
     process.exit(1);
   };
 
-
-  const convertBlockchainEventToEventDoc = async (_event) => {
-    try {
-      const eventData = deserializeEvent(_event.eventData);
-      const event = EventBase.at(_event.eventAddress);
-
-      const creator = await event.creator();
-      const resultsCount = await event.resultsCount();
-      const result = await event.resolvedResult();
-
-      const promises = [];
-
-      for (let i = 0; i < resultsCount; i++) {
-        promises.push(event.possibleResults(i));
-      }
-
-      const bidSum = (await Promise.all(promises)).reduce((accumulator, result) => accumulator + parseInt(result[3], 10), 0);
-
-      let tags = eventData.tags.map((tag) => { return {'locale': eventData.locale, 'name': tag}});
-
-      return {
-        'name': /*web3.toUtf8*/(eventData.name),
-        'description': /*web3.toUtf8*/(eventData.description),
-        'bidType': eventData.bidType,
-        'bidSum': bidSum,
-        'address': _event.eventAddress,
-        'createdBy': creator,
-        'locale': /*web3.toUtf8*/(eventData.locale),
-        'category': /*web3.toUtf8*/(eventData.category),
-        'startDate': eventData.startDate,
-        'endDate': eventData.endDate,
-        'sourceUrl': /*web3.toUtf8*/(eventData.sourceUrl),
-        'tag': tags,
-        'result': result,
-      };
-    } catch (err) {
-      logger.error(err);
-      throw err;
-    }
-  };
-
-  const indexTags = async (tags) => {
-    if (tags.length === 0) return;
-
-    let body = [];
-
-    for(let i = 0; i < tags.length; i++) {
-      body.push({ index: { _index: TAG_INDEX, _type: 'tag', _id: new Buffer(`${tags[i].locale} ${tags[i].name}`).toString('base64') } });
-      body.push({ name: tags[i].name, locale: tags[i].locale });
-    }
-
-    logger.trace(body);
-
-    await esClient.bulk({body}).then((result) => {
-      logger.info(result.items);
-    }).catch((error) => {
-      logger.error(error);
-    });
-  };
-
-  const indexEvents = async (events) => {
-    if (events.length === 0) return;
-
-    let body = [];
-
-    for(let i = 0; i < events.length; i++) {
-      try {
-        const doc = await convertBlockchainEventToEventDoc(events[i].args);
-
-        const block = await web3.eth.getBlock(events[i].blockNumber);
-        doc.createdAt = block.timestamp;
-
-        body.push({ index: { _index: EVENT_INDEX, _type: 'event', _id: doc.address } });
-        body.push(doc);
-
-        indexTags(doc.tag);
-      } catch (err) {
-        logger.error(err);
-        throw err;
-      }
-    }
-
-    logger.trace(body);
-
-    await esClient.bulk({body}).then((result) => {
-      logger.info(result.items);
-    }).catch((error) => {
-      logger.error(error);
-      throw error;
-    });
-  };
-
-  const updateEvents = async (events) => {
-    if (events.length === 0) return;
-
-    let body = [];
-
-    for(let i = 0; i < events.length; i++) {
-      try {
-        const address = events[i].args._contract;
-        const event = EventBase.at(address);
-
-        const resultsCount = await event.resultsCount();
-        const result = await event.resolvedResult();
-
-        const promises = [];
-
-        for (let i = 0; i < resultsCount; i++) {
-          promises.push(event.possibleResults(i));
-        }
-
-        const bidSum = (await Promise.all(promises)).reduce((accumulator, result) => accumulator + parseInt(result[3], 10), 0);
-
-        const doc = {
-          'bidSum': bidSum,
-          'result': result,
-        };
-
-        body.push({ update: { _index: EVENT_INDEX, _type: 'event', _id: doc.address } });
-        body.push(doc);
-
-      } catch (err) {
-        logger.error(err);
-        throw err;
-      }
-    }
-
-    logger.trace(body);
-
-    await esClient.bulk({body}).then((result) => {
-      logger.info(result.items);
-    }).catch((error) => {
-      logger.error(error);
-      throw error;
-    });
-  };
+  let main, token, accounts, eventBase;
 
   await esClient.ping({
     // ping usually has a 3000ms timeout
@@ -227,12 +108,6 @@ const esClient = new AwsEsClient(
   }).catch((error) => {
     fatal(error, 'elasticsearch cluster is down! exiting');
   });
-
-
-
-
-
-  let main, token, accounts, eventBase;
 
   web3.eth.getAccounts((err, accs) => {
     if (err !== null) {
@@ -256,6 +131,10 @@ const esClient = new AwsEsClient(
 
   const cacheStateFile = path.resolve(__dirname, 'cache_state.json');
 
+  /**
+   * @param defaultState
+   * @returns {*}
+   */
   function readCacheState(defaultState) {
     if (fs.existsSync(cacheStateFile)) {
       try {
@@ -270,6 +149,10 @@ const esClient = new AwsEsClient(
     }
   }
 
+  /**
+   * @param cacheState
+   * @returns {*}
+   */
   function writeCacheState(cacheState) {
     return fs.writeFileSync(cacheStateFile, JSON.stringify(cacheState) + '\n');
   }
@@ -292,7 +175,7 @@ const esClient = new AwsEsClient(
         }
 
         try {
-          await indexEvents(log);
+          await indexingUtil.indexEvents(log);
           cacheState.lastBlock = idx;
           writeCacheState(cacheState);
         } catch (err) {
@@ -302,7 +185,9 @@ const esClient = new AwsEsClient(
     })(i);
   }
 
-
+  /**
+   * @returns {number}
+   */
   const watchEvents = () => {
     let events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
     logger.info(`Watching for new events`);
@@ -329,7 +214,7 @@ const esClient = new AwsEsClient(
         }
 
         try {
-          await indexEvents([response]);
+          await indexingUtil.indexEvents([response]);
         } catch (err) {
           logger.error(err, `Error while indexing new event at block #${response.blockNumber}`);
           return retry();
@@ -345,7 +230,9 @@ const esClient = new AwsEsClient(
     }
   };
 
-
+  /**
+   * @returns {number}
+   */
   const watchEventUpdates = () => {
     let events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: 'latest'});
     logger.info(`Watching for event updates`);
@@ -372,7 +259,7 @@ const esClient = new AwsEsClient(
         }
 
         try {
-          await updateEvents([response]);
+          await indexingUtil.updateEvents([response]);
         } catch (err) {
           logger.error(err, `Error while indexing event update at block #${response.blockNumber}`);
           return retry();
