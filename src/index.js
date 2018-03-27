@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { Provider } from 'react-redux'
 import { syncHistoryWithStore } from 'react-router-redux'
-import { refreshBalance } from './actions/token'
 import checkRouteLocale  from './components/routing/checkRouteLocale'
 
 // Layouts
@@ -28,6 +27,7 @@ import Storage from './pages/storage/Storage'
 import NotFound from './pages/not_found/NotFound';
 import Events from './pages/events/Events';
 import NewEvent from './pages/new_event/NewEvent';
+import EventResults from './pages/event_results/EventResults';
 import Event from './pages/event/Event';
 
 // Redux Store
@@ -35,12 +35,7 @@ import store from './store';
 import { initWeb3, lockWallet, unlockWallet, changeAddress, web3LostConnection } from './actions/web3';
 
 // Put ReactDOM.render() to a function because we need to wrap the rendering with web3 detection
-function renderReactDOM(web3) {
-
-  if (typeof web3 !== 'undefined') {
-    store.dispatch(initWeb3(web3));
-  }
-
+function renderReactDOM() {
   const history = syncHistoryWithStore(browserHistory, store);
 
   const checkAuthorization = function () {
@@ -72,6 +67,7 @@ function renderReactDOM(web3) {
       <Route path="storage" component={Storage} onEnter={ checkAuthorization } />
       <Route path='events' component={Events} onEnter={ checkAuthorization } />
       <Route path='new_event' component={NewEvent} onEnter={ checkAuthorization } />
+      <Route path='event_results' component={EventResults} onEnter={ checkAuthorization } />
       <Route path='event(/:id)' component={Event} onEnter={ checkAuthorization } />
 
       <Route path='*' component={NotFound} />
@@ -120,6 +116,8 @@ getWeb3
     var hasAccounts = null;
     var currentAddress = null;
     var hasConnection = null;
+
+    store.dispatch(initWeb3(results.web3));
 
     // There are some problems with getting accounts through the public property,
     // but still try to get accounts and double check the same thing within setInterval() function below.
@@ -170,7 +168,7 @@ getWeb3
       });
     }, 500);
 
-    renderReactDOM(results.web3);
+    renderReactDOM();
   })
   .catch(function(e) {
     renderReactDOM();

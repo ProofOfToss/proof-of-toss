@@ -1,4 +1,5 @@
 import { refreshBalance } from './token'
+import { checkWhitelist } from './user';
 
 export const INIT_WEB3 = 'INIT_WEB3';
 export const LOCK_WALLET = 'LOCK_WALLET';
@@ -19,6 +20,7 @@ export const unlockWallet = (currentAddress) => {
   return (dispatch, getState) => {
     dispatch({type: UNLOCK_WALLET, currentAddress: currentAddress});
     dispatch(refreshBalance(currentAddress));
+    dispatch(checkWhitelist(currentAddress));
   };
 };
 
@@ -26,6 +28,7 @@ export const changeAddress = (newAddress) => {
   return (dispatch, getState) => {
     dispatch({type: CHANGE_ADDRESS, newAddress: newAddress});
     dispatch(refreshBalance(newAddress));
+    dispatch(checkWhitelist(newAddress));
   };
 };
 

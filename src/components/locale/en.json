@@ -1,4 +1,5 @@
 {
+  "access_denied": "Access denied",
   "notfound": {
     "error": "Error 404: File Not Found",
     "message": "The requested file could not be found."
@@ -66,11 +67,13 @@
         "fee": "Fee"
       }
     },
+    "event_results": {
+      "header": "Event results"
+    },
     "new_event": {
       "saved": "Event successfully saved",
       "gas_limit": "Gas limit",
       "gas_price": "Gas price",
-      "access_denied": "Access denied",
       "sync_whitelist": "Please sync whitelist",
       "estimate_gas_error": "Error of calculation estimate gas",
       "fee": "Fee",
@@ -126,6 +129,7 @@
         "tags": "Tags",
         "bid_type": "Bid Type",
         "start_date": "Start Date",
+        "end_date": "End Date",
         "bid_sum": "Bid Sum",
         "date_start": "Start time",
         "date_end": "End time"
