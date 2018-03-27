@@ -143,7 +143,10 @@
       "your_bet": "Your bet",
       "saved": "Bet successfully added",
       "estimate_gas_error": "Error of calculation estimate gas",
-      "disallow_betting": "You can't add new bet",
+      "allow_bidding_errors": {
+        "time_is_over": "Time is over",
+        "invalid_status": "Invalid status"
+      },
       "labels": {
         "name": "Name",
         "bid_type": "Bid type",

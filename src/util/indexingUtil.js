@@ -283,11 +283,18 @@ export class IndexingUtil {
           promises.push(event.possibleResults(i));
         }
 
-        const bidSum = (await Promise.all(promises)).reduce((accumulator, result) => accumulator + parseInt(result[3], 10), 0);
+        const possibleResults = (await Promise.all(promises)).map((result, i) => {return {
+          'index': i,
+          'betCount': result[1],
+          'betSum': result[2],
+        }});
+
+        const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseInt(result.betSum, 10), 0);
 
         const doc = {
           'bidSum': bidSum,
           'result': result,
+          'possibleResults': betCount > 0 ? possibleResults : [],
           'bettor': betCount > 0 ? [sender] : [],
         };
 
@@ -297,7 +304,8 @@ export class IndexingUtil {
             'source': [
               'ctx._source.bidSum = params.bidSum',
               'ctx._source.result = params.result',
-              'for (item in params.bettor) { if(!ctx._source.bettor.contains(item)) { ctx._source.bettor.add(item) } }'
+              'for (item in params.bettor) { if(!ctx._source.bettor.contains(item)) { ctx._source.bettor.add(item) } }',
+              'for (item in params.possibleResults) { ctx._source.possibleResults[item.index].betCount = item.betCount; ctx._source.possibleResults[item.index].betSum = item.betSum; }',
             ].join(';'),
             'lang': 'painless',
             'params' : doc,

@@ -19,8 +19,17 @@ class ResultsList extends Component {
       betAmount_1: 0,
       betAmount_2: 0,
       showErrors: false,
-      errors: {}
+      errors: {},
+      allowBiddingError: null
     }
+  }
+
+  componentDidMount() {
+    this.allowBidding();
+  }
+
+  componentWillReceiveProps() {
+    this.allowBidding();
   }
 
   newBet(resultIndex) {
@@ -42,10 +51,25 @@ class ResultsList extends Component {
   }
 
   allowBidding() {
-    return (
-      moment.unix(this.props.endTime) > moment() &&
-      [STATUS_PUBLISHED, STATUS_ACCEPTED].indexOf(this.props.status)
-    )
+    if(moment() > moment.unix(this.props.endTime).subtract(10, 'minutes')) {
+      this.setState({
+        allowBiddingError: this.props.translate('pages.event.allow_bidding_errors.time_is_over')
+      });
+
+      return;
+    }
+
+    if([STATUS_PUBLISHED, STATUS_ACCEPTED].indexOf(this.props.status) === -1) {
+      this.setState({
+        allowBiddingError: this.props.translate('pages.event.allow_bidding_errors.invalid_status')
+      });
+
+      return;
+    }
+
+    this.setState({
+      allowBiddingError: null
+    });
   }
 
   renderAllowBidding() {
@@ -88,7 +112,7 @@ class ResultsList extends Component {
   }
 
   renderDisallowBidding() {
-    return <div className="alert alert-warning" role="alert">{this.props.translate('pages.event.disallow_betting')}</div>
+    return <div className="alert alert-warning" role="alert">{this.state.allowBiddingError}</div>
   }
 
   render() {
@@ -102,10 +126,10 @@ class ResultsList extends Component {
     });
 
     let content = '';
-    if(this.allowBidding()) {
-      content = this.renderAllowBidding();
-    } else {
+    if(this.state.allowBiddingError) {
       content = this.renderDisallowBidding();
+    } else {
+      content = this.renderAllowBidding();
     }
 
     return <div>

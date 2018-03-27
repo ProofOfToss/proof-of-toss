@@ -13,9 +13,11 @@ import '../../styles/components/play_table.scss';
 
 import appConfig from "../../data/config.json"
 import { getLanguageAnalyzerByCode } from '../../util/i18n';
+import { denormalizeBalance } from '../../util/token';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
+const BET_INDEX = 'toss_bet_' + appConfig.elasticsearch.indexPostfix;
 
 class MyBets extends Component {
   constructor(props) {
@@ -231,10 +233,73 @@ class MyBets extends Component {
         }
       } : {}));
 
-      const data = _.map(res.hits.hits, '_source');
+      const bidsRes = await this.props.esClient.search(Object.assign({
+        index: BET_INDEX,
+        sort: `timestamp:desc`,
+        body: {
+          query: {
+            bool: {
+              must: [
+                {
+                  terms: {
+                    'event': res.hits.hits.map((hit) => hit._id),
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }));
+
+      const bidsByEvents = _.groupBy(_.map(bidsRes.hits.hits, (res) => {
+        return Object.assign({tx: res._id}, res._source)
+      }), 'event');
+      const emptyEvent = {
+        'name': '',
+        'description': '',
+        'bidType': '',
+        'bidSum': '',
+        'address': '',
+        'createdBy': '',
+        'locale': '',
+        'category': '',
+        'startDate': '',
+        'endDate': '',
+        'sourceUrl': '',
+        'tag': '',
+        'result': '',
+      };
+
+      const bidInfo = (bid, event) => {
+        const bidResult = event.possibleResults[bid.result];
+        const coefficient = bidResult.customCoefficient > 0 ? bidResult.customCoefficient : bid.amount / bidResult.betSum;
+
+        return {
+          tx: bid.tx,
+          isWinningBet: event.result === bid.result,
+          bidResult: bidResult.description,
+          bidSum: bid.amount,
+          bidDate: bid.timestamp,
+          coefficient: coefficient,
+          prize: event.result === bid.result ? bid.amount * coefficient : 0,
+        };
+      };
+
+      const data = _.map(res.hits.hits, '_source').reduce(
+        (accumulator, event) => {
+          const bids = bidsByEvents[event.address];
+          const bidsLength = bids.length;
+          accumulator.push(Object.assign({rowSpan: bidsLength}, event, bidInfo(bids[0], event)));
+
+          for (let i = 1; i < bidsLength; i++) {
+            accumulator.push(Object.assign({rowSpan: 0}, emptyEvent, bidInfo(bids[i], event)));
+          }
+
+          return accumulator;
+        }, []);
 
       this.setState({
-        data: data.concat(data),
+        data: data,
         total: res.hits.total,
         loading: false,
       });
@@ -250,6 +315,15 @@ class MyBets extends Component {
 
   render() {
     const { data, categories } = this.state;
+
+    const rowStyle = (row, rowIndex) => {
+      return row.isWinningBet ? { background: 'rgba(255, 200, 200, 1)' } : {};
+    };
+
+    const rowAttrs = (cell, row, rowIndex, colIndex) => {
+      return {rowSpan: row.rowSpan};
+    };
+
     return(
       <main className="container">
         <div>
@@ -296,27 +370,27 @@ class MyBets extends Component {
           <div className="playTable">
             <BootstrapTable
               ref="table"
-              keyField="address"
+              keyField="tx"
               data={ data }
               columns={ [
                 {
                   text: this.props.translate('pages.play.columns.name'),
                   dataField: "name",
                   sort: false,
-                  attrs: function callback(cell, row, rowIndex, colIndex) {
-                    return {rowspan: 2};
-                  }
+                  attrs: rowAttrs,
                 },
                 {
                   text: this.props.translate('pages.play.columns.tags'),
                   dataField: "tag",
                   sort: false,
+                  attrs: rowAttrs,
                   formatter: (tags) => _.map(tags, 'name').join(', '),
                 },
                 {
                   text: this.props.translate('pages.play.columns.bid_type'),
                   dataField: "bidType",
                   sort: false,
+                  attrs: rowAttrs,
                   width: 200,
                 },
                 {
@@ -324,13 +398,19 @@ class MyBets extends Component {
                   dataField: "category",
                   sort: false,
                   width: 200,
-                  formatter: (categoryId) => this.props.translate(`categories.${categoryId}`),
+                  attrs: rowAttrs,
+                  formatter: (categoryId) => {
+                    const category = _.find(categories, (cat) => cat.id === parseInt(categoryId));
+
+                    return category ? this.props.translate(`categories.${category.name}`) : categoryId;
+                  },
                 },
                 {
                   text: this.props.translate('pages.play.columns.start_date'),
                   dataField: "startDate",
                   sort: true,
                   width: 200,
+                  attrs: rowAttrs,
                   formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
                 },
                 {
@@ -344,6 +424,7 @@ class MyBets extends Component {
                   dataField: "bidSum",
                   sort: true,
                   width: 150,
+                  formatter: (cell) => denormalizeBalance(cell),
                 },
                 {
                   text: this.props.translate('pages.play.columns.bid_date'),
@@ -354,16 +435,16 @@ class MyBets extends Component {
                 },
                 {
                   text: this.props.translate('pages.play.columns.result_coefficient'),
-                  dataField: "results",
+                  dataField: "coefficient",
                   sort: false,
                   width: 150,
-                  formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
                 },
                 {
                   text: this.props.translate('pages.play.columns.prize'),
+                  dataField: "prize",
                   sort: false,
                   width: 200,
-                  formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
+                  formatter: (cell) => denormalizeBalance(cell),
                 },
                 {
                   text: '',
@@ -375,6 +456,7 @@ class MyBets extends Component {
                   }
                 }
               ] }
+              rowStyle={ rowStyle }
               // @todo: defaultSorted triggers table to change which triggers query to elasticsearch
               // if remove defaultSorted, do not forget to uncomment this.update() in componentDidMount() function!!!
               defaultSorted={[
