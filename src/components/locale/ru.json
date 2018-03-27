@@ -11,6 +11,12 @@
       "submit": "Submit"
     }
   },
+  "buttons": {
+    "ok": "Ok",
+    "create": "Создать",
+    "add": "Добавить",
+    "cancel": "Отмена"
+  },
   "validation": {
     "required": "Is required",
     "min_length": "This value is too short. It should have ${ min } character or more.",
@@ -104,6 +110,31 @@
       },
       "modal": {
         "submit": "Create"
+      }
+    },
+    "event": {
+      "fetching": "Загрузка события...",
+      "newBet": "Сделать ставку",
+      "bet_amount": "Сумма ставки",
+      "your_bet": "Ваша ставка",
+      "saved": "Ставка добавлена",
+      "estimate_gas_error": "Error of calculation estimate gas",
+      "disallow_betting": "You can't add new bet",
+      "labels": {
+        "name": "Названеи события",
+        "bid_type": "Тип ставки",
+        "category": "Категория",
+        "start_time": "Время начала",
+        "end_time": "Время окончания",
+        "description": "Описание",
+        "source_url": "Источник результата",
+        "tags": "Тэги"
+      },
+      "result": {
+        "name": "Результат",
+        "coefficient": "Коэффициент",
+        "bet_count": "Количество ставок",
+        "bet_sum": "Сумма ставок"
       }
     }
   }

@@ -18,8 +18,7 @@ class LanguageField extends Component {
     return <div className={"form-group" + (this.props.valueLink.error ? ' has-error' : '')}>
         <label htmlFor="event[language]">{ this.props.translate('pages.new_event.form.language')}*</label>
         {this.state.languages.length > 0 &&
-          <Select valueLink={this.props.valueLink} type='text' id="event[language]" className='form-control'
-                  >
+          <Select valueLink={this.props.valueLink} type='text' id="event[language]" className='form-control'>
             {this.state.languages.map((language) => {
               return <option key={language.code} value={language.code}>{language.name}</option>
             }, this)}

@@ -1,59 +1,100 @@
-import React, { Component } from 'react'
-import getWeb3 from '../../util/getWeb3'
-import EventContract from '../../../build/contracts/Event.json'
+import React, { Component, Fragment } from 'react'
+import { connect } from 'react-redux';
+import moment from 'moment';
+import { getTranslate } from 'react-localize-redux';
+import { fetchEvent } from '../../actions/pages/event';
+
+import CategoryUtil from '../../util/CategoryUtil';
+import TagsList from '../../components/event/TagsList';
+import ResultsList from '../../components/event/ResultsList';
 
 class Event extends Component {
   constructor(props) {
     super(props);
-    this.state = { id: this.props.params.id, web3: null, timestamp: null, creator: null };
-  }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ id: nextProps.params.id })
+    this.categoryUtil = new CategoryUtil(this.props.translate);
   }
 
   componentWillMount() {
-    // Get network provider and web3 instance.
-    // See utils/getWeb3 for more info.
+    this.props.fetchEvent(this.props.params.id);
+  }
 
-    getWeb3
-      .then(results => {
-        this.setState({
-          web3: results.web3
-        })
+  componentDidMount() {
+    this.updateEventTimer = setInterval(() => {
+      this.props.fetchEvent(this.props.params.id);
+    }, 1000 * 10);
+  }
 
-        const contract = require('truffle-contract');
-        const _event = contract(EventContract);
-        _event.setProvider(this.state.web3.currentProvider);
+  componentWillUnmount() {
+    clearInterval(this.updateEventTimer);
+  }
 
-        var eventInstance = _event.at(this.state.id);
-
-        eventInstance.getCreatedTimestamp().then((timestamp) => {
-          this.setState({
-            timestamp: timestamp.toNumber()
-          });
-        });
-
-        eventInstance.getCreator().then((creator) => {
-          this.setState({
-            creator: creator
-          });
-        });
-      })
-      .catch((e) => {
-        console.log('Error finding web3.', e)
-      })
+  renderEvent() {
+    return( <Fragment>
+        <dl className="dl-horizontal">
+          <dt>{this.props.translate('pages.event.labels.name')}</dt>
+          <dd>{this.props.eventData.name}</dd>
+        </dl>
+        <dl className="dl-horizontal">
+          <dt>{this.props.translate('pages.event.labels.bid_type')}</dt>
+          <dd>{this.props.eventData.bidType}</dd>
+        </dl>
+        <dl className="dl-horizontal">
+          <dt>{this.props.translate('pages.event.labels.category')}</dt>
+          <dd>{this.categoryUtil.getName(this.props.eventData.category)}</dd>
+        </dl>
+        <dl className="dl-horizontal">
+          <dt>{this.props.translate('pages.event.labels.start_time')}</dt>
+          <dd>{moment.unix(this.props.eventData.startDate).format('LLL')}</dd>
+        </dl>
+        <dl className="dl-horizontal">
+          <dt>{this.props.translate('pages.event.labels.end_time')}</dt>
+          <dd>{moment.unix(this.props.eventData.endDate).format('LLL')}</dd>
+        </dl>
+        <dl className="dl-horizontal">
+          <dt>{this.props.translate('pages.event.labels.description')}</dt>
+          <dd>{this.props.eventData.description}</dd>
+        </dl>
+        <dl className="dl-horizontal">
+          <dt>{this.props.translate('pages.event.labels.source_url')}</dt>
+          <dd>{this.props.eventData.sourceUrl}</dd>
+        </dl>
+        <TagsList tags={this.props.eventData.tag} />
+        <ResultsList status={this.props.eventData.status} endTime={this.props.eventData.endDate}
+                     results={this.props.eventData.results} />
+      </Fragment>
+    )
   }
 
   render() {
+    let content = <div className='alert alert-info' role='alert'>
+      {this.props.translate('pages.event.fetching')}
+    </div>;
+
+    if(this.props.fetched) {
+      content = this.renderEvent();
+    }
+
     return(
-      <div>
-        <p>Event: {this.state.id}</p>
-        <p>Created at: {this.state.timestamp}</p>
-        <p>Created by: {this.state.creator}</p>
-      </div>
+      <main className="container event">
+        {content}
+      </main>
     )
   }
 }
 
-export default Event
+function mapStateToProps(state) {
+  return {
+    web3: state.web3.web3,
+    currentAddress: state.user.address,
+    translate: getTranslate(state.locale),
+    fetched: state.event.fetched,
+    eventData: state.event.eventData
+  };
+}
+
+const mapDispatchToProps = {
+  fetchEvent
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Event)
