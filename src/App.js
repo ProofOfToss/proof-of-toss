@@ -38,7 +38,17 @@ class App extends Component {
 
     return (
       <ul className="nav navbar-nav">
-        <li className={ this._menuLinkClass('/new_event') }><Link to="/new_event" className="pure-menu-link">New event</Link></li>
+        {
+          this.props.isWhitelisted &&
+          <li className="dropdown">
+            <a href="#" className="dropdown-toggle" data-toggle="dropdown">Admin area <span className="caret"></span></a>
+            <ul className="dropdown-menu" role="menu">
+              <li className={ this._menuLinkClass('/new_event') }><Link to="/new_event" className="pure-menu-link">New event</Link></li>
+              <li className={ this._menuLinkClass('/event_results') }><Link to="/event_results" className="pure-menu-link">Event results</Link></li>
+            </ul>
+          </li>
+        }
+
         <li className={ this._menuLinkClass('/wallet') }><Link to="/wallet" className="pure-menu-link">Wallet</Link></li>
 
         <li className="dropdown">
@@ -164,7 +174,8 @@ class App extends Component {
 function mapPropsToState(state) {
   return {
     isAuthenticated: state.user.isAuthenticated,
-    web3HasConnection: state.web3.hasConnection
+    web3HasConnection: state.web3.hasConnection,
+    isWhitelisted: state.user.isWhitelisted,
   };
 }
 

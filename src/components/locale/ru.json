@@ -1,4 +1,5 @@
 {
+  "access_denied": "Доступ запрещен",
   "notfound": {
     "error": "Error 404: File Not Found",
     "message": "The requested file could not be found."
@@ -66,7 +67,6 @@
       }
     },
     "new_event": {
-      "access_denied": "Доступ запрещен",
       "saved": "Event successfully saved",
       "gas_limit": "Gas limit",
       "gas_price": "Gas price",
