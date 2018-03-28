@@ -7,6 +7,7 @@ import tokenReducer from './reducers/token';
 import elasticReducer from './reducers/elastic';
 import newEventReducer from './reducers/pages/newEvent';
 import WalletReducer from './reducers/pages/wallet';
+import eventReducer from './reducers/pages/event';
 
 const reducer = combineReducers({
   routing: routerReducer,
@@ -17,6 +18,7 @@ const reducer = combineReducers({
   newEvent: newEventReducer,
   elastic: elasticReducer,
   wallet: WalletReducer,
+  event: eventReducer,
 });
 
 export default reducer

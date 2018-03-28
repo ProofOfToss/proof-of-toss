@@ -40,7 +40,7 @@ class ModalConfirm extends Component {
         endDate: this.props.formData.endTime.unix(),
         sourceUrl: this.props.formData.sourceUrls.join(','),
         tags: this.props.formData.tags,
-        results: this.props.formData.results.map((result) => { return {'coefficient': result.coefficient, 'description': result.name}; }),
+        results: this.props.formData.results.map((result) => { return {'coefficient': result.coefficient, 'description': result.description}; }),
       });
 
       tokenInstance.transferERC223.estimateGas(mainInstance.address, this.props.formData.deposit, bytes, {
@@ -124,7 +124,7 @@ class ModalConfirm extends Component {
           <ul className="list-unstyled">
             {this.props.formData.results.map((result, key) => {
               return <li key={key}>
-                {result.name}&nbsp;{result.coefficient}&nbsp;
+                {result.description}&nbsp;{result.coefficient}&nbsp;
               </li>
             }, this)}
           </ul>

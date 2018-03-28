@@ -14,6 +14,7 @@
   "buttons": {
     "ok": "Ok",
     "create": "Create",
+    "add": "Add",
     "cancel": "Cancel"
   },
   "validation": {
@@ -133,6 +134,34 @@
         "bid_sum": "Bid Sum",
         "date_start": "Start time",
         "date_end": "End time"
+      }
+    },
+    "event": {
+      "fetching": "Loading event information...",
+      "newBet": "Add bet",
+      "bet_amount": "Amount of the bet",
+      "your_bet": "Your bet",
+      "saved": "Bet successfully added",
+      "estimate_gas_error": "Error of calculation estimate gas",
+      "allow_bidding_errors": {
+        "time_is_over": "Time is over",
+        "invalid_status": "Invalid status"
+      },
+      "labels": {
+        "name": "Name",
+        "bid_type": "Bid type",
+        "category": "Category",
+        "start_time": "Start date",
+        "end_time": "End date",
+        "description": "Description",
+        "source_url": "Source url",
+        "tags": "Tags"
+      },
+      "result": {
+        "name": "Result",
+        "coefficient": "Coefficient",
+        "bet_count": "Bet count",
+        "bet_sum": "Bet sum"
       }
     }
   },
