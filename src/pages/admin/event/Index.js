@@ -1,13 +1,23 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
-import { fetchEvent } from '../../actions/pages/event';
 
-import MainInfo from '../../components/event/MainInfo';
-import TagsList from '../../components/event/TagsList';
-import ResultsList from '../../components/event/ResultsList';
+import { modalResolveShow } from "../../../actions/pages/event";
 
-class Event extends Component {
+import BasePage from '../BasePage';
+import { fetchEvent } from '../../../actions/pages/event';
+import CategoryUtil from '../../../util/CategoryUtil';
+import MainInfo from '../../../components/event/MainInfo';
+import TagsList from '../../../components/event/TagsList';
+import ResultsList from '../../../components/admin/event/ResultsList';
+
+class Index extends Component {
+  constructor(props) {
+    super(props);
+
+    this.categoryUtil = new CategoryUtil(this.props.translate);
+  }
+
   componentWillMount() {
     this.props.fetchEvent(this.props.params.id);
   }
@@ -24,9 +34,10 @@ class Event extends Component {
 
   renderEvent() {
     return( <Fragment>
+        <h1>Admin event page</h1>
         <MainInfo eventData={this.props.eventData} />
         <TagsList tags={this.props.eventData.tag} />
-        <ResultsList status={this.props.eventData.status}
+        <ResultsList getState={this.props.eventData.getState} status={this.props.eventData.status}
                      endTime={this.props.eventData.endDate}
                      results={this.props.eventData.possibleResults} />
       </Fragment>
@@ -40,10 +51,13 @@ class Event extends Component {
       </div>;
     }
 
-    return(
+    const content =
       <main className="container event">
         {this.renderEvent()}
-      </main>
+      </main>;
+
+    return(
+      <BasePage content={content} />
     )
   }
 }
@@ -59,7 +73,8 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  fetchEvent
+  fetchEvent,
+  modalResolveShow
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Event)
+export default connect(mapStateToProps, mapDispatchToProps)(Index)

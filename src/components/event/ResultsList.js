@@ -51,9 +51,9 @@ class ResultsList extends Component {
   }
 
   allowBidding() {
-    if(moment() > moment.unix(this.props.endTime).subtract(10, 'minutes')) {
+    if(moment() > moment.unix(this.props.startTime).subtract(10, 'minutes')) {
       this.setState({
-        allowBiddingError: this.props.translate('pages.event.allow_bidding_errors.time_is_over')
+        allowBiddingError: this.props.translate('pages.event.errors.bidding.time_is_over')
       });
 
       return;
@@ -61,7 +61,7 @@ class ResultsList extends Component {
 
     if([STATUS_PUBLISHED, STATUS_ACCEPTED].indexOf(this.props.status) === -1) {
       this.setState({
-        allowBiddingError: this.props.translate('pages.event.allow_bidding_errors.invalid_status')
+        allowBiddingError: this.props.translate('pages.event.errors.bidding.invalid_status')
       });
 
       return;

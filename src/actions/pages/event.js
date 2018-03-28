@@ -2,7 +2,7 @@ import EventBaseContract from '../../../build/contracts/EventBase.json';
 import { deployed } from "../../util/contracts";
 import { formatBalance, denormalizeBalance } from './../../util/token';
 import { toBytesTruffle as toBytes } from '../../util/serialityUtil';
-import appConfig from "../../data/config.json"
+import appConfig from "../../data/config.json";
 
 export const FETCHED_EVENT = 'FETCHED_EVENT';
 export const FETCHING_ERROR_EVENT = 'FETCHING_ERROR_EVENT';
@@ -11,6 +11,10 @@ export const MODAL_NEW_BET_SHOW_EVENT = 'MODAL_NEW_BET_SHOW_EVENT';
 export const MODAL_ADD_NEW_BET_CLOSE_EVENT = 'MODAL_ADD_NEW_BET_CLOSE_EVENT';
 export const ADD_NEW_BET_ADDING_EVENT = 'ADD_NEW_BET_ADDING_EVENT';
 export const ADD_NEW_BET_ADDED_EVENT = 'ADD_NEW_BET_ADDED_EVENT';
+
+export const MODAL_RESOLVE_SHOW_EVENT = 'MODAL_RESOLVE_SHOW_EVENT';
+export const MODAL_RESOLVE_CLOSE_EVENT = 'MODAL_RESOLVE_CLOSE_EVENT';
+export const MODAL_RESOLVE_APPROVED_EVENT = 'MODAL_RESOLVE_APPROVED_EVENT';
 
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
 
@@ -38,6 +42,7 @@ export const fetchEvent = (address) => {
 
       //Fetch state
       eventData.status = (await eventBaseInstance.state()).toNumber();
+      eventData.getState = (await eventBaseInstance.getState()).toNumber();
 
       //Fetch results
       let resultsPromises = [];
@@ -102,6 +107,37 @@ export const modalAddNewBetAdd = (gasLimit, gasPrice) => {
       );
 
       dispatch({type: ADD_NEW_BET_ADDED_EVENT});
+    } catch (e) {
+      console.log(e);
+    }
+  }
+};
+
+export const modalResolveShow = (result) => ({
+  type: MODAL_RESOLVE_SHOW_EVENT,
+  result: result
+});
+
+export const modalResolveClose = (result) => ({
+  type: MODAL_RESOLVE_CLOSE_EVENT
+});
+
+export const modalResolveApprove = (gasLimit, gasPrice) => {
+  return async (dispatch, getState) => {
+
+    try {
+      const contract = require('truffle-contract');
+      const eventBase = contract(EventBaseContract);
+      eventBase.setProvider(getState().web3.web3.currentProvider);
+      const eventBaseInstance = eventBase.at(getState().event.eventData.address);
+
+      eventBaseInstance.resolve(getState().event.resolveResult.index, {
+        from: getState().user.address,
+        gasPrice: gasPrice,
+        gas: gasLimit
+      });
+
+      dispatch({type: MODAL_RESOLVE_APPROVED_EVENT});
     } catch (e) {
       console.log(e);
     }
