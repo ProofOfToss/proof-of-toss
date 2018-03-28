@@ -48,6 +48,7 @@ deploy_production:
     - npm install
     - cp truffle.js.example truffle.js
     - cp src/data/config.json.dist src/data/config.json
+    - cp src/data/private_config.json.dist src/data/private_config.json
     - npm run build
     - echo "Deloy to production"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
