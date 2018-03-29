@@ -196,14 +196,12 @@ const esClient = new AwsEsClient(
    * @returns {number}
    */
   const watchEvents = () => {
-    let events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
-    logger.info(`Watching for new events`);
+    let events;
 
     const retry = () => {
       try {
-
         events.stopWatching();
-        events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
+
       } catch (err) {
         logger.error(err);
         return setTimeout(retry, 1000);
@@ -213,6 +211,9 @@ const esClient = new AwsEsClient(
     };
 
     try {
+      logger.info(`Watching for new events`);
+
+      events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
 
       events.watch(async (error, response) => {
         if (error) {
@@ -241,14 +242,12 @@ const esClient = new AwsEsClient(
    * @returns {number}
    */
   const watchEventUpdates = () => {
-    let events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: 'latest'});
-    logger.info(`Watching for event updates`);
+    let events;
 
     const retry = () => {
       try {
-
         events.stopWatching();
-        events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: 'latest'});
+
       } catch (err) {
         logger.error(err);
         return setTimeout(retry, 1000);
@@ -258,6 +257,9 @@ const esClient = new AwsEsClient(
     };
 
     try {
+      logger.info(`Watching for event updates`);
+
+      events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: 'latest'});
 
       events.watch(async (error, response) => {
         if (error) {

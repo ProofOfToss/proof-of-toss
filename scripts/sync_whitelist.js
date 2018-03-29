@@ -54,6 +54,7 @@ logger.level = 'debug';
   const blacklist = app_config.blacklist;
 
   for(let i = 0; i < blacklist.length; i++) {
+    logger.info(`Syncing blacklist [${i}]: ${blacklist[i]}`);
 
     try {
       await whitelistInstance.updateWhitelist(blacklist[i], false);
@@ -64,6 +65,7 @@ logger.level = 'debug';
   }
 
   for(let i = 0; i < whitelist.length; i++) {
+    logger.info(`Syncing whitelist [${i}]: ${whitelist[i]}`);
 
     try {
       await whitelistInstance.updateWhitelist(whitelist[i], true);

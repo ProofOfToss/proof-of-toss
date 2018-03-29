@@ -305,8 +305,7 @@ export class IndexingUtil {
             'source': [
               'ctx._source.bidSum = params.bidSum',
               'ctx._source.result = params.result',
-              'for (item in params.bettor) { if(!ctx._source.bettor.contains(item)) { ctx._source.bettor.add(item) } }',
-              'for (item in params.possibleResults) { ctx._source.possibleResults[item.index].betCount = item.betCount; ctx._source.possibleResults[item.index].betSum = item.betSum; }',
+              'for (item in params.bettor) { if(!ctx._source.bettor.contains(item)) { ctx._source.bettor.add(item) } } for (item in params.possibleResults) { ctx._source.possibleResults[item.index].betCount = item.betCount; ctx._source.possibleResults[item.index].betSum = item.betSum; }',
             ].join(';'),
             'lang': 'painless',
             'params' : doc,
