@@ -5,6 +5,8 @@ import Config from 'truffle-config';
 import Resolver from 'truffle-resolver';
 import log4js from 'log4js';
 
+import callAsync from '../src/util/web3Util';
+
 const logger = log4js.getLogger();
 logger.level = 'debug';
 
@@ -34,8 +36,11 @@ logger.level = 'debug';
   web3.setProvider(provider);
 
   Whitelist.setProvider(provider);
-  Whitelist.defaults({from: web3.eth.coinbase});
-  web3.eth.defaultAccount = web3.eth.coinbase;
+
+  const coinbase = await callAsync(web3.eth.getCoinbase);
+
+  Whitelist.defaults({from: coinbase});
+  web3.eth.defaultAccount = coinbase;
 
   let whitelistInstance;
 
@@ -49,6 +54,7 @@ logger.level = 'debug';
   const blacklist = app_config.blacklist;
 
   for(let i = 0; i < blacklist.length; i++) {
+    logger.info(`Syncing blacklist [${i}]: ${blacklist[i]}`);
 
     try {
       await whitelistInstance.updateWhitelist(blacklist[i], false);
@@ -59,6 +65,7 @@ logger.level = 'debug';
   }
 
   for(let i = 0; i < whitelist.length; i++) {
+    logger.info(`Syncing whitelist [${i}]: ${whitelist[i]}`);
 
     try {
       await whitelistInstance.updateWhitelist(whitelist[i], true);

@@ -6,6 +6,8 @@
 snippets/
 build/
 deploy.sh
+deploy-aws.sh
+deploy-demo.sh
 node_modules/
 truffle.js
 build_

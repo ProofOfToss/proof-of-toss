@@ -8,6 +8,7 @@ import contract from 'truffle-contract';
 import Config from 'truffle-config';
 import Resolver from 'truffle-resolver';
 import {IndexingUtil} from '../src/util/indexingUtil';
+import callAsync from '../src/util/web3Util';
 
 import log4js from 'log4js';
 
@@ -61,11 +62,14 @@ const esClient = new AwsEsClient(
   Token.setProvider(provider);
   Main.setProvider(provider);
   EventBase.setProvider(provider);
-  Token.defaults({from: web3.eth.coinbase});
-  Main.defaults({from: web3.eth.coinbase});
-  EventBase.defaults({from: web3.eth.coinbase});
+  
+  const coinbase = await callAsync(web3.eth.getCoinbase);
+  
+  Token.defaults({from: coinbase});
+  Main.defaults({from: coinbase});
+  EventBase.defaults({from: coinbase});
 
-  web3.eth.defaultAccount = web3.eth.coinbase;
+  web3.eth.defaultAccount = coinbase;
 
 
   const indexingUtil = new IndexingUtil(
@@ -160,12 +164,13 @@ const esClient = new AwsEsClient(
   }
 
   let cacheState = readCacheState({lastBlock: appConfig.firstBlock, lastUpdateBlock: appConfig.firstBlock});
+  const blockNumber = await callAsync(web3.eth.getBlockNumber);
 
-  logger.info(`Caching events starting from block #${cacheState.lastBlock} to block #${web3.eth.blockNumber}`);
+  logger.info(`Caching events starting from block #${cacheState.lastBlock} to block #${blockNumber}`);
 
   const step = 10;
 
-  for(let i = cacheState.lastBlock; i < web3.eth.blockNumber; i += step) {
+  for(let i = cacheState.lastBlock; i < blockNumber; i += step) {
     logger.info(`Caching events from block #${i}`);
 
     const events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: cacheState.lastBlock + step});
@@ -191,14 +196,12 @@ const esClient = new AwsEsClient(
    * @returns {number}
    */
   const watchEvents = () => {
-    let events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
-    logger.info(`Watching for new events`);
+    let events;
 
     const retry = () => {
       try {
-
         events.stopWatching();
-        events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
+
       } catch (err) {
         logger.error(err);
         return setTimeout(retry, 1000);
@@ -208,6 +211,9 @@ const esClient = new AwsEsClient(
     };
 
     try {
+      logger.info(`Watching for new events`);
+
+      events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
 
       events.watch(async (error, response) => {
         if (error) {
@@ -236,14 +242,12 @@ const esClient = new AwsEsClient(
    * @returns {number}
    */
   const watchEventUpdates = () => {
-    let events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: 'latest'});
-    logger.info(`Watching for event updates`);
+    let events;
 
     const retry = () => {
       try {
-
         events.stopWatching();
-        events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: 'latest'});
+
       } catch (err) {
         logger.error(err);
         return setTimeout(retry, 1000);
@@ -253,6 +257,9 @@ const esClient = new AwsEsClient(
     };
 
     try {
+      logger.info(`Watching for event updates`);
+
+      events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: 'latest'});
 
       events.watch(async (error, response) => {
         if (error) {

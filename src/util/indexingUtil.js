@@ -1,4 +1,5 @@
 import { deserializeEvent } from './eventUtil';
+import callAsync from './web3Util';
 import util from 'util';
 
 export const tagMapping = {
@@ -232,7 +233,7 @@ export class IndexingUtil {
       try {
         const doc = await this.convertBlockchainEventToEventDoc(events[i].args);
 
-        const block = await this.web3.eth.getBlock(events[i].blockNumber);
+        const block = await callAsync(this.web3.eth.getBlock.bind(this.web3.eth, events[i].blockNumber));
         doc.createdAt = block.timestamp;
 
         body.push({ index: { _index: this.EVENT_INDEX, _type: 'event', _id: doc.address } });
@@ -267,7 +268,7 @@ export class IndexingUtil {
     for(let i = 0; i < events.length; i++) {
       try {
         const transactionHash = events[i].transactionHash;
-        const sender = (await this.web3.eth.getTransaction(transactionHash)).from;
+        const sender = (await callAsync(this.web3.eth.getTransaction.bind(this.web3.eth, events[i].transactionHash))).from;
 
         const address = events[i].args._contract;
         const betCount = events[i].args.betCount;
@@ -304,8 +305,7 @@ export class IndexingUtil {
             'source': [
               'ctx._source.bidSum = params.bidSum',
               'ctx._source.result = params.result',
-              'for (item in params.bettor) { if(!ctx._source.bettor.contains(item)) { ctx._source.bettor.add(item) } }',
-              'for (item in params.possibleResults) { ctx._source.possibleResults[item.index].betCount = item.betCount; ctx._source.possibleResults[item.index].betSum = item.betSum; }',
+              'for (item in params.bettor) { if(!ctx._source.bettor.contains(item)) { ctx._source.bettor.add(item) } } for (item in params.possibleResults) { ctx._source.possibleResults[item.index].betCount = item.betCount; ctx._source.possibleResults[item.index].betSum = item.betSum; }',
             ].join(';'),
             'lang': 'painless',
             'params' : doc,
