@@ -57,7 +57,9 @@ logger.level = 'debug';
     logger.info(`Syncing blacklist [${i}]: ${blacklist[i]}`);
 
     try {
-      await whitelistInstance.updateWhitelist(blacklist[i], false);
+      if ((await whitelistInstance.whitelist(blacklist[i])) !== false) {
+        await whitelistInstance.updateWhitelist(blacklist[i], false);
+      }
     } catch (error) {
       fatal(error);
     }
@@ -68,7 +70,9 @@ logger.level = 'debug';
     logger.info(`Syncing whitelist [${i}]: ${whitelist[i]}`);
 
     try {
-      await whitelistInstance.updateWhitelist(whitelist[i], true);
+      if ((await whitelistInstance.whitelist(whitelist[i])) !== true) {
+        await whitelistInstance.updateWhitelist(whitelist[i], true);
+      }
     } catch (error) {
       fatal(error);
     }
