@@ -95,6 +95,15 @@ getFilesListFromBasket.then(data => {
       });
     });
 
+    glob.sync("./build_webpack/static/css/*.css").forEach(file => {
+      files.push({
+        name: file,
+        key: file.replace(/.\/build_webpack\//, ''),
+        contentType: 'text/css',
+        cacheControl: 'no-cache'
+      });
+    });
+
 
     //Read and upload files to s3
     let filesPromises = [];
