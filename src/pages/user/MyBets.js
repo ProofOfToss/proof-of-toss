@@ -400,7 +400,7 @@ class MyBets extends Component {
                   width: 200,
                   attrs: rowAttrs,
                   formatter: (categoryId) => {
-                    const category = _.find(categories, (cat) => cat.id === parseInt(categoryId));
+                    const category = _.find(categories, (cat) => cat.id === parseInt(categoryId, 10));
 
                     return category ? this.props.translate(`categories.${category.name}`) : categoryId;
                   },
