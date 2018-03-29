@@ -1,5 +1,9 @@
 // Allows us to use ES6 in our migrations and tests.
-require('babel-register')
+require('babel-register');
+const Web3 = require('web3');
+const HDWalletProvider = require('truffle-hdwallet-provider');
+
+const mnemonic = 'frame luggage drop rail energy fog essay stuff boring heavy gasp price';
 
 module.exports = {
   networks: {
@@ -10,6 +14,14 @@ module.exports = {
       host: 'localhost',
       port: 4444,
       network_id: '778' // Match any network id
+    },
+    ropsten: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/2z9JJBmsyJCcF80q8MsU')
+      },
+      network_id: '*',
+      gas: 4500000,
+      gasPrice: 25000000000
     },
     test: {
       gas: 6721975,

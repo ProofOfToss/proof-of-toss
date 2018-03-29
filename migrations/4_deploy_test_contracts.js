@@ -13,12 +13,12 @@ var argv = require('yargs-parser')(process.argv.slice(2));
 
 module.exports = function(deployer) {
   if (argv._ && argv._[0] === 'test') {
-    deployer.deploy(BlockingGranter, Token.address, {gasPrice: 1000});
-    deployer.deploy(Blocker, Token.address, {gasPrice: 1000});
-    deployer.deploy(SerialityTest, {gasPrice: 1000});
+    deployer.deploy(BlockingGranter, Token.address);
+    deployer.deploy(Blocker, Token.address);
+    deployer.deploy(SerialityTest);
 
-    deployer.deploy(TestEventBase, Token.address, {gasPrice: 1000}).then(function() {
-      return deployer.deploy(TestMainSC, Token.address, Whitelist.address, TestEventBase.address, {gasPrice: 1000});
+    deployer.deploy(TestEventBase, Token.address).then(function() {
+      return deployer.deploy(TestMainSC, Token.address, Whitelist.address, TestEventBase.address);
     });
   }
 };
