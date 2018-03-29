@@ -1,31 +1,56 @@
 import { deserializeEvent } from './eventUtil';
+import util from 'util';
 
 export const tagMapping = {
-  'properties': {
-    'name': {'type': 'text'},
-    'locale': {'type': 'keyword'},
+  'mappings': {
+    'tag': {
+      'properties': {
+        'name': {'type': 'text'},
+        'locale': {'type': 'keyword'},
+      }
+    },
   }
 };
 
 export const eventMapping = {
-  'properties': {
-    'name': {'type': 'text'},
-    'description': {'type': 'text'},
-    'bidType': {'type': 'keyword'},
-    'address': {'type': 'keyword'},
-    'createdBy': {'type': 'keyword'},
-    'createdAt': {'type': 'date'},
-    'locale': {'type': 'keyword'},
-    'category': {'type': 'keyword'},
-    'startDate': {'type': 'date'},
-    'endDate': {'type': 'date'},
-    'sourceUrl': {'type': 'text'},
-    'bidSum': {'type': 'integer'},
-    'tag': {'type': 'nested'},
+  'mappings': {
+    'event': {
+      'properties': {
+        'name': {'type': 'text'},
+        'description': {'type': 'text'},
+        'bidType': {'type': 'keyword'},
+        'address': {'type': 'keyword'},
+        'createdBy': {'type': 'keyword'},
+        'createdAt': {'type': 'date'},
+        'locale': {'type': 'keyword'},
+        'category': {'type': 'keyword'},
+        'startDate': {'type': 'date'},
+        'endDate': {'type': 'date'},
+        'sourceUrl': {'type': 'text'},
+        'bidSum': {'type': 'integer'},
+        'tag': {'type': 'nested'},
 
-    'result': {'type': 'integer'},
-    'possibleResults': {'type': 'object'},
-    'bet': {'type': 'object'},
+        'result': {'type': 'integer'},
+        'possibleResults': {'type': 'object'},
+        'bettor': {'type': 'keyword'},
+      }
+    },
+  }
+};
+
+export const betMapping = {
+  'mappings': {
+    'bet': {
+      'properties': {
+        'event': {'type': 'keyword'},
+        'index': {'type': 'integer'},
+        'timestamp': {'type': 'date'},
+        'bettor': {'type': 'keyword'},
+        'result': {'type': 'integer'},
+        'amount': {'type': 'integer'},
+        'withdrawn': {'type': 'keyword'},
+      }
+    },
   }
 };
 
@@ -37,16 +62,19 @@ export class IndexingUtil {
    * @param logger
    * @param web3
    * @param contractAPIs
-   * @param contractAPIs
+   * @param forceRefresh
    */
-  constructor(EVENT_INDEX, TAG_INDEX, esClient, logger, web3, contractAPIs) {
+  constructor(EVENT_INDEX, TAG_INDEX, BET_INDEX, esClient, logger, web3, contractAPIs, forceRefresh = false) {
     this.EVENT_INDEX = EVENT_INDEX;
     this.TAG_INDEX = TAG_INDEX;
+    this.BET_INDEX = BET_INDEX;
 
     this.esClient = esClient;
     this.logger = logger;
     this.web3 = web3;
     this.contractAPIs = contractAPIs;
+
+    this.forceRefresh = forceRefresh;
 
     this.convertBlockchainEventToEventDoc = this.convertBlockchainEventToEventDoc.bind(this);
     this.indexTags = this.indexTags.bind(this);
@@ -55,84 +83,63 @@ export class IndexingUtil {
   }
 
   /**
+   * @param index
+   * @param type
+   * @param mapping
    * @param force
    * @returns {Promise.<void>}
+   * @private
    */
-  async createEventsIndex(force = false) {
-    const eventIndexExists = await this.esClient.indices.exists({index: this.EVENT_INDEX});
-    if (eventIndexExists && force) {
-      await this.deleteEventsIndex();
+  async _createIndex(index, type, mapping, force = false) {
+    const indexExists = await this.esClient.indices.exists({index: index});
+    if (indexExists && force) {
+      await this._deleteIndex(index, type);
     }
 
-    (eventIndexExists && !force) || await this.esClient.indices.create({
-      index: this.EVENT_INDEX,
-      body: {
-        'mappings': {
-          'event': eventMapping,
-        }
-      },
+    (indexExists && !force) || await this.esClient.indices.create({
+      index: index,
+      body: mapping,
     });
-    (eventIndexExists && !force) ? this.logger.info('event index exists') : this.logger.info('event index created');
+    (indexExists && !force) ? this.logger.info(`${type} index exists`) : this.logger.info(`${type} index created`);
   }
 
   /**
-   * @param force
+   * @param index
+   * @param type
    * @returns {Promise.<void>}
+   * @private
    */
-  async createTagsIndex(force = false) {
-    const tagIndexExists = await this.esClient.indices.exists({index: this.TAG_INDEX});
-
-    if (tagIndexExists && force) {
-      await this.deleteTagsIndex();
-    }
-
-    (tagIndexExists && !force) || await this.esClient.indices.create({
-      index: this.TAG_INDEX,
-      body: {
-        'mappings': {
-          'tag': tagMapping,
-        }
-      },
-    });
-    (tagIndexExists && !force) ? this.logger.info('tag index exists') : this.logger.info('tag index created');
+  async _deleteIndex(index, type) {
+    await this.esClient.indices.delete({index: index});
+    this.logger.info(`${type} index deleted`);
   }
 
   /**
+   * @param index
+   * @param type
+   * @param mapping
    * @returns {Promise.<void>}
+   * @private
    */
-  async deleteEventsIndex() {
-    await this.esClient.indices.delete({index: this.EVENT_INDEX});
-    this.logger.info('event index deleted');
-  }
-
-  /**
-   * @returns {Promise.<void>}
-   */
-  async deleteTagsIndex() {
-    await this.esClient.indices.delete({index: this.TAG_INDEX});
-    this.logger.info('tag index deleted');
-  }
-
-  /**
-   * @returns {Promise.<void>}
-   */
-  async updateEventsIndex() {
+  async _updateIndex(index, type, mapping) {
     await this.esClient.indices.putMapping({
-      index: this.TAG_INDEX,
-      type: 'tag',
-      body: tagMapping,
+      index: index,
+      type: type,
+      body: mapping.mappings[type],
     });
   }
 
   /**
    * @returns {Promise.<void>}
    */
-  async updateTagsIndex() {
-    await this.esClient.indices.putMapping({
-      index: this.EVENT_INDEX,
-      type: 'event',
-      body: eventMapping,
-    });
+  async syncIndeces(force = false) {
+    await this._createIndex(this.TAG_INDEX, 'tag', tagMapping, force);
+    await this._createIndex(this.EVENT_INDEX, 'event', eventMapping, force);
+    await this._createIndex(this.BET_INDEX, 'bet', betMapping, force);
+
+    await this._updateIndex(this.TAG_INDEX, 'tag', tagMapping);
+    await this._updateIndex(this.EVENT_INDEX, 'event', eventMapping);
+    await this._updateIndex(this.BET_INDEX, 'bet', betMapping);
   }
 
   /**
@@ -181,7 +188,7 @@ export class IndexingUtil {
         'tag': tags,
         'possibleResults': possibleResults,
         'result': result,
-        'bet': [],
+        'bettor': [],
       };
     } catch (err) {
       this.logger.error(err);
@@ -205,7 +212,7 @@ export class IndexingUtil {
 
     this.logger.trace(body);
 
-    await this.esClient.bulk({body}).then((result) => {
+    await this.esClient.bulk({body, refresh: this.forceRefresh}).then((result) => {
       this.logger.info(result.items);
     }).catch((error) => {
       this.logger.error(error);
@@ -240,7 +247,7 @@ export class IndexingUtil {
 
     this.logger.trace(body);
 
-    await this.esClient.bulk({body}).then((result) => {
+    await this.esClient.bulk({body, refresh: this.forceRefresh}).then((result) => {
       this.logger.info(result.items);
     }).catch((error) => {
       this.logger.error(error);
@@ -259,9 +266,12 @@ export class IndexingUtil {
 
     for(let i = 0; i < events.length; i++) {
       try {
-        const sender = (await this.web3.eth.getTransaction(events[i].transactionHash)).from;
+        const transactionHash = events[i].transactionHash;
+        const sender = (await this.web3.eth.getTransaction(transactionHash)).from;
 
         const address = events[i].args._contract;
+        const betCount = events[i].args.betCount;
+
         const event = this.contractAPIs.EventBase.at(address);
 
         const resultsCount = await event.resultsCount();
@@ -273,22 +283,19 @@ export class IndexingUtil {
           promises.push(event.possibleResults(i));
         }
 
-        const bidSum = (await Promise.all(promises)).reduce((accumulator, result) => accumulator + parseInt(result[3], 10), 0);
+        const possibleResults = (await Promise.all(promises)).map((result, i) => {return {
+          'index': i,
+          'betCount': result[1],
+          'betSum': result[2],
+        }});
 
-        const userBetIndexes = await event.getUserBets(sender);
-        const userBets = await Promise.all(userBetIndexes.map((idx) => event.bets(idx)));
+        const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseInt(result.betSum, 10), 0);
 
         const doc = {
           'bidSum': bidSum,
           'result': result,
-          'bet': userBets.map((bet) => {
-            return {
-              timestamp: bet[0],
-              bettor: bet[1],
-              result: bet[2],
-              amount: bet[3],
-            };
-          }),
+          'possibleResults': betCount > 0 ? possibleResults : [],
+          'bettor': betCount > 0 ? [sender] : [],
         };
 
         body.push({ update: { _index: this.EVENT_INDEX, _type: 'event', _id: address } });
@@ -297,12 +304,28 @@ export class IndexingUtil {
             'source': [
               'ctx._source.bidSum = params.bidSum',
               'ctx._source.result = params.result',
-              'for (item in params.bet) { if(!ctx._source.bet.contains(item)) { ctx._source.bet.add(item) } }'
+              'for (item in params.bettor) { if(!ctx._source.bettor.contains(item)) { ctx._source.bettor.add(item) } }',
+              'for (item in params.possibleResults) { ctx._source.possibleResults[item.index].betCount = item.betCount; ctx._source.possibleResults[item.index].betSum = item.betSum; }',
             ].join(';'),
             'lang': 'painless',
             'params' : doc,
           }
         });
+
+        if (betCount > 0) {
+          const bet = await event.bets(betCount - 1);
+
+          body.push({ index: { _index: this.BET_INDEX, _type: 'bet', _id: transactionHash } });
+          body.push({
+            event: address,
+            index: betCount - 1,
+            timestamp: bet[0],
+            bettor: bet[1],
+            result: bet[2],
+            amount: bet[3],
+            withdrawn: false,
+          });
+        }
 
       } catch (err) {
         this.logger.error(err);
@@ -312,8 +335,8 @@ export class IndexingUtil {
 
     this.logger.trace(body);
 
-    await this.esClient.bulk({body}).then((result) => {
-      this.logger.info(result.items);
+    await this.esClient.bulk({body, refresh: this.forceRefresh}).then((result) => {
+      this.logger.info(util.inspect(result.items, {showHidden: false, depth: 10}));
     }).catch((error) => {
       this.logger.error(error);
       throw error;

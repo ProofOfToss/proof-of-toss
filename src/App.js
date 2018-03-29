@@ -70,6 +70,13 @@ class App extends Component {
         </li>
 
         <li className={ this._menuLinkClass('/judge') }><Link to="/judge" className="pure-menu-link">Judge</Link></li>
+
+        <li className="dropdown">
+          <a href="#" className="dropdown-toggle" data-toggle="dropdown">Cabinet <span className="caret"></span></a>
+          <ul className="dropdown-menu" role="menu">
+            <li><Link to="/cabinet/my_bets" className="pure-menu-link">My bets</Link></li>
+          </ul>
+        </li>
       </ul>
     );
   }
@@ -109,6 +116,12 @@ class App extends Component {
         <div className="col-xs-2 col-md-2">
           <ul className="list-unstyled" role="menu">
             <li><Link to="/judge" className="pure-menu-link">Judge</Link></li>
+          </ul>
+        </div>
+
+        <div className="col-xs-2 col-md-2">
+          <ul className="list-unstyled" role="menu">
+            <li><Link to="/cabinet/my_bets" className="pure-menu-link">My bets</Link></li>
           </ul>
         </div>
       </div>
