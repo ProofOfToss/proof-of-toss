@@ -198,9 +198,9 @@ const esClient = new AwsEsClient(
   const watchEvents = () => {
     let events;
 
-    const retry = () => {
+    const retry = async () => {
       try {
-        events.stopWatching();
+        await callAsync(events.stopWatching);
 
       } catch (err) {
         logger.error(err);
@@ -244,9 +244,9 @@ const esClient = new AwsEsClient(
   const watchEventUpdates = () => {
     let events;
 
-    const retry = () => {
+    const retry = async () => {
       try {
-        events.stopWatching();
+        await callAsync(events.stopWatching);
 
       } catch (err) {
         logger.error(err);
