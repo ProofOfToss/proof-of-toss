@@ -10,7 +10,7 @@ import ModalResolve from './ModalResolve';
 class ResultsList extends Component {
 
   renderStatusColumn(result) {
-    if(this.props.getState === STATUS_FINISHED) {
+    if(this.props.status === STATUS_FINISHED) {
       return <span className="btn btn-primary" onClick={() => {this.props.modalResolveShow(result)}}>
               {this.props.translate('pages.event.result.confirm')}</span>
     }
@@ -19,7 +19,7 @@ class ResultsList extends Component {
       return this.props.translate('pages.event.errors.resolve.already_closed');
     }
 
-    if(this.props.getStatus !== STATUS_FINISHED) {
+    if(this.props.status !== STATUS_FINISHED) {
       return this.props.translate('pages.event.errors.resolve.need_finished');
     }
   }

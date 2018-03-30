@@ -37,7 +37,7 @@ class Index extends Component {
         <h1>Admin event page</h1>
         <MainInfo eventData={this.props.eventData} />
         <TagsList tags={this.props.eventData.tag} />
-        <ResultsList getState={this.props.eventData.getState} status={this.props.eventData.status}
+        <ResultsList status={this.props.eventData.status}
                      endTime={this.props.eventData.endDate}
                      results={this.props.eventData.possibleResults} />
       </Fragment>

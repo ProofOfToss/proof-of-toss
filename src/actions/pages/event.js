@@ -41,8 +41,7 @@ export const fetchEvent = (address) => {
       const eventBaseInstance = eventBase.at(address);
 
       //Fetch state
-      eventData.status = (await eventBaseInstance.state()).toNumber();
-      eventData.getState = (await eventBaseInstance.getState()).toNumber();
+      eventData.status = (await eventBaseInstance.getState()).toNumber();
 
       //Fetch results
       let resultsPromises = [];

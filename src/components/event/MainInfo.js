@@ -22,10 +22,6 @@ class MainInfo extends Component {
         <dd>{this.props.translate(`pages.event.states.state_${this.props.eventData.status}`)}</dd>
       </dl>
       <dl className="dl-horizontal">
-        <dt>{this.props.translate('pages.event.labels.get_state')}</dt>
-        <dd>{this.props.translate(`pages.event.states.state_${this.props.eventData.getState}`)}</dd>
-      </dl>
-      <dl className="dl-horizontal">
         <dt>{this.props.translate('pages.event.labels.bid_type')}</dt>
         <dd>{this.props.eventData.bidType}</dd>
       </dl>
