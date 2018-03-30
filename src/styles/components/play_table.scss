@@ -12,7 +12,13 @@
 }
 
 .multiple-bets-row {
-  td:nth-child(1), td:nth-child(2), td:nth-child(3), td:nth-child(4), td:nth-child(5) {
+  td:nth-child(1), td:nth-child(2), td:nth-child(3), td:nth-child(4), td:nth-child(5), td:last-child {
     display: none;
+  }
+}
+
+.winning-bet-row {
+  td:nth-child(6), td:nth-child(7), td:nth-child(8), td:nth-child(9), td:nth-child(10) {
+    background: rgba(220, 255, 220, 1);
   }
 }
