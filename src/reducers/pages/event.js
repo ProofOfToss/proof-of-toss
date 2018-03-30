@@ -1,5 +1,5 @@
-import { FETCHED_EVENT, MODAL_ADD_NEW_BET_CLOSE_EVENT,
-  MODAL_NEW_BET_SHOW_EVENT, ADD_NEW_BET_ADDING_EVENT, ADD_NEW_BET_ADDED_EVENT }
+import { FETCHED_EVENT, MODAL_ADD_NEW_BET_CLOSE_EVENT, MODAL_NEW_BET_SHOW_EVENT,
+  ADD_NEW_BET_ADDING_EVENT, ADD_NEW_BET_ADDED_EVENT, ADD_NEW_BET_ERROR_EVENT }
 from '../../actions/pages/event';
 
 const initialState = {
@@ -8,7 +8,8 @@ const initialState = {
   newBetData: {},
   showNewBetModal: false,
   newBetSaving: false,
-  newBetSaved: false
+  newBetSaved: false,
+  newBetError: false
 };
 
 const eventReducer = (state = initialState, action) => {
@@ -35,8 +36,10 @@ const eventReducer = (state = initialState, action) => {
     case MODAL_ADD_NEW_BET_CLOSE_EVENT:
       return {
         ...state,
+        showNewBetModal: false,
+        newBetSaving: false,
         newBetSaved: false,
-        showNewBetModal: false
+        newBetError: false
       };
 
     case ADD_NEW_BET_ADDING_EVENT:
@@ -49,7 +52,14 @@ const eventReducer = (state = initialState, action) => {
       return {
         ...state,
         newBetData: {},
+        newBetSaving: false,
         newBetSaved: true
+      };
+
+    case ADD_NEW_BET_ERROR_EVENT:
+      return {
+        ...state,
+        newBetError: action.error
       };
 
     default:

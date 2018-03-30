@@ -78,11 +78,6 @@
         "bid_type": "Bid type",
         "deposit": "Deposit",
         "submit": "Submit",
-        "approve": {
-          "label": "Approve",
-          "fetching": "Fetching allowance value from blockchain.",
-          "message": "Your current allowance balance: ${ allowance }. It's not enough for creating event. Please approve more tokens."
-        },
         "tags": {
           "label": "Tags",
           "error": "You should add at least one tag"
