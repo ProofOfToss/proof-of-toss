@@ -75,7 +75,7 @@ class ModalConfirm extends Component {
 
       {this.props.save_error &&
         <div className='alert alert-danger' role='alert'>
-          {this.props.save_error.message}
+          {this.props.save_error}
         </div>
       }
 
@@ -183,7 +183,7 @@ class ModalConfirm extends Component {
         className: 'btn-primary',
         attrs: {
           onClick: this.saveEventHandler,
-          disabled: this.feeLink.error
+          disabled: this.feeLink.error || this.props.saving
         }
       }];
     }
@@ -215,6 +215,7 @@ function mapStateToProps(state) {
   return {
     web3: state.web3.web3,
     currentAddress: state.user.address,
+    saving: state.newEvent.saving,
     saved: state.newEvent.saved,
     save_error: state.newEvent.save_error,
     formData: state.newEvent.formData,

@@ -1,4 +1,5 @@
 import EventBaseContract from '../../../build/contracts/EventBase.json';
+import { getTranslate } from 'react-localize-redux';
 import { deployed } from "../../util/contracts";
 import { formatBalance, denormalizeBalance } from './../../util/token';
 import { toBytesTruffle as toBytes } from '../../util/serialityUtil';
@@ -11,6 +12,7 @@ export const MODAL_NEW_BET_SHOW_EVENT = 'MODAL_NEW_BET_SHOW_EVENT';
 export const MODAL_ADD_NEW_BET_CLOSE_EVENT = 'MODAL_ADD_NEW_BET_CLOSE_EVENT';
 export const ADD_NEW_BET_ADDING_EVENT = 'ADD_NEW_BET_ADDING_EVENT';
 export const ADD_NEW_BET_ADDED_EVENT = 'ADD_NEW_BET_ADDED_EVENT';
+export const ADD_NEW_BET_ERROR_EVENT = 'ADD_NEW_BET_ERROR_EVENT';
 
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
 
@@ -103,7 +105,20 @@ export const modalAddNewBetAdd = (gasLimit, gasPrice) => {
 
       dispatch({type: ADD_NEW_BET_ADDED_EVENT});
     } catch (e) {
-      console.log(e);
+      let msg;
+      const translate = getTranslate(getState().locale);
+      if (
+        // firefox do not have normal msg, so trying to check for method name in call stack
+        e.message.indexOf('nsetTxStatusRejected') !== -1 ||
+      // chrome have normal message
+        e.message.indexOf('User denied transaction signature') !== -1)
+      {
+        msg = translate('errors.denied_transaction');
+      } else {
+        msg = translate('errors.unexpected_error');
+      }
+
+      dispatch({type: ADD_NEW_BET_ERROR_EVENT, error: msg});
     }
   }
 };

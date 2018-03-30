@@ -66,9 +66,9 @@ class ModalNewBet extends Component {
   _confirmContent() {
 
     return <div className="modal-new-bet">
-      {this.props.save_error &&
+      {this.props.newBetError &&
         <div className='alert alert-danger' role='alert'>
-          {this.props.save_error.message}
+          {this.props.newBetError}
         </div>
       }
 
@@ -147,7 +147,7 @@ class ModalNewBet extends Component {
         className: 'btn-primary',
         attrs: {
           onClick: this.addBetHandler,
-          disabled: this.links.fee.error
+          disabled: this.links.fee.error || this.props.newBetSaving
         }
       }];
     }
@@ -181,7 +181,9 @@ function mapStateToProps(state) {
     currentAddress: state.user.address,
     eventData: state.event.eventData,
     newBetData: state.event.newBetData,
+    newBetSaving: state.event.newBetSaving,
     newBetSaved: state.event.newBetSaved,
+    newBetError: state.event.newBetError,
     sbtcBalance: state.token.sbtcBalance,
     translate: getTranslate(state.locale),
   };
