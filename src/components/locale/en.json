@@ -128,13 +128,21 @@
       "columns": {
         "name": "Name",
         "tags": "Tags",
+        "category": "Category",
         "bid_type": "Bid Type",
         "start_date": "Start Date",
         "end_date": "End Date",
         "bid_sum": "Bid Sum",
         "date_start": "Start time",
-        "date_end": "End time"
+        "date_end": "End time",
+        "bid_date": "Bid date",
+        "bid_result": "Bid result",
+        "result_coefficient": "Result coefficient",
+        "prize": "Prize"
       }
+    },
+    "my_bets": {
+      "header": "My bets"
     },
     "event": {
       "fetching": "Loading event information...",

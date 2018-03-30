@@ -13,7 +13,7 @@ import '../../styles/components/play_table.scss';
 
 import appConfig from "../../data/config.json"
 import { getLanguageAnalyzerByCode } from '../../util/i18n';
-import { denormalizeBalance } from '../../util/token';
+import { formatBalance } from '../../util/token';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -64,7 +64,6 @@ class MyBets extends Component {
       error: null,
 
       q: parsed.q,
-      category: parsed.category ? parseInt(parsed.category, 10) : null,
       fromDate: parsed.fromTimestamp ? Datetime.moment(new Date(parseInt(parsed.fromTimestamp, 10) * 1000)) : null,
       toDate: parsed.toTimestamp ? Datetime.moment(new Date(parseInt(parsed.toTimestamp, 10) * 1000)) : null,
       fromTimestamp: parsed.fromTimestamp && parseInt(parsed.fromTimestamp, 10),
@@ -191,14 +190,6 @@ class MyBets extends Component {
 
     }
 
-    if (this.state.category) {
-      conditions.push({
-        term: {
-          category: this.state.category,
-        }
-      });
-    }
-
     if (this.state.fromTimestamp || this.state.toTimestamp) {
       const condition = {};
 
@@ -292,7 +283,7 @@ class MyBets extends Component {
           accumulator.push(Object.assign({rowSpan: bidsLength}, event, bidInfo(bids[0], event)));
 
           for (let i = 1; i < bidsLength; i++) {
-            accumulator.push(Object.assign({rowSpan: 0}, emptyEvent, bidInfo(bids[i], event)));
+            accumulator.push(Object.assign({rowSpan: -1}, emptyEvent, bidInfo(bids[i], event)));
           }
 
           return accumulator;
@@ -321,24 +312,17 @@ class MyBets extends Component {
     };
 
     const rowAttrs = (cell, row, rowIndex, colIndex) => {
-      return {rowSpan: row.rowSpan};
+      return row.rowSpan > 0 ? {rowSpan: row.rowSpan} : {};
+    };
+
+    const rowClasses = (row, rowIndex) => {
+      return row.rowSpan === -1 ? 'multiple-bets-row' : '';
     };
 
     return(
       <main className="container">
         <div>
-          <h1>{ this.props.translate('pages.play.header') }</h1>
-
-          <div>
-            <a className={this.state.category ? 'btn btn-link' : 'btn btn-default'} onClick={this.onChangeCategory.bind(this, null)}>{this.props.translate(`categories.all`)}</a>
-            {
-              categories.map((category, key) => <a
-                key={key}
-                className={this.state.category === category.id ? 'btn btn-default' : 'btn btn-link'}
-                onClick={this.onChangeCategory.bind(this, category.id)}
-              >{this.props.translate(`categories.${category.name}`)}</a>)
-            }
-          </div>
+          <h1>{ this.props.translate('pages.my_bets.header') }</h1>
 
           <form className="form" onSubmit={this.handleSubmit}>
 
@@ -424,7 +408,7 @@ class MyBets extends Component {
                   dataField: "bidSum",
                   sort: true,
                   width: 150,
-                  formatter: (cell) => denormalizeBalance(cell),
+                  formatter: (cell) => formatBalance(cell),
                 },
                 {
                   text: this.props.translate('pages.play.columns.bid_date'),
@@ -444,7 +428,7 @@ class MyBets extends Component {
                   dataField: "prize",
                   sort: false,
                   width: 200,
-                  formatter: (cell) => denormalizeBalance(cell),
+                  formatter: (cell) => formatBalance(cell),
                 },
                 {
                   text: '',
@@ -457,6 +441,7 @@ class MyBets extends Component {
                 }
               ] }
               rowStyle={ rowStyle }
+              rowClasses={ rowClasses }
               // @todo: defaultSorted triggers table to change which triggers query to elasticsearch
               // if remove defaultSorted, do not forget to uncomment this.update() in componentDidMount() function!!!
               defaultSorted={[
