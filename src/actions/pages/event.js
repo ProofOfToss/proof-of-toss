@@ -14,7 +14,11 @@ export const ADD_NEW_BET_ADDED_EVENT = 'ADD_NEW_BET_ADDED_EVENT';
 
 export const MODAL_RESOLVE_SHOW_EVENT = 'MODAL_RESOLVE_SHOW_EVENT';
 export const MODAL_RESOLVE_CLOSE_EVENT = 'MODAL_RESOLVE_CLOSE_EVENT';
+export const MODAL_RESOLVE_APPROVING_EVENT = 'MODAL_RESOLVE_APPROVING_EVENT';
 export const MODAL_RESOLVE_APPROVED_EVENT = 'MODAL_RESOLVE_APPROVED_EVENT';
+export const MODAL_RESOLVE_APPROVE_ERROR_EVENT = 'MODAL_RESOLVE_APPROVE_ERROR_EVENT';
+
+export const DID_NOT_HAPPEN_EVENT = 'DID_NOT_HAPPEN_EVENT';
 
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
 
@@ -42,6 +46,7 @@ export const fetchEvent = (address) => {
 
       //Fetch state
       eventData.status = (await eventBaseInstance.getState()).toNumber();
+      eventData.resolvedResult = (await eventBaseInstance.resolvedResult()).toNumber();
 
       //Fetch results
       let resultsPromises = [];
@@ -123,6 +128,7 @@ export const modalResolveClose = (result) => ({
 
 export const modalResolveApprove = (gasLimit, gasPrice) => {
   return async (dispatch, getState) => {
+    dispatch({type: MODAL_RESOLVE_APPROVING_EVENT});
 
     try {
       const contract = require('truffle-contract');
@@ -130,7 +136,7 @@ export const modalResolveApprove = (gasLimit, gasPrice) => {
       eventBase.setProvider(getState().web3.web3.currentProvider);
       const eventBaseInstance = eventBase.at(getState().event.eventData.address);
 
-      eventBaseInstance.resolve(getState().event.resolveResult.index, {
+      await eventBaseInstance.resolve(getState().event.resolveResult.index, {
         from: getState().user.address,
         gasPrice: gasPrice,
         gas: gasLimit
@@ -139,6 +145,11 @@ export const modalResolveApprove = (gasLimit, gasPrice) => {
       dispatch({type: MODAL_RESOLVE_APPROVED_EVENT});
     } catch (e) {
       console.log(e);
+      dispatch({type: MODAL_RESOLVE_APPROVE_ERROR_EVENT});
     }
   }
 };
+
+export const didNotHappen = () => ({
+  type: DID_NOT_HAPPEN_EVENT
+});

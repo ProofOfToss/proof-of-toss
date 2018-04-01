@@ -1,16 +1,26 @@
-import { FETCHED_EVENT, MODAL_ADD_NEW_BET_CLOSE_EVENT,
-  MODAL_NEW_BET_SHOW_EVENT, ADD_NEW_BET_ADDING_EVENT, ADD_NEW_BET_ADDED_EVENT,
-  MODAL_RESOLVE_SHOW_EVENT, MODAL_RESOLVE_CLOSE_EVENT, MODAL_RESOLVE_APPROVED_EVENT}
-from '../../actions/pages/event';
+import { FETCHED_EVENT, MODAL_ADD_NEW_BET_CLOSE_EVENT, MODAL_NEW_BET_SHOW_EVENT,
+  ADD_NEW_BET_ADDING_EVENT, ADD_NEW_BET_ADDED_EVENT, ADD_NEW_BET_ERROR_EVENT,
+
+  MODAL_RESOLVE_SHOW_EVENT, MODAL_RESOLVE_CLOSE_EVENT, MODAL_RESOLVE_APPROVING_EVENT,
+  MODAL_RESOLVE_APPROVED_EVENT, MODAL_RESOLVE_APPROVE_ERROR_EVENT,
+
+  DID_NOT_HAPPEN_EVENT
+} from '../../actions/pages/event';
 
 const initialState = {
   fetched: false,
   eventData: {},
   newBetData: {},
   showNewBetModal: false,
-  showResolveModal: false,
   newBetSaving: false,
-  newBetSaved: false
+  newBetSaved: false,
+  newBetError: false,
+
+  showResolveModal: false,
+  resolveApproving: false,
+  resolveApproved: false,
+  resolveApproveError: false,
+  resolveResult: {}
 };
 
 const eventReducer = (state = initialState, action) => {
@@ -67,14 +77,34 @@ const eventReducer = (state = initialState, action) => {
       return {
         ...state,
         showResolveModal: false,
+        resolveApproving: false,
+        resolveApproved: false,
+        resolveApproveError: false,
         resolveResult: {}
+      };
+
+    case MODAL_RESOLVE_APPROVING_EVENT:
+      return {
+        ...state,
+        resolveApproving: true
       };
 
     case MODAL_RESOLVE_APPROVED_EVENT:
       return {
         ...state,
-        resolveResult: {},
-        resolveApproved: true
+        resolveApproved: true,
+        resolveResult: {}
+      };
+
+    case MODAL_RESOLVE_APPROVE_ERROR_EVENT:
+      return {
+        ...state,
+        resolveApproveError: action.msg
+      };
+
+    case DID_NOT_HAPPEN_EVENT:
+      return {
+        ...state
       };
 
     default:

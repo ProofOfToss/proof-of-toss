@@ -153,7 +153,8 @@
       "saved": "Bet successfully added",
       "estimate_gas_error": "Error of calculation estimate gas",
       "modal_resolve_title": "Resolve result",
-      "resolve_approved": "result approved",
+      "resolve_approved": "Result approved",
+      "did_not_happen": "Did't happen",
       "errors": {
         "bidding": {
           "time_is_over": "Time is over",

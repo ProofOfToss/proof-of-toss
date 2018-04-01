@@ -38,7 +38,7 @@ class Index extends Component {
         <MainInfo eventData={this.props.eventData} />
         <TagsList tags={this.props.eventData.tag} />
         <ResultsList status={this.props.eventData.status}
-                     endTime={this.props.eventData.endDate}
+                     resolvedResult={this.props.eventData.resolvedResult}
                      results={this.props.eventData.possibleResults} />
       </Fragment>
     )
