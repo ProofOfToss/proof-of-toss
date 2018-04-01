@@ -18,6 +18,10 @@
     "cancel": "Cancel",
     "resolve": "Resolve"
   },
+  "errors": {
+    "denied_transaction": "You have denied transaction",
+    "unexpected_error": "There have been an unexpected error. Please try again!"
+  },
   "validation": {
     "required": "Is required",
     "min_length": "This value is too short. It should have ${ min } character or more.",
@@ -86,11 +90,6 @@
         "bid_type": "Bid type",
         "deposit": "Deposit",
         "submit": "Submit",
-        "approve": {
-          "label": "Approve",
-          "fetching": "Fetching allowance value from blockchain.",
-          "message": "Your current allowance balance: ${ allowance }. It's not enough for creating event. Please approve more tokens."
-        },
         "tags": {
           "label": "Tags",
           "error": "You should add at least one tag"

@@ -47,8 +47,10 @@ const eventReducer = (state = initialState, action) => {
     case MODAL_ADD_NEW_BET_CLOSE_EVENT:
       return {
         ...state,
-        newBetSaved: false,
         showNewBetModal: false,
+        newBetSaving: false,
+        newBetSaved: false,
+        newBetError: false,
         newBetData: {}
       };
 
@@ -62,7 +64,14 @@ const eventReducer = (state = initialState, action) => {
       return {
         ...state,
         newBetData: {},
+        newBetSaving: false,
         newBetSaved: true
+      };
+
+    case ADD_NEW_BET_ERROR_EVENT:
+      return {
+        ...state,
+        newBetError: action.error
       };
 
     //Resolve modal
@@ -102,6 +111,7 @@ const eventReducer = (state = initialState, action) => {
         resolveApproveError: action.msg
       };
 
+    //Did not happen
     case DID_NOT_HAPPEN_EVENT:
       return {
         ...state

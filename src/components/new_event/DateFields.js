@@ -31,15 +31,20 @@ class DateFields extends Component {
   }
 
   onChangeStartTime(currentDate) {
+    const endTime = (this.state.formData.endTime < currentDate || !this.state.formData.endTime) ? currentDate.clone() : this.state.formData.endTime;
+
     this.setState({
       formData: {
         ...this.state.formData,
         startTime: currentDate,
-        endTime: (this.state.formData.endTime < currentDate || !this.state.formData.endTime) ? currentDate.clone() : this.state.formData.endTime,
+        endTime: endTime,
       }
     });
 
-    this.props.onChange({'startTime': currentDate});
+    this.props.onChange({
+      'startTime': currentDate,
+      'endTime': endTime
+    });
   }
 
   onChangeEndTime(currentDate) {

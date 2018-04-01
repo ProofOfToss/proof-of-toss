@@ -245,21 +245,6 @@ class MyBets extends Component {
       const bidsByEvents = _.groupBy(_.map(bidsRes.hits.hits, (res) => {
         return Object.assign({tx: res._id}, res._source)
       }), 'event');
-      const emptyEvent = {
-        'name': '',
-        'description': '',
-        'bidType': '',
-        'bidSum': '',
-        'address': '',
-        'createdBy': '',
-        'locale': '',
-        'category': '',
-        'startDate': '',
-        'endDate': '',
-        'sourceUrl': '',
-        'tag': '',
-        'result': '',
-      };
 
       const bidInfo = (bid, event) => {
         const bidResult = event.possibleResults[bid.result];
@@ -283,7 +268,7 @@ class MyBets extends Component {
           accumulator.push(Object.assign({rowSpan: bidsLength}, event, bidInfo(bids[0], event)));
 
           for (let i = 1; i < bidsLength; i++) {
-            accumulator.push(Object.assign({rowSpan: -1}, emptyEvent, bidInfo(bids[i], event)));
+            accumulator.push(Object.assign({rowSpan: -1}, event, bidInfo(bids[i], event)));
           }
 
           return accumulator;
@@ -307,16 +292,17 @@ class MyBets extends Component {
   render() {
     const { data, categories } = this.state;
 
-    const rowStyle = (row, rowIndex) => {
-      return row.isWinningBet ? { background: 'rgba(255, 200, 200, 1)' } : {};
-    };
-
     const rowAttrs = (cell, row, rowIndex, colIndex) => {
       return row.rowSpan > 0 ? {rowSpan: row.rowSpan} : {};
     };
 
     const rowClasses = (row, rowIndex) => {
-      return row.rowSpan === -1 ? 'multiple-bets-row' : '';
+      const classes = [];
+
+      if (row.rowSpan === -1) { classes.push('multiple-bets-row'); }
+      if (row.isWinningBet) { classes.push('winning-bet-row'); }
+
+      return classes.join(' ');
     };
 
     return(
@@ -400,13 +386,13 @@ class MyBets extends Component {
                 {
                   text: this.props.translate('pages.play.columns.bid_result'),
                   dataField: "bidResult",
-                  sort: true,
+                  sort: false,
                   width: 150,
                 },
                 {
                   text: this.props.translate('pages.play.columns.bid_sum'),
                   dataField: "bidSum",
-                  sort: true,
+                  sort: false,
                   width: 150,
                   formatter: (cell) => formatBalance(cell),
                 },
@@ -435,12 +421,12 @@ class MyBets extends Component {
                   dataField: 'address',
                   sort: false,
                   width: 100,
+                  attrs: rowAttrs,
                   formatter: (cell) => {
                     return <Link to={`/${this.state.locale}/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link>
                   }
                 }
               ] }
-              rowStyle={ rowStyle }
               rowClasses={ rowClasses }
               // @todo: defaultSorted triggers table to change which triggers query to elasticsearch
               // if remove defaultSorted, do not forget to uncomment this.update() in componentDidMount() function!!!

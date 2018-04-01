@@ -1,45 +1,14 @@
 import MainContract from '../../../build/contracts/Main.json'
 import TokenContract from '../../../build/contracts/Token.json'
-import { getGasCalculation } from '../../util/gasPriceOracle';
+import { getTranslate } from 'react-localize-redux';
 import { denormalizeBalance } from './../../util/token';
-import { deployed } from '../../util/contracts';
 import { serializeEvent } from '../../util/eventUtil';
 
-export const FORM_APPROVE_EVENT = 'FORM_APPROVE_EVENT';
-export const FORM_APPROVE_EVENT_SUCCESS = 'FORM_APPROVE_EVENT_SUCCESS';
-export const FORM_APPROVE_EVENT_ERROR = 'FORM_APPROVE_EVENT_ERROR';
-export const FORM_NEED_TO_REAPPROVE_EVENT = 'FORM_NEED_TO_REAPPROVE_EVENT';
 export const FORM_SAVE_EVENT = 'FORM_SAVE_EVENT';
 export const MODAL_SAVE_EVENT = 'MODAL_SAVE_EVENT';
 export const MODAL_CLOSE_EVENT = 'MODAL_CLOSE_EVENT';
 export const SAVE_ERROR_EVENT = 'SAVE_ERROR_EVENT';
 export const SAVED_EVENT = 'SAVED_EVENT';
-
-export const approveEvent = (deposit) => {
-  return (dispatch, getState) => {
-    dispatch({type: FORM_APPROVE_EVENT, deposit: deposit});
-
-    const web3 = getState().web3.web3;
-
-    deployed(web3, 'main', 'token').then(({mainInstance, tokenInstance}) => {
-      tokenInstance.approve.estimateGas(mainInstance.address, deposit, {
-        from: getState().user.address
-      })
-      .then((gasAmount) => {
-        return getGasCalculation(web3, gasAmount);
-      })
-      .then((gasCalculation) => {
-        return tokenInstance.approve(mainInstance.address, deposit, {
-          from: getState().user.address,
-          gasPrice: gasCalculation.gasPrice,
-          gas: gasCalculation.gasLimit
-        });
-      }).then(() => {
-        dispatch({type: FORM_APPROVE_EVENT_SUCCESS});
-      });
-    });
-  }
-};
 
 export const formSaveEvent = (formData) => ({
   type: FORM_SAVE_EVENT,
@@ -114,7 +83,20 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
         dispatch({type: SAVED_EVENT});
 
       }).catch(function(e) {
-        dispatch({type: SAVE_ERROR_EVENT, error: e})
+        let msg;
+        const translate = getTranslate(getState().locale);
+        if (
+          // firefox do not have normal msg, so trying to check for method name in call stack
+          e.message.indexOf('nsetTxStatusRejected') !== -1 ||
+          // chrome have normal message
+          e.message.indexOf('User denied transaction signature') !== -1)
+        {
+          msg = translate('errors.denied_transaction');
+        } else {
+          msg = translate('errors.unexpected_error');
+        }
+
+        dispatch({type: SAVE_ERROR_EVENT, error: msg})
       });
     })
   }
@@ -126,8 +108,4 @@ export const modalCloseEvent = () => ({
 
 export const savedEvent = () => ({
   'type': SAVED_EVENT
-});
-
-export const needToReapproveEvent = () => ({
-  type: FORM_NEED_TO_REAPPROVE_EVENT
 });
