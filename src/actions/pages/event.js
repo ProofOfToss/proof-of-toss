@@ -64,10 +64,16 @@ export const fetchEvent = (address) => {
           });
 
           Object.assign(esResult, {
-            coefficient: results[i][0].toNumber(),
-            betCount: results[i][1].toNumber(),
-            betSum: formatBalance(results[i][2].toNumber())
+            coefficient: results[esResult.index][0].toNumber(),
+            betCount: results[esResult.index][1].toNumber(),
+            betSum: formatBalance(results[esResult.index][2].toNumber()),
+            resolved: false
           });
+
+          if(esResult.index === eventData.resolvedResult) {
+            esResult.resolved = true;
+            eventData.resolvedResultDescription = esResult.description;
+          }
 
           delete(esResult.customCoefficient);
         }

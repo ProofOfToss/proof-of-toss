@@ -22,7 +22,7 @@ class ResultItem extends Component {
   }
 
   render() {
-      return <tr className={this.props.resolvedResult === this.props.result.index ? 'success' : ''}>
+      return <tr className={this.props.result.resolved ? 'success' : ''}>
         <td>{this.props.result.description}</td>
         <td>{this.props.result.coefficient}</td>
         <td>{this.props.result.betCount}</td>

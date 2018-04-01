@@ -10,7 +10,6 @@ class MainInfo extends Component {
     super(props);
     this.categoryUtil = new CategoryUtil(props.translate);
   }
-
   render() {
     return <Fragment>
       <dl className="dl-horizontal">
@@ -45,6 +44,12 @@ class MainInfo extends Component {
         <dt>{this.props.translate('pages.event.labels.source_url')}</dt>
         <dd>{this.props.eventData.sourceUrl}</dd>
       </dl>
+      {this.props.eventData.status > 5 &&
+        <dl className="dl-horizontal">
+          <dt>{this.props.translate('pages.event.labels.resolved_result')}</dt>
+          <dd>{this.props.eventData.resolvedResultDescription}</dd>
+        </dl>
+      }
     </Fragment>
   }
 }
