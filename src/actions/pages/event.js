@@ -170,7 +170,3 @@ export const modalResolveApprove = (gasLimit, gasPrice) => {
     }
   }
 };
-
-export const didNotHappen = () => ({
-  type: DID_NOT_HAPPEN_EVENT
-});

@@ -4,10 +4,31 @@ import { getTranslate } from 'react-localize-redux';
 
 import { modalResolveShow, didNotHappen } from '../../../actions/pages/event';
 import ResultItem from './ResultItem';
+import { STATUS_FINISHED } from "../../../util/eventUtil";
 
 import ModalResolve from './ModalResolve';
 
 class ResultsList extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.didNotHappen = this.didNotHappen.bind(this);
+  }
+
+  didNotHappen() {
+    const result = {
+      index: 254,
+      description: this.props.translate('pages.event.did_not_happen'),
+      coefficient: 0,
+      betSum: 0
+    };
+
+    console.log(this, result);
+
+    this.props.modalResolveShow(result);
+  }
+
   render() {
     return <Fragment>
       <table className="table table-striped results"><tbody>
@@ -27,7 +48,11 @@ class ResultsList extends Component {
         />
       }, this)}
       </tbody></table>
-      <div href="#" className="btn btn-primary" onClick={this.props.didNotHappen}>{this.props.translate('pages.event.did_not_happen')}</div>
+      {this.props.status === STATUS_FINISHED &&
+        <div href="#" className="btn btn-primary" onClick={this.didNotHappen}>
+          {this.props.translate('pages.event.did_not_happen')}
+        </div>
+      }
       {this.props.showResolveModal ? <ModalResolve /> : null}
     </Fragment>
   }
@@ -42,8 +67,7 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  modalResolveShow,
-  didNotHappen
+  modalResolveShow
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResultsList);

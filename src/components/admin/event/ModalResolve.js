@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
@@ -69,11 +69,14 @@ class ModalResolve extends Component {
         <dt>{this.props.translate('pages.event.result.name')}</dt>
         <dd>{this.props.resolveResult.description}</dd>
 
-        <dt>{this.props.translate('pages.event.result.coefficient')}</dt>
-        <dd>{this.props.resolveResult.coefficient}</dd>
+        {this.props.resolveResult < 220 && <Fragment>
+            <dt>{this.props.translate('pages.event.result.coefficient')}</dt>
+            <dd>{this.props.resolveResult.coefficient}</dd>
 
-        <dt>{this.props.translate('pages.event.result.bet_sum')}</dt>
-        <dd>{this.props.resolveResult.betSum}</dd>
+            <dt>{this.props.translate('pages.event.result.bet_sum')}</dt>
+            <dd>{this.props.resolveResult.betSum}</dd>
+          </Fragment>
+        }
 
         <br />
 
