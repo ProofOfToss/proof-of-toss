@@ -19,7 +19,12 @@ class ResultsList extends Component {
         <th />
       </tr>
       {this.props.results.map((result) => {
-        return <ResultItem key={result.index} result={result} resolvedResult={this.props.resolvedResult} />
+        return <ResultItem
+          key={result.index}
+          result={result}
+          status={this.props.status}
+          resolvedResult={this.props.resolvedResult}
+        />
       }, this)}
       </tbody></table>
       <div href="#" className="btn btn-primary" onClick={this.props.didNotHappen}>{this.props.translate('pages.event.did_not_happen')}</div>
