@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 
-import { modalResolveShow, didNotHappen } from '../../../actions/pages/event';
+import { modalResolveShow } from '../../../actions/pages/event';
 import ResultItem from './ResultItem';
 import { STATUS_FINISHED } from "../../../util/eventUtil";
 
