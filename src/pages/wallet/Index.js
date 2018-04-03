@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import TransactionsList from './TransactionsList'
 import ModalDeposit from './ModalDeposit'
-import ModalSend from "./ModalSend";
+import ModalSend from "./../../components/wallet/ModalSend";
 import { formatBalance } from './../../util/token'
 
 class Index extends Component {
