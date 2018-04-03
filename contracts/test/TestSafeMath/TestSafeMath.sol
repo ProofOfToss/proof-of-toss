@@ -1,13 +1,13 @@
 pragma solidity ^0.4.2;
 
-import "./Token.sol";
+import "./TestSafeMathToken.sol";
 import "../../installed_contracts/SafeMath.sol";
 
 contract TestSafeMath {
 
     using SafeMath for uint256;
 
-    Token public token;
+    TestSafeMathToken public token;
     address public owner;
     uint64 public deposit;
     uint8 public resolvedResult;
@@ -38,7 +38,7 @@ contract TestSafeMath {
     mapping (address => Vote) public votes;
 
     function TestSafeMath() public {
-        token = new Token();
+        token = new TestSafeMathToken();
 
         owner = msg.sender;
         deposit = 1000000;
