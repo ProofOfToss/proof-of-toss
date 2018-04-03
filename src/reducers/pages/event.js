@@ -1,6 +1,11 @@
 import { FETCHED_EVENT, MODAL_ADD_NEW_BET_CLOSE_EVENT, MODAL_NEW_BET_SHOW_EVENT,
-  ADD_NEW_BET_ADDING_EVENT, ADD_NEW_BET_ADDED_EVENT, ADD_NEW_BET_ERROR_EVENT }
-from '../../actions/pages/event';
+  ADD_NEW_BET_ADDING_EVENT, ADD_NEW_BET_ADDED_EVENT, ADD_NEW_BET_ERROR_EVENT,
+
+  MODAL_RESOLVE_SHOW_EVENT, MODAL_RESOLVE_CLOSE_EVENT, MODAL_RESOLVE_APPROVING_EVENT,
+  MODAL_RESOLVE_APPROVED_EVENT, MODAL_RESOLVE_APPROVE_ERROR_EVENT,
+
+  DID_NOT_HAPPEN_EVENT
+} from '../../actions/pages/event';
 
 const initialState = {
   fetched: false,
@@ -9,7 +14,13 @@ const initialState = {
   showNewBetModal: false,
   newBetSaving: false,
   newBetSaved: false,
-  newBetError: false
+  newBetError: false,
+
+  showResolveModal: false,
+  resolveApproving: false,
+  resolveApproved: false,
+  resolveApproveError: false,
+  resolveResult: {}
 };
 
 const eventReducer = (state = initialState, action) => {
@@ -39,7 +50,8 @@ const eventReducer = (state = initialState, action) => {
         showNewBetModal: false,
         newBetSaving: false,
         newBetSaved: false,
-        newBetError: false
+        newBetError: false,
+        newBetData: {}
       };
 
     case ADD_NEW_BET_ADDING_EVENT:
@@ -60,6 +72,49 @@ const eventReducer = (state = initialState, action) => {
       return {
         ...state,
         newBetError: action.error
+      };
+
+    //Resolve modal
+    case MODAL_RESOLVE_SHOW_EVENT:
+      return {
+        ...state,
+        showResolveModal: true,
+        resolveResult: action.result
+      };
+
+    case MODAL_RESOLVE_CLOSE_EVENT:
+      return {
+        ...state,
+        showResolveModal: false,
+        resolveApproving: false,
+        resolveApproved: false,
+        resolveApproveError: false,
+        resolveResult: {}
+      };
+
+    case MODAL_RESOLVE_APPROVING_EVENT:
+      return {
+        ...state,
+        resolveApproving: true
+      };
+
+    case MODAL_RESOLVE_APPROVED_EVENT:
+      return {
+        ...state,
+        resolveApproved: true,
+        resolveResult: {}
+      };
+
+    case MODAL_RESOLVE_APPROVE_ERROR_EVENT:
+      return {
+        ...state,
+        resolveApproveError: action.msg
+      };
+
+    //Did not happen
+    case DID_NOT_HAPPEN_EVENT:
+      return {
+        ...state
       };
 
     default:

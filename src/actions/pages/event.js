@@ -3,7 +3,7 @@ import { getTranslate } from 'react-localize-redux';
 import { deployed } from "../../util/contracts";
 import { formatBalance, denormalizeBalance } from './../../util/token';
 import { toBytesTruffle as toBytes } from '../../util/serialityUtil';
-import appConfig from "../../data/config.json"
+import appConfig from "../../data/config.json";
 
 export const FETCHED_EVENT = 'FETCHED_EVENT';
 export const FETCHING_ERROR_EVENT = 'FETCHING_ERROR_EVENT';
@@ -13,6 +13,14 @@ export const MODAL_ADD_NEW_BET_CLOSE_EVENT = 'MODAL_ADD_NEW_BET_CLOSE_EVENT';
 export const ADD_NEW_BET_ADDING_EVENT = 'ADD_NEW_BET_ADDING_EVENT';
 export const ADD_NEW_BET_ADDED_EVENT = 'ADD_NEW_BET_ADDED_EVENT';
 export const ADD_NEW_BET_ERROR_EVENT = 'ADD_NEW_BET_ERROR_EVENT';
+
+export const MODAL_RESOLVE_SHOW_EVENT = 'MODAL_RESOLVE_SHOW_EVENT';
+export const MODAL_RESOLVE_CLOSE_EVENT = 'MODAL_RESOLVE_CLOSE_EVENT';
+export const MODAL_RESOLVE_APPROVING_EVENT = 'MODAL_RESOLVE_APPROVING_EVENT';
+export const MODAL_RESOLVE_APPROVED_EVENT = 'MODAL_RESOLVE_APPROVED_EVENT';
+export const MODAL_RESOLVE_APPROVE_ERROR_EVENT = 'MODAL_RESOLVE_APPROVE_ERROR_EVENT';
+
+export const DID_NOT_HAPPEN_EVENT = 'DID_NOT_HAPPEN_EVENT';
 
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
 
@@ -39,7 +47,8 @@ export const fetchEvent = (address) => {
       const eventBaseInstance = eventBase.at(address);
 
       //Fetch state
-      eventData.status = (await eventBaseInstance.state()).toNumber();
+      eventData.status = (await eventBaseInstance.getState()).toNumber();
+      eventData.resolvedResult = (await eventBaseInstance.resolvedResult()).toNumber();
 
       //Fetch results
       let resultsPromises = [];
@@ -55,10 +64,16 @@ export const fetchEvent = (address) => {
           });
 
           Object.assign(esResult, {
-            coefficient: results[i][0].toNumber(),
-            betCount: results[i][1].toNumber(),
-            betSum: formatBalance(results[i][2].toNumber())
+            coefficient: results[esResult.index][0].toNumber(),
+            betCount: results[esResult.index][1].toNumber(),
+            betSum: formatBalance(results[esResult.index][2].toNumber()),
+            resolved: false
           });
+
+          if(esResult.index === eventData.resolvedResult) {
+            esResult.resolved = true;
+            eventData.resolvedResultDescription = esResult.description;
+          }
 
           delete(esResult.customCoefficient);
         }
@@ -119,6 +134,39 @@ export const modalAddNewBetAdd = (gasLimit, gasPrice) => {
       }
 
       dispatch({type: ADD_NEW_BET_ERROR_EVENT, error: msg});
+    }
+  }
+};
+
+export const modalResolveShow = (result) => ({
+  type: MODAL_RESOLVE_SHOW_EVENT,
+  result: result
+});
+
+export const modalResolveClose = (result) => ({
+  type: MODAL_RESOLVE_CLOSE_EVENT
+});
+
+export const modalResolveApprove = (gasLimit, gasPrice) => {
+  return async (dispatch, getState) => {
+    dispatch({type: MODAL_RESOLVE_APPROVING_EVENT});
+
+    try {
+      const contract = require('truffle-contract');
+      const eventBase = contract(EventBaseContract);
+      eventBase.setProvider(getState().web3.web3.currentProvider);
+      const eventBaseInstance = eventBase.at(getState().event.eventData.address);
+
+      await eventBaseInstance.resolve(getState().event.resolveResult.index, {
+        from: getState().user.address,
+        gasPrice: gasPrice,
+        gas: gasLimit
+      });
+
+      dispatch({type: MODAL_RESOLVE_APPROVED_EVENT});
+    } catch (e) {
+      console.log(e);
+      dispatch({type: MODAL_RESOLVE_APPROVE_ERROR_EVENT});
     }
   }
 };

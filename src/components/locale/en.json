@@ -15,7 +15,8 @@
     "ok": "Ok",
     "create": "Create",
     "add": "Add",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "resolve": "Resolve"
   },
   "errors": {
     "denied_transaction": "You have denied transaction",
@@ -150,25 +151,45 @@
       "your_bet": "Your bet",
       "saved": "Bet successfully added",
       "estimate_gas_error": "Error of calculation estimate gas",
-      "allow_bidding_errors": {
-        "time_is_over": "Time is over",
-        "invalid_status": "Invalid status"
+      "modal_resolve_title": "Resolve result",
+      "resolve_approved": "Result approved",
+      "did_not_happen": "Did't happen",
+      "errors": {
+        "bidding": {
+          "time_is_over": "Time is over",
+          "invalid_status": "Invalid status"
+        },
+        "resolve": {
+          "need_finished": "Need finished status for resolve",
+          "already_closed": "Already closed"
+        }
       },
       "labels": {
         "name": "Name",
         "bid_type": "Bid type",
         "category": "Category",
+        "state": "State",
         "start_time": "Start date",
         "end_time": "End date",
         "description": "Description",
         "source_url": "Source url",
         "tags": "Tags"
       },
+      "states": {
+        "state_0": "Created",
+        "state_1": "Published",
+        "state_2": "Accepted",
+        "state_3": "Started",
+        "state_4": "Finished",
+        "state_5": "Closed",
+        "state_6": "Distributed"
+      },
       "result": {
         "name": "Result",
         "coefficient": "Coefficient",
         "bet_count": "Bet count",
-        "bet_sum": "Bet sum"
+        "bet_sum": "Bet sum",
+        "confirm": "Confirm"
       }
     }
   },
