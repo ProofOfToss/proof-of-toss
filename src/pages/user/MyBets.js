@@ -13,7 +13,6 @@ import '../../styles/components/play_table.scss';
 
 import appConfig from "../../data/config.json"
 import { getLanguageAnalyzerByCode } from '../../util/i18n';
-import { formatBalance } from '../../util/token';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -394,7 +393,6 @@ class MyBets extends Component {
                   dataField: "bidSum",
                   sort: false,
                   width: 150,
-                  formatter: (cell) => formatBalance(cell),
                 },
                 {
                   text: this.props.translate('pages.play.columns.bid_date'),
@@ -414,7 +412,6 @@ class MyBets extends Component {
                   dataField: "prize",
                   sort: false,
                   width: 200,
-                  formatter: (cell) => formatBalance(cell),
                 },
                 {
                   text: '',
