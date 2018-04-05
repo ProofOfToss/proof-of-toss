@@ -172,7 +172,7 @@ class ModalSend extends Component {
 
     token.deployed().then((instance) => {
 
-      return instance.transfer.estimateGas(address, denormalizeBalance(sum));
+      return instance.transfer.estimateGas(address, denormalizeBalance(sum), {from: this.props.currentAddress});
 
     }).then((result) => {
       const gas = Math.round( Number(result) * 1.5); // x 1.5 to prevent surprise out-of-gas errors
