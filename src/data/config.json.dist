@@ -11,7 +11,7 @@
     "token_symbol": "TOSS",
     "currency_symbol": "SBTC",
     "token_precision": 2,
-    "currency_precision": 4,
+    "currency_precision": 18,
     "gwei_precision": 2,
     "token_min_send_value": 0.0001
   },

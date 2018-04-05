@@ -1,6 +1,7 @@
 import { deserializeEvent } from './eventUtil';
 import callAsync from './web3Util';
 import util from 'util';
+import { formatBalance } from './token'
 
 export const tagMapping = {
   'mappings': {
@@ -28,7 +29,7 @@ export const eventMapping = {
         'startDate': {'type': 'date'},
         'endDate': {'type': 'date'},
         'sourceUrl': {'type': 'text'},
-        'bidSum': {'type': 'integer'},
+        'bidSum': {'type': 'double'},
         'tag': {'type': 'nested'},
 
         'result': {'type': 'integer'},
@@ -48,7 +49,7 @@ export const betMapping = {
         'timestamp': {'type': 'date'},
         'bettor': {'type': 'keyword'},
         'result': {'type': 'integer'},
-        'amount': {'type': 'integer'},
+        'amount': {'type': 'double'},
         'withdrawn': {'type': 'keyword'},
       }
     },
@@ -178,7 +179,7 @@ export class IndexingUtil {
         'name': eventData.name,
         'description': eventData.description,
         'bidType': eventData.bidType,
-        'bidSum': bidSum,
+        'bidSum': formatBalance(bidSum),
         'address': _event.eventAddress,
         'createdBy': creator,
         'locale': eventData.locale,
@@ -293,7 +294,7 @@ export class IndexingUtil {
         const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseInt(result.betSum, 10), 0);
 
         const doc = {
-          'bidSum': bidSum,
+          'bidSum': formatBalance(bidSum),
           'result': result,
           'possibleResults': betCount > 0 ? possibleResults : [],
           'bettor': betCount > 0 ? [sender] : [],
@@ -322,7 +323,7 @@ export class IndexingUtil {
             timestamp: bet[0],
             bettor: bet[1],
             result: bet[2],
-            amount: bet[3],
+            amount: formatBalance(bet[3]),
             withdrawn: false,
           });
         }
