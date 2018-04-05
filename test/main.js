@@ -3,7 +3,7 @@ import { serializeEvent } from '../src/util/eventUtil';
 
 var Main = artifacts.require("./Main.sol");
 var EventBase = artifacts.require("./EventBase.sol");
-var Token = artifacts.require("./Token.sol");
+var Token = artifacts.require("./token-sale-contracts/TokenSale/Token/Token.sol");
 var Whitelist = artifacts.require("./Whitelist.sol");
 
 contract('Main', function(accounts) {
@@ -42,6 +42,8 @@ contract('Main', function(accounts) {
     whitelist = await Whitelist.deployed();
     token = await Token.deployed();
 
+    await token.setPause(false);
+    await token.mint(accounts[0], 10000000000000);
 
     return Main.deployed().then(function(instance) {
 
@@ -61,7 +63,7 @@ contract('Main', function(accounts) {
         assert.isUndefined(e);
       }
 
-      const transactionResult = await token.transferERC223(main.address, eventDeposit, serializeEvent(eventData), {
+      const transactionResult = await token.transferToContract(main.address, eventDeposit, serializeEvent(eventData), {
         from: accounts[0]
       });
 
@@ -157,7 +159,7 @@ contract('Main', function(accounts) {
 
     eventData.name = 'Test event 2';
 
-    await expectThrow(token.transferERC223(main.address, eventDeposit, serializeEvent(eventData), {from: accounts[1]}));
+    await expectThrow(token.transferToContract(main.address, eventDeposit, serializeEvent(eventData), {from: accounts[1]}));
   });
 
   it("should allow to create event to users in whitelist", async function() {
@@ -178,7 +180,7 @@ contract('Main', function(accounts) {
 
       eventData.name = 'Test event 3';
 
-      const transactionResult = await token.transferERC223(main.address, eventDeposit, serializeEvent(eventData), {from: accounts[0]});
+      const transactionResult = await token.transferToContract(main.address, eventDeposit, serializeEvent(eventData), {from: accounts[0]});
 
       const events = await new Promise((resolve, reject) => {
         main.NewEvent({}, {fromBlock: transactionResult.receipt.blockNumber, toBlock: 'pending', topics: transactionResult.receipt.logs[0].topics}).get((error, log) => {

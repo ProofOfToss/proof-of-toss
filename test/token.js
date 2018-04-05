@@ -1,10 +1,17 @@
 import expectThrow from './helpers/expectThrow';
 
-var Token = artifacts.require("./Token.sol");
+var Token = artifacts.require("./token-sale-contracts/TokenSale/Token/Token.sol");
 var Blocker = artifacts.require("./test/Blocker.sol");
 var BlockingGranter = artifacts.require("./test/BlockingGranter.sol");
 
 contract('Token', function (accounts) {
+
+  before(async () => {
+    const token = await Token.deployed();
+
+    await token.setPause(false);
+    await token.mint(accounts[0], 10000000000000);
+  });
 
   it("should add initial balance to msg.sender", async () => {
     const token = await Token.deployed();
@@ -125,10 +132,10 @@ contract('Token', function (accounts) {
         return granter.grant(accounts[0], blocker.address, {from: accounts[1]});
       }).then(async function () {
 
-        await token.generateTokens(accounts[1], 10000000);
+        await token.mint(accounts[1], 10000000);
         assert.equal(10000000, await token.balanceOf(accounts[1]));
         await expectThrow(blocker.block(accounts[1], 10000000, {from: accounts[1]})); // smart-contract was not granted to block tokens of accounts[1]
-        await token.generateTokens(accounts[1], -10000000);
+        await token.transfer(accounts[2], 10000000, {from: accounts[1]}); // await token.mint(accounts[1], -10000000);
 
         return blocker.block(accounts[0], 10000000, {from: accounts[1]});
       }).then(async function() {

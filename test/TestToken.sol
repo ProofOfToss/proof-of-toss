@@ -2,7 +2,7 @@ pragma solidity ^0.4.2;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
-import "../contracts/Token.sol";
+import "../contracts/token-sale-contracts/TokenSale/Token/Token.sol";
 
 import "../contracts/test/Blocker.sol";
 import "../contracts/test/BlockingGranter.sol";
@@ -10,19 +10,24 @@ import "../contracts/test/BlockingGranter.sol";
 contract TestToken {
 
     function testInitialBalanceUsingDeployedContract() {
-        Token token = Token(DeployedAddresses.Token());
+        Token token = new Token();
+
+        token.setPause(false);
+        token.mint(address(this), 10000000000000);
 
         uint expected = 10000000000000;
 
-        Assert.equal(token.balanceOf(tx.origin), expected, "Owner should have 10000000000000 tokens initially");
+        Assert.equal(token.balanceOf(address(this)), expected, "Owner should have 10000000000000 tokens initially");
     }
 
     function testBlocking() {
-        Token token = Token(DeployedAddresses.Token());
-        BlockingGranter blockingGranter = BlockingGranter(DeployedAddresses.BlockingGranter());
-        Blocker blocker = Blocker(DeployedAddresses.Blocker());
+        Token token = new Token();
 
-        token.generateTokens(address(this), 10000000000000);
+        token.setPause(false);
+        token.mint(address(this), 10000000000000);
+
+        BlockingGranter blockingGranter = new BlockingGranter(token);
+        Blocker blocker = new Blocker(token);
 
         Assert.equal(token.balanceOf(address(this)), 10000000000000, "Owner should have 10000000000000 tokens initially");
 

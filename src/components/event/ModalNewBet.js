@@ -32,7 +32,7 @@ class ModalNewBet extends Component {
     try {
       const tokenInstance = (await deployed(this.props.web3, 'token')).tokenInstance;
 
-      const gasAmount = await tokenInstance.transferERC223.estimateGas(
+      const gasAmount = await tokenInstance.transferToContract.estimateGas(
         this.props.eventData.address,
         denormalizeBalance(this.props.newBetData.amount),
         toBytes(

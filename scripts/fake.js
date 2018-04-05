@@ -80,7 +80,7 @@ logger.level = 'debug';
   }
 
   // await token.grantToAllowBlocking(main.address, true, {from: accounts[0]});
-  await token.generateTokens(accounts[1], 1000000000, {from: accounts[0]});
+  await token.mint(accounts[1], 1000000000, {from: accounts[0]});
 
   await token.approve(main.address, 1500, {from: accounts[1]});
   await whitelist.updateWhitelist(accounts[1], true);
@@ -114,7 +114,7 @@ logger.level = 'debug';
       results: results,
     });
 
-    const transactionResult = await token.transferERC223(main.address, deposit, bytes, {
+    const transactionResult = await token.transferToContract(main.address, deposit, bytes, {
       from: accounts[0]
     });
 
