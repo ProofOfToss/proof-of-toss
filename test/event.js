@@ -20,7 +20,7 @@ const BET_INDEX = 'toss_bet_' + appConfig.elasticsearch.indexPostfix + '_test';
 
 var Main = artifacts.require("./test/TestMainSC.sol");
 var EventBase = artifacts.require("./test/TestEventBase.sol");
-var Token = artifacts.require("./Token.sol");
+var Token = artifacts.require("./token-sale-contracts/TokenSale/Token/Token.sol");
 var Whitelist = artifacts.require("./Whitelist.sol");
 
 const esClient = new AwsEsPublicClient(
@@ -85,6 +85,9 @@ contract('Event', function(accounts) {
     whitelist = await Whitelist.deployed();
     eventBase = await EventBase.deployed();
 
+    await token.setPause(false);
+    await token.mint(accounts[0], 10000000000000);
+
     return Main.deployed().then(function(instance) {
       main = instance;
       return main.getToken();
@@ -97,11 +100,13 @@ contract('Event', function(accounts) {
         assert.isUndefined(e);
       }
 
-      return token.transferERC223(main.address, eventDeposit, bytes, {
+      return token.transferToContract(main.address, eventDeposit, bytes, {
         from: accounts[0]
       });
 
     }).then(async function(transactionResult) {
+
+      console.log(transactionResult.receipt.logs);
 
       const events = await new Promise((resolve, reject) => {
         main.NewEvent({}, {fromBlock: transactionResult.receipt.blockNumber, toBlock: 'pending', topics: transactionResult.receipt.logs[0].topics}).get((error, log) => {
@@ -124,7 +129,7 @@ contract('Event', function(accounts) {
 
   it("should add new bet", async () => {
 
-    await token.transferERC223(
+    await token.transferToContract(
       event.address,
       1000000,
       toBytes(
@@ -138,7 +143,7 @@ contract('Event', function(accounts) {
     assert.equal((await event.possibleResults(0))[2].toNumber(), 1000000, 'Sum of bets is invalid');
     assert.equal((await token.balanceOf(event.address)).toNumber(), 11000000, 'Event balance is invalid');
 
-    await token.transferERC223(
+    await token.transferToContract(
       event.address,
       500000,
       toBytes(
@@ -168,7 +173,7 @@ contract('Event', function(accounts) {
     });
 
     await event.setStartDate(now + 120);
-    await expectThrow(token.transferERC223(
+    await expectThrow(token.transferToContract(
       event.address,
       1000000,
       toBytes(
@@ -185,7 +190,7 @@ contract('Event', function(accounts) {
     assert.equal(await event.getState(), 1, 'Event state must be Published');
     assert.equal(await event.resolvedResult(), 255, 'Event result must be empty');
 
-    await token.transferERC223(
+    await token.transferToContract(
       event.address,
       1000000,
       toBytes(
@@ -225,7 +230,7 @@ contract('Event', function(accounts) {
     assert.equal(await event.getState(), 1, 'Event state must be Published');
     assert.equal(await event.resolvedResult(), 255, 'Event result must be empty');
 
-    await token.transferERC223(
+    await token.transferToContract(
       event.address,
       1000000,
       toBytes(
@@ -244,7 +249,7 @@ contract('Event', function(accounts) {
 
 
   it("should index bets", async () => {
-    await token.generateTokens(accounts[1], 10000000);
+    await token.mint(accounts[1], 10000000);
 
     await indexingUtil.syncIndeces(true);
 
@@ -278,7 +283,7 @@ contract('Event', function(accounts) {
     });
 
 
-    await token.transferERC223(
+    await token.transferToContract(
       event.address,
       98765,
       toBytes(
@@ -288,7 +293,7 @@ contract('Event', function(accounts) {
       {from: accounts[0]}
     );
 
-    await token.transferERC223(
+    await token.transferToContract(
       event.address,
       43210,
       toBytes(
@@ -328,6 +333,7 @@ contract('Event', function(accounts) {
 
     let bidsResult = await esClient.search(Object.assign({
       index: BET_INDEX,
+      sort: `timestamp:asc`,
       body: {
         query: {
           bool: {

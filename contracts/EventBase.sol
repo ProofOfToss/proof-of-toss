@@ -1,9 +1,9 @@
 pragma solidity ^0.4.2;
 
 import "./installed_contracts/Seriality/Seriality.sol";
-import "./Token.sol";
+import "./token-sale-contracts/TokenSale/Token/Token.sol";
 import "./Whitelist.sol";
-import "./ERC223ReceivingContract.sol";
+import "./token-sale-contracts/TokenSale/ERC223ReceivingContract.sol";
 
 contract EventBase is ERC223ReceivingContract, Seriality {
     // Declare Event contract's fields because fields must match

@@ -3,7 +3,7 @@ pragma solidity ^0.4.2;
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
 import "../contracts/installed_contracts/Seriality/Seriality.sol";
-import "../contracts/Token.sol";
+import "../contracts/token-sale-contracts/TokenSale/Token/Token.sol";
 import "../contracts/test/TestMainSC.sol";
 import "../contracts/EventBase.sol";
 import "../contracts/Event.sol";
@@ -18,13 +18,15 @@ contract TestEvent is Seriality {
     EventBase _event;
 
     function beforeEach() {
-        token = Token(DeployedAddresses.Token());
-        eventBase = EventBase(DeployedAddresses.EventBase());
-        whitelist = Whitelist(DeployedAddresses.Whitelist());
+        token = new Token();
+        eventBase = new EventBase(token);
+        whitelist = new Whitelist();
         main = new TestMainSC(token, whitelist, eventBase);
 
-        token.generateTokens(address(this), 10000000000000);
+        token.setPause(false);
+        token.mint(address(this), 10000000000000);
         whitelist.updateWhitelist(address(this), true);
+        whitelist.updateWhitelist(tx.origin, true);
 
         uint deposit = 10000000;
         uint64 startDate = 2517406195;
@@ -63,14 +65,12 @@ contract TestEvent is Seriality {
         str = 'tag2_name'; stringToBytes(offset, bytes(str), buffer); offset -= sizeOfString(str);
         str = 'tag3_name'; stringToBytes(offset, bytes(str), buffer); offset -= sizeOfString(str);
 
-        token.transferERC223(address(main), deposit, buffer);
+        token.transferToContract(address(main), deposit, buffer);
 
         _event = EventBase(main.getLastEvent());
     }
 
     function testNewBet() {
-        token = Token(DeployedAddresses.Token());
-
         uint8 action = 1; // bet
         uint8 result = 0;
 
@@ -80,7 +80,7 @@ contract TestEvent is Seriality {
         uintToBytes(offset, action, buffer); offset -= sizeOfInt(8);
         uintToBytes(offset, result, buffer); offset -= sizeOfInt(8);
 
-        token.transferERC223(address(_event), 1000000, buffer);
+        token.transferToContract(address(_event), 1000000, buffer);
 
         uint coefficient;
         uint count;

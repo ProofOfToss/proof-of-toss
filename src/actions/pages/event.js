@@ -104,7 +104,7 @@ export const modalAddNewBetAdd = (gasLimit, gasPrice) => {
     const tokenInstance = (await deployed(getState().web3.web3, 'token')).tokenInstance;
 
     try {
-      await tokenInstance.transferERC223(
+      await tokenInstance.transferToContract(
         getState().event.eventData.address,
         denormalizeBalance(getState().event.newBetData.amount),
         toBytes(

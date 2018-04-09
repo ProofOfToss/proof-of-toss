@@ -1,6 +1,6 @@
 pragma solidity ^0.4.2;
 
-import "../Token.sol";
+import "../token-sale-contracts/TokenSale/Token/Token.sol";
 
 contract Blocker {
     Token token;

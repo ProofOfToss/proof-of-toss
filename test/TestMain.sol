@@ -3,7 +3,7 @@ pragma solidity ^0.4.2;
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
 import "../contracts/installed_contracts/Seriality/Seriality.sol";
-import "../contracts/Token.sol";
+import "../contracts/token-sale-contracts/TokenSale/Token/Token.sol";
 import "../contracts/test/TestMainSC.sol";
 import "../contracts/EventBase.sol";
 import "../contracts/Whitelist.sol";
@@ -18,12 +18,15 @@ contract TestMain is Seriality {
     function tokenFallback(address _from, uint _value, bytes _data) public {}
 
     function testEventCreation() {
-        token = Token(DeployedAddresses.Token());
-        eventBase = EventBase(DeployedAddresses.EventBase());
-        whitelist = Whitelist(DeployedAddresses.Whitelist());
+        token = new Token();
+        eventBase = new EventBase(token);
+        whitelist = new Whitelist();
         main = new TestMainSC(token, whitelist, eventBase);
 
-        token.generateTokens(address(this), 10000000000000);
+        token.setPause(false);
+        token.mint(address(this), 10000000000000);
+        whitelist.updateWhitelist(address(this), true);
+        whitelist.updateWhitelist(tx.origin, true);
 
         Assert.equal(address(token), main.getToken(), "Main.token should be the same as token");
         Assert.equal(token.balanceOf(address(this)), 10000000000000, "Owner should have 10000000000000 tokens initially");
@@ -47,7 +50,7 @@ contract TestMain is Seriality {
         uintToBytes(offset, result_2Coefficient, buffer); offset -= sizeOfInt(64);
 
 
-        token.transferERC223(address(main), deposit, buffer);
+        token.transferToContract(address(main), deposit, buffer);
 
         Assert.equal(main.getLastEvent() != 0, true, "Event should be created");
 

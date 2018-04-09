@@ -1,10 +1,10 @@
 pragma solidity ^0.4.2;
 
-import "./Token.sol";
+import "./token-sale-contracts/TokenSale/Token/Token.sol";
 import "./Event.sol";
 import "./EventBase.sol";
 import "./Whitelist.sol";
-import "./ERC223ReceivingContract.sol";
+import "./token-sale-contracts/TokenSale/ERC223ReceivingContract.sol";
 import "./installed_contracts/Seriality/Seriality.sol";
 
 contract Main is ERC223ReceivingContract, Seriality {
@@ -40,8 +40,7 @@ contract Main is ERC223ReceivingContract, Seriality {
     event NewEvent(address indexed eventAddress, uint64 deposit, bytes eventData);
 
     function tokenFallback(address _from, uint _value, bytes memory _data) {
-        bytes memory empty;
-        token.transferERC223(newEvent(_from, uint64(_value), _data), _value, empty);
+        token.transfer(newEvent(_from, uint64(_value), _data), _value);
     }
 
     // Mapping:
@@ -88,7 +87,7 @@ contract Main is ERC223ReceivingContract, Seriality {
             _lastEvent.addResult(_resultCoefficient);
         }
 
-        NewEvent(
+        emit NewEvent(
             address(_lastEvent),
             _deposit,
             buffer
