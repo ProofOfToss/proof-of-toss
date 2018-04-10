@@ -1,13 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Select } from 'valuelink/tags'
+import moment from 'moment';
 import { getTranslate } from 'react-localize-redux';
 import { TIME_ZONES } from "../../util/timezones";
-import Datetime from "react-datetime"
+import DatePicker from "../form/DatePicker";
 import config from "../../data/config.json";
 import 'react-datetime/css/react-datetime.css'
 
-export const DEFAULT_START_TIME = Datetime.moment().add(1, 'hours');
+export const DEFAULT_START_TIME = moment().add(1, 'hours');
 export const DEFAULT_END_TIME = DEFAULT_START_TIME.clone();
 
 class DateFields extends Component {
@@ -59,7 +60,7 @@ class DateFields extends Component {
   }
 
   isValidStartDate(currentDate) {
-    return currentDate.isSameOrAfter(Datetime.moment().add(1, 'hour'), 'day');
+    return currentDate.isSameOrAfter(moment().add(1, 'hour'), 'day');
   }
 
   isValidEndDate(currentDate) {
@@ -67,10 +68,10 @@ class DateFields extends Component {
   }
 
   calculateStartTimeConstraints() {
-    if(this.state.formData.startTime.isSame(Datetime.moment(), 'day')) {
+    if(this.state.formData.startTime.isSame(moment(), 'day')) {
       return {
         hours: {
-          min: Datetime.moment().hours()
+          min: moment().hours() + 1
         }
       }
     }
@@ -112,8 +113,7 @@ class DateFields extends Component {
         {this.state.timeZones.length > 0 &&
           <Fragment>
             <label htmlFor="event[time_zone]">{ this.props.translate('pages.new_event.form.time_zone')}*</label>
-            <Select valueLink={this.props.valueLinkTimeZone} type='text' id="event[time_zone]" className='form-control'
-                    >
+            <Select valueLink={this.props.valueLinkTimeZone} type='text' id="event[time_zone]" className='form-control'>
               {this.state.timeZones.map((timeZone, key) => {
                 return <option key={key} value={key}>{timeZone}</option>
               }, this)}
@@ -125,14 +125,14 @@ class DateFields extends Component {
 
       <div className="form-group">
         <label htmlFor="event[date_start]">{ this.props.translate('pages.new_event.form.date_start')}*</label>
-        <Datetime isValidDate={this.isValidStartDate} onChange={this.onChangeStartTime}
+        <DatePicker isValidDate={this.isValidStartDate} onChange={this.onChangeStartTime}
           timeConstraints={this.calculateStartTimeConstraints()} timeFormat="H:mm"
-                  value={this.state.formData.startTime}/>
+          value={this.state.formData.startTime}/>
       </div>
 
       <div className="form-group">
-        <label htmlFor="event[date_start]">{ this.props.translate('pages.new_event.form.date_end')}*</label>
-        <Datetime isValidDate={this.isValidEndDate} onChange={this.onChangeEndTime}
+        <label htmlFor="event[date_end]">{ this.props.translate('pages.new_event.form.date_end')}*</label>
+        <DatePicker isValidDate={this.isValidEndDate} onChange={this.onChangeEndTime}
             timeConstraints={this.calculateEndTimeConstraints()} timeFormat="H:mm" inputProps={this.getEndDateInputProps()}
             value={this.state.formData.endTime}
          />

@@ -16,6 +16,7 @@
     "create": "Create",
     "add": "Add",
     "cancel": "Cancel",
+    "open": "Open",
     "resolve": "Resolve"
   },
   "errors": {
