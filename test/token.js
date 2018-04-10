@@ -37,7 +37,7 @@ contract('Token', function (accounts) {
 
     return Token.deployed()
       .then(async function (instance) {
-        await expectThrow(instance.block(accounts[0], 10000000));
+        await expectThrow(instance.blockTokens(accounts[0], 10000000));
       });
 
   });
@@ -46,7 +46,7 @@ contract('Token', function (accounts) {
 
     return Token.deployed()
       .then(async function (instance) {
-        await expectThrow(instance.block(accounts[0], 10000000, {from: accounts[1]}));
+        await expectThrow(instance.blockTokens(accounts[0], 10000000, {from: accounts[1]}));
       });
 
   });
@@ -86,21 +86,21 @@ contract('Token', function (accounts) {
         return token.grantToAllowBlocking(granter.address, true, {from: accounts[0]});
       }).then(async function () {
 
-        return token.allowanceToAllowBlocking(accounts[0], granter.address);
+        return token.grantedToAllowBlocking(accounts[0], granter.address);
       }).then(async function (result) {
         assert.equal(true, result);
 
         return granter.grant(accounts[0], blocker.address, {from: accounts[1]}); // accounts[1] can initiate blocking of accounts[0] tokens by smart-contract
       }).then(async function () {
 
-        return blocker.block(accounts[0], 10000000, {from: accounts[1]});
+        return blocker.blockTokens(accounts[0], 10000000, {from: accounts[1]});
       }).then(async function() {
 
         return token.balanceOf(accounts[0]);
       }).then(async function(balanceOf) {
         assert.equal(balanceOf.toNumber(), 10000000000000 - 10000000);
 
-        await blocker.unblock(accounts[0], 10000000, {from: accounts[1]});
+        await blocker.unblockTokens(accounts[0], 10000000, {from: accounts[1]});
         return token.balanceOf(accounts[0]);
       }).then(function(balanceOf) {
 
@@ -125,7 +125,7 @@ contract('Token', function (accounts) {
         return token.grantToAllowBlocking(granter.address, true, {from: accounts[0]});
       }).then(async function () {
 
-        return token.allowanceToAllowBlocking(accounts[0], granter.address);
+        return token.grantedToAllowBlocking(accounts[0], granter.address);
       }).then(async function (result) {
         assert.equal(true, result);
 
@@ -134,17 +134,17 @@ contract('Token', function (accounts) {
 
         await token.mint(accounts[1], 10000000);
         assert.equal(10000000, await token.balanceOf(accounts[1]));
-        await expectThrow(blocker.block(accounts[1], 10000000, {from: accounts[1]})); // smart-contract was not granted to block tokens of accounts[1]
+        await expectThrow(blocker.blockTokens(accounts[1], 10000000, {from: accounts[1]})); // smart-contract was not granted to block tokens of accounts[1]
         await token.transfer(accounts[2], 10000000, {from: accounts[1]}); // await token.mint(accounts[1], -10000000);
 
-        return blocker.block(accounts[0], 10000000, {from: accounts[1]});
+        return blocker.blockTokens(accounts[0], 10000000, {from: accounts[1]});
       }).then(async function() {
 
         return token.balanceOf(accounts[0]);
       }).then(async function(balanceOf) {
         assert.equal(balanceOf.toNumber(), 10000000000000 - 10000000);
 
-        await blocker.unblock(accounts[0], 10000000, {from: accounts[1]});
+        await blocker.unblockTokens(accounts[0], 10000000, {from: accounts[1]});
         return token.balanceOf(accounts[0]);
       }).then(function(balanceOf) {
 
@@ -170,7 +170,7 @@ contract('Token', function (accounts) {
         return granter.grant(accounts[0], blocker.address, {from: accounts[1]});
       })
       .then(async function (instance) {
-        await expectThrow(blocker.block(accounts[0], 0, {from: accounts[1]}));
+        await expectThrow(blocker.blockTokens(accounts[0], 0, {from: accounts[1]}));
       });
   });
 
@@ -201,7 +201,7 @@ contract('Token', function (accounts) {
         return granter.grant(accounts[0], blocker.address, {from: accounts[1]});
       })
       .then(function () {
-        return blocker.block(accounts[0], blockedCount, {from: accounts[1]});
+        return blocker.blockTokens(accounts[0], blockedCount, {from: accounts[1]});
       })
       .then(function () {
         return token.balanceOf(accounts[0]);
@@ -215,9 +215,9 @@ contract('Token', function (accounts) {
         assert.equal(blockedCount, blocked.toNumber());
       })
       .then(async function () {
-        await expectThrow(blocker.unblock(accounts[0], blockedCount + 1, {from: accounts[1]}));
+        await expectThrow(blocker.unblockTokens(accounts[0], blockedCount + 1, {from: accounts[1]}));
 
-        return blocker.unblock(accounts[0], blockedCount, {from: accounts[1]});
+        return blocker.unblockTokens(accounts[0], blockedCount, {from: accounts[1]});
       })
       .then(async function () {
         assert.equal(0, await token.blocked(accounts[0], blocker.address));
@@ -253,7 +253,7 @@ contract('Token', function (accounts) {
         return granter.grant(accounts[0], blocker.address, {from: accounts[1]});
       })
       .then(function () {
-        return blocker.block(accounts[0], blockedCount, {from: accounts[1]});
+        return blocker.blockTokens(accounts[0], blockedCount, {from: accounts[1]});
       })
       .then(function () {
         return token.balanceOf(accounts[0]);
@@ -267,7 +267,7 @@ contract('Token', function (accounts) {
         assert.equal(blockedCount, blocked.toNumber());
       })
       .then(function () {
-        return blocker.unblock(accounts[0], 300, {from: accounts[1]});
+        return blocker.unblockTokens(accounts[0], 300, {from: accounts[1]});
       })
       .then(function () {
         return token.balanceOf(accounts[0]);
@@ -288,7 +288,7 @@ contract('Token', function (accounts) {
         assert.equal(blockedCount - 300, blocked.toNumber());
       })
       .then(function () {
-        return blocker.unblockTo(accounts[0], accounts[1], 700, {from: accounts[1]});
+        return blocker.unblockTokensTo(accounts[0], accounts[1], 700, {from: accounts[1]});
       })
       .then(function () {
         return token.balanceOf(accounts[0]);
