@@ -13,15 +13,15 @@ contract Blocker {
         return address(token);
     }
 
-    function block(address _owner, uint amount) {
-        token.block(_owner, amount);
+    function blockTokens(address _owner, uint amount) {
+        token.blockTokens(_owner, amount);
     }
 
-    function unblock(address _owner, uint amount) {
-        token.unblock(_owner, _owner, amount);
+    function unblockTokens(address _owner, uint amount) {
+        token.unblockTokens(_owner, _owner, amount);
     }
 
-    function unblockTo(address _owner, address _receiver, uint amount) {
-        token.unblock(_owner, _receiver, amount);
+    function unblockTokensTo(address _owner, address _receiver, uint amount) {
+        token.unblockTokens(_owner, _receiver, amount);
     }
 }

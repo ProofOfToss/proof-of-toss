@@ -37,11 +37,11 @@ contract TestToken {
 
         blockingGranter.grant(address(this), address(blocker));
 
-        blocker.block(address(this), 10000000000000);
+        blocker.blockTokens(address(this), 10000000000000);
 
         Assert.equal(token.balanceOf(address(this)), 0, "Owner should have 0 tokens after block");
 
-        blocker.unblock(address(this), 1000);
+        blocker.unblockTokens(address(this), 1000);
 
         Assert.equal(token.balanceOf(address(this)), 1000, "Owner should have 0 tokens after unblock");
     }
