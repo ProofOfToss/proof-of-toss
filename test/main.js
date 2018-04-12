@@ -45,9 +45,13 @@ contract('Main', function(accounts) {
     await token.setPause(false);
     await token.mint(accounts[0], 10000000000000);
 
-    return Main.deployed().then(function(instance) {
+    return Main.deployed().then(async function(instance) {
 
       main = instance;
+
+      await token.setPause(true);
+      await token.setUnpausedWallet(main.address, true);
+      await token.grantToSetUnpausedWallet(main.address, true);
 
       return main.getToken();
 
