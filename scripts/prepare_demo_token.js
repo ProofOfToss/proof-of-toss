@@ -29,15 +29,20 @@ logger.level = 'debug';
   const provider = config.provider;
 
   const Token = resolver.require("../contracts/Token.sol");
+  const Main = resolver.require("../contracts/Main.sol");
 
   const web3 = new Web3();
   web3.setProvider(provider);
 
   Token.setProvider(provider);
   Token.defaults({from: web3.eth.coinbase});
+
+  Main.setProvider(provider);
+  Main.defaults({from: web3.eth.coinbase});
+
   web3.eth.defaultAccount = web3.eth.coinbase;
 
-  let token, accounts;
+  let token, main, accounts;
 
   await new Promise((resolve, reject) => {
     web3.eth.getAccounts((err, accs) => {
@@ -57,11 +62,17 @@ logger.level = 'debug';
 
   try {
     token = await Token.deployed();
+    main = await Main.deployed();
   } catch (error) {
     fatal(error);
   }
 
-  await token.setPause(false, {from: accounts[0]});
+  // await token.setPause(false, {from: accounts[0]});
+
+  await token.setPause(true, {from: accounts[0]});
+  await token.setUnpausedWallet(main.address, true, {from: accounts[0]});
+  await token.grantToSetUnpausedWallet(main.address, true, {from: accounts[0]});
+
   await token.mint(accounts[0], 10000000000000, {from: accounts[0]});
 
 })(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error); });
