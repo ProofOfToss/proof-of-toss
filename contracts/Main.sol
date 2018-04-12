@@ -56,10 +56,7 @@ contract Main is ERC223ReceivingContract, Seriality {
     // uint8 tagsCount | uint8 resultsCount | uint64 endDate | uint64 startDate
     function newEvent(address _creator, uint64 _deposit, bytes memory buffer) internal returns (address) {
         require(whitelist.whitelist(tx.origin) == true);
-
-        if (token.paused()) {
-            require(token.grantedToSetUnpausedWallet(address(this)) == true);
-        }
+        require(token.grantedToSetUnpausedWallet(address(this)) == true);
 
         uint64 _startDate;
         uint64 _endDate;
@@ -91,9 +88,7 @@ contract Main is ERC223ReceivingContract, Seriality {
             _lastEvent.addResult(_resultCoefficient);
         }
 
-        if (token.paused()) {
-            token.setUnpausedWallet(address(_lastEvent), true);
-        }
+        token.setUnpausedWallet(address(_lastEvent), true);
 
         emit NewEvent(
             address(_lastEvent),
