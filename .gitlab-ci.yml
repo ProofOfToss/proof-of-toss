@@ -1,5 +1,7 @@
 deploy_demo:
   stage: deploy
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
   environment:
     name: demo
     url: http://proof-of-toss-demo.axioma.lv/
