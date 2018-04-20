@@ -116,7 +116,8 @@
       "estimate_gas_error": "Error of calculation estimate gas",
       "allow_bidding_errors": {
         "time_is_over": "Time is over",
-        "invalid_status": "Invalid status"
+        "invalid_status": "Invalid status",
+        "not_enough_tokens": "Not enough tokens for betting"
       },
       "labels": {
         "name": "Названеи события",
