@@ -3,6 +3,7 @@ import TokenContract from '../../../build/contracts/Token.json'
 import { getTranslate } from 'react-localize-redux';
 import { denormalizeBalance } from './../../util/token';
 import { serializeEvent } from '../../util/eventUtil';
+import { decodeEvent } from '../../util/web3Util';
 
 export const FORM_SAVE_EVENT = 'FORM_SAVE_EVENT';
 export const MODAL_SAVE_EVENT = 'MODAL_SAVE_EVENT';
@@ -64,19 +65,9 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
 
       }).then(async function (transactionResult) {
 
-        const events = await new Promise((resolve, reject) => {
-          mainContract.NewEvent({}, {fromBlock: transactionResult.receipt.blockNumber, toBlock: 'pending', topics: transactionResult.receipt.logs[0].topics}).get((error, log) => {
-            if (error) {
-              reject(error);
-            }
+        const event = decodeEvent(web3, transactionResult.receipt.logs, main, 'NewEvent');
 
-            if (log[0].transactionHash === transactionResult.tx) {
-              resolve(log);
-            }
-          });
-        });
-
-        return events[0].args.eventAddress;
+        return event.eventAddress;
 
       }).then((eventAddress) => {
 
