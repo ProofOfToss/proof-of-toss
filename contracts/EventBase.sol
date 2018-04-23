@@ -6,6 +6,9 @@ import "./Whitelist.sol";
 import "./token-sale-contracts/TokenSale/ERC223ReceivingContract.sol";
 
 contract EventBase is ERC223ReceivingContract, Seriality {
+    using SafeMath for uint256;
+    using SafeMath for uint32;
+
     // Declare Event contract's fields because fields must match
     EventBase base;
     address public owner;
@@ -16,14 +19,14 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     struct Result {
         uint64 customCoefficient;
         uint32 betCount;
-        uint64 betSum;
+        uint256 betSum;
     }
 
     struct Bet {
         uint timestamp;
         address bettor;
         uint8 result;
-        uint64 amount;
+        uint256 amount;
     }
 
     Token public token;
@@ -31,7 +34,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
     address public creator;
     address public operatorId = 1;
-    uint64 public deposit;
+    uint256 public deposit;
     uint64 public startDate;
     uint64 public endDate;
     bytes32 public bidType;
@@ -65,7 +68,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         token = Token(_token);
     }
 
-    function init(address _token, address _whitelist, address _creator, uint64 _deposit, uint64 _startDate, uint64 _endDate, uint8 _resultsCount) public {
+    function init(address _token, address _whitelist, address _creator, uint256 _deposit, uint64 _startDate, uint64 _endDate, uint8 _resultsCount) public {
         require(msg.sender == owner);
         require(_resultsCount < 220); // 220 - 255 reserved for special results
         require(_startDate <= _endDate);
@@ -117,7 +120,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
             result = bytesToUint8(offset, _data);
             offset -= 1; // sizeOfUint(8);
 
-            newBet(result, uint64(_value));
+            newBet(result, _value);
 
         } else if (action == 2) {
             throw; // Not implemented
@@ -160,15 +163,15 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         _;
     }
 
-    function newBet(uint8 result, uint64 amount) stateTransitions internal {
+    function newBet(uint8 result, uint256 amount) stateTransitions internal {
         require(state == States.Published || state == States.Accepted);
         require(result >= 0 && result < resultsCount);
         require(now < startDate - (10 minutes));
 
         bets.push(Bet(now, tx.origin, result, amount));
 
-        possibleResults[result].betCount += 1;
-        possibleResults[result].betSum += amount;
+        possibleResults[result].betCount.add(1);
+        possibleResults[result].betSum.add(amount);
 
         usersBets[tx.origin].push(bets.length - 1);
         state = States.Accepted;
@@ -191,15 +194,163 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return usersBets[_user];
     }
 
-    function getShare(address user) constant returns (uint256) {
-        if (user == creator) {
-            return token.balanceOf(address(this));
-        } else {
-            return 0;
-        }
+    function isOperatorEvent() constant returns (bool) {
+        return false;
     }
 
+    function hasDefinedResult() constant internal returns (bool) {
+        return resolvedResult < 220;
+    }
+    
+    function isPlayer() constant returns (bool) {
+        return usersBets[tx.origin].length > 0;
+    }
+
+    function calculateLosersBetSum() private view returns (uint256) {
+        uint256 loosersBetSum = 0;
+        for(uint8 i = 0; i < resultsCount; i++) {
+            if(i == resolvedResult) {
+                continue;
+            }
+
+            loosersBetSum += possibleResults[i].betSum;
+        }
+
+        return loosersBetSum;
+    }
+
+    function calculateBetsSum() private view returns (uint256) {
+        uint256 betsSum = 0;
+        for(uint8 i = 0; i < resultsCount; i++) {
+            betsSum = betsSum.add(possibleResults[i].betSum);
+        }
+
+        return betsSum;
+    }
+ 
+    function getPrize(uint _userBet) constant returns (uint256) {
+        if (state != States.Closed) {
+            return 0;
+        }
+
+        require(_userBet < usersBets[tx.origin].length);
+
+        Bet bet = bets[usersBets[tx.origin][_userBet]];
+
+        if (bet.result == resolvedResult) {
+            if(isOperatorEvent()) {
+                return bet.amount.mul(possibleResults[resolvedResult].customCoefficient);
+            } else {
+                uint256 loosersBetSum = calculateLosersBetSum();
+                uint256 winnerCount = possibleResults[resolvedResult].betCount;
+
+                return (bet.amount.mul(99).div(100)).add(loosersBetSum.mul(99).div(100).div(winnerCount));
+            }
+        }
+
+        return 0;
+    }
+
+    function getRefund(uint _userBet) constant returns (uint256) {
+        if (state != States.Closed || hasDefinedResult()) {
+            return 0;
+        }
+
+        require(_userBet < usersBets[tx.origin].length);
+
+        return bets[usersBets[tx.origin][_userBet]].amount;
+    }
+
+    function getEventCreatorReward() constant returns (uint256) {
+        if (tx.origin != creator) {
+            return 0;
+        }
+
+        if (state != States.Closed) {
+            return 0;
+        }
+
+        uint256 betSum = calculateBetsSum();
+
+        // uint256 eventCreatorPercent = betsSum.mul(5).div(1000); // TODO use this when judging implemented
+        uint256 eventCreatorPercent = betSum.div(100);
+
+        if(eventCreatorPercent < deposit) {
+            return eventCreatorPercent;
+        }
+
+        return deposit;
+    }
+
+    function getEventCreatorRefund() constant returns (uint256) {
+        if (tx.origin != creator) {
+            return 0;
+        }
+
+        if (state != States.Closed || hasDefinedResult()) {
+            return 0;
+        }
+
+        uint256 betSum = calculateBetsSum();
+
+        if (betSum == 0) {
+            return 0;
+        }
+
+        return deposit;
+    }
+
+    function getShare(address user) constant returns (uint) {
+        uint share = 0;
+
+        share = share.add(getEventCreatorReward());
+        share = share.add(getEventCreatorRefund());
+
+        uint betsCount = usersBets[tx.origin].length;
+
+        for(uint i = 0; i < betsCount; i++) {
+            share = share.add(getPrize(i));
+            share = share.add(getRefund(i));
+        }
+
+        return share;
+    }
+
+    // --------------------------------
+
+    mapping(address => uint) withdraws; // User address => withdrawal timestamp
+    uint lastWithdraw = 0;
+
     function withdraw() {
-        token.transfer(msg.sender, getShare(msg.sender));
+        require(withdraws[msg.sender] == 0);
+
+        uint256 share = getShare(msg.sender);
+
+        require(share > 0);
+
+        if (lastWithdraw == 0) {
+            // TODO transfer jackpot
+        }
+
+        lastWithdraw = now;
+        withdraws[msg.sender] = lastWithdraw;
+
+        token.transfer(msg.sender, share);
+    }
+
+    mapping(address => mapping(uint => uint)) betWithdraws; // User address => userBet index => withdrawal timestamp
+
+    function withdrawPrize(uint bet) {
+        require(withdraws[msg.sender] == 0);
+        require(betWithdraws[msg.sender][bet] == 0);
+
+        uint share = getPrize(bet).add(getRefund(bet));
+
+        require(share > 0);
+
+        lastWithdraw = now;
+        withdraws[msg.sender] = lastWithdraw;
+
+        token.transfer(msg.sender, share);
     }
 }
