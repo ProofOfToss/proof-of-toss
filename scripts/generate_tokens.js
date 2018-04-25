@@ -7,7 +7,7 @@ import log4js from 'log4js';
 import callAsync from '../src/util/web3Util';
 
 const argv = require('yargs-parser')(process.argv.slice(2));
-const address = argv._[0];
+const address = '0x' + argv._[0].toString();
 
 
 const logger = log4js.getLogger();
@@ -73,6 +73,8 @@ logger.level = 'debug';
   } catch (error) {
     fatal(error);
   }
+
+  console.log(`Generating 10000000000000 TOSS for ${address}`);
 
   await token.setUnpausedWallet(address, true, {from: accounts[0]});
 
