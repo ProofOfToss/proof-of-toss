@@ -207,16 +207,16 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     }
 
     function calculateLosersBetSum() private view returns (uint256) {
-        uint256 loosersBetSum = 0;
+        uint256 losersBetSum = 0;
         for(uint8 i = 0; i < resultsCount; i++) {
             if(i == resolvedResult) {
                 continue;
             }
 
-            loosersBetSum += possibleResults[i].betSum;
+            losersBetSum += possibleResults[i].betSum;
         }
 
-        return loosersBetSum;
+        return losersBetSum;
     }
 
     function calculateBetsSum() private view returns (uint256) {
@@ -226,6 +226,24 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         }
 
         return betsSum;
+    }
+
+    function calculateBetsSums() private view returns (uint256, uint256, uint256) { // betSum, winnersBetSum, losersBetSum
+        uint256 betsSum = 0;
+        uint256 losersBetSum = 0;
+        uint256 winnersBetSum = possibleResults[resolvedResult].betSum;
+
+        for(uint8 i = 0; i < resultsCount; i++) {
+            betsSum = betsSum.add(possibleResults[i].betSum);
+
+            if(i == resolvedResult) {
+                continue;
+            }
+
+            losersBetSum += possibleResults[i].betSum;
+        }
+
+        return (betsSum, winnersBetSum, losersBetSum);
     }
  
     function getPrize(uint _userBet) constant returns (uint256) {
@@ -241,10 +259,18 @@ contract EventBase is ERC223ReceivingContract, Seriality {
             if(isOperatorEvent()) {
                 return bet.amount.mul(possibleResults[resolvedResult].customCoefficient);
             } else {
-                uint256 loosersBetSum = calculateLosersBetSum();
-                uint256 winnerCount = possibleResults[resolvedResult].betCount;
+                uint256 betSum;
+                uint256 losersBetSum;
+                uint256 winnersBetSum;
 
-                return (bet.amount.mul(99).div(100)).add(loosersBetSum.mul(99).div(100).div(winnerCount));
+                (betSum, losersBetSum, winnersBetSum) = calculateBetsSums();
+
+                uint256 coefficient = bet.amount.div(winnersBetSum);
+                uint256 prize = bet.amount.mul(99).add(
+                    losersBetSum.mul(99).div(100).mul(coefficient)
+                );
+
+                return prize;
             }
         }
 
@@ -272,7 +298,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
         uint256 betSum = calculateBetsSum();
 
-        // uint256 eventCreatorPercent = betsSum.mul(5).div(1000); // TODO use this when judging implemented
+        // uint256 eventCreatorPercent = betsSum.mul(200); // TODO use this when judging implemented
         uint256 eventCreatorPercent = betSum.div(100);
 
         if(eventCreatorPercent < deposit) {

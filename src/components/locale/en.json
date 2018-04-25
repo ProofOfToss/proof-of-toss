@@ -145,6 +145,9 @@
     "my_bets": {
       "header": "My bets"
     },
+    "withdraw": {
+      "header": "Withdraw"
+    },
     "event": {
       "fetching": "Loading event information...",
       "newBet": "Add bet",

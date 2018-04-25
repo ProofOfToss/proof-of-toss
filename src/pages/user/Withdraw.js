@@ -9,17 +9,18 @@ import { Link } from 'react-router';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
+import { modalWithdrawShow } from '../../actions/pages/event';
+import ModalWithdraw from './ModalWithdraw';
 import '../../styles/components/play_table.scss';
 
 import appConfig from "../../data/config.json"
-import { getLanguageAnalyzerByCode } from '../../util/i18n';
-import { myBetsConditions } from '../../util/searchUtil';
+import { myPrizeConditions, myPrizeBetConditions } from '../../util/searchUtil';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
 const BET_INDEX = 'toss_bet_' + appConfig.elasticsearch.indexPostfix;
 
-class MyBets extends Component {
+class Withdraw extends Component {
   constructor(props) {
     super(props);
 
@@ -103,6 +104,15 @@ class MyBets extends Component {
     }, this.update);
   }
 
+  modalWithdrawShow(event, userBet) {
+    const result = {
+      address: event,
+      userBet,
+    };
+
+    this.props.modalWithdrawShow(result);
+  }
+
   isValidDate(currentDate) {
     return true;
   }
@@ -149,9 +159,9 @@ class MyBets extends Component {
   }
 
   async update() {
-    history.replaceState({}, '', `/${this.state.locale}/cabinet/my_bets?${this.getUrlParams()}`);
+    history.replaceState({}, '', `/${this.state.locale}/cabinet/withdraw?${this.getUrlParams()}`);
 
-    const {conditions, shouldConditions} = myBetsConditions(
+    let {conditions, shouldConditions} = myPrizeConditions(
       this.state.locale,
       this.props.currentAddress,
       this.state.q,
@@ -180,19 +190,20 @@ class MyBets extends Component {
         }
       } : {}));
 
+      let {conditions} = myPrizeBetConditions();
+      conditions.push({
+        terms: {
+          'event': res.hits.hits.map((hit) => hit._id),
+        }
+      });
+
       const bidsRes = await this.props.esClient.search(Object.assign({
         index: BET_INDEX,
         sort: `timestamp:desc`,
         body: {
           query: {
             bool: {
-              must: [
-                {
-                  terms: {
-                    'event': res.hits.hits.map((hit) => hit._id),
-                  }
-                }
-              ]
+              must: conditions,
             }
           }
         }
@@ -264,7 +275,7 @@ class MyBets extends Component {
     return(
       <main className="container">
         <div>
-          <h1>{ this.props.translate('pages.my_bets.header') }</h1>
+          <h1>{ this.props.translate('pages.withdraw.header') }</h1>
 
           <form className="form" onSubmit={this.handleSubmit}>
 
@@ -369,6 +380,13 @@ class MyBets extends Component {
                   dataField: "prize",
                   sort: false,
                   width: 200,
+                  formatter: (cell, row) => {
+                    return (
+                      <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index)}}>
+                        {`Withdraw ${cell} TOSS`}
+                      </span>
+                    );
+                  }
                 },
                 {
                   text: '',
@@ -404,6 +422,7 @@ class MyBets extends Component {
             />
           </div>
         </div>
+        {this.props.showWithdrawModal ? <ModalWithdraw /> : null}
       </main>
     )
   }
@@ -416,7 +435,12 @@ function mapStateToProps(state) {
     translate: getTranslate(state.locale),
     locale: _.find(state.locale.languages, (l) => l.active).code,
     esClient: state.elastic.client,
+    showWithdrawModal: state.event.showWithdrawModal
   };
 }
 
-export default connect(mapStateToProps)(MyBets);
+const mapDispatchToProps = {
+  modalWithdrawShow
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Withdraw);

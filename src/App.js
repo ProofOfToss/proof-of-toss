@@ -75,6 +75,7 @@ class App extends Component {
           <a href="#" className="dropdown-toggle" data-toggle="dropdown">Cabinet <span className="caret"></span></a>
           <ul className="dropdown-menu" role="menu">
             <li><Link to="/cabinet/my_bets" className="pure-menu-link">My bets</Link></li>
+            <li><Link to="/cabinet/withdraw" className="pure-menu-link">Withdraw</Link></li>
           </ul>
         </li>
       </ul>

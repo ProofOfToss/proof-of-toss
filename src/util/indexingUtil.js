@@ -45,6 +45,7 @@ export const betMapping = {
     'bet': {
       'properties': {
         'event': {'type': 'keyword'},
+        'eventResult': {'type': 'integer'},
         'index': {'type': 'integer'},
         'timestamp': {'type': 'date'},
         'bettor': {'type': 'keyword'},
