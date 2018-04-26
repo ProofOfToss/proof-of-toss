@@ -201,10 +201,8 @@ const esClient = new AwsEsPublicClient(
     const retry = async () => {
       try {
         await callAsync(events.stopWatching);
-
       } catch (err) {
         logger.error(err);
-        return setTimeout(retry, 1000);
       }
 
       setTimeout(watchEvents, 1000);
