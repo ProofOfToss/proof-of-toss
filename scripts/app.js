@@ -310,6 +310,6 @@ const esClient = new AwsEsPublicClient(
     }
   };
 
-  //watchEvents();
+  watchEvents();
   watchEventUpdates();
 })(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error, 'Emergency stop'); });
