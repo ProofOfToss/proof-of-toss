@@ -4,6 +4,7 @@ import Web3 from 'web3';
 import Config from 'truffle-config';
 import Resolver from 'truffle-resolver';
 import log4js from 'log4js';
+import callAsync from '../src/util/web3Util';
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -34,13 +35,15 @@ logger.level = 'debug';
   const web3 = new Web3();
   web3.setProvider(provider);
 
+  const coinbase = await callAsync(web3.eth.getCoinbase);
+
   Token.setProvider(provider);
-  Token.defaults({from: web3.eth.coinbase});
+  Token.defaults({from: coinbase});
 
   Main.setProvider(provider);
-  Main.defaults({from: web3.eth.coinbase});
+  Main.defaults({from: coinbase});
 
-  web3.eth.defaultAccount = web3.eth.coinbase;
+  web3.eth.defaultAccount = coinbase;
 
   let token, main, accounts;
 

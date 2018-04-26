@@ -77,6 +77,7 @@
   "dependencies": {
     "aws-sdk": "^2.192.0",
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "bignumber.js": "^6.0.0",
     "bootstrap-tagsinput": "^0.7.1",
     "compressjs": "^1.0.3",
