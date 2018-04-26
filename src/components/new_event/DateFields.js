@@ -71,7 +71,7 @@ class DateFields extends Component {
     if(this.state.formData.startTime.isSame(moment(), 'day')) {
       return {
         hours: {
-          min: moment().hours() + 1
+          min: moment().hours() // + 1
         }
       }
     }

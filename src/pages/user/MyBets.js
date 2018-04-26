@@ -220,6 +220,11 @@ class MyBets extends Component {
       const data = _.map(res.hits.hits, '_source').reduce(
         (accumulator, event) => {
           const bids = bidsByEvents[event.address];
+
+          if (!bids) {
+            return accumulator;
+          }
+
           const bidsLength = bids.length;
           accumulator.push(Object.assign({rowSpan: bidsLength}, event, bidInfo(bids[0], event)));
 
