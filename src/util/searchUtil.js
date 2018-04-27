@@ -72,8 +72,8 @@ function myPrizeConditions(locale, currentAddress, q, fromTimestamp, toTimestamp
   return {conditions, shouldConditions};
 }
 
-function myPrizeBetConditions() {
-  const conditions = {};
+function myPrizeBetConditions(eventHits) {
+  const conditions = [];
 
   conditions.push({ // bet not withdrawn
     term: {
@@ -81,12 +81,19 @@ function myPrizeBetConditions() {
     }
   });
 
+  conditions.push({
+    terms: {
+      'event': eventHits.map((hit) => hit._id),
+    }
+  });
+
   conditions.push({ // bet on winning result
-    term: {
+    'script' : {
       'script' : {
-        'script' : {
-          'source': 'doc["eventResult"].value == doc["result"].value || (doc["eventResult"].value >= 232 && doc["eventResult"].value < 255)',
-          'lang': 'painless'
+        'source': 'for (item in params.events) { if(doc["event"].value == item.address) { return Long.parseLong(item.result, 10) == doc["result"].value } } return false',
+        'lang': 'painless',
+        'params' : {
+          'events': eventHits.map((hit) => ({address: hit._id, result: hit._source.result})),
         }
       }
     }

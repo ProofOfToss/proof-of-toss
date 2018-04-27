@@ -273,11 +273,12 @@ export class IndexingUtil {
         const sender = (await callAsync(this.web3.eth.getTransaction.bind(this.web3.eth, events[i].transactionHash))).from;
 
         const address = events[i].args._contract;
-        const betCount = events[i].args.betCount;
+        // const action = events[i].args.action;
 
         const event = this.contractAPIs.EventBase.at(address);
 
         const resultsCount = await event.resultsCount();
+        const betCount = await event.betsCount.call();
         const result = await event.resolvedResult();
 
         const promises = [];

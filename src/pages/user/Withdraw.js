@@ -190,12 +190,7 @@ class Withdraw extends Component {
         }
       } : {}));
 
-      let {conditions} = myPrizeBetConditions();
-      conditions.push({
-        terms: {
-          'event': res.hits.hits.map((hit) => hit._id),
-        }
-      });
+      conditions = myPrizeBetConditions(res.hits.hits).conditions;
 
       const bidsRes = await this.props.esClient.search(Object.assign({
         index: BET_INDEX,
