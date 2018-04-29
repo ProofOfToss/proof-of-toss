@@ -43,15 +43,15 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     States public state;
     Result[] public possibleResults;
     Bet[] public bets;
-    mapping (address => uint[]) private usersBets;
+    mapping (address => uint[]) public usersBets;
 
     uint8 public resolvedResult; // 255 - not set; 254 – different result; 253 – undefined result; 232 – event was canceled; etc ... todo
 
     uint constant public meta_version = 1;
 
-    event Updated(address _contract, string action);
+    event Updated(address _contract, uint betCount, string action);
 
-    function updated(address _contract, string action) public {
+    function updated(address _contract, uint betCount, string action) public {
         uint codeLength;
 
         assembly {
@@ -60,7 +60,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
         require(codeLength > 0 && msg.sender == _contract);
 
-        Updated(_contract, action);
+        Updated(_contract, betCount, action);
     }
 
     function betsCount() public constant returns(uint) {
@@ -180,7 +180,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         usersBets[tx.origin].push(bets.length - 1);
         state = States.Accepted;
 
-        base.updated(address(this), "newBet");
+        base.updated(address(this), bets.length, "newBet");
     }
 
     function resolve(uint8 result) stateTransitions {
@@ -191,7 +191,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         resolvedResult = result;
         state = States.Closed;
 
-        base.updated(address(this), "resolve");
+        base.updated(address(this), 0, "resolve");
     }
 
     function getUserBets(address _user) view returns (uint[]) {
@@ -348,8 +348,8 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
     // --------------------------------
 
-    mapping(address => uint) withdraws; // User address => withdrawal timestamp
-    uint lastWithdraw = 0;
+    mapping(address => uint) public withdraws; // User address => withdrawal timestamp
+    uint public lastWithdraw = 0;
 
     function withdraw() {
         require(withdraws[msg.sender] == 0);
@@ -368,7 +368,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         token.transfer(msg.sender, share);
     }
 
-    mapping(address => mapping(uint => uint)) betWithdraws; // User address => userBet index => withdrawal timestamp
+    mapping(address => mapping(uint => uint)) public betWithdraws; // User address => userBet index => withdrawal timestamp
 
     function withdrawPrize(uint bet) {
         require(withdraws[msg.sender] == 0);

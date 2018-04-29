@@ -177,9 +177,9 @@ export const modalResolveApprove = (gasLimit, gasPrice) => {
   }
 };
 
-export const modalWithdrawShow = (result) => ({
+export const modalWithdrawShow = (withdraw) => ({
   type: MODAL_WITHDRAW_SHOW_EVENT,
-  result: result
+  withdraw: withdraw
 });
 
 export const modalWithdrawClose = (result) => ({

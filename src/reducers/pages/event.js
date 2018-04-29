@@ -119,7 +119,7 @@ const eventReducer = (state = initialState, action) => {
       return {
         ...state,
         showWithdrawModal: true,
-        withdrawResult: action.result
+        withdraw: action.withdraw
       };
 
     case MODAL_WITHDRAW_CLOSE_EVENT:
@@ -129,7 +129,7 @@ const eventReducer = (state = initialState, action) => {
         withdrawApproving: false,
         withdrawApproved: false,
         withdrawApproveError: false,
-        withdrawResult: {}
+        withdraw: {}
       };
 
     case MODAL_WITHDRAW_APPROVING_EVENT:
@@ -142,7 +142,7 @@ const eventReducer = (state = initialState, action) => {
       return {
         ...state,
         withdrawApproved: true,
-        withdrawResult: {}
+        withdraw: {}
       };
 
     case MODAL_WITHDRAW_APPROVE_ERROR_EVENT:

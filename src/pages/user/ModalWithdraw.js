@@ -26,19 +26,23 @@ class ModalWithdraw extends Component {
   }
 
   async componentWillMount() {
+    console.log(
+      this.props.withdraw,
+      {from: this.props.currentAddress}
+    );
+
     try {
-      const contract = require('truffle-contract');
-      const eventBase = contract(EventBaseContract);
-      eventBase.setProvider(this.props.web3.currentProvider);
-      const eventBaseInstance = eventBase.at(this.props.eventData.address);
+      const contract = require('truffle-contract'); console.log('test 1');
+      const eventBase = contract(EventBaseContract); console.log('test 2');
+      eventBase.setProvider(this.props.web3.currentProvider); console.log('test 3');
+      const eventBaseInstance = eventBase.at(this.props.withdraw.address); console.log('test 4');
 
       const gasAmount = await eventBaseInstance.withdrawPrize.estimateGas(
-        this.props.withdraw.address,
         this.props.withdraw.userBet,
         {from: this.props.currentAddress}
-      );
+      ); console.log('test 5');
 
-      const gasCalculation = await getGasCalculation(this.props.web3, gasAmount);
+      const gasCalculation = await getGasCalculation(this.props.web3, gasAmount); console.log('test 6');
 
       this.setState({
         gasLimit: gasCalculation.gasLimit,
@@ -46,8 +50,9 @@ class ModalWithdraw extends Component {
         gasPriceStr: Number(this.props.web3.toWei(gasCalculation.price / gasCalculation.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei',
         minFee: gasCalculation.minFee,
         fee: gasCalculation.fee
-      });
+      }); console.log('test 7');
     } catch (e) {
+      console.log(e);
       this.setState({
         estimateGasError: true
       });

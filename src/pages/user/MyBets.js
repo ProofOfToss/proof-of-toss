@@ -191,6 +191,11 @@ class MyBets extends Component {
                   terms: {
                     'event': res.hits.hits.map((hit) => hit._id),
                   }
+                },
+                {
+                  terms: {
+                    'bettor': [this.props.currentAddress],
+                  }
                 }
               ]
             }
@@ -216,6 +221,9 @@ class MyBets extends Component {
           prize: event.result === bid.result ? bid.amount * coefficient : 0,
         };
       };
+
+      console.log(res);
+      console.log(bidsByEvents);
 
       const data = _.map(res.hits.hits, '_source').reduce(
         (accumulator, event) => {

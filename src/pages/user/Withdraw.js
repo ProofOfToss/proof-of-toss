@@ -105,12 +105,12 @@ class Withdraw extends Component {
   }
 
   modalWithdrawShow(event, userBet) {
-    const result = {
+    const withdraw = {
       address: event,
       userBet,
     };
 
-    this.props.modalWithdrawShow(result);
+    this.props.modalWithdrawShow(withdraw);
   }
 
   isValidDate(currentDate) {
@@ -220,12 +220,18 @@ class Withdraw extends Component {
           bidDate: bid.timestamp,
           coefficient: coefficient,
           prize: event.result === bid.result ? bid.amount * coefficient : 0,
+          index: bid.index,
         };
       };
 
       const data = _.map(res.hits.hits, '_source').reduce(
         (accumulator, event) => {
           const bids = bidsByEvents[event.address];
+
+          if (!bids) {
+            return accumulator;
+          }
+
           const bidsLength = bids.length;
           accumulator.push(Object.assign({rowSpan: bidsLength}, event, bidInfo(bids[0], event)));
 
