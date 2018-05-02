@@ -170,8 +170,8 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
         bets.push(Bet(now, tx.origin, result, amount));
 
-        possibleResults[result].betCount.add(1);
-        possibleResults[result].betSum.add(amount);
+        possibleResults[result].betCount = uint32(possibleResults[result].betCount.add(1));
+        possibleResults[result].betSum = possibleResults[result].betSum.add(amount);
 
         usersBets[tx.origin].push(bets.length - 1);
         state = States.Accepted;
