@@ -83,14 +83,6 @@ class ResultsList extends Component {
         <th />
       </tr>
       {this.props.results.map((result, key) => {
-        const betAmountLink = this.links[`betAmount_${key}`];
-
-        const inputAttr = {
-          type: 'number',
-          id: `event[bet_amount_${key}]`,
-          placeholder: this.props.translate('pages.event.bet_amount'),
-          min: 0
-        };
 
         return <tr key={key}>
           <td>{result.description}</td>
@@ -98,17 +90,35 @@ class ResultsList extends Component {
           <td>{result.betCount}</td>
           <td>{result.betSum}</td>
           <td>
-            <form className="form-inline">
-              <BootstrapInput valueLink={betAmountLink} showError={this.state.errors[`betAmount_${key}`]} attr={inputAttr} />
-              <span className="btn btn-primary" onClick={() => this.newBet(key)}>
-                {this.props.translate('pages.event.newBet')}</span>
-            </form>
+            {this.renderAddBetColumn(key)}
           </td>
         </tr>
       }, this)}
       </tbody></table>
       {this.props.showNewBetModal ? <ModalNewBet eventInstance={this.props.eventInstance} /> : null}
     </Fragment>
+  }
+
+  renderAddBetColumn(key) {
+    if(this.props.balance > 0) {
+
+      const betAmountLink = this.links[`betAmount_${key}`];
+
+      const inputAttr = {
+        type: 'number',
+        id: `event[bet_amount_${key}]`,
+        placeholder: this.props.translate('pages.event.bet_amount'),
+        min: 0
+      };
+
+      return <form className="form-inline">
+        <BootstrapInput valueLink={betAmountLink} showError={this.state.errors[`betAmount_${key}`]} attr={inputAttr}/>
+        <span className="btn btn-primary" onClick={() => this.newBet(key)}>
+                    {this.props.translate('pages.event.newBet')}</span>
+      </form>
+    }
+
+    return this.props.translate('pages.event.errors.bidding.not_enough_tokens');
   }
 
   renderDisallowBidding() {
@@ -122,6 +132,7 @@ class ResultsList extends Component {
         .check(v => v, this.props.translate('validation.required'))
         .check(v => !isNaN(parseFloat(v)), this.props.translate('validation.token.fee_is_nan'))
         .check(v => parseFloat(v) >= 1, this.props.translate('validation.to_small', {value: 1}))
+        .check(v => parseFloat(v) <= this.props.balance, this.props.translate('validation.to_big', {value: this.props.balance}))
       ;
     });
 
@@ -141,7 +152,7 @@ class ResultsList extends Component {
 function mapStateToProps(state) {
   return {
     web3: state.web3.web3,
-    allowance: state.event.allowance,
+    balance: state.token.balance,
     showNewBetModal: state.event.showNewBetModal,
     translate: getTranslate(state.locale)
   }
