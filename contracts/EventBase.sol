@@ -49,9 +49,9 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
     uint constant public meta_version = 1;
 
-    event Updated(address _contract, uint betCount, string action);
+    event Updated(address _contract, bytes _data);
 
-    function updated(address _contract, uint betCount, string action) public {
+    function updated(address _contract, bytes _data) public {
         uint codeLength;
 
         assembly {
@@ -60,7 +60,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
         require(codeLength > 0 && msg.sender == _contract);
 
-        Updated(_contract, betCount, action);
+        Updated(_contract, _data);
     }
 
     function betsCount() public constant returns(uint) {
@@ -180,7 +180,9 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         usersBets[tx.origin].push(bets.length - 1);
         state = States.Accepted;
 
-        base.updated(address(this), bets.length, "newBet");
+        bytes memory buffer = new bytes(32);
+        intToBytes(32, bets.length, buffer);
+        base.updated(address(this), buffer);
     }
 
     function resolve(uint8 result) stateTransitions {
@@ -191,7 +193,8 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         resolvedResult = result;
         state = States.Closed;
 
-        base.updated(address(this), 0, "resolve");
+        bytes memory empty;
+        base.updated(address(this), empty);
     }
 
     function getUserBets(address _user) view returns (uint[]) {
@@ -270,7 +273,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
                 (betSum, losersBetSum, winnersBetSum) = calculateBetsSums();
 
                 uint256 coefficient = bet.amount.div(winnersBetSum);
-                uint256 prize = bet.amount.mul(99).add(
+                uint256 prize = bet.amount.mul(99).div(100).add(
                     losersBetSum.mul(99).div(100).mul(coefficient)
                 );
 
@@ -306,10 +309,10 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         uint256 eventCreatorPercent = betSum.div(100);
 
         if(eventCreatorPercent < deposit) {
-            return eventCreatorPercent;
+            return eventCreatorPercent.add(deposit);
         }
 
-        return deposit;
+        return deposit.mul(2);
     }
 
     function getEventCreatorRefund() constant returns (uint256) {
@@ -366,12 +369,14 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         withdraws[msg.sender] = lastWithdraw;
 
         token.transfer(msg.sender, share);
+
+        bytes memory empty;
+        base.updated(address(this), empty);
     }
 
     mapping(address => mapping(uint => uint)) public betWithdraws; // User address => userBet index => withdrawal timestamp
 
     function withdrawPrize(uint bet) {
-        require(withdraws[msg.sender] == 0);
         require(betWithdraws[msg.sender][bet] == 0);
 
         uint share = getPrize(bet).add(getRefund(bet));
@@ -382,5 +387,27 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         withdraws[msg.sender] = lastWithdraw;
 
         token.transfer(msg.sender, share);
+
+        bytes memory empty;
+        base.updated(address(this), empty);
+    }
+
+    mapping(address => uint) public rewardWithdraws; // User address => withdrawal timestamp
+
+    function withdrawReward() {
+        require(tx.origin == creator) ;
+        require(rewardWithdraws[msg.sender] == 0);
+
+        uint share = getEventCreatorReward();
+
+        require(share > 0);
+
+        lastWithdraw = now;
+        withdraws[msg.sender] = lastWithdraw;
+
+        token.transfer(msg.sender, share);
+
+        bytes memory empty;
+        base.updated(address(this), empty);
     }
 }

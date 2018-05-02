@@ -88,43 +88,33 @@ contract('Event', function(accounts) {
     await token.setPause(false);
     await token.mint(accounts[0], 10000000000000);
 
-    return Main.deployed().then(function(instance) {
-      main = instance;
-      return main.getToken();
-    }).then(function() {
-      return token.approve(main.address, 10000000, {from: accounts[0]});
-    }).then(async function() {
-      try {
-        await whitelist.updateWhitelist(accounts[0], true);
-      } catch (e) {
-        assert.isUndefined(e);
-      }
+    main = await Main.deployed();
+    await token.approve(main.address, 10000000, {from: accounts[0]});
+    await token.grantToSetUnpausedWallet(main.address, true);
 
-      return token.transferToContract(main.address, eventDeposit, bytes, {
-        from: accounts[0]
-      });
+    try {
+      await whitelist.updateWhitelist(accounts[0], true);
+    } catch (e) {
+      assert.isUndefined(e);
+    }
 
-    }).then(async function(transactionResult) {
-
-      console.log(transactionResult.receipt.logs);
-
-      const events = await new Promise((resolve, reject) => {
-        main.NewEvent({}, {fromBlock: transactionResult.receipt.blockNumber, toBlock: 'pending', topics: transactionResult.receipt.logs[0].topics}).get((error, log) => {
-          if (error) {
-            reject(error);
-          }
-
-          if (log[0].transactionHash === transactionResult.tx) {
-            resolve(log);
-          }
-        });
-      });
-
-      return events[0].args.eventAddress;
-
-    }).then(function(eventAddress) {
-      event = EventBase.at(eventAddress);
+    const transactionResult = await token.transferToContract(main.address, eventDeposit, bytes, {
+      from: accounts[0]
     });
+
+    const events = await new Promise((resolve, reject) => {
+      main.NewEvent({}, {fromBlock: transactionResult.receipt.blockNumber, toBlock: 'pending', topics: transactionResult.receipt.logs[0].topics}).get((error, log) => {
+        if (error) {
+          reject(error);
+        }
+
+        if (log[0].transactionHash === transactionResult.tx) {
+          resolve(log);
+        }
+      });
+    });
+
+    event = EventBase.at(events[0].args.eventAddress);
   });
 
   it("should add new bet", async () => {
@@ -248,7 +238,7 @@ contract('Event', function(accounts) {
   });
 
 
-  it("should withdraw winner prize", async () => {
+  it("should withdraw winner prize and ec reward", async () => {
     await whitelist.updateWhitelist(accounts[0], true);
 
     assert.equal(await event.getState(), 1, 'Event state must be Published');

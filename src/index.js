@@ -31,7 +31,7 @@ import EventResults from './pages/event_results/EventResults';
 import Event from './pages/event/Event';
 
 import MyBets from './pages/user/MyBets';
-import Withdraw from './pages/user/Withdraw';
+import Withdraw from './pages/user/withdraw';
 
 //Admin components
 import AdminEvent from './pages/admin/event/Index';

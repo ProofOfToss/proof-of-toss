@@ -1,7 +1,9 @@
 import { deserializeEvent } from './eventUtil';
+import { fromBytes } from './serialityUtil';
 import callAsync from './web3Util';
 import util from 'util';
 import { formatBalance } from './token'
+import { decodeEventMethod } from './web3Util'
 
 export const tagMapping = {
   'mappings': {
@@ -35,6 +37,7 @@ export const eventMapping = {
         'result': {'type': 'integer'},
         'possibleResults': {'type': 'object'},
         'bettor': {'type': 'keyword'},
+        'withdrawn': {'type': 'keyword'},
       }
     },
   }
@@ -269,17 +272,51 @@ export class IndexingUtil {
 
     for(let i = 0; i < events.length; i++) {
       try {
-        const transactionHash = events[i].transactionHash;
-        const sender = (await callAsync(this.web3.eth.getTransaction.bind(this.web3.eth, events[i].transactionHash))).from;
-
         const address = events[i].args._contract;
-        const action = events[i].args.action;
-        const betCount = action === 'newBet' ? events[i].args.betCount : 0;
-
+        const data = events[i].args._data;
         const event = this.contractAPIs.EventBase.at(address);
 
+        const transactionHash = events[i].transactionHash;
+        const transaction = await callAsync(this.web3.eth.getTransaction.bind(this.web3.eth, transactionHash));
+        const sender = transaction.from;
+        const transactionMethod = decodeEventMethod(transaction.input);
+
+        let action;
+        let betCount = 0;
+        let rewardWithdrawn = false;
+
+        switch (transactionMethod.name) {
+          case 'transferToContract':
+            action = 'newBet';
+
+            let parsed = fromBytes(
+              data,
+              {type: 'uint', size: 256, key: 'betCount'},
+            );
+
+            betCount = parsed.parsedData.betCount;
+
+            break;
+
+          case 'resolve':
+            action = 'resolve';
+            break;
+
+          case 'withdraw':
+            action = 'withdraw';
+            break;
+
+          case 'withdrawPrize':
+            action = 'withdrawPrize';
+            break;
+
+          case 'withdrawReward':
+            action = 'withdrawReward';
+            rewardWithdrawn = true;
+            break;
+        }
+
         const resultsCount = await event.resultsCount();
-        // const betCount = await event.betsCount.call();
         const result = await event.resolvedResult();
 
         const promises = [];
@@ -301,6 +338,7 @@ export class IndexingUtil {
           'result': result,
           'possibleResults': betCount > 0 ? possibleResults : [],
           'bettor': betCount > 0 ? [sender] : [],
+          'rewardWithdrawn': rewardWithdrawn,
         };
 
         body.push({ update: { _index: this.EVENT_INDEX, _type: 'event', _id: address } });
@@ -309,6 +347,7 @@ export class IndexingUtil {
             'source': [
               'ctx._source.bidSum = params.bidSum',
               'ctx._source.result = params.result',
+              rewardWithdrawn ? 'ctx._source.withdrawn = true' : '',
               'for (item in params.bettor) { if(!ctx._source.bettor.contains(item)) { ctx._source.bettor.add(item) } } for (item in params.possibleResults) { ctx._source.possibleResults[item.index].betCount = item.betCount; ctx._source.possibleResults[item.index].betSum = item.betSum; }',
             ].join(';'),
             'lang': 'painless',

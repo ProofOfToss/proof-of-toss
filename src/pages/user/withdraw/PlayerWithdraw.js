@@ -1,5 +1,5 @@
 import 'babel-polyfill';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Datetime from "react-datetime";
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
@@ -9,18 +9,18 @@ import { Link } from 'react-router';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
-import { modalWithdrawShow } from '../../actions/pages/event';
+import { modalWithdrawShow } from '../../../actions/pages/event';
 import ModalWithdraw from './ModalWithdraw';
-import '../../styles/components/play_table.scss';
+import '../../../styles/components/play_table.scss';
 
-import appConfig from "../../data/config.json"
-import { myPrizeConditions, myPrizeBetConditions } from '../../util/searchUtil';
+import appConfig from "../../../data/config.json"
+import { myPrizeConditions, myPrizeBetConditions } from '../../../util/searchUtil';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
 const BET_INDEX = 'toss_bet_' + appConfig.elasticsearch.indexPostfix;
 
-class Withdraw extends Component {
+class PlayerWithdraw extends Component {
   constructor(props) {
     super(props);
 
@@ -107,6 +107,7 @@ class Withdraw extends Component {
   modalWithdrawShow(event, userBet) {
     const withdraw = {
       address: event,
+      type: 'userBet',
       userBet,
     };
 
@@ -209,8 +210,29 @@ class Withdraw extends Component {
       }), 'event');
 
       const bidInfo = (bid, event) => {
+        const isOperatorEvent = false;
         const bidResult = event.possibleResults[bid.result];
-        const coefficient = bidResult.customCoefficient > 0 ? bidResult.customCoefficient : bid.amount / bidResult.betSum;
+        let coefficient;
+
+        if (isOperatorEvent) {
+          coefficient = bidResult.customCoefficient > 0 ? bidResult.customCoefficient : bid.amount / bidResult.betSum;
+        } else {
+          /*
+          uint256 betSum;
+          uint256 losersBetSum;
+          uint256 winnersBetSum;
+
+          (betSum, losersBetSum, winnersBetSum) = calculateBetsSums();
+
+          uint256 coefficient = bet.amount.div(winnersBetSum);
+          uint256 prize = bet.amount.mul(99).div(100).add(
+              losersBetSum.mul(99).div(100).mul(coefficient)
+          );
+
+          return prize;
+           */
+          coefficient = bidResult.customCoefficient > 0 ? bidResult.customCoefficient : bid.amount / bidResult.betSum;
+        }
 
         return {
           tx: bid.tx,
@@ -274,157 +296,152 @@ class Withdraw extends Component {
     };
 
     return(
-      <main className="container">
-        <div>
-          <h1>{ this.props.translate('pages.withdraw.header') }</h1>
+      <Fragment>
+        <form className="form" onSubmit={this.handleSubmit}>
 
-          <form className="form" onSubmit={this.handleSubmit}>
-
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_start') }</label>
-                  <Datetime value={this.state.fromDate} timeFormat={false} closeOnSelect={true} onChange={this.onChangeFromDate} isValidDate={this.isValidDate} />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_end') }</label>
-                  <Datetime value={this.state.toDate} timeFormat={false} closeOnSelect={true} onChange={this.onChangeToDate} isValidDate={this.isValidDate} />
-                </div>
+          <div className="row">
+            <div className="col-md-6">
+              <div className="form-group">
+                <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_start') }</label>
+                <Datetime value={this.state.fromDate} timeFormat={false} closeOnSelect={true} onChange={this.onChangeFromDate} isValidDate={this.isValidDate} />
               </div>
             </div>
-
-            <div className="row">
-              <div className="col-md-6">
-                <div className="input-group">
-                  <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
-                </div>
+            <div className="col-md-6">
+              <div className="form-group">
+                <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_end') }</label>
+                <Datetime value={this.state.toDate} timeFormat={false} closeOnSelect={true} onChange={this.onChangeToDate} isValidDate={this.isValidDate} />
               </div>
             </div>
-
-          </form>
-
-          <div className="playTable">
-            <BootstrapTable
-              ref="table"
-              keyField="tx"
-              data={ data }
-              columns={ [
-                {
-                  text: this.props.translate('pages.play.columns.name'),
-                  dataField: "name",
-                  sort: false,
-                  attrs: rowAttrs,
-                },
-                {
-                  text: this.props.translate('pages.play.columns.tags'),
-                  dataField: "tag",
-                  sort: false,
-                  attrs: rowAttrs,
-                  formatter: (tags) => _.map(tags, 'name').join(', '),
-                },
-                {
-                  text: this.props.translate('pages.play.columns.bid_type'),
-                  dataField: "bidType",
-                  sort: false,
-                  attrs: rowAttrs,
-                  width: 200,
-                },
-                {
-                  text: this.props.translate('pages.play.columns.category'),
-                  dataField: "category",
-                  sort: false,
-                  width: 200,
-                  attrs: rowAttrs,
-                  formatter: (categoryId) => {
-                    const category = _.find(categories, (cat) => cat.id === parseInt(categoryId, 10));
-
-                    return category ? this.props.translate(`categories.${category.name}`) : categoryId;
-                  },
-                },
-                {
-                  text: this.props.translate('pages.play.columns.start_date'),
-                  dataField: "startDate",
-                  sort: true,
-                  width: 200,
-                  attrs: rowAttrs,
-                  formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
-                },
-                {
-                  text: this.props.translate('pages.play.columns.bid_result'),
-                  dataField: "bidResult",
-                  sort: false,
-                  width: 150,
-                },
-                {
-                  text: this.props.translate('pages.play.columns.bid_sum'),
-                  dataField: "bidSum",
-                  sort: false,
-                  width: 150,
-                },
-                {
-                  text: this.props.translate('pages.play.columns.bid_date'),
-                  dataField: "bidDate",
-                  sort: false,
-                  width: 200,
-                  formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
-                },
-                {
-                  text: this.props.translate('pages.play.columns.result_coefficient'),
-                  dataField: "coefficient",
-                  sort: false,
-                  width: 150,
-                },
-                {
-                  text: this.props.translate('pages.play.columns.prize'),
-                  dataField: "prize",
-                  sort: false,
-                  width: 200,
-                  formatter: (cell, row) => {
-                    return (
-                      <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index)}}>
-                        {`Withdraw ${cell} TOSS`}
-                      </span>
-                    );
-                  }
-                },
-                {
-                  text: '',
-                  dataField: 'address',
-                  sort: false,
-                  width: 100,
-                  attrs: rowAttrs,
-                  formatter: (cell) => {
-                    return <Link to={`/${this.state.locale}/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link>
-                  }
-                }
-              ] }
-              rowClasses={ rowClasses }
-              // @todo: defaultSorted triggers table to change which triggers query to elasticsearch
-              // if remove defaultSorted, do not forget to uncomment this.update() in componentDidMount() function!!!
-              defaultSorted={[
-                {
-                  dataField: 'startDate',
-                  order: 'desc'
-                }
-              ]}
-              onTableChange={ this.handleTableChange }
-              pagination={ paginationFactory({ page: this.state.page, sizePerPage: this.state.pageSize, totalSize: this.state.total }) }
-              noDataIndication={ () => <div>{ this.props.translate('pages.play.empty') }</div> }
-              loading={ this.state.loading }
-              overlay={ overlayFactory({ spinner: true, background: 'rgba(192,192,192,0.3)' }) }
-              remote={{
-                filter: true,
-                pagination: true,
-                sort: true,
-                cellEdit: false
-              }}
-            />
           </div>
+
+          <div className="row">
+            <div className="col-md-6">
+              <div className="input-group">
+                <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
+              </div>
+            </div>
+          </div>
+
+        </form>
+        <div className="playTable">
+          <BootstrapTable
+            ref="table"
+            keyField="tx"
+            data={ data }
+            columns={ [
+              {
+                text: this.props.translate('pages.play.columns.name'),
+                dataField: "name",
+                sort: false,
+                attrs: rowAttrs,
+              },
+              {
+                text: this.props.translate('pages.play.columns.tags'),
+                dataField: "tag",
+                sort: false,
+                attrs: rowAttrs,
+                formatter: (tags) => _.map(tags, 'name').join(', '),
+              },
+              {
+                text: this.props.translate('pages.play.columns.bid_type'),
+                dataField: "bidType",
+                sort: false,
+                attrs: rowAttrs,
+                width: 200,
+              },
+              {
+                text: this.props.translate('pages.play.columns.category'),
+                dataField: "category",
+                sort: false,
+                width: 200,
+                attrs: rowAttrs,
+                formatter: (categoryId) => {
+                  const category = _.find(categories, (cat) => cat.id === parseInt(categoryId, 10));
+
+                  return category ? this.props.translate(`categories.${category.name}`) : categoryId;
+                },
+              },
+              {
+                text: this.props.translate('pages.play.columns.start_date'),
+                dataField: "startDate",
+                sort: true,
+                width: 200,
+                attrs: rowAttrs,
+                formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
+              },
+              {
+                text: this.props.translate('pages.play.columns.bid_result'),
+                dataField: "bidResult",
+                sort: false,
+                width: 150,
+              },
+              {
+                text: this.props.translate('pages.play.columns.bid_sum'),
+                dataField: "bidSum",
+                sort: false,
+                width: 150,
+              },
+              {
+                text: this.props.translate('pages.play.columns.bid_date'),
+                dataField: "bidDate",
+                sort: false,
+                width: 200,
+                formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
+              },
+              {
+                text: this.props.translate('pages.play.columns.result_coefficient'),
+                dataField: "coefficient",
+                sort: false,
+                width: 150,
+              },
+              {
+                text: this.props.translate('pages.play.columns.prize'),
+                dataField: "prize",
+                sort: false,
+                width: 200,
+                formatter: (cell, row) => {
+                  return (
+                    <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index)}}>
+                          {`Withdraw ${cell} TOSS`}
+                        </span>
+                  );
+                }
+              },
+              {
+                text: '',
+                dataField: 'address',
+                sort: false,
+                width: 100,
+                attrs: rowAttrs,
+                formatter: (cell) => {
+                  return <Link to={`/${this.state.locale}/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link>
+                }
+              }
+            ] }
+            rowClasses={ rowClasses }
+            // @todo: defaultSorted triggers table to change which triggers query to elasticsearch
+            // if remove defaultSorted, do not forget to uncomment this.update() in componentDidMount() function!!!
+            defaultSorted={[
+              {
+                dataField: 'startDate',
+                order: 'desc'
+              }
+            ]}
+            onTableChange={ this.handleTableChange }
+            pagination={ paginationFactory({ page: this.state.page, sizePerPage: this.state.pageSize, totalSize: this.state.total }) }
+            noDataIndication={ () => <div>{ this.props.translate('pages.play.empty') }</div> }
+            loading={ this.state.loading }
+            overlay={ overlayFactory({ spinner: true, background: 'rgba(192,192,192,0.3)' }) }
+            remote={{
+              filter: true,
+              pagination: true,
+              sort: true,
+              cellEdit: false
+            }}
+          />
         </div>
-        {this.props.showWithdrawModal ? <ModalWithdraw /> : null}
-      </main>
+
+      </Fragment>
     )
   }
 }
@@ -444,4 +461,4 @@ const mapDispatchToProps = {
   modalWithdrawShow
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Withdraw);
+export default connect(mapStateToProps, mapDispatchToProps)(PlayerWithdraw);

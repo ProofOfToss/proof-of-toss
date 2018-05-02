@@ -196,11 +196,24 @@ export const modalWithdrawApprove = (gasLimit, gasPrice) => {
       eventBase.setProvider(getState().web3.web3.currentProvider);
       const eventBaseInstance = eventBase.at(getState().event.withdraw.address);
 
-      await eventBaseInstance.withdrawPrize(getState().event.withdraw.userBet, {
-        from: getState().user.address,
-        gasPrice: gasPrice,
-        gas: gasLimit
-      });
+      switch (getState().event.withdraw.type) {
+        case 'userBet':
+          await eventBaseInstance.withdrawPrize(getState().event.withdraw.userBet, {
+            from: getState().user.address,
+            gasPrice: gasPrice,
+            gas: gasLimit
+          });
+
+          break;
+        case 'eventCreatorReward':
+          await eventBaseInstance.withdrawReward({
+            from: getState().user.address,
+            gasPrice: gasPrice,
+            gas: gasLimit
+          });
+
+          break;
+      }
 
       dispatch({type: MODAL_WITHDRAW_APPROVED_EVENT});
     } catch (e) {
