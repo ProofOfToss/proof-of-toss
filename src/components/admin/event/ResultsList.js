@@ -24,8 +24,6 @@ class ResultsList extends Component {
       betSum: 0
     };
 
-    console.log(this, result);
-
     this.props.modalResolveShow(result);
   }
 
