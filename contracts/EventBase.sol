@@ -239,7 +239,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return betsSum;
     }
 
-    function calculateBetsSums() private view returns (uint256, uint256, uint256) { // betSum, winnersBetSum, losersBetSum
+    function calculateBetsSums() public view returns (uint256, uint256, uint256) { // betSum, winnersBetSum, losersBetSum
         uint256 betsSum = 0;
         uint256 losersBetSum = 0;
         uint256 winnersBetSum = possibleResults[resolvedResult].betSum;
@@ -251,7 +251,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
                 continue;
             }
 
-            losersBetSum += possibleResults[i].betSum;
+            losersBetSum = losersBetSum.add(possibleResults[i].betSum);
         }
 
         return (betsSum, winnersBetSum, losersBetSum);
@@ -274,7 +274,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
                 uint256 losersBetSum;
                 uint256 winnersBetSum;
 
-                (betSum, losersBetSum, winnersBetSum) = calculateBetsSums();
+                (betSum, winnersBetSum, losersBetSum) = calculateBetsSums();
 
                 uint256 coefficient = bet.amount.div(winnersBetSum);
                 uint256 prize = bet.amount.mul(99).div(100).add(

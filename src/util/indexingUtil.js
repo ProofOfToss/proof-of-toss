@@ -286,8 +286,6 @@ export class IndexingUtil {
         let rewardWithdrawn = false;
         let prizeWithdrawn = [];
 
-        console.log(transactionMethod);
-
         switch (transactionMethod.name) {
           case 'transferToContract':
             action = 'newBet';
@@ -316,7 +314,7 @@ export class IndexingUtil {
             const userBetsCount = await event.userBetsCount(sender);
 
             for (let i = 0, betIndex; i < userBetsCount; i++) {
-              betIndex = await event.userBetsCount(sender, i);
+              betIndex = await event.usersBets(sender, i);
               prizeWithdrawn.push(betIndex);
             }
 
@@ -324,7 +322,8 @@ export class IndexingUtil {
 
           case 'withdrawPrize':
             action = 'withdrawPrize';
-            prizeWithdrawn.push(transactionMethod.params[0].value); // bet index
+            const betIndex = await event.usersBets(sender, transactionMethod.params[0].value);
+            prizeWithdrawn.push(betIndex);
 
             break;
 
@@ -388,29 +387,31 @@ export class IndexingUtil {
           });
         }
 
-        const res = await this.esClient.search(Object.assign({
-          index: this.BET_INDEX,
-        }, {
-          body: {
-            query: {
-              bool: {
-                must: [
-                  { term: { 'event': address } },
-                  { terms: { 'index': prizeWithdrawn } },
-                  { term: { 'bettor': sender } },
-                ]
+        if (prizeWithdrawn.length > 0) {
+          const res = await this.esClient.search(Object.assign({
+            index: this.BET_INDEX,
+          }, {
+            body: {
+              query: {
+                bool: {
+                  must: [
+                    { term: { 'event': address } },
+                    { terms: { 'index': prizeWithdrawn } },
+                    { term: { 'bettor': sender } },
+                  ]
+                }
               }
             }
-          }
-        }));
+          }));
 
-        for (let i = 0; i < res.hits.hits.length; i++) {
-          body.push({ update: { _index: this.BET_INDEX, _type: 'bet', _id: res.hits.hits[i]._id } });
-          body.push({
-            doc: {
-              withdrawn: true,
-            }
-          });
+          for (let i = 0; i < res.hits.hits.length; i++) {
+            body.push({ update: { _index: this.BET_INDEX, _type: 'bet', _id: res.hits.hits[i]._id } });
+            body.push({
+              doc: {
+                withdrawn: true,
+              }
+            });
+          }
         }
 
       } catch (err) {

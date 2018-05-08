@@ -121,7 +121,11 @@ contract('Event', function(accounts) {
   });
 
   it("should index bets", async () => {
-    await token.mint(accounts[1], 10000000);
+    let balance = (await token.balanceOf(accounts[1])).toNumber();
+    if (balance > 0) { await token.burn(accounts[1], balance); }
+    await token.mint(accounts[1], 43210);
+
+    const eventCreatorBalance = (await token.balanceOf(accounts[0])).toNumber();
 
     await indexingUtil.syncIndeces(true);
 
@@ -170,13 +174,12 @@ contract('Event', function(accounts) {
       43210,
       toBytes(
         {type: 'uint', size: 8, value: 1}, // action – bet
-        {type: 'uint', size: 8, value: 0}, // result index
+        {type: 'uint', size: 8, value: 1}, // result index
       ),
       {from: accounts[1]}
     );
 
     await new Promise((resolve) => setTimeout(resolve, 6000));
-    events.stopWatching();
 
     let eventsResult = await esClient.search(Object.assign({
       index: EVENT_INDEX,
@@ -226,5 +229,89 @@ contract('Event', function(accounts) {
     assert.equal(denormalizeBalance(bidsResult.hits.hits[0]._source.amount), 98765, 'Invalid bet');
     assert.equal(bidsResult.hits.hits[1]._source.bettor, accounts[1], 'Invalid bet');
     assert.equal(denormalizeBalance(bidsResult.hits.hits[1]._source.amount), 43210, 'Invalid bet');
+
+
+
+
+
+
+
+
+
+    await event.setStartDate(now - 120);
+    assert.equal(await event.getState(), 3, 'Event state must be Started');
+
+    await event.setEndDate(now - 60);
+    assert.equal(await event.getState(), 4, 'Event state must be Finished');
+
+    const txResult = await event.resolve(1);
+    assert.equal(await event.resolvedResult(), 1, 'Event result must be 1');
+    assert.equal(await event.getState(), 5, 'Event state must be Closed');
+
+    await expectThrow(event.withdrawPrize(0, {from: accounts[0]}));
+    await event.withdrawPrize(0, {from: accounts[1]});
+    await event.withdrawReward({from: accounts[0]});
+
+    assert.equal((await token.balanceOf(accounts[1])).toNumber(), Math.floor(98765 * 0.99) + Math.floor(43210 * 0.99), 'Winner balance is invalid');
+    assert.equal((await token.balanceOf(accounts[0])).toNumber(), Math.floor(eventCreatorBalance + eventDeposit - 98765 + (98765 + 43210) * 0.01), 'EC balance is invalid');
+
+    // assert.equal((await token.balanceOf(event.address)).toNumber(), 0, 'Event balance is invalid');
+
+    await new Promise((resolve) => setTimeout(resolve, 6000));
+    events.stopWatching();
+
+
+    eventsResult = await esClient.search(Object.assign({
+      index: EVENT_INDEX,
+      _source_exclude: ['bettor'],
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                term: {
+                  'bettor': accounts[1],
+                }
+              }
+            ],
+          }
+        }
+      }
+    })).catch((error) => {
+      assert.equal(error, null, error.toString());
+    });
+
+    console.log(_.map(eventsResult.hits.hits, '_source'));
+
+    assert.equal(eventsResult.hits.total, 1, 'Invalid hits count');
+    assert.equal(eventsResult.hits.hits[0]._id, event.address, 'Invalid event found');
+    assert.equal(eventsResult.hits.hits[0]._source.withdrawn, true, 'Event must be withdrawn');
+
+    bidsResult = await esClient.search(Object.assign({
+      index: BET_INDEX,
+      sort: `timestamp:asc`,
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                terms: {
+                  'event': eventsResult.hits.hits.map((hit) => hit._id),
+                }
+              }
+            ]
+          }
+        }
+      }
+    }));
+
+    assert.equal(bidsResult.hits.hits.length, 2, 'Invalid bets count');
+    assert.equal(bidsResult.hits.hits[0]._source.bettor, accounts[0], 'Invalid bet');
+    assert.equal(denormalizeBalance(bidsResult.hits.hits[0]._source.amount), 98765, 'Invalid bet');
+    assert.equal(bidsResult.hits.hits[1]._source.bettor, accounts[1], 'Invalid bet');
+    assert.equal(denormalizeBalance(bidsResult.hits.hits[1]._source.amount), 43210, 'Invalid bet');
+
+    assert.equal(bidsResult.hits.hits[0]._source.withdrawn, false, 'Bet 1 must not be withdrawn');
+    assert.equal(bidsResult.hits.hits[1]._source.withdrawn, true, 'Bet 2 must be withdrawn');
   });
 });
