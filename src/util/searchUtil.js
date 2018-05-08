@@ -1,19 +1,13 @@
 import Datetime from "react-datetime";
 import { getLanguageAnalyzerByCode } from './i18n';
 
-function myBetsConditions(locale, currentAddress, q, fromTimestamp, toTimestamp) {
+function filterEventsConditions(locale, q, fromTimestamp, toTimestamp) {
   const conditions = [];
   const shouldConditions = [];
 
   conditions.push({
     term: {
-      locale: locale
-    }
-  });
-
-  conditions.push({
-    term: {
-      'bettor': currentAddress,
+      locale: locale,
     }
   });
 
@@ -38,7 +32,6 @@ function myBetsConditions(locale, currentAddress, q, fromTimestamp, toTimestamp)
         }
       }
     });
-
   }
 
   if (fromTimestamp || toTimestamp) {
@@ -53,6 +46,44 @@ function myBetsConditions(locale, currentAddress, q, fromTimestamp, toTimestamp)
       }
     });
   }
+
+  return {conditions, shouldConditions};
+}
+
+function myBetsConditions(locale, currentAddress, q, fromTimestamp, toTimestamp) {
+  const {conditions, shouldConditions} = filterEventsConditions(locale, q, fromTimestamp, toTimestamp);
+
+  conditions.push({
+    term: {
+      'bettor': currentAddress,
+    }
+  });
+
+  return {conditions, shouldConditions};
+}
+
+function myRewardConditions(locale, currentAddress, q, fromTimestamp, toTimestamp) {
+  const {conditions, shouldConditions} = filterEventsConditions(locale, q, fromTimestamp, toTimestamp);
+
+  conditions.push({
+    term: {
+      'createdBy': currentAddress,
+    }
+  });
+
+  conditions.push({
+    term: {
+      'withdrawn': false,
+    }
+  });
+
+  conditions.push({ // Event has result
+    range: {
+      result: {
+        lt: 255,
+      }
+    }
+  });
 
   return {conditions, shouldConditions};
 }
@@ -102,4 +133,4 @@ function myPrizeBetConditions(eventHits) {
   return {conditions};
 }
 
-export {myBetsConditions, myPrizeConditions, myPrizeBetConditions};
+export {myBetsConditions, myPrizeConditions, myPrizeBetConditions, myRewardConditions};

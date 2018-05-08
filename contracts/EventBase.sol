@@ -67,6 +67,10 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return bets.length;
     }
 
+    function userBetsCount(address _user) public constant returns(uint) {
+        return usersBets[_user].length;
+    }
+
     function EventBase(address _token) {
         owner = msg.sender;
         token = Token(_token);
@@ -181,7 +185,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         state = States.Accepted;
 
         bytes memory buffer = new bytes(32);
-        intToBytes(32, bets.length, buffer);
+        uintToBytes(32, bets.length, buffer);
         base.updated(address(this), buffer);
     }
 
@@ -263,7 +267,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         Bet bet = bets[usersBets[tx.origin][_userBet]];
 
         if (bet.result == resolvedResult) {
-            if(isOperatorEvent()) {
+            if (isOperatorEvent()) {
                 return bet.amount.mul(possibleResults[resolvedResult].customCoefficient);
             } else {
                 uint256 betSum;

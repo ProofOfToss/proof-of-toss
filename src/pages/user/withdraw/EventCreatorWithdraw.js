@@ -14,7 +14,7 @@ import ModalWithdraw from './ModalWithdraw';
 import '../../../styles/components/play_table.scss';
 
 import appConfig from "../../../data/config.json"
-import { myPrizeConditions, myPrizeBetConditions } from '../../../util/searchUtil';
+import { myPrizeConditions, myPrizeBetConditions, myRewardConditions } from '../../../util/searchUtil';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -161,7 +161,7 @@ class EventCreatorWithdraw extends Component {
   async update() {
     history.replaceState({}, '', `/${this.state.locale}/cabinet/withdraw?${this.getUrlParams()}`);
 
-    let {conditions, shouldConditions} = myPrizeConditions(
+    let {conditions, shouldConditions} = myRewardConditions(
       this.state.locale,
       this.props.currentAddress,
       this.state.q,

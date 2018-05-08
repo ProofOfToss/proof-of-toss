@@ -402,8 +402,8 @@ class PlayerWithdraw extends Component {
                 formatter: (cell, row) => {
                   return (
                     <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index)}}>
-                          {`Withdraw ${cell} TOSS`}
-                        </span>
+                      {`Withdraw ${cell} TOSS`}
+                    </span>
                   );
                 }
               },

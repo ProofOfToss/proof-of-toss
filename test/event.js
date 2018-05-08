@@ -238,12 +238,86 @@ contract('Event', function(accounts) {
   });
 
 
-  it("should withdraw winner prize and ec reward", async () => {
+  it("should withdraw winner prize", async () => {
     await whitelist.updateWhitelist(accounts[0], true);
 
     assert.equal(await event.getState(), 1, 'Event state must be Published');
     assert.equal(await event.resolvedResult(), 255, 'Event result must be empty');
 
+    let balance = (await token.balanceOf(accounts[2])).toNumber();
+    if (balance > 0) { await token.burn(accounts[2], balance); }
+    balance = (await token.balanceOf(accounts[3])).toNumber();
+    if (balance > 0) { await token.burn(accounts[3], balance); }
+    await token.mint(accounts[2], 1000000);
+    await token.mint(accounts[3], 1000000);
+
+    await token.transferToContract(
+      event.address,
+      1000000,
+      toBytes(
+        {type: 'uint', size: 8, value: 1}, // action – bet
+        {type: 'uint', size: 8, value: 0}, // result index
+      ),
+      {from: accounts[2]}
+    );
+
+    await token.transferToContract(
+      event.address,
+      1000000,
+      toBytes(
+        {type: 'uint', size: 8, value: 1}, // action – bet
+        {type: 'uint', size: 8, value: 1}, // result index
+      ),
+      {from: accounts[3]}
+    );
+
+    assert.equal((await event.possibleResults(0))[1].toNumber(), 1, 'Amount of bets is invalid');
+    assert.equal((await event.possibleResults(0))[2].toNumber(), 1000000, 'Sum of bets is invalid');
+    assert.equal((await event.possibleResults(1))[1].toNumber(), 1, 'Amount of bets is invalid');
+    assert.equal((await event.possibleResults(1))[2].toNumber(), 1000000, 'Sum of bets is invalid');
+    assert.equal((await token.balanceOf(event.address)).toNumber(), eventDeposit + 2000000, 'Event balance is invalid');
+
+    assert.equal(await event.getState(), 2, 'Event state must be Accepted');
+
+    await expectThrow(event.resolve(1));
+
+    await event.setStartDate(now - 120);
+    assert.equal(await event.getState(), 3, 'Event state must be Started');
+
+    await expectThrow(event.resolve(1));
+
+    await event.setEndDate(now - 60);
+    assert.equal(await event.getState(), 4, 'Event state must be Finished');
+
+
+    const txResult = await event.resolve(1);
+    assert.equal(await event.resolvedResult(), 1, 'Event result must be 1');
+    assert.equal(await event.getState(), 5, 'Event state must be Closed');
+
+    assert.equal(txResult.logs[0].event, 'Updated', 'Updated event should be raised');
+    assert.equal(txResult.logs[0].args._contract, event.address, 'Updated event should contain event address');
+
+    await expectThrow(event.withdraw({from: accounts[2]})); // Loser can't withdraw
+    await event.withdraw({from: accounts[3]});
+    await event.withdraw({from: accounts[0]});
+
+    assert.equal((await token.balanceOf(accounts[2])).toNumber(), 0, 'Loser balance is invalid');
+    assert.equal((await token.balanceOf(accounts[3])).toNumber(), 2000000 * 0.99, 'Winner balance is invalid');
+
+    assert.equal((await token.balanceOf(event.address)).toNumber(), 0, 'Event balance is invalid');
+  });
+
+  it("should withdraw individual bet prize and ec reward", async () => {
+    const eventCreatorBalance = (await token.balanceOf(accounts[0])).toNumber();
+    await whitelist.updateWhitelist(accounts[0], true);
+
+    assert.equal(await event.getState(), 1, 'Event state must be Published');
+    assert.equal(await event.resolvedResult(), 255, 'Event result must be empty');
+
+    let balance = (await token.balanceOf(accounts[2])).toNumber();
+    if (balance > 0) { await token.burn(accounts[2], balance); }
+    balance = (await token.balanceOf(accounts[3])).toNumber();
+    if (balance > 0) { await token.burn(accounts[3], balance); }
     await token.mint(accounts[2], 1000000);
     await token.mint(accounts[3], 1000000);
 
@@ -293,12 +367,13 @@ contract('Event', function(accounts) {
     assert.equal(txResult.logs[0].args._contract, event.address, 'Updated event should contain event address');
 
 
-    await event.withdraw({from: accounts[2]});
-    await event.withdraw({from: accounts[3]});
-    await event.withdraw({from: accounts[0]});
+    await expectThrow(event.withdrawPrize(0, {from: accounts[2]}));
+    await event.withdrawPrize(0, {from: accounts[3]});
+    await event.withdrawReward({from: accounts[0]});
 
     assert.equal((await token.balanceOf(accounts[2])).toNumber(), 0, 'Looser balance is invalid');
     assert.equal((await token.balanceOf(accounts[3])).toNumber(), 2000000 * 0.99, 'Winner balance is invalid');
+    assert.equal((await token.balanceOf(accounts[0])).toNumber(), eventCreatorBalance + eventDeposit + 2000000 * 0.01, 'EC balance is invalid');
 
     assert.equal((await token.balanceOf(event.address)).toNumber(), 0, 'Event balance is invalid');
   });

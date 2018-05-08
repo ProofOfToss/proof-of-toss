@@ -284,6 +284,7 @@ export class IndexingUtil {
         let action;
         let betCount = 0;
         let rewardWithdrawn = false;
+        let prizeWithdrawn = [];
 
         switch (transactionMethod.name) {
           case 'transferToContract':
@@ -304,10 +305,25 @@ export class IndexingUtil {
 
           case 'withdraw':
             action = 'withdraw';
+            const creator = await event.creator();
+
+            if (creator.toUpperCase() === sender.toUpperCase()) {
+              rewardWithdrawn = true;
+            }
+
+            const userBetsCount = await event.userBetsCount(sender);
+
+            for (let i = 0, betIndex; i < userBetsCount; i++) {
+              betIndex = await event.userBetsCount(sender, i);
+              prizeWithdrawn.push(betIndex);
+            }
+
             break;
 
           case 'withdrawPrize':
             action = 'withdrawPrize';
+            prizeWithdrawn.push(transactionMethod.params[0].value); // bet index
+
             break;
 
           case 'withdrawReward':
@@ -367,6 +383,31 @@ export class IndexingUtil {
             result: bet[2],
             amount: formatBalance(bet[3]),
             withdrawn: false,
+          });
+        }
+
+        const res = await this.esClient.search(Object.assign({
+          index: this.BET_INDEX,
+        }, {
+          body: {
+            filter: {
+              bool: {
+                must: [
+                  { term: { 'event': address } },
+                  { terms: { 'index': prizeWithdrawn } },
+                  { term: { 'bettor': sender } },
+                ]
+              }
+            }
+          }
+        }));
+
+        for (let i = 0; i < res.hits.hits.length; i++) {
+          body.push({ update: { _index: this.BET_INDEX, _type: 'bet', _id: res.hits.hits[i]._id } });
+          body.push({
+            doc: {
+              withdrawn: true,
+            }
           });
         }
 
