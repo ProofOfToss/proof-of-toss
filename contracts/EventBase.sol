@@ -60,7 +60,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
         require(codeLength > 0 && msg.sender == _contract);
 
-        Updated(_contract, _data);
+        emit Updated(_contract, _data);
     }
 
     function betsCount() public constant returns(uint) {
@@ -184,8 +184,8 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         usersBets[tx.origin].push(bets.length - 1);
         state = States.Accepted;
 
-        bytes memory buffer = new bytes(32);
-        uintToBytes(32, bets.length, buffer);
+        bytes memory buffer = new bytes(sizeOfUint(256));
+        uintToBytes(sizeOfUint(256), bets.length, buffer);
         base.updated(address(this), buffer);
     }
 

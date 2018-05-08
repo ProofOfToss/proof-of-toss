@@ -13,5 +13,5 @@ contract TestEventBase is EventBase {
         endDate = _endDate;
     }
 
-    event Updated(address _contract, uint betCount);
+    event Updated(address _contract, bytes _data);
 }

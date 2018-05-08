@@ -156,7 +156,7 @@ contract('Event', function(accounts) {
       assert.equal(bets[0][1], accounts[0], 'Address of better is invalid');
       assert.equal(bets[0][2].toNumber(), 0, 'Result of the bet is invalid');
       assert.equal(bets[0][3].toNumber(), 1000000, 'Amount of the bet is invalid');
-      
+
       assert.equal(bets[1][1], accounts[0], 'Address of better is invalid');
       assert.equal(bets[1][2].toNumber(), 1, 'Result of the bet is invalid');
       assert.equal(bets[1][3].toNumber(), 500000, 'Amount of the bet is invalid');

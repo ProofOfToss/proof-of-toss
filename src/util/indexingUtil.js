@@ -279,12 +279,14 @@ export class IndexingUtil {
         const transactionHash = events[i].transactionHash;
         const transaction = await callAsync(this.web3.eth.getTransaction.bind(this.web3.eth, transactionHash));
         const sender = transaction.from;
-        const transactionMethod = decodeEventMethod(transaction.input);
+        const transactionMethod = decodeEventMethod(this.contractAPIs.EventBase, this.contractAPIs.Token, transaction.input);
 
         let action;
         let betCount = 0;
         let rewardWithdrawn = false;
         let prizeWithdrawn = [];
+
+        console.log(transactionMethod);
 
         switch (transactionMethod.name) {
           case 'transferToContract':
@@ -344,7 +346,7 @@ export class IndexingUtil {
         const possibleResults = (await Promise.all(promises)).map((result, i) => {return {
           'index': i,
           'betCount': result[1],
-          'betSum': result[2],
+          'betSum': formatBalance(result[2]),
         }});
 
         const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseInt(result.betSum, 10), 0);
@@ -361,11 +363,11 @@ export class IndexingUtil {
         body.push({
           'script' : {
             'source': [
-              'ctx._source.bidSum = params.bidSum',
-              'ctx._source.result = params.result',
-              rewardWithdrawn ? 'ctx._source.withdrawn = true' : '',
+              'ctx._source.bidSum = params.bidSum;',
+              'ctx._source.result = params.result;',
+              rewardWithdrawn ? 'ctx._source.withdrawn = true;' : '',
               'for (item in params.bettor) { if(!ctx._source.bettor.contains(item)) { ctx._source.bettor.add(item) } } for (item in params.possibleResults) { ctx._source.possibleResults[item.index].betCount = item.betCount; ctx._source.possibleResults[item.index].betSum = item.betSum; }',
-            ].join(';'),
+            ].join(''),
             'lang': 'painless',
             'params' : doc,
           }
@@ -390,7 +392,7 @@ export class IndexingUtil {
           index: this.BET_INDEX,
         }, {
           body: {
-            filter: {
+            query: {
               bool: {
                 must: [
                   { term: { 'event': address } },
