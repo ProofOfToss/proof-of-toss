@@ -108,7 +108,8 @@ const eventReducer = (state = initialState, action) => {
     case MODAL_RESOLVE_APPROVE_ERROR_EVENT:
       return {
         ...state,
-        resolveApproveError: action.msg
+        resolveApproving: false,
+        resolveApproveError: action.error
       };
 
     //Did not happen
