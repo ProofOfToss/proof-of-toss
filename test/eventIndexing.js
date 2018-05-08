@@ -7,6 +7,7 @@ import appConfig from '../src/data/config.json';
 import log4js from 'log4js';
 import _ from 'lodash';
 import { decodeEvent } from '../src/util/web3Util';
+import { formatBalance, denormalizeBalance } from '../src/util/token'
 
 log4js.configure({
   appenders: {
@@ -119,117 +120,6 @@ contract('Event', function(accounts) {
     event = EventBase.at(events[0].args.eventAddress);
   });
 
-  /*it("should index bets", async () => {
-    await token.mint(accounts[1], 10000000);
-
-    await indexingUtil.syncIndeces(true);
-
-    let events = main.NewEvent({}, {fromBlock: 0});
-    events.get(async (error, log) => {
-      if (error) {
-        assert.equal(error, null, error.toString());
-      }
-
-      try {
-        await indexingUtil.indexEvents(log);
-      } catch (err) {
-        assert.equal(err, null, err.toString());
-      }
-    });
-
-    await new Promise((resolve) => setTimeout(resolve, 6000));
-
-
-    let transactionResult = await token.transferToContract(
-      event.address,
-      98765,
-      toBytes(
-        {type: 'uint', size: 8, value: 1}, // action – bet
-        {type: 'uint', size: 8, value: 0}, // result index
-      ),
-      {from: accounts[0]}
-    );
-
-    console.log(transactionResult.receipt.logs);
-    let log = decodeEvent(Main.web3, transactionResult.receipt.logs, eventBase, 'Updated');
-
-    try {
-      await indexingUtil.updateEvents([log]);
-    } catch (err) {
-      assert.equal(err, null, err.toString());
-    }
-
-    transactionResult = await token.transferToContract(
-      event.address,
-      43210,
-      toBytes(
-        {type: 'uint', size: 8, value: 1}, // action – bet
-        {type: 'uint', size: 8, value: 0}, // result index
-      ),
-      {from: accounts[1]}
-    );
-
-    console.log(transactionResult.receipt.logs);
-    log = decodeEvent(Main.web3, transactionResult.receipt.logs, eventBase, 'Updated');
-
-    try {
-      await indexingUtil.updateEvents([log]);
-    } catch (err) {
-      assert.equal(err, null, err.toString());
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 6000));
-
-    let eventsResult = await esClient.search(Object.assign({
-      index: EVENT_INDEX,
-      //_source_exclude: ['bettor'],
-      body: {
-        /!*query: {
-          bool: {
-            must: [
-              {
-                term: {
-                  'bettor': accounts[1],
-                }
-              }
-            ],
-          }
-        }*!/
-      }
-    })).catch((error) => {
-      assert.equal(error, null, error.toString());
-    });
-
-    console.log(_.map(eventsResult.hits.hits, '_source'));
-
-    assert.equal(eventsResult.hits.total, 1, 'Invalid hits count');
-    assert.equal(eventsResult.hits.hits[0]._id, event.address, 'Invalid event found');
-
-    let bidsResult = await esClient.search(Object.assign({
-      index: BET_INDEX,
-      sort: `timestamp:asc`,
-      body: {
-        query: {
-          bool: {
-            must: [
-              {
-                terms: {
-                  'event': eventsResult.hits.hits.map((hit) => hit._id),
-                }
-              }
-            ]
-          }
-        }
-      }
-    }));
-
-    assert.equal(bidsResult.hits.hits.length, 2, 'Invalid bets count');
-    assert.equal(bidsResult.hits.hits[0]._source.bettor, accounts[0], 'Invalid bet');
-    assert.equal(bidsResult.hits.hits[0]._source.amount, 98765, 'Invalid bet');
-    assert.equal(bidsResult.hits.hits[1]._source.bettor, accounts[1], 'Invalid bet');
-    assert.equal(bidsResult.hits.hits[1]._source.amount, 43210, 'Invalid bet');
-  });*/
-
   it("should index bets", async () => {
     await token.mint(accounts[1], 10000000);
 
@@ -333,8 +223,8 @@ contract('Event', function(accounts) {
 
     assert.equal(bidsResult.hits.hits.length, 2, 'Invalid bets count');
     assert.equal(bidsResult.hits.hits[0]._source.bettor, accounts[0], 'Invalid bet');
-    assert.equal(bidsResult.hits.hits[0]._source.amount, 98765, 'Invalid bet');
+    assert.equal(denormalizeBalance(bidsResult.hits.hits[0]._source.amount), 98765, 'Invalid bet');
     assert.equal(bidsResult.hits.hits[1]._source.bettor, accounts[1], 'Invalid bet');
-    assert.equal(bidsResult.hits.hits[1]._source.amount, 43210, 'Invalid bet');
+    assert.equal(denormalizeBalance(bidsResult.hits.hits[1]._source.amount), 43210, 'Invalid bet');
   });
 });

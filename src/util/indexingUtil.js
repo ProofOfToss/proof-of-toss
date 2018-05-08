@@ -171,7 +171,7 @@ export class IndexingUtil {
         'index': i,
         'customCoefficient': result[0],
         'betCount': result[1],
-        'betSum': result[2],
+        'betSum': formatBalance([2]),
         'description': eventData.results[i].description
       }});
 
