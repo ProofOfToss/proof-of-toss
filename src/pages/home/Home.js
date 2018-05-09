@@ -3,6 +3,17 @@ import { connect } from 'react-redux'
 import { getTranslate } from 'react-localize-redux'
 
 class Home extends Component {
+
+  redirectToSignInIfNotAuthenticated() {
+    if (this.props.isAuthenticated === false) {
+      this.props.router.push("/sign-in");
+    }
+  }
+
+  componentWillMount() {
+    this.redirectToSignInIfNotAuthenticated();
+  }
+
   render() {
     return(
       <main className="container">
@@ -18,6 +29,7 @@ class Home extends Component {
 function mapStateToProps(state) {
   return {
     translate: getTranslate(state.locale),
+    isAuthenticated: state.user.isAuthenticated
   };
 }
 
