@@ -26,11 +26,6 @@ class ModalWithdraw extends Component {
   }
 
   async componentWillMount() {
-    console.log(
-      this.props.withdraw,
-      {from: this.props.currentAddress}
-    );
-
     try {
       const contract = require('truffle-contract');
       const eventBase = contract(EventBaseContract);
@@ -112,7 +107,7 @@ class ModalWithdraw extends Component {
 
   _savedContent() {
     return <div className='alert alert-success' role='alert'>
-      {this.props.translate('pages.event.withdraw_approved')}
+      {this.props.translate('pages.withdraw.withdraw_approved')}
     </div>
   }
 
@@ -159,7 +154,7 @@ class ModalWithdraw extends Component {
 
       <main className='container'>
         <div>
-          <BaseModal handleHideModal={this.props.modalWithdrawClose} buttons={this._buttons()} title={ this.props.translate('pages.event.modal_withdraw_title')} >
+          <BaseModal handleHideModal={this.props.modalWithdrawClose} buttons={this._buttons()} title={ this.props.translate('pages.withdraw.modal_withdraw_title')} >
             { this.props.withdrawApproved ? this._savedContent() : this._confirmContent() }
           </BaseModal>
         </div>

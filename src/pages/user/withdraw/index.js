@@ -20,13 +20,13 @@ class Withdraw extends Component {
         <div>
           <h1>{ this.props.translate('pages.withdraw.header') }</h1>
 
-          <h2>My bets</h2>
+          <h2>{ this.props.translate('pages.withdraw.my_bets') }</h2>
 
-          <PlayerWithdraw {...this.props}/>
+          <PlayerWithdraw location={this.props.location} />
 
-          <h2>My events</h2>
+          <h2>{ this.props.translate('pages.withdraw.my_events') }</h2>
 
-          <EventCreatorWithdraw {...this.props}/>
+          <EventCreatorWithdraw location={this.props.location} />
 
         </div>
         {this.props.showWithdrawModal ? <ModalWithdraw /> : null}
@@ -38,10 +38,7 @@ class Withdraw extends Component {
 
 function mapStateToProps(state) {
   return {
-    currentAddress: state.user.address,
     translate: getTranslate(state.locale),
-    locale: _.find(state.locale.languages, (l) => l.active).code,
-    esClient: state.elastic.client,
     showWithdrawModal: state.event.showWithdrawModal
   };
 }

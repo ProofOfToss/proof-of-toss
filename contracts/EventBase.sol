@@ -402,7 +402,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         require(tx.origin == creator) ;
         require(rewardWithdraws[msg.sender] == 0);
 
-        uint share = getEventCreatorReward();
+        uint share = hasDefinedResult() ? getEventCreatorReward() : getEventCreatorRefund();
 
         require(share > 0);
 

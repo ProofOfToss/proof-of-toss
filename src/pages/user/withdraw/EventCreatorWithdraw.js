@@ -41,11 +41,11 @@ class EventCreatorWithdraw extends Component {
   }
 
   getUrlParams() {
-    let params = {};
+    let params = queryString.parse(window.location.search);
 
     ['q', 'category', 'fromTimestamp', 'toTimestamp', 'page', 'sortField', 'sortOrder'].forEach((field) => {
       if (this.state[field]) {
-        params[field] = this.state[field];
+        params['e_' + field] = this.state[field];
       }
     });
 
@@ -54,6 +54,11 @@ class EventCreatorWithdraw extends Component {
 
   getStateFromQueryString(props) {
     const parsed = queryString.parse(props.location.search);
+    ['q', 'category', 'fromTimestamp', 'toTimestamp', 'page', 'sortField', 'sortOrder'].forEach((field) => {
+      if (parsed['e_' + field]) {
+        parsed[field] = parsed['e_' + field];
+      }
+    });
 
     return {
       locale: props.locale,
@@ -367,7 +372,7 @@ function mapStateToProps(state) {
     translate: getTranslate(state.locale),
     locale: _.find(state.locale.languages, (l) => l.active).code,
     esClient: state.elastic.client,
-    showWithdrawModal: state.event.showWithdrawModal
+    withdrawApproved: state.event.withdrawApproved,
   };
 }
 

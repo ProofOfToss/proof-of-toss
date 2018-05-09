@@ -222,9 +222,6 @@ class MyBets extends Component {
         };
       };
 
-      console.log(res);
-      console.log(bidsByEvents);
-
       const data = _.map(res.hits.hits, '_source').reduce(
         (accumulator, event) => {
           const bids = bidsByEvents[event.address];

@@ -41,11 +41,11 @@ class PlayerWithdraw extends Component {
   }
 
   getUrlParams() {
-    let params = {};
+    let params = queryString.parse(window.location.search);
 
     ['q', 'category', 'fromTimestamp', 'toTimestamp', 'page', 'sortField', 'sortOrder'].forEach((field) => {
       if (this.state[field]) {
-        params[field] = this.state[field];
+        params['p_' + field] = this.state[field];
       }
     });
 
@@ -54,6 +54,11 @@ class PlayerWithdraw extends Component {
 
   getStateFromQueryString(props) {
     const parsed = queryString.parse(props.location.search);
+    ['q', 'category', 'fromTimestamp', 'toTimestamp', 'page', 'sortField', 'sortOrder'].forEach((field) => {
+      if (parsed['p_' + field]) {
+        parsed[field] = parsed['p_' + field];
+      }
+    });
 
     return {
       locale: props.locale,
@@ -453,7 +458,7 @@ function mapStateToProps(state) {
     translate: getTranslate(state.locale),
     locale: _.find(state.locale.languages, (l) => l.active).code,
     esClient: state.elastic.client,
-    showWithdrawModal: state.event.showWithdrawModal
+    withdrawApproved: state.event.withdrawApproved,
   };
 }
 

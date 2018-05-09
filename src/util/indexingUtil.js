@@ -171,11 +171,11 @@ export class IndexingUtil {
         'index': i,
         'customCoefficient': result[0],
         'betCount': result[1],
-        'betSum': formatBalance([2]),
+        'betSum': formatBalance(result[2]),
         'description': eventData.results[i].description
       }});
 
-      const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseInt(result.betSum, 10), 0);
+      const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum, 10), 0);
 
       let tags = eventData.tags.map((tag) => { return {'locale': eventData.locale, 'name': tag}});
 
@@ -183,7 +183,7 @@ export class IndexingUtil {
         'name': eventData.name,
         'description': eventData.description,
         'bidType': eventData.bidType,
-        'bidSum': formatBalance(bidSum),
+        'bidSum': bidSum,
         'address': _event.eventAddress,
         'createdBy': creator,
         'locale': eventData.locale,
@@ -195,6 +195,7 @@ export class IndexingUtil {
         'possibleResults': possibleResults,
         'result': result,
         'bettor': [],
+        'withdrawn': false,
       };
     } catch (err) {
       this.logger.error(err);
@@ -348,14 +349,14 @@ export class IndexingUtil {
           'betSum': formatBalance(result[2]),
         }});
 
-        const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseInt(result.betSum, 10), 0);
+        const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum, 10), 0);
 
         const doc = {
-          'bidSum': formatBalance(bidSum),
+          'bidSum': bidSum,
           'result': result,
           'possibleResults': betCount > 0 ? possibleResults : [],
           'bettor': betCount > 0 ? [sender] : [],
-          'rewardWithdrawn': rewardWithdrawn,
+          'withdrawn': rewardWithdrawn,
         };
 
         body.push({ update: { _index: this.EVENT_INDEX, _type: 'event', _id: address } });
