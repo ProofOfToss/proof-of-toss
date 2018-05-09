@@ -9,7 +9,7 @@ class EventResults extends Component {
   renderEventResults() {
     return (<Index
       header="pages.event_results.header"
-      routeName="event_results"
+      routeName="admin/event_results"
       refreshInterval="5000"
       includeEndDateColumn="true"
       defaultSortField="endDate"

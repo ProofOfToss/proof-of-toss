@@ -7,27 +7,12 @@ import checkRouteLocale  from './components/routing/checkRouteLocale'
 
 // Layouts
 import App from './App'
-import Home from './pages/home/Home'
 
 import SignIn from './pages/user/SignIn'
 
 import Wallet from './pages/wallet/Index'
 
 import Play from './pages/play/Index'
-import PlayEvent from './pages/play/Event'
-import PlayBidConfirmation from './pages/play/BidConfirmation'
-import PlayContestResult from './pages/play/ContestResult'
-
-import Payments from './pages/payments/Index'
-import PaymentsWithdraw from './pages/payments/Withdraw'
-
-import Judge from './pages/judge/Index'
-
-import Storage from './pages/storage/Storage'
-import NotFound from './pages/not_found/NotFound';
-import Events from './pages/events/Events';
-import NewEvent from './pages/new_event/NewEvent';
-import EventResults from './pages/event_results/EventResults';
 import Event from './pages/event/Event';
 
 import MyBets from './pages/user/MyBets';
@@ -35,6 +20,10 @@ import Withdraw from './pages/user/withdraw';
 
 //Admin components
 import AdminEvent from './pages/admin/event/Index';
+import NewEvent from './pages/new_event/NewEvent';
+import EventResults from './pages/event_results/EventResults';
+
+import NotFound from './pages/not_found/NotFound';
 
 // Redux Store
 import store from './store';
@@ -52,35 +41,20 @@ function renderReactDOM() {
 
   const routes = (
     <Fragment>
-      <IndexRoute component={Home} />
-
       <Route path="sign-in" component={SignIn} />
 
+      <IndexRoute component={Play} onEnter={ checkAuthorization } />
       <Route path="wallet" component={Wallet} onEnter={ checkAuthorization } />
-      <Route path="wallet/:page" component={Wallet} onEnter={ checkAuthorization } />
 
-
-      <Route path="play" component={Play} onEnter={ checkAuthorization } />
-      <Route path="play/event" component={PlayEvent} onEnter={ checkAuthorization } />
-      <Route path="play/event/bid_confirmation" component={PlayBidConfirmation} onEnter={ checkAuthorization } />
-      <Route path="play/event/contest_result" component={PlayContestResult} onEnter={ checkAuthorization } />
-
-      <Route path="payments" component={Payments} onEnter={ checkAuthorization } />
-      <Route path="payments/withdraw" component={PaymentsWithdraw} onEnter={ checkAuthorization } />
-
-      <Route path="judge" component={Judge} onEnter={ checkAuthorization } />
-
-      <Route path="storage" component={Storage} onEnter={ checkAuthorization } />
-      <Route path='events' component={Events} onEnter={ checkAuthorization } />
-      <Route path='new_event' component={NewEvent} onEnter={ checkAuthorization } />
-      <Route path='event_results' component={EventResults} onEnter={ checkAuthorization } />
       <Route path='event(/:id)' component={Event} onEnter={ checkAuthorization } />
 
       <Route path='cabinet/my_bets' component={MyBets} onEnter={ checkAuthorization } />
       <Route path='cabinet/withdraw' component={Withdraw} onEnter={ checkAuthorization } />
 
       <Route path="admin">
-        <Route path='event(/:id)' component={AdminEvent} />
+        <Route path='new_event' component={NewEvent} onEnter={ checkAuthorization } />
+        <Route path='event(/:id)' component={AdminEvent} onEnter={ checkAuthorization } />
+        <Route path='event_results' component={EventResults} onEnter={ checkAuthorization } />
       </Route>
 
       <Route path='*' component={NotFound} />
