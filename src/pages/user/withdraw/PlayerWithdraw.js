@@ -10,7 +10,6 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
 import { modalWithdrawShow } from '../../../actions/pages/event';
-import ModalWithdraw from './ModalWithdraw';
 import '../../../styles/components/play_table.scss';
 
 import appConfig from "../../../data/config.json"

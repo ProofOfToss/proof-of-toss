@@ -1,4 +1,3 @@
-import Datetime from "react-datetime";
 import { getLanguageAnalyzerByCode } from './i18n';
 
 function filterEventsConditions(locale, q, fromTimestamp, toTimestamp) {

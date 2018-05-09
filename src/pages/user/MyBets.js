@@ -12,7 +12,6 @@ import overlayFactory from 'react-bootstrap-table2-overlay';
 import '../../styles/components/play_table.scss';
 
 import appConfig from "../../data/config.json"
-import { getLanguageAnalyzerByCode } from '../../util/i18n';
 import { myBetsConditions } from '../../util/searchUtil';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';

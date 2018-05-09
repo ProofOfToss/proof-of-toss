@@ -213,6 +213,8 @@ export const modalWithdrawApprove = (gasLimit, gasPrice) => {
           });
 
           break;
+        default:
+          throw new Error('Invalid withdrawal type');
       }
 
       dispatch({type: MODAL_WITHDRAW_APPROVED_EVENT});

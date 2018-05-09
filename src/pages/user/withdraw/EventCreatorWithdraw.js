@@ -10,15 +10,13 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
 import { modalWithdrawShow } from '../../../actions/pages/event';
-import ModalWithdraw from './ModalWithdraw';
 import '../../../styles/components/play_table.scss';
 
 import appConfig from "../../../data/config.json"
-import { myPrizeConditions, myPrizeBetConditions, myRewardConditions } from '../../../util/searchUtil';
+import { myRewardConditions } from '../../../util/searchUtil';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
-const BET_INDEX = 'toss_bet_' + appConfig.elasticsearch.indexPostfix;
 
 class EventCreatorWithdraw extends Component {
   constructor(props) {

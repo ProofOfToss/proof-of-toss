@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
@@ -48,6 +48,8 @@ class ModalWithdraw extends Component {
           );
 
           break;
+        default:
+          throw new Error('Invalid withdrawal type');
       }
 
       const gasCalculation = await getGasCalculation(this.props.web3, gasAmount);

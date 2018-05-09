@@ -10,10 +10,6 @@ import ModalWithdraw from './ModalWithdraw';
 import '../../../styles/components/play_table.scss';
 
 class Withdraw extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return(
       <main className="container">
