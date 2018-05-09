@@ -52,15 +52,13 @@ function renderReactDOM() {
 
   const routes = (
     <Fragment>
-      <IndexRoute component={Home} />
-
       <Route path="sign-in" component={SignIn} />
 
       <Route path="wallet" component={Wallet} onEnter={ checkAuthorization } />
       <Route path="wallet/:page" component={Wallet} onEnter={ checkAuthorization } />
 
 
-      <Route path="play" component={Play} onEnter={ checkAuthorization } />
+      <IndexRoute path="play" component={Play} onEnter={ checkAuthorization } />
       <Route path="play/event" component={PlayEvent} onEnter={ checkAuthorization } />
       <Route path="play/event/bid_confirmation" component={PlayBidConfirmation} onEnter={ checkAuthorization } />
       <Route path="play/event/contest_result" component={PlayContestResult} onEnter={ checkAuthorization } />
