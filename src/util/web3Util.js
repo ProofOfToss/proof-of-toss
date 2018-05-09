@@ -46,6 +46,16 @@ export function decodeEvent(web3, logs, contract, eventName) {
   }, {});
 }
 
+export function decodeEventMethod(EventBase, Token, transactionInput) {
+  const abiDecoder = require('abi-decoder');
+  abiDecoder.addABI(EventBase.abi);
+  abiDecoder.addABI(Token.abi);
+
+  const decodedData = abiDecoder.decodeMethod(transactionInput);
+
+  return decodedData;
+}
+
 export default function callAsync(method) {
   return new Promise((resolve, reject) => {
     method((error, result) => {

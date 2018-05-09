@@ -31,6 +31,7 @@ import EventResults from './pages/event_results/EventResults';
 import Event from './pages/event/Event';
 
 import MyBets from './pages/user/MyBets';
+import Withdraw from './pages/user/withdraw';
 
 //Admin components
 import AdminEvent from './pages/admin/event/Index';
@@ -76,6 +77,7 @@ function renderReactDOM() {
       <Route path='event(/:id)' component={Event} onEnter={ checkAuthorization } />
 
       <Route path='cabinet/my_bets' component={MyBets} onEnter={ checkAuthorization } />
+      <Route path='cabinet/withdraw' component={Withdraw} onEnter={ checkAuthorization } />
 
       <Route path="admin">
         <Route path='event(/:id)' component={AdminEvent} />

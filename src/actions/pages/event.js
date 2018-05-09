@@ -20,6 +20,12 @@ export const MODAL_RESOLVE_APPROVING_EVENT = 'MODAL_RESOLVE_APPROVING_EVENT';
 export const MODAL_RESOLVE_APPROVED_EVENT = 'MODAL_RESOLVE_APPROVED_EVENT';
 export const MODAL_RESOLVE_APPROVE_ERROR_EVENT = 'MODAL_RESOLVE_APPROVE_ERROR_EVENT';
 
+export const MODAL_WITHDRAW_SHOW_EVENT = 'MODAL_WITHDRAW_SHOW_EVENT';
+export const MODAL_WITHDRAW_CLOSE_EVENT = 'MODAL_WITHDRAW_CLOSE_EVENT';
+export const MODAL_WITHDRAW_APPROVING_EVENT = 'MODAL_WITHDRAW_APPROVING_EVENT';
+export const MODAL_WITHDRAW_APPROVED_EVENT = 'MODAL_WITHDRAW_APPROVED_EVENT';
+export const MODAL_WITHDRAW_APPROVE_ERROR_EVENT = 'MODAL_WITHDRAW_APPROVE_ERROR_EVENT';
+
 export const DID_NOT_HAPPEN_EVENT = 'DID_NOT_HAPPEN_EVENT';
 
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -167,6 +173,52 @@ export const modalResolveApprove = (gasLimit, gasPrice) => {
     } catch (e) {
       console.log(e);
       dispatch({type: MODAL_RESOLVE_APPROVE_ERROR_EVENT});
+    }
+  }
+};
+
+export const modalWithdrawShow = (withdraw) => ({
+  type: MODAL_WITHDRAW_SHOW_EVENT,
+  withdraw: withdraw
+});
+
+export const modalWithdrawClose = (result) => ({
+  type: MODAL_WITHDRAW_CLOSE_EVENT
+});
+
+export const modalWithdrawApprove = (gasLimit, gasPrice) => {
+  return async (dispatch, getState) => {
+    dispatch({type: MODAL_WITHDRAW_APPROVING_EVENT});
+
+    try {
+      const contract = require('truffle-contract');
+      const eventBase = contract(EventBaseContract);
+      eventBase.setProvider(getState().web3.web3.currentProvider);
+      const eventBaseInstance = eventBase.at(getState().event.withdraw.address);
+
+      switch (getState().event.withdraw.type) {
+        case 'userBet':
+          await eventBaseInstance.withdrawPrize(getState().event.withdraw.userBet, {
+            from: getState().user.address,
+            gasPrice: gasPrice,
+            gas: gasLimit
+          });
+
+          break;
+        case 'eventCreatorReward':
+          await eventBaseInstance.withdrawReward({
+            from: getState().user.address,
+            gasPrice: gasPrice,
+            gas: gasLimit
+          });
+
+          break;
+      }
+
+      dispatch({type: MODAL_WITHDRAW_APPROVED_EVENT});
+    } catch (e) {
+      console.log(e);
+      dispatch({type: MODAL_WITHDRAW_APPROVE_ERROR_EVENT});
     }
   }
 };

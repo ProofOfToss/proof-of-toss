@@ -1,7 +1,9 @@
 import { deserializeEvent } from './eventUtil';
+import { fromBytes } from './serialityUtil';
 import callAsync from './web3Util';
 import util from 'util';
 import { formatBalance } from './token'
+import { decodeEventMethod } from './web3Util'
 
 export const tagMapping = {
   'mappings': {
@@ -35,6 +37,7 @@ export const eventMapping = {
         'result': {'type': 'integer'},
         'possibleResults': {'type': 'object'},
         'bettor': {'type': 'keyword'},
+        'withdrawn': {'type': 'keyword'},
       }
     },
   }
@@ -45,6 +48,7 @@ export const betMapping = {
     'bet': {
       'properties': {
         'event': {'type': 'keyword'},
+        'eventResult': {'type': 'integer'},
         'index': {'type': 'integer'},
         'timestamp': {'type': 'date'},
         'bettor': {'type': 'keyword'},
@@ -167,11 +171,11 @@ export class IndexingUtil {
         'index': i,
         'customCoefficient': result[0],
         'betCount': result[1],
-        'betSum': result[2],
+        'betSum': formatBalance(result[2]),
         'description': eventData.results[i].description
       }});
 
-      const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseInt(result.betSum, 10), 0);
+      const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum, 10), 0);
 
       let tags = eventData.tags.map((tag) => { return {'locale': eventData.locale, 'name': tag}});
 
@@ -179,7 +183,7 @@ export class IndexingUtil {
         'name': eventData.name,
         'description': eventData.description,
         'bidType': eventData.bidType,
-        'bidSum': formatBalance(bidSum),
+        'bidSum': bidSum,
         'address': _event.eventAddress,
         'createdBy': creator,
         'locale': eventData.locale,
@@ -191,6 +195,7 @@ export class IndexingUtil {
         'possibleResults': possibleResults,
         'result': result,
         'bettor': [],
+        'withdrawn': false,
       };
     } catch (err) {
       this.logger.error(err);
@@ -268,13 +273,66 @@ export class IndexingUtil {
 
     for(let i = 0; i < events.length; i++) {
       try {
-        const transactionHash = events[i].transactionHash;
-        const sender = (await callAsync(this.web3.eth.getTransaction.bind(this.web3.eth, events[i].transactionHash))).from;
-
         const address = events[i].args._contract;
-        const betCount = events[i].args.betCount;
-
+        const data = events[i].args._data;
         const event = this.contractAPIs.EventBase.at(address);
+
+        const transactionHash = events[i].transactionHash;
+        const transaction = await callAsync(this.web3.eth.getTransaction.bind(this.web3.eth, transactionHash));
+        const sender = transaction.from;
+        const transactionMethod = decodeEventMethod(this.contractAPIs.EventBase, this.contractAPIs.Token, transaction.input);
+
+        let action;
+        let betCount = 0;
+        let rewardWithdrawn = false;
+        let prizeWithdrawn = [];
+
+        switch (transactionMethod.name) {
+          case 'transferToContract':
+            action = 'newBet';
+
+            let parsed = fromBytes(
+              data,
+              {type: 'uint', size: 256, key: 'betCount'},
+            );
+
+            betCount = parsed.parsedData.betCount;
+
+            break;
+
+          case 'resolve':
+            action = 'resolve';
+            break;
+
+          case 'withdraw':
+            action = 'withdraw';
+            const creator = await event.creator();
+
+            if (creator.toUpperCase() === sender.toUpperCase()) {
+              rewardWithdrawn = true;
+            }
+
+            const userBetsCount = await event.userBetsCount(sender);
+
+            for (let i = 0, betIndex; i < userBetsCount; i++) {
+              betIndex = await event.usersBets(sender, i);
+              prizeWithdrawn.push(betIndex);
+            }
+
+            break;
+
+          case 'withdrawPrize':
+            action = 'withdrawPrize';
+            const betIndex = await event.usersBets(sender, transactionMethod.params[0].value);
+            prizeWithdrawn.push(betIndex);
+
+            break;
+
+          case 'withdrawReward':
+            action = 'withdrawReward';
+            rewardWithdrawn = true;
+            break;
+        }
 
         const resultsCount = await event.resultsCount();
         const result = await event.resolvedResult();
@@ -288,26 +346,28 @@ export class IndexingUtil {
         const possibleResults = (await Promise.all(promises)).map((result, i) => {return {
           'index': i,
           'betCount': result[1],
-          'betSum': result[2],
+          'betSum': formatBalance(result[2]),
         }});
 
-        const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseInt(result.betSum, 10), 0);
+        const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum, 10), 0);
 
         const doc = {
-          'bidSum': formatBalance(bidSum),
+          'bidSum': bidSum,
           'result': result,
           'possibleResults': betCount > 0 ? possibleResults : [],
           'bettor': betCount > 0 ? [sender] : [],
+          'withdrawn': rewardWithdrawn,
         };
 
         body.push({ update: { _index: this.EVENT_INDEX, _type: 'event', _id: address } });
         body.push({
           'script' : {
             'source': [
-              'ctx._source.bidSum = params.bidSum',
-              'ctx._source.result = params.result',
+              'ctx._source.bidSum = params.bidSum;',
+              'ctx._source.result = params.result;',
+              rewardWithdrawn ? 'ctx._source.withdrawn = true;' : '',
               'for (item in params.bettor) { if(!ctx._source.bettor.contains(item)) { ctx._source.bettor.add(item) } } for (item in params.possibleResults) { ctx._source.possibleResults[item.index].betCount = item.betCount; ctx._source.possibleResults[item.index].betSum = item.betSum; }',
-            ].join(';'),
+            ].join(''),
             'lang': 'painless',
             'params' : doc,
           }
@@ -326,6 +386,33 @@ export class IndexingUtil {
             amount: formatBalance(bet[3]),
             withdrawn: false,
           });
+        }
+
+        if (prizeWithdrawn.length > 0) {
+          const res = await this.esClient.search(Object.assign({
+            index: this.BET_INDEX,
+          }, {
+            body: {
+              query: {
+                bool: {
+                  must: [
+                    { term: { 'event': address } },
+                    { terms: { 'index': prizeWithdrawn } },
+                    { term: { 'bettor': sender } },
+                  ]
+                }
+              }
+            }
+          }));
+
+          for (let i = 0; i < res.hits.hits.length; i++) {
+            body.push({ update: { _index: this.BET_INDEX, _type: 'bet', _id: res.hits.hits[i]._id } });
+            body.push({
+              doc: {
+                withdrawn: true,
+              }
+            });
+          }
         }
 
       } catch (err) {
