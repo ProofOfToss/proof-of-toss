@@ -7,6 +7,7 @@ import appConfig from "../../data/config.json";
 
 export const FETCHED_EVENT = 'FETCHED_EVENT';
 export const FETCHING_ERROR_EVENT = 'FETCHING_ERROR_EVENT';
+export const RESET_EVENT = 'RESET_EVENT';
 
 export const MODAL_NEW_BET_SHOW_EVENT = 'MODAL_NEW_BET_SHOW_EVENT';
 export const MODAL_ADD_NEW_BET_CLOSE_EVENT = 'MODAL_ADD_NEW_BET_CLOSE_EVENT';
@@ -92,6 +93,10 @@ export const fetchEvent = (address) => {
     }
   }
 };
+
+export const resetEvent = () => ({
+  type: RESET_EVENT
+});
 
 export const newBet = (result, resultIndex, amount) => {
   return (dispatch, getState) => {
