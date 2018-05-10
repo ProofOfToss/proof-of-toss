@@ -12,7 +12,7 @@ import overlayFactory from 'react-bootstrap-table2-overlay';
 import '../../styles/components/play_table.scss';
 
 import appConfig from "../../data/config.json"
-import { getLanguageAnalyzerByCode } from '../../util/i18n';
+import { myBetsConditions } from '../../util/searchUtil';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -148,59 +148,15 @@ class MyBets extends Component {
   }
 
   async update() {
-    const conditions = [];
-    const shouldConditions = [];
-
     history.replaceState({}, '', `/${this.state.locale}/cabinet/my_bets?${this.getUrlParams()}`);
 
-    conditions.push({
-      term: {
-        locale: this.state.locale
-      }
-    });
-
-    conditions.push({
-      term: {
-        'bettor': this.props.currentAddress,
-      }
-    });
-
-    if (this.state.q) {
-      shouldConditions.push({
-        query_string: {
-          analyzer: getLanguageAnalyzerByCode(this.props.locale),
-          fields: ['name', 'description'],
-          query: this.state.q
-        }
-      });
-
-      shouldConditions.push({
-        "nested": {
-          "path": "tag",
-          "query": {
-            query_string: {
-              analyzer: getLanguageAnalyzerByCode(this.props.locale),
-              fields: ['tag.name'],
-              query: this.state.q
-            }
-          }
-        }
-      });
-
-    }
-
-    if (this.state.fromTimestamp || this.state.toTimestamp) {
-      const condition = {};
-
-      if (this.state.fromTimestamp) { condition.gte = this.state.fromTimestamp; }
-      if (this.state.toTimestamp) { condition.lte = this.state.toTimestamp; }
-
-      conditions.push({
-        range: {
-          startDate: condition
-        }
-      });
-    }
+    const {conditions, shouldConditions} = myBetsConditions(
+      this.state.locale,
+      this.props.currentAddress,
+      this.state.q,
+      this.state.fromTimestamp,
+      this.state.toTimestamp
+    );
 
     try {
       const res = await this.props.esClient.search(Object.assign({
@@ -234,6 +190,11 @@ class MyBets extends Component {
                   terms: {
                     'event': res.hits.hits.map((hit) => hit._id),
                   }
+                },
+                {
+                  terms: {
+                    'bettor': [this.props.currentAddress],
+                  }
                 }
               ]
             }
@@ -263,6 +224,11 @@ class MyBets extends Component {
       const data = _.map(res.hits.hits, '_source').reduce(
         (accumulator, event) => {
           const bids = bidsByEvents[event.address];
+
+          if (!bids) {
+            return accumulator;
+          }
+
           const bidsLength = bids.length;
           accumulator.push(Object.assign({rowSpan: bidsLength}, event, bidInfo(bids[0], event)));
 

@@ -11,7 +11,7 @@ function formatBalance(balance) {
 }
 
 function denormalizeBalance(balance) {
-  return parseFloat(balance) * Math.pow(10, config.view.currency_precision);
+  return Math.floor(parseFloat(balance) * Math.pow(10, config.view.currency_precision));
 }
 
 function getMyBalance(web3, address) {

@@ -7,6 +7,7 @@ import appConfig from "../../data/config.json";
 
 export const FETCHED_EVENT = 'FETCHED_EVENT';
 export const FETCHING_ERROR_EVENT = 'FETCHING_ERROR_EVENT';
+export const RESET_EVENT = 'RESET_EVENT';
 
 export const MODAL_NEW_BET_SHOW_EVENT = 'MODAL_NEW_BET_SHOW_EVENT';
 export const MODAL_ADD_NEW_BET_CLOSE_EVENT = 'MODAL_ADD_NEW_BET_CLOSE_EVENT';
@@ -19,6 +20,12 @@ export const MODAL_RESOLVE_CLOSE_EVENT = 'MODAL_RESOLVE_CLOSE_EVENT';
 export const MODAL_RESOLVE_APPROVING_EVENT = 'MODAL_RESOLVE_APPROVING_EVENT';
 export const MODAL_RESOLVE_APPROVED_EVENT = 'MODAL_RESOLVE_APPROVED_EVENT';
 export const MODAL_RESOLVE_APPROVE_ERROR_EVENT = 'MODAL_RESOLVE_APPROVE_ERROR_EVENT';
+
+export const MODAL_WITHDRAW_SHOW_EVENT = 'MODAL_WITHDRAW_SHOW_EVENT';
+export const MODAL_WITHDRAW_CLOSE_EVENT = 'MODAL_WITHDRAW_CLOSE_EVENT';
+export const MODAL_WITHDRAW_APPROVING_EVENT = 'MODAL_WITHDRAW_APPROVING_EVENT';
+export const MODAL_WITHDRAW_APPROVED_EVENT = 'MODAL_WITHDRAW_APPROVED_EVENT';
+export const MODAL_WITHDRAW_APPROVE_ERROR_EVENT = 'MODAL_WITHDRAW_APPROVE_ERROR_EVENT';
 
 export const DID_NOT_HAPPEN_EVENT = 'DID_NOT_HAPPEN_EVENT';
 
@@ -86,6 +93,10 @@ export const fetchEvent = (address) => {
     }
   }
 };
+
+export const resetEvent = () => ({
+  type: RESET_EVENT
+});
 
 export const newBet = (result, resultIndex, amount) => {
   return (dispatch, getState) => {
@@ -181,6 +192,54 @@ export const modalResolveApprove = (gasLimit, gasPrice) => {
       }
 
       dispatch({type: MODAL_RESOLVE_APPROVE_ERROR_EVENT, error: msg});
+    }
+  }
+};
+
+export const modalWithdrawShow = (withdraw) => ({
+  type: MODAL_WITHDRAW_SHOW_EVENT,
+  withdraw: withdraw
+});
+
+export const modalWithdrawClose = (result) => ({
+  type: MODAL_WITHDRAW_CLOSE_EVENT
+});
+
+export const modalWithdrawApprove = (gasLimit, gasPrice) => {
+  return async (dispatch, getState) => {
+    dispatch({type: MODAL_WITHDRAW_APPROVING_EVENT});
+
+    try {
+      const contract = require('truffle-contract');
+      const eventBase = contract(EventBaseContract);
+      eventBase.setProvider(getState().web3.web3.currentProvider);
+      const eventBaseInstance = eventBase.at(getState().event.withdraw.address);
+
+      switch (getState().event.withdraw.type) {
+        case 'userBet':
+          await eventBaseInstance.withdrawPrize(getState().event.withdraw.userBet, {
+            from: getState().user.address,
+            gasPrice: gasPrice,
+            gas: gasLimit
+          });
+
+          break;
+        case 'eventCreatorReward':
+          await eventBaseInstance.withdrawReward({
+            from: getState().user.address,
+            gasPrice: gasPrice,
+            gas: gasLimit
+          });
+
+          break;
+        default:
+          throw new Error('Invalid withdrawal type');
+      }
+
+      dispatch({type: MODAL_WITHDRAW_APPROVED_EVENT});
+    } catch (e) {
+      console.log(e);
+      dispatch({type: MODAL_WITHDRAW_APPROVE_ERROR_EVENT});
     }
   }
 };

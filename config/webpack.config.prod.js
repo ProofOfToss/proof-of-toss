@@ -138,6 +138,16 @@ module.exports = {
           sourceMaps: ['inline']
         }
       },
+      {
+        test: /\.js$/,
+        include: /node_modules\/abi-decoder/,
+        loader: 'babel',
+        query: {
+          presets: ['es2015'],
+          plugins: ['transform-object-assign'],
+          sourceMaps: ['inline']
+        }
+      },
       // Process JS with Babel.
       {
         test: /\.(js|jsx)$/,

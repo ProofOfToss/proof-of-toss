@@ -15,7 +15,8 @@
     "ok": "Ok",
     "create": "Создать",
     "add": "Добавить",
-    "cancel": "Отмена"
+    "cancel": "Отмена",
+    "withdraw": "Withdraw"
   },
   "validation": {
     "required": "Is required",
@@ -106,6 +107,39 @@
       "modal": {
         "submit": "Create"
       }
+    },
+    "play": {
+      "header": "Play",
+      "more": "More",
+      "empty": "No results",
+      "loading": "Loading...",
+      "search": "Search for...",
+      "columns": {
+        "name": "Name",
+        "tags": "Tags",
+        "category": "Category",
+        "bid_type": "Bid Type",
+        "start_date": "Start Date",
+        "end_date": "End Date",
+        "bid_sum": "Bid Sum",
+        "date_start": "Start time",
+        "date_end": "End time",
+        "bid_date": "Bid date",
+        "bid_result": "Bid result",
+        "result_coefficient": "Result coefficient",
+        "prize": "Prize",
+        "reward": "Reward/Refund"
+      }
+    },
+    "my_bets": {
+      "header": "My bets"
+    },
+    "withdraw": {
+      "header": "Withdraw",
+      "my_bets": "My bets",
+      "my_events": "My events",
+      "modal_withdraw_title": "Withdraw",
+      "withdraw_approved": "Withdraw approved"
     },
     "event": {
       "fetching": "Загрузка события...",

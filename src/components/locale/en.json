@@ -17,7 +17,8 @@
     "add": "Add",
     "cancel": "Cancel",
     "open": "Open",
-    "resolve": "Resolve"
+    "resolve": "Resolve",
+    "withdraw": "Withdraw"
   },
   "errors": {
     "denied_transaction": "You have denied transaction",
@@ -139,11 +140,19 @@
         "bid_date": "Bid date",
         "bid_result": "Bid result",
         "result_coefficient": "Result coefficient",
-        "prize": "Prize"
+        "prize": "Prize",
+        "reward": "Reward/Refund"
       }
     },
     "my_bets": {
       "header": "My bets"
+    },
+    "withdraw": {
+      "header": "Withdraw",
+      "my_bets": "My bets",
+      "my_events": "My events",
+      "modal_withdraw_title": "Withdraw",
+      "withdraw_approved": "Withdraw approved"
     },
     "event": {
       "fetching": "Loading event information...",

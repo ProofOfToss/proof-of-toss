@@ -175,22 +175,26 @@ const esClient = new AwsEsPublicClient(
 
     const events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: cacheState.lastBlock + step});
 
-    ((idx) => {
-      events.get(async (error, log) => {
-        if (error) {
-          fatal(error);
-        }
+    try {
+      const log = await callAsync(events.get.bind(events));
 
-        try {
-          await indexingUtil.indexEvents(log);
-          cacheState.lastBlock = idx;
-          writeCacheState(cacheState);
-        } catch (err) {
-          fatal(err);
-        }
-      });
-    })(i);
+      try {
+        await indexingUtil.indexEvents(log);
+        cacheState.lastBlock = i;
+        writeCacheState(cacheState);
+      } catch (err) {
+        fatal(err, `Error while caching events from block #${i}`);
+      }
+    } catch (error) {
+      fatal(error, `Error while fetching events from block #${i}`);
+    }
   }
+
+  logger.info(`Events to block #${blockNumber} cached`);
+
+
+  let watchEventRetryTimeout;
+  let watchEventRetryPending = false;
 
   /**
    * @returns {number}
@@ -199,15 +203,24 @@ const esClient = new AwsEsPublicClient(
     let events;
 
     const retry = async () => {
+      if (watchEventRetryPending) {return;}
+      watchEventRetryPending = true;
+
+      clearTimeout(watchEventRetryTimeout);
+
       try {
-        await callAsync(events.stopWatching);
+        if (events && events.requestManager) {
+          await callAsync(events.stopWatching.bind(events));
+        }
 
       } catch (err) {
         logger.error(err);
-        return setTimeout(retry, 1000);
       }
 
-      setTimeout(watchEvents, 1000);
+      watchEventRetryTimeout = setTimeout(() => {
+        watchEventRetryPending = false;
+        watchEvents();
+      }, 1000);
     };
 
     try {
@@ -218,14 +231,14 @@ const esClient = new AwsEsPublicClient(
       events.watch(async (error, response) => {
         if (error) {
           logger.error(error, `Error while watching for new events starting from block #${cacheState.lastBlock}`);
-          return retry();
+          return setTimeout(retry, 1000);
         }
 
         try {
           await indexingUtil.indexEvents([response]);
         } catch (err) {
           logger.error(err, `Error while indexing new event at block #${response.blockNumber}`);
-          return retry();
+          return setTimeout(retry, 1000);
         }
 
         cacheState.lastBlock = response.blockNumber - 1;
@@ -238,6 +251,10 @@ const esClient = new AwsEsPublicClient(
     }
   };
 
+
+  let watchEventUpdatesRetryTimeout;
+  let watchEventUpdatesRetryPending = false;
+
   /**
    * @returns {number}
    */
@@ -245,15 +262,24 @@ const esClient = new AwsEsPublicClient(
     let events;
 
     const retry = async () => {
+      if (watchEventUpdatesRetryPending) {return;}
+      watchEventUpdatesRetryPending = true;
+
+      clearTimeout(watchEventUpdatesRetryTimeout);
+
       try {
-        await callAsync(events.stopWatching);
+        if (events && events.requestManager) {
+          await callAsync(events.stopWatching.bind(events));
+        }
 
       } catch (err) {
         logger.error(err);
-        return setTimeout(retry, 1000);
       }
 
-      setTimeout(watchEventUpdates, 1000);
+      watchEventUpdatesRetryTimeout = setTimeout(() => {
+        watchEventUpdatesRetryPending = false;
+        watchEventUpdates();
+      }, 1000);
     };
 
     try {
@@ -264,14 +290,14 @@ const esClient = new AwsEsPublicClient(
       events.watch(async (error, response) => {
         if (error) {
           logger.error(error, `Error while watching for events updates starting from block #${cacheState.lastUpdateBlock}`);
-          return retry();
+          return setTimeout(retry, 1000);
         }
 
         try {
           await indexingUtil.updateEvents([response]);
         } catch (err) {
           logger.error(err, `Error while indexing event update at block #${response.blockNumber}`);
-          return retry();
+          return setTimeout(retry, 1000);
         }
 
         cacheState.lastUpdateBlock = response.blockNumber - 1;
@@ -286,4 +312,4 @@ const esClient = new AwsEsPublicClient(
 
   watchEvents();
   watchEventUpdates();
-})(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error); });
+})(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error, 'Emergency stop'); });
