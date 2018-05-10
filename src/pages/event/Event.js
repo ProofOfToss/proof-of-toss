@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
-import { fetchEvent } from '../../actions/pages/event';
+import { fetchEvent, resetEvent } from '../../actions/pages/event';
 
 import MainInfo from '../../components/event/MainInfo';
 import TagsList from '../../components/event/TagsList';
@@ -20,6 +20,7 @@ class Event extends Component {
 
   componentWillUnmount() {
     clearInterval(this.updateEventTimer);
+    this.props.resetEvent();
   }
 
   renderEvent() {
@@ -59,7 +60,8 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  fetchEvent
+  fetchEvent,
+  resetEvent
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Event)
