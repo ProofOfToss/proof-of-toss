@@ -38,38 +38,8 @@ class App extends Component {
 
     return (
       <ul className="nav navbar-nav">
-        {
-          this.props.isWhitelisted &&
-          <li className="dropdown">
-            <a href="#" className="dropdown-toggle" data-toggle="dropdown">Admin area <span className="caret"></span></a>
-            <ul className="dropdown-menu" role="menu">
-              <li className={ this._menuLinkClass('/new_event') }><Link to="/new_event" className="pure-menu-link">New event</Link></li>
-              <li className={ this._menuLinkClass('/event_results') }><Link to="/event_results" className="pure-menu-link">Event results</Link></li>
-            </ul>
-          </li>
-        }
-
+        <li className={ this._menuLinkClass('/') }><Link to="/" className="pure-menu-link">Play</Link></li>
         <li className={ this._menuLinkClass('/wallet') }><Link to="/wallet" className="pure-menu-link">Wallet</Link></li>
-
-        <li className="dropdown">
-          <a href="#" className="dropdown-toggle" data-toggle="dropdown">Play <span className="caret"></span></a>
-          <ul className="dropdown-menu" role="menu">
-            <li><Link to="/play" className="pure-menu-link">Play</Link></li>
-            <li><Link to="/play/event" className="pure-menu-link">Event</Link></li>
-            <li><Link to="/play/event/bid_confirmation" className="pure-menu-link">Bid confirmation</Link></li>
-            <li><Link to="/play/event/contest_result" className="pure-menu-link">Contest result</Link></li>
-          </ul>
-        </li>
-
-        <li className="dropdown">
-          <a href="#" className="dropdown-toggle" data-toggle="dropdown">Payments <span className="caret"></span></a>
-          <ul className="dropdown-menu" role="menu">
-            <li><Link to="/payments" className="pure-menu-link">Payments</Link></li>
-            <li><Link to="/payments/withdraw" className="pure-menu-link">Withdraw payment</Link></li>
-          </ul>
-        </li>
-
-        <li className={ this._menuLinkClass('/judge') }><Link to="/judge" className="pure-menu-link">Judge</Link></li>
 
         <li className="dropdown">
           <a href="#" className="dropdown-toggle" data-toggle="dropdown">Cabinet <span className="caret"></span></a>
@@ -78,6 +48,17 @@ class App extends Component {
             <li><Link to="/cabinet/withdraw" className="pure-menu-link">Withdraw</Link></li>
           </ul>
         </li>
+
+        {
+          this.props.isWhitelisted &&
+          <li className="dropdown">
+            <a href="#" className="dropdown-toggle" data-toggle="dropdown">Admin area <span className="caret"></span></a>
+            <ul className="dropdown-menu" role="menu">
+              <li className={ this._menuLinkClass('/admin/new_event') }><Link to="/admin/new_event" className="pure-menu-link">New event</Link></li>
+              <li className={ this._menuLinkClass('/admin/event_results') }><Link to="/admin/event_results" className="pure-menu-link">Event results</Link></li>
+            </ul>
+          </li>
+        }
       </ul>
     );
   }
@@ -92,37 +73,20 @@ class App extends Component {
 
         <div className="col-xs-2 col-md-2">
           <ul className="list-unstyled" role="menu">
-            <li><Link to="/wallet" className="pure-menu-link">Wallet</Link></li>
-            <li><Link to="/wallet/deposit" className="pure-menu-link">Deposit</Link></li>
-            <li><Link to="/wallet/send" className="pure-menu-link">Send</Link></li>
-          </ul>
-        </div>
-
-        <div className="col-xs-2 col-md-2">
-          <ul className="list-unstyled" role="menu">
             <li><Link to="/play" className="pure-menu-link">Play</Link></li>
-            <li><Link to="/play/event" className="pure-menu-link">Event</Link></li>
-            <li><Link to="/play/event/bid_confirmation" className="pure-menu-link">Bid confirmation</Link></li>
-            <li><Link to="/play/event/contest_result" className="pure-menu-link">Contest result</Link></li>
           </ul>
         </div>
 
         <div className="col-xs-2 col-md-2">
           <ul className="list-unstyled" role="menu">
-            <li><Link to="/payments" className="pure-menu-link">Payments</Link></li>
-            <li><Link to="/payments/withdraw" className="pure-menu-link">Withdraw payment</Link></li>
-        </ul>
-        </div>
-
-        <div className="col-xs-2 col-md-2">
-          <ul className="list-unstyled" role="menu">
-            <li><Link to="/judge" className="pure-menu-link">Judge</Link></li>
+            <li><Link to="/wallet" className="pure-menu-link">Wallet</Link></li>
           </ul>
         </div>
 
         <div className="col-xs-2 col-md-2">
           <ul className="list-unstyled" role="menu">
             <li><Link to="/cabinet/my_bets" className="pure-menu-link">My bets</Link></li>
+            <li><Link to="/cabinet/withdraw" className="pure-menu-link">Withdraw</Link></li>
           </ul>
         </div>
       </div>
