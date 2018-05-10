@@ -110,6 +110,7 @@ const eventReducer = (state = initialState, action) => {
     case MODAL_RESOLVE_APPROVED_EVENT:
       return {
         ...state,
+        resolveApproving: false,
         resolveApproved: true,
         resolveResult: {}
       };
@@ -117,6 +118,7 @@ const eventReducer = (state = initialState, action) => {
     case MODAL_RESOLVE_APPROVE_ERROR_EVENT:
       return {
         ...state,
+        resolveApproving: false,
         resolveApproveError: action.msg
       };
 
