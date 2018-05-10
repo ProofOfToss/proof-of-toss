@@ -174,7 +174,7 @@ function mapStateToProps(state) {
     sbtcBalance: state.token.sbtcBalance,
     translate: getTranslate(state.locale),
     eventData: state.event.eventData,
-    resolveApproveError: state.event.newBetError,
+    resolveApproveError: state.event.resolveApproveError,
     resolveResult: state.event.resolveResult,
     resolveApproving: state.event.resolveApproving,
     resolveApproved: state.event.resolveApproved,
