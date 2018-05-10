@@ -59,6 +59,7 @@ function renderReactDOM() {
 
       <Route path='*' component={NotFound} />
     </Fragment>
+
   );
 
   ReactDOM.render((
