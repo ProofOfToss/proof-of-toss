@@ -119,7 +119,7 @@ const eventReducer = (state = initialState, action) => {
       return {
         ...state,
         resolveApproving: false,
-        resolveApproveError: action.msg
+        resolveApproveError: action.error
       };
 
     //Withdraw modal

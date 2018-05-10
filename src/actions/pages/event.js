@@ -176,8 +176,22 @@ export const modalResolveApprove = (gasLimit, gasPrice) => {
 
       dispatch({type: MODAL_RESOLVE_APPROVED_EVENT});
     } catch (e) {
-      console.log(e);
-      dispatch({type: MODAL_RESOLVE_APPROVE_ERROR_EVENT});
+
+      let msg;
+      const translate = getTranslate(getState().locale);
+
+      if (
+        // firefox do not have normal msg, so trying to check for method name in call stack
+        e.message.indexOf('nsetTxStatusRejected') !== -1 ||
+        // chrome have normal message
+        e.message.indexOf('User denied transaction signature') !== -1)
+      {
+        msg = translate('errors.denied_transaction');
+      } else {
+        msg = translate('errors.unexpected_error');
+      }
+
+      dispatch({type: MODAL_RESOLVE_APPROVE_ERROR_EVENT, error: msg});
     }
   }
 };

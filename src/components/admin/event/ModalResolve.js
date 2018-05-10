@@ -58,6 +58,12 @@ class ModalResolve extends Component {
   _confirmContent() {
 
     return <div className="modal-resolve">
+      {this.props.resolveApproveError &&
+        <div className='alert alert-danger' role='alert'>
+          {this.props.resolveApproveError}
+        </div>
+      }
+
       {this.state.estimateGasError &&
         <div className='alert alert-danger' role='alert'>
           {this.props.translate('pages.event.estimate_gas_error')}
@@ -168,6 +174,7 @@ function mapStateToProps(state) {
     sbtcBalance: state.token.sbtcBalance,
     translate: getTranslate(state.locale),
     eventData: state.event.eventData,
+    resolveApproveError: state.event.resolveApproveError,
     resolveResult: state.event.resolveResult,
     resolveApproving: state.event.resolveApproving,
     resolveApproved: state.event.resolveApproved,
