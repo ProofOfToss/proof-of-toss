@@ -1,12 +1,18 @@
-# Technologies
+# Architecture
 
-* [node.js](https://nodejs.org)
-* [babel-cli](https://babeljs.io/docs/usage/cli/)
-* [truffle 4.x](http://truffleframework.com/)
-* [solc 0.4.x](http://solidity.readthedocs.io)
-* [reactjs](https://reactjs.org/)
-* [redux](https://redux.js.org/)
-* [elasticsearch-js](https://github.com/elastic/elasticsearch-js)
+* Solidity smart-contracts
+    - developed using truffle [truffle 4.x](http://truffleframework.com/) [solc 0.4.x](http://solidity.readthedocs.io)
+    - public MVP will deployed to Ethereum blockchain. Product is planned to work on RSK blockchain
+    - store data in compressed cost-effective format
+* Elasticsearch index
+    - stores data from blockchain in a suitable for effective filtering and sorting format
+* Web-app
+    - developed with react and redux [reactjs](https://reactjs.org/) [redux](https://redux.js.org/)
+    - using web3 for interaction with smart-contracts
+    - loads data from elasticsearch [elasticsearch-js](https://github.com/elastic/elasticsearch-js)
+* Data indexer
+    - developed on node.js [node.js](https://nodejs.org)
+    - listens for blockchain events, fetching data from blockchain and sends it to elasticsearch
 
 # Project structure
 
@@ -122,7 +128,11 @@ To synchronize white list with blockchain run:
     It should be executed after each deploy.
 
 1. TOSS Token is paused by default. To get site working the Main smart contract should be unpaused and granted to unpause other contracts.
-There is a sample script [ scripts/prepare_demo_token.js ] to do this task. Run it after each deploy. 
+There is a sample script [ scripts/prepare_demo_token.js ] to do this task. 
+    ```
+    $ babel-node scripts/prepare_demo_token.js
+    ```
+    Run it after each deploy. 
     
 After that open `localhost:3000` in a browser
 
