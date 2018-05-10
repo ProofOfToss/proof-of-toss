@@ -1,4 +1,4 @@
-import { FETCHED_EVENT, MODAL_ADD_NEW_BET_CLOSE_EVENT, MODAL_NEW_BET_SHOW_EVENT,
+import { FETCHED_EVENT, RESET_EVENT, MODAL_ADD_NEW_BET_CLOSE_EVENT, MODAL_NEW_BET_SHOW_EVENT,
   ADD_NEW_BET_ADDING_EVENT, ADD_NEW_BET_ADDED_EVENT, ADD_NEW_BET_ERROR_EVENT,
 
   MODAL_RESOLVE_SHOW_EVENT, MODAL_RESOLVE_CLOSE_EVENT, MODAL_RESOLVE_APPROVING_EVENT,
@@ -34,6 +34,12 @@ const eventReducer = (state = initialState, action) => {
         ...state,
         fetched: true,
         eventData: action.eventData
+      };
+
+    case RESET_EVENT:
+      return {
+        ...state,
+        ...initialState
       };
 
     case MODAL_NEW_BET_SHOW_EVENT:
@@ -104,6 +110,7 @@ const eventReducer = (state = initialState, action) => {
     case MODAL_RESOLVE_APPROVED_EVENT:
       return {
         ...state,
+        resolveApproving: false,
         resolveApproved: true,
         resolveResult: {}
       };
@@ -111,6 +118,7 @@ const eventReducer = (state = initialState, action) => {
     case MODAL_RESOLVE_APPROVE_ERROR_EVENT:
       return {
         ...state,
+        resolveApproving: false,
         resolveApproveError: action.msg
       };
 

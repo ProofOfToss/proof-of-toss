@@ -40,7 +40,7 @@ class Index extends Component {
 
   static defaultProps = {
     header: 'pages.play.header',
-    routeName: 'play',
+    routeName: '',
     refreshInterval: false,
     includeEndDateColumn: false,
     defaultSortField: 'startDate',
@@ -183,7 +183,7 @@ class Index extends Component {
       conditions.push({
         range: {
           startDate: {
-            gte: parseInt(Datetime.moment().add(BIDDING_END_MINUTES, 'minute').unix(), 10),
+            // gte: parseInt(Datetime.moment().add(BIDDING_END_MINUTES, 'minute').unix(), 10),
           }
         }
       });
@@ -316,7 +316,7 @@ class Index extends Component {
       sort: false,
       width: 100,
       formatter: (cell) => {
-        return (this.props.routeName === 'event_results') ?
+        return (this.props.routeName === 'admin/event_results') ?
           <Link to={`/${this.props.locale}/admin/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link> :
           <Link to={`/${this.props.locale}/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link>
       }

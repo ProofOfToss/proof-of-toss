@@ -5,7 +5,7 @@ import { getTranslate } from 'react-localize-redux';
 import { modalResolveShow } from "../../../actions/pages/event";
 
 import BasePage from '../BasePage';
-import { fetchEvent } from '../../../actions/pages/event';
+import { fetchEvent, resetEvent } from '../../../actions/pages/event';
 import CategoryUtil from '../../../util/CategoryUtil';
 import MainInfo from '../../../components/event/MainInfo';
 import TagsList from '../../../components/event/TagsList';
@@ -30,6 +30,7 @@ class Index extends Component {
 
   componentWillUnmount() {
     clearInterval(this.updateEventTimer);
+    this.props.resetEvent();
   }
 
   renderEvent() {
@@ -74,6 +75,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   fetchEvent,
+  resetEvent,
   modalResolveShow
 };
 

@@ -133,7 +133,7 @@ class ModalResolve extends Component {
         className: 'btn-primary',
         attrs: {
           onClick: this.approveHandler,
-          disabled: this.links.fee.error
+          disabled: this.links.fee.error || this.props.resolveApproving
         }
       }];
     }
@@ -169,6 +169,7 @@ function mapStateToProps(state) {
     translate: getTranslate(state.locale),
     eventData: state.event.eventData,
     resolveResult: state.event.resolveResult,
+    resolveApproving: state.event.resolveApproving,
     resolveApproved: state.event.resolveApproved,
   };
 }
