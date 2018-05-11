@@ -2,16 +2,16 @@
 
 * Solidity smart-contracts
     - developed using truffle [truffle 4.x](http://truffleframework.com/) [solc 0.4.x](http://solidity.readthedocs.io)
-    - public MVP will deployed to Ethereum blockchain. Product is planned to work on RSK blockchain
+    - public MVP will be deployed to Ethereum blockchain. Product is planned to work on RSK blockchain
     - store data in compressed cost-effective format
 * Elasticsearch index
-    - stores data from blockchain in a suitable for effective filtering and sorting format
+    - stores data from blockchain in a suitable format for effective filtration and sorting
 * Web-app
     - developed with react and redux [reactjs](https://reactjs.org/) [redux](https://redux.js.org/)
     - using web3 for interaction with smart-contracts
     - loads data from elasticsearch [elasticsearch-js](https://github.com/elastic/elasticsearch-js)
 * Data indexer
-    - developed on node.js [node.js](https://nodejs.org)
+    - developed on [node.js](https://nodejs.org)
     - listens for blockchain events, fetching data from blockchain and sends it to elasticsearch
 
 # Project structure
@@ -36,6 +36,9 @@ scripts
     start.js – starts dev server
     sync_whitelist.js – uploads list of privileged users to blockchain
 src
+    App.js – web-app common layout (header, footer)
+    index.js – entry point, redux initialization
+    
     reducer.js – redux root reducer
     store.js – redux store
     actions – redux actions dir
@@ -44,9 +47,6 @@ src
     data – app configuration
     util – reusable logic
     components, pages – react components
-    
-    App.js – web-app common layout (header, footer)
-    index.js – entry point, redux initialization
 test – unit tests
 ```
 
@@ -58,7 +58,7 @@ ERC20 token inheriting FreezingToken, MintableToken, MigratableToken, BurnableTo
 Token has app-specific logic: 
 
 - token blocking. Methods blockTokens, unblockTokens, allowBlocking, grantToAllowBlocking are needed for operator's pledge logic
-- ERC223-like token transfer with additional data (transferToContract). When send tokens with transferToContract receiving contract must implement tokenFallback method.
+- ERC223-like token transfer with additional data (transferToContract). When send tokens with transferToContract receiving contract must implement tokenFallback method. We do not implement ERC223 fully because the token needs to be compatible with existing smart-contracts using ERC20 standard and not implementing tokenFallback method.
 
 ## Whitelist
 
@@ -70,7 +70,7 @@ Creates new events.
 
 ## EventBase
 
-All event logic (bets, results resolving, prize withdrawal) implemented here
+All event logic (bets, results resolving, prize withdrawal) is implemented here
 
 ## Event
 
@@ -80,7 +80,7 @@ To minimize gas usage Event smart contract contains no logic. All method calls a
 
 # How to install
 
-TOSS Token smart contracts hosting in a separate repository (https://github.com/ProofOfToss/token-sale-contracts) and linked to contracts/token-sale-contracts via git submodule system.
+TOSS Token smart contracts are hosting in a separate repository (https://github.com/ProofOfToss/token-sale-contracts) and linked to contracts/token-sale-contracts via git submodule system.
 To initialize submodules run:
 ```
 $ git submodule init
