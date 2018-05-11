@@ -39,18 +39,17 @@ function getDecimals(web3) {
 }
 
 //TODO: get contract fromBlock, walletNumber, fee
-function getMyTransactions(web3) {
+function getMyTransactions(web3, filter = {}) {
   const contract = require('truffle-contract');
   const token = contract(TokenContract);
 
   token.setProvider(web3.currentProvider);
 
-  return token.deployed()
-    .then((instance) => {
+  return token.deployed().then((instance) => {
       let items = [];
 
       return new Promise((resolve, reject) => {
-        instance.Transfer({}, { fromBlock: 0, toBlock: 'pending' }).get(function (err, log) {
+        instance.Transfer(filter, {fromBlock: 0, toBlock: 'pending' }).get(function (err, log) {
           if (err) {
             reject(err);
             return;

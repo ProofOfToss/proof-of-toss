@@ -45,6 +45,7 @@ function renderReactDOM() {
 
       <IndexRoute component={Play} onEnter={ checkAuthorization } />
       <Route path="wallet" component={Wallet} onEnter={ checkAuthorization } />
+      <Route path="wallet/:page" component={Wallet} onEnter={ checkAuthorization } />
 
       <Route path='event(/:id)' component={Event} onEnter={ checkAuthorization } />
 
