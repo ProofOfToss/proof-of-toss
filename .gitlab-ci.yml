@@ -23,6 +23,7 @@ deploy_demo:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
     - rm -rf node_modules
+    - nvm use system
     - npm install
     - cp truffle.js.example truffle.js
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/config.json $CI_PROJECT_DIR/src/data/
