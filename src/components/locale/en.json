@@ -167,7 +167,7 @@
       "errors": {
         "bidding": {
           "time_is_over": "Time is over",
-          "invalid_status": "Invalid status",
+          "invalid_status": "Invalid event status for adding bets",
           "not_enough_tokens": "Not enough tokens for betting"
         },
         "resolve": {
