@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
-import Link from 'valuelink'
+import Link from 'valuelink';
 import moment from 'moment';
 
-import BootstrapInput from '../../components/form/BootstrapInput'
+import BootstrapInput from '../../components/form/BootstrapInput';
 
 import { STATUS_PUBLISHED, STATUS_ACCEPTED } from '../../util/eventUtil';
 import ModalNewBet from './ModalNewBet';
@@ -152,7 +152,7 @@ class ResultsList extends Component {
 function mapStateToProps(state) {
   return {
     web3: state.web3.web3,
-    balance: state.token.balance,
+    balance: state.token.normalizeBalance,
     showNewBetModal: state.event.showNewBetModal,
     translate: getTranslate(state.locale)
   }
