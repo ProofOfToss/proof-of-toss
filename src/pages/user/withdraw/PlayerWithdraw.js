@@ -10,6 +10,8 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
 import { modalWithdrawShow } from '../../../actions/pages/event';
+import { refreshBalance } from '../../../actions/token';
+import store from '../../../store';
 import '../../../styles/components/play_table.scss';
 
 import appConfig from "../../../data/config.json"
@@ -90,6 +92,16 @@ class PlayerWithdraw extends Component {
     // @todo: we use defaultSorted prop for BootstrapTable which triggers table change which triggers elastic search query
     // if we uncomment this.update() below there will be two identical queries to elastic search at the initial page loading
     //this.update();
+
+    if (this.props.refreshInterval !== false) {
+      this.refreshIntervalId = setInterval(this.update, parseInt(this.props.refreshInterval, 10));
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.refreshInterval !== false) {
+      clearInterval(this.refreshIntervalId);
+    }
   }
 
   handleTableChange(type, state) {
@@ -221,22 +233,26 @@ class PlayerWithdraw extends Component {
 
         if (hasDefinedResult) {
           if (isOperatorEvent) {
-            coefficient = bidResult.customCoefficient;
-            prize = event.result === bid.result ? bid.amount * coefficient : 0;
+            coefficient = parseFloat(bidResult.customCoefficient);
+            prize = event.result === bid.result ? parseFloat(bid.amount) * coefficient : 0;
           } else {
-            let losersBetSum = 0;
-            let winnersBetSum = 0;
+            if (event.result === bid.result) {
+              let losersBetSum = 0;
+              let winnersBetSum = 0;
 
-            for (let i = 0; i < event.possibleResults.length; i++) {
-              if (event.possibleResults[i].index === event.result) {
-                winnersBetSum += event.possibleResults[i].betSum;
-              } else {
-                losersBetSum += event.possibleResults[i].betSum;
+              for (let i = 0; i < event.possibleResults.length; i++) {
+                if (parseInt(event.possibleResults[i].index) === parseInt(event.result)) {
+                  winnersBetSum += parseFloat(event.possibleResults[i].betSum);
+                } else {
+                  losersBetSum += parseFloat(event.possibleResults[i].betSum);
+                }
               }
-            }
 
-            coefficient = bid.amount / winnersBetSum;
-            prize = bid.amount * 0.99 + losersBetSum * 0.99 * coefficient;
+              coefficient = parseFloat(bid.amount) / winnersBetSum;
+              prize = parseFloat(bid.amount) * 0.99 + losersBetSum * 0.99 * coefficient;
+            } else {
+              prize = 0;
+            }
           }
         } else {
           prize = bid.amount;
@@ -286,6 +302,8 @@ class PlayerWithdraw extends Component {
         error: e,
       });
     }
+
+    store.dispatch(refreshBalance(this.props.currentAddress));
   }
 
   render() {

@@ -1,6 +1,5 @@
 {
   "network": "test",
-  "firstBlock": 1000,
   "elasticsearch": {
     "esNode": "search-xxx-xxxxxxxxxxxx",
     "region": "eu-central-1",

@@ -10,6 +10,8 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
 import { modalWithdrawShow } from '../../../actions/pages/event';
+import { refreshBalance } from '../../../actions/token';
+import store from '../../../store';
 import '../../../styles/components/play_table.scss';
 
 import appConfig from "../../../data/config.json"
@@ -89,6 +91,16 @@ class EventCreatorWithdraw extends Component {
     // @todo: we use defaultSorted prop for BootstrapTable which triggers table change which triggers elastic search query
     // if we uncomment this.update() below there will be two identical queries to elastic search at the initial page loading
     //this.update();
+
+    if (this.props.refreshInterval !== false) {
+      this.refreshIntervalId = setInterval(this.update, parseInt(this.props.refreshInterval, 10));
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.refreshInterval !== false) {
+      clearInterval(this.refreshIntervalId);
+    }
   }
 
   handleTableChange(type, state) {
@@ -196,8 +208,9 @@ class EventCreatorWithdraw extends Component {
       const data = _.map(res.hits.hits, '_source').reduce(
         (accumulator, event) => {
           const hasDefinedResult = event.result < 232;
-          let reward = hasDefinedResult ? event.bidSum * 0.01 : 0;
-          reward = reward > event.deposit ? (event.deposit * 2) : (event.deposit + reward);
+          const deposit = parseFloat(event.deposit);
+          let reward = hasDefinedResult ? parseFloat(event.bidSum) * 0.01 : 0;
+          reward = reward > deposit ? (deposit * 2) : (deposit + reward);
 
           accumulator.push(Object.assign(
             {},
@@ -224,6 +237,8 @@ class EventCreatorWithdraw extends Component {
         error: e,
       });
     }
+
+    store.dispatch(refreshBalance(this.props.currentAddress));
   }
 
   render() {

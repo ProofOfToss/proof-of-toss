@@ -245,7 +245,7 @@ export class IndexingUtil {
         const block = await callAsync(this.web3.eth.getBlock.bind(this.web3.eth, events[i].blockNumber));
         doc.createdAt = block.timestamp;
 
-        body.push({ index: { _index: this.EVENT_INDEX, _type: 'event', _id: doc.address } });
+        body.push({ create: { _index: this.EVENT_INDEX, _type: 'event', _id: doc.address } });
         body.push(doc);
 
         this.indexTags(doc.tag);
