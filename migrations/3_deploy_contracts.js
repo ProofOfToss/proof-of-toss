@@ -5,9 +5,7 @@ var EventBase = artifacts.require("EventBase");
 var Whitelist = artifacts.require("Whitelist");
 
 module.exports = function(deployer) {
-  deployer.deploy(Token).then(function() {
-    return deployer.deploy(EventBase, Token.address);
-  }).then(function() {
+  deployer.deploy(EventBase, Token.address).then(function() {
     return deployer.deploy(Whitelist);
   }).then(function() {
     return deployer.deploy(Main, Token.address, Whitelist.address, EventBase.address);

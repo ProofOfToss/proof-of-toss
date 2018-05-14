@@ -33,8 +33,75 @@ deploy_demo:
     - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
     - echo "Deploy to Demo"
-    - rm -rf /srv/www/proof-of-toss-demo.axioma.lv/htdocs/scripts/cache_state.json
     - rsync -hrlv --delete --exclude=.git --exclude=node_modules --exclude=npm-debug.log --exclude=testrpc_db --exclude=nohup.out $CI_PROJECT_DIR/ /srv/www/proof-of-toss-demo.axioma.lv/htdocs/
+
+deploy_demo_contracts:
+  stage: deploy
+    variables:
+      GIT_SUBMODULE_STRATEGY: recursive
+    environment:
+      name: demo
+      url: http://proof-of-toss-demo.axioma.lv/
+    tags:
+      - demo
+    when: manual
+    only:
+      - master
+    script:
+      - echo "Build app"
+      - source /opt/rh/devtoolset-2/enable
+      - rm -rf node_modules
+      - nvm use system
+      - npm install
+      - cp truffle.js.example truffle.js
+      - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/config.json $CI_PROJECT_DIR/src/data/
+      - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
+      - mkdir $CI_PROJECT_DIR/build
+      - rsync -hrlv --delete /srv/www/proof-of-toss-demo.axioma.lv/htdocs/build/ $CI_PROJECT_DIR/build/
+      - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
+      - npm run build
+      - echo "Deploy to Demo"
+      - rm -rf /srv/www/proof-of-toss-demo.axioma.lv/htdocs/scripts/cache_state.json
+      - ssh testrpc@vs04.axioma.lv "/usr/local/bin/pm2 stop event_watcher"
+      - rsync -hrlv --delete --exclude=.git --exclude=node_modules --exclude=npm-debug.log --exclude=testrpc_db --exclude=nohup.out $CI_PROJECT_DIR/ /srv/www/proof-of-toss-demo.axioma.lv/htdocs/
+      - npm run sync_whitelist
+      - npm run prepare_demo_token
+      - npm run renew_es_index
+      - ssh testrpc@vs04.axioma.lv "/usr/local/bin/pm2 start event_watcher"
+
+deploy_demo_full:
+  stage: deploy
+    variables:
+      GIT_SUBMODULE_STRATEGY: recursive
+    environment:
+      name: demo
+      url: http://proof-of-toss-demo.axioma.lv/
+    tags:
+      - demo
+    when: manual
+    only:
+      - master
+    script:
+      - echo "Build app"
+      - source /opt/rh/devtoolset-2/enable
+      - rm -rf node_modules
+      - nvm use system
+      - npm install
+      - cp truffle.js.example truffle.js
+      - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/config.json $CI_PROJECT_DIR/src/data/
+      - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
+      - mkdir $CI_PROJECT_DIR/build
+      - rsync -hrlv --delete /srv/www/proof-of-toss-demo.axioma.lv/htdocs/build/ $CI_PROJECT_DIR/build/
+      - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate --reset
+      - npm run build
+      - echo "Deploy to Demo"
+      - rm -rf /srv/www/proof-of-toss-demo.axioma.lv/htdocs/scripts/cache_state.json
+      - ssh testrpc@vs04.axioma.lv "/usr/local/bin/pm2 stop event_watcher"
+      - rsync -hrlv --delete --exclude=.git --exclude=node_modules --exclude=npm-debug.log --exclude=testrpc_db --exclude=nohup.out $CI_PROJECT_DIR/ /srv/www/proof-of-toss-demo.axioma.lv/htdocs/
+      - npm run sync_whitelist
+      - npm run prepare_demo_token
+      - npm run renew_es_index
+      - ssh testrpc@vs04.axioma.lv "/usr/local/bin/pm2 start event_watcher"
 
 deploy_production:
   stage: deploy
@@ -46,12 +113,71 @@ deploy_production:
   only:
     - master
   script:
-    - echo "Deploy to production server"
+    - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
+    - rm -rf node_modules
+    - nvm use system
     - npm install
     - cp truffle.js.example truffle.js
     - cp src/data/config.json.dist src/data/config.json
-    - cp src/data/private_config.json.dist src/data/private_config.json
+    - mkdir $CI_PROJECT_DIR/build
+    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
+    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
-    - echo "Deloy to production"
+    - echo "Deloy to production server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
+
+deploy_production_contracts:
+  stage: deploy
+  environment:
+    name: deploy_production
+  tags:
+    - demo
+  when: manual
+  only:
+    - master
+  script:
+    - echo "Build app"
+    - source /opt/rh/devtoolset-2/enable
+    - rm -rf node_modules
+    - nvm use system
+    - npm install
+    - cp truffle.js.example truffle.js
+    - cp src/data/config.json.dist src/data/config.json
+    - mkdir $CI_PROJECT_DIR/build
+    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
+    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
+    - npm run build
+    - echo "Deloy to production server"
+    - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
+    - echo "Deloy to event-watcher server"
+    - scp -r ./build $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/
+    - ssh $AWS_HOST_LOGIN "cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; /usr/local/nvm/versions/node/v7.10.1/bin/pm2 stop event_watcher; npm run renew_es_index; rm scripts/cache_state.json; /usr/local/nvm/versions/node/v7.10.1/bin/pm2 restart event_watcher"
+
+deploy_production_full:
+  stage: deploy
+  environment:
+    name: deploy_production
+  tags:
+    - demo
+  when: manual
+  only:
+    - master
+  script:
+    - echo "Build app"
+    - source /opt/rh/devtoolset-2/enable
+    - rm -rf node_modules
+    - nvm use system
+    - npm install
+    - cp truffle.js.example truffle.js
+    - cp src/data/config.json.dist src/data/config.json
+    - mkdir $CI_PROJECT_DIR/build
+    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
+    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate --reset
+    - npm run build
+    - echo "Deloy to production server"
+    - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
+    - echo "Deloy to event-watcher server"
+    - scp -r ./build $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/
+    - ssh $AWS_HOST_LOGIN "cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; /usr/local/nvm/versions/node/v7.10.1/bin/pm2 stop event_watcher; npm run renew_es_index; rm scripts/cache_state.json; /usr/local/nvm/versions/node/v7.10.1/bin/pm2 restart event_watcher"
+
