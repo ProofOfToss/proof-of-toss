@@ -186,7 +186,7 @@ export class IndexingUtil {
         'description': eventData.description,
         'bidType': eventData.bidType,
         'bidSum': bidSum,
-        'deposit': deposit,
+        'deposit': formatBalance(deposit),
         'address': _event.eventAddress,
         'createdBy': creator,
         'locale': eventData.locale,
