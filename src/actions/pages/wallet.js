@@ -6,28 +6,33 @@ export const FETCH_TRANSACTIONS_REJECTED  = 'TRANSACTIONS_REJECTED ';
 export const TRANSACTION_SAVED  = 'TRANSACTION_SAVED ';
 
 export const fetchTransactions = () => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     dispatch({
       type: FETCH_TRANSACTIONS_PENDING
     });
 
-    getMyTransactions(getState().web3.web3).then(transactions => {
+    const transactionsFrom = await getMyTransactions(getState().web3.web3, {from: getState().user.address});
+    const transactionTo = await getMyTransactions(getState().web3.web3, {to: getState().user.address});
 
-      transactions.sort(function(transaction1, transaction2) {
-        if(transaction1.time < transaction2.time) {
-          return 1;
-        } else if (transaction1.time > transaction2.time) {
-          return -1;
-        } else {
-          return 0;
-        }
-      });
+    let transactions = transactionsFrom.concat(transactionTo);
 
-      dispatch({
-        type: FETCH_TRANSACTIONS_FULFILLED,
-        payload: transactions
-      });
-    })
+    transactions.sort(function(transaction1, transaction2) {
+      if(transaction1.time < transaction2.time) {
+        return 1;
+      } else if (transaction1.time > transaction2.time) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+
+    dispatch({
+      type: FETCH_TRANSACTIONS_FULFILLED,
+      payload: transactions
+    });
+    // }, e => {
+    //   console.log(arguments);
+    // })
   }
 };
 
