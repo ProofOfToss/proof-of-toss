@@ -183,7 +183,7 @@ class Index extends Component {
       conditions.push({
         range: {
           startDate: {
-            // gte: parseInt(Datetime.moment().add(BIDDING_END_MINUTES, 'minute').unix(), 10),
+            gte: parseInt(Datetime.moment().add(BIDDING_END_MINUTES, 'minute').unix(), 10),
           }
         }
       });
