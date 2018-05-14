@@ -32,6 +32,7 @@ export const eventMapping = {
         'endDate': {'type': 'date'},
         'sourceUrl': {'type': 'text'},
         'bidSum': {'type': 'double'},
+        'deposit': {'type': 'double'},
         'tag': {'type': 'nested'},
 
         'result': {'type': 'integer'},
@@ -160,6 +161,7 @@ export class IndexingUtil {
       const creator = await event.creator();
       const resultsCount = await event.resultsCount();
       const result = await event.resolvedResult();
+      const deposit = await event.deposit();
 
       const promises = [];
 
@@ -184,6 +186,7 @@ export class IndexingUtil {
         'description': eventData.description,
         'bidType': eventData.bidType,
         'bidSum': bidSum,
+        'deposit': deposit,
         'address': _event.eventAddress,
         'createdBy': creator,
         'locale': eventData.locale,
