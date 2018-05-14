@@ -120,7 +120,7 @@ deploy_production:
     - nvm use system
     - npm install
     - cp truffle.js.example truffle.js
-    - cp src/data/config.json.dist src/data/config.json
+    - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
     - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
@@ -145,7 +145,7 @@ deploy_production_contracts:
     - nvm use system
     - npm install
     - cp truffle.js.example truffle.js
-    - cp src/data/config.json.dist src/data/config.json
+    - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
     - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
@@ -172,7 +172,7 @@ deploy_production_full:
     - nvm use system
     - npm install
     - cp truffle.js.example truffle.js
-    - cp src/data/config.json.dist src/data/config.json
+    - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
     - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate --reset
