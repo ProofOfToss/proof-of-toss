@@ -168,7 +168,7 @@ const esClient = new AwsEsPublicClient(
 
   logger.info(`Caching events starting from block #${cacheState.lastBlock} to block #${blockNumber}`);
 
-  const step = 10;
+  const step = 100;
 
   for(let i = cacheState.lastBlock; i < blockNumber; i += step) {
     logger.info(`Caching events from block #${i}`);

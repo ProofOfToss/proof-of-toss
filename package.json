@@ -117,7 +117,9 @@
   "scripts": {
     "start_app": "babel-node scripts/app.js",
     "create_es_index": "babel-node scripts/create_es_index.js",
+    "renew_es_index": "babel-node scripts/create_es_index.js --force",
     "sync_whitelist": "babel-node scripts/sync_whitelist.js",
+    "prepare_demo_token": "babel-node scripts/prepare_demo_token.js",
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
