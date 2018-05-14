@@ -317,6 +317,13 @@ class EventCreatorWithdraw extends Component {
                 formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
               },
               {
+                text: this.props.translate('pages.play.columns.deposit'),
+                dataField: "deposit",
+                sort: true,
+                width: 150,
+                attrs: rowAttrs,
+              },
+              {
                 text: this.props.translate('pages.play.columns.bid_sum'),
                 dataField: "bidSum",
                 sort: true,
