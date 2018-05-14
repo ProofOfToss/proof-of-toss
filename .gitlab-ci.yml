@@ -34,6 +34,7 @@ deploy_demo:
     - npm run build
     - echo "Deploy to Demo"
     - rsync -hrlv --delete --exclude=.git --exclude=node_modules --exclude=npm-debug.log --exclude=testrpc_db --exclude=nohup.out $CI_PROJECT_DIR/ /srv/www/proof-of-toss-demo.axioma.lv/htdocs/
+    - ssh testrpc@vs04.axioma.lv "/usr/local/bin/pm2 restart event_watcher"
 
 deploy_demo_contracts:
   stage: deploy
@@ -126,6 +127,7 @@ deploy_production:
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
+    - ssh $AWS_HOST_LOGIN "cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; /usr/local/nvm/versions/node/v7.10.1/bin/pm2 restart event_watcher"
 
 deploy_production_contracts:
   stage: deploy
