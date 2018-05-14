@@ -195,7 +195,7 @@ class PlayerWithdraw extends Component {
         }
       } : {}));
 
-      conditions = myPrizeBetConditions(res.hits.hits).conditions;
+      conditions = myPrizeBetConditions(this.props.currentAddress, res.hits.hits).conditions;
 
       const bidsRes = await this.props.esClient.search(Object.assign({
         index: BET_INDEX,
@@ -214,28 +214,32 @@ class PlayerWithdraw extends Component {
       }), 'event');
 
       const bidInfo = (bid, event) => {
+        const hasDefinedResult = event.result < 232;
         const isOperatorEvent = false;
         const bidResult = event.possibleResults[bid.result];
-        let coefficient;
+        let coefficient, prize;
 
-        if (isOperatorEvent) {
-          coefficient = bidResult.customCoefficient > 0 ? bidResult.customCoefficient : bid.amount / bidResult.betSum;
+        if (hasDefinedResult) {
+          if (isOperatorEvent) {
+            coefficient = bidResult.customCoefficient;
+            prize = event.result === bid.result ? bid.amount * coefficient : 0;
+          } else {
+            let losersBetSum = 0;
+            let winnersBetSum = 0;
+
+            for (let i = 0; i < event.possibleResults.length; i++) {
+              if (event.possibleResults[i].index === event.result) {
+                winnersBetSum += event.possibleResults[i].betSum;
+              } else {
+                losersBetSum += event.possibleResults[i].betSum;
+              }
+            }
+
+            coefficient = bid.amount / winnersBetSum;
+            prize = bid.amount * 0.99 + losersBetSum * 0.99 * coefficient;
+          }
         } else {
-          /*
-          uint256 betSum;
-          uint256 losersBetSum;
-          uint256 winnersBetSum;
-
-          (betSum, losersBetSum, winnersBetSum) = calculateBetsSums();
-
-          uint256 coefficient = bet.amount.div(winnersBetSum);
-          uint256 prize = bet.amount.mul(99).div(100).add(
-              losersBetSum.mul(99).div(100).mul(coefficient)
-          );
-
-          return prize;
-           */
-          coefficient = bidResult.customCoefficient > 0 ? bidResult.customCoefficient : bid.amount / bidResult.betSum;
+          prize = bid.amount;
         }
 
         return {
@@ -245,8 +249,9 @@ class PlayerWithdraw extends Component {
           bidSum: bid.amount,
           bidDate: bid.timestamp,
           coefficient: coefficient,
-          prize: event.result === bid.result ? bid.amount * coefficient : 0,
+          prize: prize,
           index: bid.index,
+          hasDefinedResult: hasDefinedResult,
         };
       };
 
@@ -406,7 +411,7 @@ class PlayerWithdraw extends Component {
                 formatter: (cell, row) => {
                   return (
                     <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index)}}>
-                      {`Withdraw ${cell} TOSS`}
+                      {row.hasDefinedResult ? `Withdraw ${cell} TOSS` : `Get back ${cell} TOSS`}
                     </span>
                   );
                 }

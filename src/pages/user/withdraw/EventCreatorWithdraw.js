@@ -195,11 +195,16 @@ class EventCreatorWithdraw extends Component {
 
       const data = _.map(res.hits.hits, '_source').reduce(
         (accumulator, event) => {
+          const hasDefinedResult = event.result < 232;
+          let reward = hasDefinedResult ? event.bidSum * 0.01 : 0;
+          reward = reward > event.deposit ? (event.deposit * 2) : (event.deposit + reward);
+
           accumulator.push(Object.assign(
             {},
             event,
             {
-              reward: event.bidSum * 0.01,
+              reward: reward,
+              hasDefinedResult: hasDefinedResult,
             }
           ));
 
@@ -319,8 +324,8 @@ class EventCreatorWithdraw extends Component {
                 formatter: (cell, row) => {
                   return (
                     <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address)}}>
-                          {`Withdraw ${cell} TOSS`}
-                        </span>
+                      {row.hasDefinedResult ? `Withdraw ${cell} TOSS` : `Get back ${cell} TOSS`}
+                    </span>
                   );
                 }
               },

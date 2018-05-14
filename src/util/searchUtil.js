@@ -90,7 +90,6 @@ function myRewardConditions(locale, currentAddress, q, fromTimestamp, toTimestam
 function myPrizeConditions(locale, currentAddress, q, fromTimestamp, toTimestamp) {
   const {conditions, shouldConditions} = myBetsConditions(locale, currentAddress, q, fromTimestamp, toTimestamp);
 
-
   conditions.push({ // Event has result
     range: {
       result: {
@@ -102,7 +101,7 @@ function myPrizeConditions(locale, currentAddress, q, fromTimestamp, toTimestamp
   return {conditions, shouldConditions};
 }
 
-function myPrizeBetConditions(eventHits) {
+function myPrizeBetConditions(currentAddress, eventHits) {
   const conditions = [];
 
   conditions.push({ // bet not withdrawn
@@ -114,6 +113,12 @@ function myPrizeBetConditions(eventHits) {
   conditions.push({
     terms: {
       'event': eventHits.map((hit) => hit._id),
+    }
+  });
+
+  conditions.push({
+    term: {
+      'bettor': currentAddress,
     }
   });
 
