@@ -73,7 +73,7 @@ class App extends Component {
 
         <div className="col-xs-2 col-md-2">
           <ul className="list-unstyled" role="menu">
-            <li><Link to="/play" className="pure-menu-link">Play</Link></li>
+            <li><Link to="/" className="pure-menu-link">Play</Link></li>
           </ul>
         </div>
 
