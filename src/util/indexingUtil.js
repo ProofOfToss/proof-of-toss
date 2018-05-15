@@ -359,12 +359,12 @@ export class IndexingUtil {
           'betSum': formatBalance(result[2]),
         }});
 
-        const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum, 10), 0);
+        const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum), 0);
 
         const doc = {
           'bidSum': bidSum,
           'result': result,
-          'possibleResults': betCount > 0 ? possibleResults : [],
+          'possibleResults': possibleResults,
           'bettor': betCount > 0 ? [sender] : [],
           'withdrawn': rewardWithdrawn,
         };
