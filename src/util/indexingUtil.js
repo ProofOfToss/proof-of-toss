@@ -431,7 +431,7 @@ export class IndexingUtil {
       }
     }
 
-    this.logger.trace(body);
+    this.logger.info(body);
 
     await this.esClient.bulk({body, refresh: this.forceRefresh}).then((result) => {
       this.logger.info(util.inspect(result.items, {showHidden: false, depth: 10}));
