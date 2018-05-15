@@ -4,6 +4,7 @@ import { deployed } from "../../util/contracts";
 import { formatBalance, denormalizeBalance } from './../../util/token';
 import { toBytesTruffle as toBytes } from '../../util/serialityUtil';
 import appConfig from "../../data/config.json";
+import {refreshBalance} from "../token";
 
 export const FETCHED_EVENT = 'FETCHED_EVENT';
 export const FETCHING_ERROR_EVENT = 'FETCHING_ERROR_EVENT';
@@ -88,7 +89,6 @@ export const fetchEvent = (address) => {
         dispatch({type: FETCHED_EVENT, eventData: eventData});
       });
     } catch (e) {
-      console.log(e);
       dispatch({type: FETCHING_ERROR_EVENT, error: e});
     }
   }
@@ -129,6 +129,7 @@ export const modalAddNewBetAdd = (gasLimit, gasPrice) => {
         }
       );
 
+      dispatch(refreshBalance(getState().user.address));
       dispatch({type: ADD_NEW_BET_ADDED_EVENT});
     } catch (e) {
       let msg;
