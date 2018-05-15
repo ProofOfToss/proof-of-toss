@@ -241,7 +241,7 @@ class PlayerWithdraw extends Component {
               let winnersBetSum = 0;
 
               for (let i = 0; i < event.possibleResults.length; i++) {
-                if (parseInt(event.possibleResults[i].index) === parseInt(event.result)) {
+                if (parseInt(event.possibleResults[i].index, 10) === parseInt(event.result, 10)) {
                   winnersBetSum += parseFloat(event.possibleResults[i].betSum);
                 } else {
                   losersBetSum += parseFloat(event.possibleResults[i].betSum);
