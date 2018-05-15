@@ -255,10 +255,17 @@ export class IndexingUtil {
       }
     }
 
-    this.logger.trace(body);
+    this.logger.info(body);
 
     await this.esClient.bulk({body, refresh: this.forceRefresh}).then((result) => {
-      this.logger.info(result.items);
+
+      result.items.forEach(item => {
+        this.logger.info(item);
+        if (item.error) {
+          this.logger.error(item.error);
+        }
+      })
+
     }).catch((error) => {
       this.logger.error(error);
       throw error;
