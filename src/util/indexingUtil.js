@@ -383,6 +383,8 @@ export class IndexingUtil {
           }
         });
 
+        this.logger.info(doc);
+
         if (betCount > 0) {
           const bet = await event.bets(betCount - 1);
 
