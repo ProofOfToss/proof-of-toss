@@ -173,10 +173,10 @@ const esClient = new AwsEsPublicClient(
 
   const step = 1000;
 
-  for(let i = cacheState.lastBlock + 1; i < blockNumber; i += step) {
+  for(let i = cacheState.lastBlock; i < blockNumber; i += step) {
     logger.info(`Caching events from block #${i}`);
 
-    const events = main.NewEvent({}, {fromBlock: cacheState.lastBlock + 1, toBlock: cacheState.lastBlock + step});
+    const events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: cacheState.lastBlock + step});
 
     try {
       const log = await callAsync(events.get.bind(events));
@@ -194,7 +194,7 @@ const esClient = new AwsEsPublicClient(
 
     logger.info(`Caching event updates from block #${i}`);
 
-    const update_events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock + 1, toBlock: cacheState.lastUpdateBlock + step});
+    const update_events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: cacheState.lastUpdateBlock + step});
 
     try {
       const log = await callAsync(update_events.get.bind(update_events));
@@ -247,7 +247,7 @@ const esClient = new AwsEsPublicClient(
     try {
       logger.info(`Watching for new events`);
 
-      events = main.NewEvent({}, {fromBlock: cacheState.lastBlock + 1, toBlock: 'latest'});
+      events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
 
       events.watch(async (error, response) => {
         if (error) {
@@ -308,7 +308,7 @@ const esClient = new AwsEsPublicClient(
     try {
       logger.info(`Watching for event updates`);
 
-      events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock + 1, toBlock: 'latest'});
+      events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: 'latest'});
 
       events.watch(async (error, response) => {
         if (error) {
