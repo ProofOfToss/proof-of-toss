@@ -169,6 +169,14 @@
         "bet_count": "Количество ставок",
         "bet_sum": "Сумма ставок"
       }
+    },
+    "faucet": {
+      "address": "Address",
+      "amount": "Amount",
+      "add": "Add",
+      "submitQueryError": "Please, try again later",
+      "fetchingTransaction": "Transaction <span class='alert-link'>${ txHash }</span> is pending.",
+      "successTransaction": "Transaction completed successfully"
     }
   }
 

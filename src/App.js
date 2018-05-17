@@ -49,6 +49,8 @@ class App extends Component {
           </ul>
         </li>
 
+        <li className={ this._menuLinkClass('/faucet') }><Link to="/faucet" className="pure-menu-link">Faucet</Link></li>
+
         {
           this.props.isWhitelisted &&
           <li className="dropdown">

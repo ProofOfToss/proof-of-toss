@@ -8,6 +8,7 @@ import elasticReducer from './reducers/elastic';
 import newEventReducer from './reducers/pages/newEvent';
 import WalletReducer from './reducers/pages/wallet';
 import eventReducer from './reducers/pages/event';
+import faucetReducer from './reducers/pages/faucet';
 
 const reducer = combineReducers({
   routing: routerReducer,
@@ -19,6 +20,7 @@ const reducer = combineReducers({
   elastic: elasticReducer,
   wallet: WalletReducer,
   event: eventReducer,
+  faucet: faucetReducer
 });
 
 export default reducer
