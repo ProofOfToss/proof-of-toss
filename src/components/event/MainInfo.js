@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import moment from 'moment';
 import CategoryUtil from '../../util/CategoryUtil';
+import SourceUrl from './SourceUrl';
 
 class MainInfo extends Component {
 
@@ -40,10 +41,7 @@ class MainInfo extends Component {
         <dt>{this.props.translate('pages.event.labels.description')}</dt>
         <dd>{this.props.eventData.description}</dd>
       </dl>
-      <dl className="dl-horizontal">
-        <dt>{this.props.translate('pages.event.labels.source_url')}</dt>
-        <dd>{this.props.eventData.sourceUrl}</dd>
-      </dl>
+      <SourceUrl sourceUrl={this.props.eventData.sourceUrl} />*/}
       {this.props.eventData.status > 5 &&
         <dl className="dl-horizontal">
           <dt>{this.props.translate('pages.event.labels.resolved_result')}</dt>
