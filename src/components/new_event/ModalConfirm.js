@@ -71,6 +71,9 @@ class ModalConfirm extends Component {
 
   _confirmContent() {
 
+    const expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+    const urlRegex = new RegExp(expression);
+
     return <div className="modal-confirm-new-event">
 
       {this.props.save_error &&
@@ -117,7 +120,19 @@ class ModalConfirm extends Component {
         <dd>{this.props.formData.description}</dd>
 
         <dt>{this.props.translate('pages.new_event.form.source_url.label')}</dt>
-        <dd>{this.props.formData.sourceUrls.join(', ')}</dd>
+        <dd className="sourceUrl">
+          <ul className="list-unstyled">
+            {
+              this.props.formData.sourceUrls.map((sourceUrl, key) => {
+                if (sourceUrl.match(urlRegex)) {
+                  return <li key={key}><a href={sourceUrl} target="_blank">{sourceUrl}</a></li>
+                }
+
+                return <li key={key}>{sourceUrl}</li>
+              })
+            }
+          </ul>
+        </dd>
 
         <dt>{this.props.translate('pages.new_event.form.results.label')}</dt>
         <dd>
