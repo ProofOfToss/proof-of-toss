@@ -71,7 +71,7 @@ function deserializeEvent(bytes) {
     );
 
     offset = parsed.offset;
-    parsedData.results.push({coefficient: parsed.parsedData.coefficient});
+    parsedData.results.push({coefficient: parsed.parsedData.coefficient || 0});
   }
 
   let compressedData = bytes.substr(0, offset);

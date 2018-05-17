@@ -40,7 +40,7 @@ class ModalConfirm extends Component {
         endDate: this.props.formData.endTime.unix(),
         sourceUrl: this.props.formData.sourceUrls.join(','),
         tags: this.props.formData.tags,
-        results: this.props.formData.results.map((result) => { return {'coefficient': result.coefficient, 'description': result.description}; }),
+        results: this.props.formData.results.map((result) => { return {'coefficient': result.coefficient || 0, 'description': result.description}; }),
       });
 
       tokenInstance.transferToContract.estimateGas(mainInstance.address, this.props.formData.deposit, bytes, {

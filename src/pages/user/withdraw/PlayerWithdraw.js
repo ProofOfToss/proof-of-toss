@@ -15,7 +15,7 @@ import store from '../../../store';
 import '../../../styles/components/play_table.scss';
 
 import appConfig from "../../../data/config.json"
-import { myPrizeConditions, myPrizeBetConditions } from '../../../util/searchUtil';
+import { myPrizeConditions, myPrizeBetConditions, bidInfo } from '../../../util/searchUtil';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -225,52 +225,6 @@ class PlayerWithdraw extends Component {
         return Object.assign({tx: res._id}, res._source)
       }), 'event');
 
-      const bidInfo = (bid, event) => {
-        const hasDefinedResult = event.result < 232;
-        const isOperatorEvent = false;
-        const bidResult = event.possibleResults[bid.result];
-        let coefficient, prize;
-
-        if (hasDefinedResult) {
-          if (isOperatorEvent) {
-            coefficient = parseFloat(bidResult.customCoefficient);
-            prize = event.result === bid.result ? parseFloat(bid.amount) * coefficient : 0;
-          } else {
-            if (event.result === bid.result) {
-              let losersBetSum = 0;
-              let winnersBetSum = 0;
-
-              for (let i = 0; i < event.possibleResults.length; i++) {
-                if (parseInt(event.possibleResults[i].index, 10) === parseInt(event.result, 10)) {
-                  winnersBetSum += parseFloat(event.possibleResults[i].betSum);
-                } else {
-                  losersBetSum += parseFloat(event.possibleResults[i].betSum);
-                }
-              }
-
-              coefficient = parseFloat(bid.amount) / winnersBetSum;
-              prize = parseFloat(bid.amount) * 0.99 + losersBetSum * 0.99 * coefficient;
-            } else {
-              prize = 0;
-            }
-          }
-        } else {
-          prize = bid.amount;
-        }
-
-        return {
-          tx: bid.tx,
-          isWinningBet: event.result === bid.result,
-          bidResult: bidResult.description,
-          bidSum: bid.amount,
-          bidDate: bid.timestamp,
-          coefficient: coefficient,
-          prize: prize,
-          index: bid.index,
-          hasDefinedResult: hasDefinedResult,
-        };
-      };
-
       const data = _.map(res.hits.hits, '_source').reduce(
         (accumulator, event) => {
           const bids = bidsByEvents[event.address];
@@ -420,6 +374,7 @@ class PlayerWithdraw extends Component {
                 dataField: "coefficient",
                 sort: false,
                 width: 150,
+                formatter: (cell) => parseFloat(cell).toFixed(2),
               },
               {
                 text: this.props.translate('pages.play.columns.prize'),

@@ -54,7 +54,7 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
           endDate: formData.endTime.unix(),
           sourceUrl: formData.sourceUrls.join(','),
           tags: formData.tags,
-          results: formData.results.map((result) => { return {'coefficient': result.coefficient, 'description': result.description}; }),
+          results: formData.results.map((result) => { return {'coefficient': result.coefficient || 0, 'description': result.description}; }),
         });
 
         return tokenContract.transferToContract(mainContract.address, deposit, bytes, {
@@ -87,7 +87,7 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
           msg = translate('errors.unexpected_error');
         }
 
-        dispatch({type: SAVE_ERROR_EVENT, error: msg})
+        dispatch({type: SAVE_ERROR_EVENT, error: msg});
       });
     })
   }

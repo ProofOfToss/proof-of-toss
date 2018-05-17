@@ -79,9 +79,12 @@ class ResultsField extends Component {
       .check( v => v, this.props.translate('validation.required'))
       .check( v => v.length >= 3, this.props.translate('validation.min_length', {min: 3}));
 
-    this.resultLinkCoefficient = Link.state(this, 'resultCoefficient')
-      .check( v => parseFloat(v) >= 1, this.props.translate('validation.range', {min: 1, max: 99}))
-      .check( v => parseFloat(v) <= 99, this.props.translate('validation.range', {min: 1, max: 99}));
+    this.resultLinkCoefficient = Link.state(this, 'resultCoefficient');
+
+    if (this.props.isOperatorEvent) {
+      this.resultLinkCoefficient.check(v => parseFloat(v) >= 1, this.props.translate('validation.range', {min: 1, max: 99}));
+      this.resultLinkCoefficient.check(v => parseFloat(v) <= 99, this.props.translate('validation.range', {min: 1, max: 99}));
+    }
 
     return <Fragment>
       <div className="form-group">
@@ -127,13 +130,17 @@ class ResultsField extends Component {
               <span id="helpBlock" className="help-block">{ this.resultLink.error || '' }</span>
             }
           </div>
-          <div className={"col-xs-2" + (this.resultLinkCoefficient.error && this.state.showResultErrors ? ' has-error' : '')}>
-            <Input valueLink={ this.resultLinkCoefficient } type='number' id="event[result_coefficient]" className='form-control'
-                   placeholder={this.props.translate('pages.new_event.form.results.coefficient')}/>
-            {this.resultLinkCoefficient.error && this.state.showResultErrors &&
-              <span id="helpBlock" className="help-block">{this.resultLinkCoefficient.error || ''}</span>
-            }
-          </div>
+          {
+            this.props.isOperatorEvent
+              ? <div className={"col-xs-2" + (this.resultLinkCoefficient.error && this.state.showResultErrors ? ' has-error' : '')}>
+                <Input valueLink={ this.resultLinkCoefficient } type='number' id="event[result_coefficient]" className='form-control'
+                       placeholder={this.props.translate('pages.new_event.form.results.coefficient')}/>
+                {this.resultLinkCoefficient.error && this.state.showResultErrors &&
+                <span id="helpBlock" className="help-block">{this.resultLinkCoefficient.error || ''}</span>
+                }
+              </div>
+              : null
+          }
           <div className="col-xs-4">
             <a className="btn btn-default" onClick={this.addResult}>{ this.props.translate('pages.new_event.form.results.add_new')}</a>
           </div>
