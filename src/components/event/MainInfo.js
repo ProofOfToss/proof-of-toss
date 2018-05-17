@@ -41,7 +41,7 @@ class MainInfo extends Component {
         <dt>{this.props.translate('pages.event.labels.description')}</dt>
         <dd>{this.props.eventData.description}</dd>
       </dl>
-      <SourceUrl sourceUrl={this.props.eventData.sourceUrl} />*/}
+      <SourceUrl sourceUrl={this.props.eventData.sourceUrl} />
       {this.props.eventData.status > 5 &&
         <dl className="dl-horizontal">
           <dt>{this.props.translate('pages.event.labels.resolved_result')}</dt>
