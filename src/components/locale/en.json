@@ -43,6 +43,9 @@
       "deposit_is_nan": "Deposit should be a number"
     }
   },
+  "header": {
+    "address": "Address"
+  },
   "pages": {
     "home": {
       "title": "Good to Go!"

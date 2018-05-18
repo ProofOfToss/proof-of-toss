@@ -1,6 +1,7 @@
 @import "~bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
 @import "./bootstrap/bootstrap";
 
+@import "./components/header";
 @import "./components/fees_block";
 @import "./components/new_event";
 @import "./components/event";
