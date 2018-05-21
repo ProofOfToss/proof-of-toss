@@ -70,7 +70,7 @@ class ModalConfirm extends Component {
 
   _confirmContent() {
 
-    const expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+    const expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/gi;
     const urlRegex = new RegExp(expression);
 
     return <div className="modal-confirm-new-event">

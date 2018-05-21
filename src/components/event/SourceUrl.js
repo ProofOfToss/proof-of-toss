@@ -5,7 +5,7 @@ import { getTranslate } from 'react-localize-redux';
 class SourceUrl extends Component {
 
   render() {
-    const expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+    const expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/gi;
     const regex = new RegExp(expression);
 
     return <dl className="dl-horizontal">
