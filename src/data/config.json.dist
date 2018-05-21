@@ -8,7 +8,7 @@
   },
   "view": {
     "token_symbol": "TOSS",
-    "currency_symbol": "SBTC",
+    "currency_symbol": "ETH",
     "token_precision": 2,
     "currency_precision": 18,
     "gwei_precision": 2,
@@ -44,5 +44,7 @@
     "0x277ef42000668133fe0000eb173fdd05222e53a4",
     "0x7ab38c0d2a990ceaa93f3e7a5a3d31a33bd21d42",
     "0x0c1e057003ba8ef98d45c3f642eac55c01e53711"
-  ]
+  ],
+  "faucetUrl": "",
+  "txCheckUrl": ""
 }
