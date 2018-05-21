@@ -32,6 +32,7 @@ export const eventMapping = {
         'endDate': {'type': 'date'},
         'sourceUrl': {'type': 'text'},
         'bidSum': {'type': 'double'},
+        'deposit': {'type': 'double'},
         'tag': {'type': 'nested'},
 
         'result': {'type': 'integer'},
@@ -160,6 +161,7 @@ export class IndexingUtil {
       const creator = await event.creator();
       const resultsCount = await event.resultsCount();
       const result = await event.resolvedResult();
+      const deposit = await event.deposit();
 
       const promises = [];
 
@@ -184,6 +186,7 @@ export class IndexingUtil {
         'description': eventData.description,
         'bidType': eventData.bidType,
         'bidSum': bidSum,
+        'deposit': formatBalance(deposit),
         'address': _event.eventAddress,
         'createdBy': creator,
         'locale': eventData.locale,
@@ -242,7 +245,7 @@ export class IndexingUtil {
         const block = await callAsync(this.web3.eth.getBlock.bind(this.web3.eth, events[i].blockNumber));
         doc.createdAt = block.timestamp;
 
-        body.push({ index: { _index: this.EVENT_INDEX, _type: 'event', _id: doc.address } });
+        body.push({ create: { _index: this.EVENT_INDEX, _type: 'event', _id: doc.address } });
         body.push(doc);
 
         this.indexTags(doc.tag);
@@ -252,10 +255,17 @@ export class IndexingUtil {
       }
     }
 
-    this.logger.trace(body);
+    this.logger.info(body);
 
     await this.esClient.bulk({body, refresh: this.forceRefresh}).then((result) => {
-      this.logger.info(result.items);
+
+      result.items.forEach(item => {
+        this.logger.info(item);
+        if (item.error) {
+          this.logger.error(item.error);
+        }
+      })
+
     }).catch((error) => {
       this.logger.error(error);
       throw error;
@@ -349,12 +359,12 @@ export class IndexingUtil {
           'betSum': formatBalance(result[2]),
         }});
 
-        const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum, 10), 0);
+        const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum), 0);
 
         const doc = {
           'bidSum': bidSum,
           'result': result,
-          'possibleResults': betCount > 0 ? possibleResults : [],
+          'possibleResults': possibleResults,
           'bettor': betCount > 0 ? [sender] : [],
           'withdrawn': rewardWithdrawn,
         };
@@ -372,6 +382,8 @@ export class IndexingUtil {
             'params' : doc,
           }
         });
+
+        this.logger.info(doc);
 
         if (betCount > 0) {
           const bet = await event.bets(betCount - 1);
@@ -421,7 +433,7 @@ export class IndexingUtil {
       }
     }
 
-    this.logger.trace(body);
+    this.logger.info(body);
 
     await this.esClient.bulk({body, refresh: this.forceRefresh}).then((result) => {
       this.logger.info(util.inspect(result.items, {showHidden: false, depth: 10}));

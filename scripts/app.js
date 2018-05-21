@@ -160,15 +160,18 @@ const esClient = new AwsEsPublicClient(
    * @returns {*}
    */
   function writeCacheState(cacheState) {
+    logger.info('cache state saved: ', cacheState);
     return fs.writeFileSync(cacheStateFile, JSON.stringify(cacheState) + '\n');
   }
 
-  let cacheState = readCacheState({lastBlock: appConfig.firstBlock, lastUpdateBlock: appConfig.firstBlock});
+  const firstBlock = (await callAsync(web3.eth.getTransactionReceipt.bind(web3.eth, Token.transactionHash))).blockNumber;
+
+  let cacheState = readCacheState({lastBlock: firstBlock, lastUpdateBlock: firstBlock});
   const blockNumber = await callAsync(web3.eth.getBlockNumber);
 
   logger.info(`Caching events starting from block #${cacheState.lastBlock} to block #${blockNumber}`);
 
-  const step = 100;
+  const step = 1000;
 
   for(let i = cacheState.lastBlock; i < blockNumber; i += step) {
     logger.info(`Caching events from block #${i}`);
@@ -187,6 +190,24 @@ const esClient = new AwsEsPublicClient(
       }
     } catch (error) {
       fatal(error, `Error while fetching events from block #${i}`);
+    }
+
+    logger.info(`Caching event updates from block #${i}`);
+
+    const update_events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: cacheState.lastUpdateBlock + step});
+
+    try {
+      const log = await callAsync(update_events.get.bind(update_events));
+
+      try {
+        await indexingUtil.updateEvents(log);
+        cacheState.lastUpdateBlock = i;
+        writeCacheState(cacheState);
+      } catch (err) {
+        fatal(err, `Error while caching event updates from block #${i}`);
+      }
+    } catch (error) {
+      fatal(error, `Error while fetching event updates from block #${i}`);
     }
   }
 
@@ -241,7 +262,7 @@ const esClient = new AwsEsPublicClient(
           return setTimeout(retry, 1000);
         }
 
-        cacheState.lastBlock = response.blockNumber - 1;
+        cacheState.lastBlock = response.blockNumber;
         writeCacheState(cacheState);
       });
 
@@ -249,6 +270,8 @@ const esClient = new AwsEsPublicClient(
       logger.error(err);
       return setTimeout(retry, 1000);
     }
+
+    setInterval(retry, 1000 * 60);
   };
 
 
@@ -300,7 +323,7 @@ const esClient = new AwsEsPublicClient(
           return setTimeout(retry, 1000);
         }
 
-        cacheState.lastUpdateBlock = response.blockNumber - 1;
+        cacheState.lastUpdateBlock = response.blockNumber;
         writeCacheState(cacheState);
       });
 
@@ -308,8 +331,14 @@ const esClient = new AwsEsPublicClient(
       logger.error(err);
       return setTimeout(retry, 1000);
     }
+
+    setInterval(retry, 1000 * 60);
   };
 
-  watchEvents();
-  watchEventUpdates();
+  try {
+    watchEvents();
+    watchEventUpdates();
+  } catch (err) {
+    fatal(err);
+  }
 })(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error, 'Emergency stop'); });

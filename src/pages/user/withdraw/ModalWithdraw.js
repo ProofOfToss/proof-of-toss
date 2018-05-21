@@ -54,12 +54,15 @@ class ModalWithdraw extends Component {
 
       const gasCalculation = await getGasCalculation(this.props.web3, gasAmount);
 
+      console.log('gasCalculation', gasCalculation);
+
       this.setState({
         gasLimit: gasCalculation.gasLimit,
-        gasPrice: gasCalculation.price / gasCalculation.gasLimit,
-        gasPriceStr: Number(this.props.web3.toWei(gasCalculation.price / gasCalculation.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei',
+        gasPrice: gasCalculation.gasPrice,
         minFee: gasCalculation.minFee,
         fee: gasCalculation.fee
+      }, () => {
+        console.log('state', this.state);
       });
     } catch (e) {
       console.log(e);
@@ -76,6 +79,12 @@ class ModalWithdraw extends Component {
   _confirmContent() {
 
     return <div className="modal-resolve">
+      {this.props.withdrawApproveError &&
+      <div className='alert alert-danger' role='alert'>
+        {this.props.withdrawApproveError}
+      </div>
+      }
+
       {this.state.estimateGasError &&
         <div className='alert alert-danger' role='alert'>
           {this.props.translate('pages.event.estimate_gas_error')}
@@ -137,7 +146,7 @@ class ModalWithdraw extends Component {
         className: 'btn-primary',
         attrs: {
           onClick: this.approveHandler,
-          disabled: this.links.fee.error
+          disabled: this.links.fee.error || this.props.withdrawApproving
         }
       }];
     }
@@ -173,6 +182,8 @@ function mapStateToProps(state) {
     translate: getTranslate(state.locale),
     eventData: state.event.eventData,
     withdraw: state.event.withdraw,
+    withdrawApproveError: state.event.withdrawApproveError,
+    withdrawApproving: state.event.withdrawApproving,
     withdrawApproved: state.event.withdrawApproved,
   };
 }

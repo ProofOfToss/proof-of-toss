@@ -156,7 +156,8 @@ const eventReducer = (state = initialState, action) => {
     case MODAL_WITHDRAW_APPROVE_ERROR_EVENT:
       return {
         ...state,
-        withdrawApproveError: action.msg
+        withdrawApproving: false,
+        withdrawApproveError: action.error
       };
 
     //Did not happen

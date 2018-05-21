@@ -389,6 +389,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
         lastWithdraw = now;
         withdraws[msg.sender] = lastWithdraw;
+        betWithdraws[msg.sender][bet] = lastWithdraw;
 
         token.transfer(msg.sender, share);
 
@@ -408,6 +409,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
         lastWithdraw = now;
         withdraws[msg.sender] = lastWithdraw;
+        rewardWithdraws[msg.sender] = lastWithdraw;
 
         token.transfer(msg.sender, share);
 

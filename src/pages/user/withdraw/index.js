@@ -18,11 +18,11 @@ class Withdraw extends Component {
 
           <h2>{ this.props.translate('pages.withdraw.my_bets') }</h2>
 
-          <PlayerWithdraw location={this.props.location} />
+          <PlayerWithdraw location={this.props.location} refreshInterval="5000" />
 
           <h2>{ this.props.translate('pages.withdraw.my_events') }</h2>
 
-          <EventCreatorWithdraw location={this.props.location} />
+          <EventCreatorWithdraw location={this.props.location} refreshInterval="5000" />
 
         </div>
         {this.props.showWithdrawModal ? <ModalWithdraw /> : null}

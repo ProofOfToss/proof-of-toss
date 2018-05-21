@@ -52,8 +52,7 @@ class ModalConfirm extends Component {
       .then((gasCalculation) => {
         this.setState({
           gasLimit: gasCalculation.gasLimit,
-          gasPrice: gasCalculation.price / gasCalculation.gasLimit,
-          gasPriceStr: Number(this.props.web3.toWei(gasCalculation.price / gasCalculation.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei',
+          gasPrice: gasCalculation.gasPrice,
           minFee: gasCalculation.minFee,
           fee: gasCalculation.fee
         });

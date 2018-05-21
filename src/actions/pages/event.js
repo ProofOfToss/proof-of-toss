@@ -4,6 +4,7 @@ import { deployed } from "../../util/contracts";
 import { formatBalance, denormalizeBalance } from './../../util/token';
 import { toBytesTruffle as toBytes } from '../../util/serialityUtil';
 import appConfig from "../../data/config.json";
+import {refreshBalance} from "../token";
 
 export const FETCHED_EVENT = 'FETCHED_EVENT';
 export const FETCHING_ERROR_EVENT = 'FETCHING_ERROR_EVENT';
@@ -88,7 +89,6 @@ export const fetchEvent = (address) => {
         dispatch({type: FETCHED_EVENT, eventData: eventData});
       });
     } catch (e) {
-      console.log(e);
       dispatch({type: FETCHING_ERROR_EVENT, error: e});
     }
   }
@@ -129,6 +129,7 @@ export const modalAddNewBetAdd = (gasLimit, gasPrice) => {
         }
       );
 
+      dispatch(refreshBalance(getState().user.address));
       dispatch({type: ADD_NEW_BET_ADDED_EVENT});
     } catch (e) {
       let msg;
@@ -238,8 +239,22 @@ export const modalWithdrawApprove = (gasLimit, gasPrice) => {
 
       dispatch({type: MODAL_WITHDRAW_APPROVED_EVENT});
     } catch (e) {
-      console.log(e);
-      dispatch({type: MODAL_WITHDRAW_APPROVE_ERROR_EVENT});
+
+      let msg;
+      const translate = getTranslate(getState().locale);
+
+      if (
+        // firefox do not have normal msg, so trying to check for method name in call stack
+      e.message.indexOf('nsetTxStatusRejected') !== -1 ||
+      // chrome have normal message
+      e.message.indexOf('User denied transaction signature') !== -1)
+      {
+        msg = translate('errors.denied_transaction');
+      } else {
+        msg = translate('errors.unexpected_error');
+      }
+
+      dispatch({type: MODAL_WITHDRAW_APPROVE_ERROR_EVENT, error: msg});
     }
   }
 };

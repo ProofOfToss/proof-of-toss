@@ -10,6 +10,8 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
 import { modalWithdrawShow } from '../../../actions/pages/event';
+import { refreshBalance } from '../../../actions/token';
+import store from '../../../store';
 import '../../../styles/components/play_table.scss';
 
 import appConfig from "../../../data/config.json"
@@ -90,6 +92,16 @@ class PlayerWithdraw extends Component {
     // @todo: we use defaultSorted prop for BootstrapTable which triggers table change which triggers elastic search query
     // if we uncomment this.update() below there will be two identical queries to elastic search at the initial page loading
     //this.update();
+
+    if (this.props.refreshInterval !== false) {
+      this.refreshIntervalId = setInterval(this.update, parseInt(this.props.refreshInterval, 10));
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.refreshInterval !== false) {
+      clearInterval(this.refreshIntervalId);
+    }
   }
 
   handleTableChange(type, state) {
@@ -195,7 +207,7 @@ class PlayerWithdraw extends Component {
         }
       } : {}));
 
-      conditions = myPrizeBetConditions(res.hits.hits).conditions;
+      conditions = myPrizeBetConditions(this.props.currentAddress, res.hits.hits).conditions;
 
       const bidsRes = await this.props.esClient.search(Object.assign({
         index: BET_INDEX,
@@ -214,28 +226,36 @@ class PlayerWithdraw extends Component {
       }), 'event');
 
       const bidInfo = (bid, event) => {
+        const hasDefinedResult = event.result < 232;
         const isOperatorEvent = false;
         const bidResult = event.possibleResults[bid.result];
-        let coefficient;
+        let coefficient, prize;
 
-        if (isOperatorEvent) {
-          coefficient = bidResult.customCoefficient > 0 ? bidResult.customCoefficient : bid.amount / bidResult.betSum;
+        if (hasDefinedResult) {
+          if (isOperatorEvent) {
+            coefficient = parseFloat(bidResult.customCoefficient);
+            prize = event.result === bid.result ? parseFloat(bid.amount) * coefficient : 0;
+          } else {
+            if (event.result === bid.result) {
+              let losersBetSum = 0;
+              let winnersBetSum = 0;
+
+              for (let i = 0; i < event.possibleResults.length; i++) {
+                if (parseInt(event.possibleResults[i].index, 10) === parseInt(event.result, 10)) {
+                  winnersBetSum += parseFloat(event.possibleResults[i].betSum);
+                } else {
+                  losersBetSum += parseFloat(event.possibleResults[i].betSum);
+                }
+              }
+
+              coefficient = parseFloat(bid.amount) / winnersBetSum;
+              prize = parseFloat(bid.amount) * 0.99 + losersBetSum * 0.99 * coefficient;
+            } else {
+              prize = 0;
+            }
+          }
         } else {
-          /*
-          uint256 betSum;
-          uint256 losersBetSum;
-          uint256 winnersBetSum;
-
-          (betSum, losersBetSum, winnersBetSum) = calculateBetsSums();
-
-          uint256 coefficient = bet.amount.div(winnersBetSum);
-          uint256 prize = bet.amount.mul(99).div(100).add(
-              losersBetSum.mul(99).div(100).mul(coefficient)
-          );
-
-          return prize;
-           */
-          coefficient = bidResult.customCoefficient > 0 ? bidResult.customCoefficient : bid.amount / bidResult.betSum;
+          prize = bid.amount;
         }
 
         return {
@@ -245,8 +265,9 @@ class PlayerWithdraw extends Component {
           bidSum: bid.amount,
           bidDate: bid.timestamp,
           coefficient: coefficient,
-          prize: event.result === bid.result ? bid.amount * coefficient : 0,
+          prize: prize,
           index: bid.index,
+          hasDefinedResult: hasDefinedResult,
         };
       };
 
@@ -281,6 +302,8 @@ class PlayerWithdraw extends Component {
         error: e,
       });
     }
+
+    store.dispatch(refreshBalance(this.props.currentAddress));
   }
 
   render() {
@@ -406,7 +429,7 @@ class PlayerWithdraw extends Component {
                 formatter: (cell, row) => {
                   return (
                     <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index)}}>
-                      {`Withdraw ${cell} TOSS`}
+                      {row.hasDefinedResult ? `Withdraw ${cell} TOSS` : `Get back ${cell} TOSS`}
                     </span>
                   );
                 }
