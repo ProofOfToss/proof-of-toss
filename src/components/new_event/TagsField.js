@@ -68,6 +68,8 @@ class TagsField extends Component {
                  renderInput={this.renderInput}
                  onlyUnique={true}
                  maxTags="10"
+                 addKeys={[9, 13, 32]}
+                 addOnBlur={true}
                  className='react-tagsinput form-control' />
       { this._showErrors() &&
         <span id="helpBlock" className="help-block">{ this.props.translate('pages.new_event.form.tags.error') }</span>
