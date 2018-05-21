@@ -28,9 +28,6 @@
       {"id": 3, "name": "weather"}
     ]
   },
-  "timeZones": {
-    "default": 10
-  },
   "whitelist": [
     "0x06bc9874f0fe6e31120ab390ac9d99e12bdc5089",
     "0x9de32bb33dd4ecab8e2dcb5ad8a0407cb66dd4f3",

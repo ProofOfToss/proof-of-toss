@@ -1,11 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Select } from 'valuelink/tags'
 import moment from 'moment';
 import { getTranslate } from 'react-localize-redux';
-import { TIME_ZONES } from "../../util/timezones";
 import DatePicker from "../form/DatePicker";
-import config from "../../data/config.json";
 import 'react-datetime/css/react-datetime.css'
 
 export const DEFAULT_START_TIME = moment().add(1, 'hours');
@@ -22,9 +19,7 @@ class DateFields extends Component {
     this.getEndDateInputProps = this.getEndDateInputProps.bind(this);
 
     this.state = {
-      timeZones: TIME_ZONES,
       formData: {
-        timeZone: config.timeZones.default,
         startTime: DEFAULT_START_TIME,
         endTime: DEFAULT_END_TIME
       }
@@ -109,29 +104,15 @@ class DateFields extends Component {
 
   render() {
     return <Fragment>
-      <div className={"form-group" + (this.props.valueLinkTimeZone.error ? ' has-error' : '')}>
-        {this.state.timeZones.length > 0 &&
-          <Fragment>
-            <label htmlFor="event[time_zone]">{ this.props.translate('pages.new_event.form.time_zone')}*</label>
-            <Select valueLink={this.props.valueLinkTimeZone} type='text' id="event[time_zone]" className='form-control'>
-              {this.state.timeZones.map((timeZone, key) => {
-                return <option key={key} value={key}>{timeZone}</option>
-              }, this)}
-            </Select>
-            <span id="helpBlock" className="help-block">{ this.props.valueLinkTimeZone.error || '' }</span>
-          </Fragment>
-        }
-      </div>
-
       <div className="form-group">
-        <label htmlFor="event[date_start]">{ this.props.translate('pages.new_event.form.date_start')}*</label>
+        <label htmlFor="event[date_start]">{this.props.translate('pages.new_event.form.dates.date_start')}*</label>
         <DatePicker isValidDate={this.isValidStartDate} onChange={this.onChangeStartTime}
           timeConstraints={this.calculateStartTimeConstraints()} timeFormat="H:mm"
           value={this.state.formData.startTime}/>
       </div>
 
       <div className="form-group">
-        <label htmlFor="event[date_end]">{ this.props.translate('pages.new_event.form.date_end')}*</label>
+        <label htmlFor="event[date_end]">{this.props.translate('pages.new_event.form.dates.date_end')}*</label>
         <DatePicker isValidDate={this.isValidEndDate} onChange={this.onChangeEndTime}
             timeConstraints={this.calculateEndTimeConstraints()} timeFormat="H:mm" inputProps={this.getEndDateInputProps()}
             value={this.state.formData.endTime}

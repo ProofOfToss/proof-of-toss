@@ -16,6 +16,8 @@
     "create": "Создать",
     "add": "Добавить",
     "cancel": "Отмена",
+    "open": "Отрыть",
+    "resolve": "Resolve",
     "withdraw": "Withdraw"
   },
   "validation": {
@@ -87,9 +89,11 @@
           "label": "Tags",
           "error": "You should add at least one tag"
         },
-        "time_zone": "Time zone",
-        "date_start": "Start time",
-        "date_end": "End time",
+        "dates": {
+          "date_start": "Start time",
+          "date_end": "End time",
+          "help": "Выбирете ваше локальное время события"
+        },
         "description": "Description",
         "source_url": {
           "label": "Source url",
@@ -183,6 +187,11 @@
       "fetchingTransaction": "Transaction <span class='alert-link'>${ txHash }</span> is pending.",
       "successTransaction": "Transaction completed successfully"
     }
+  },
+  "categories": {
+    "all": "Все категории",
+    "sport": "Спорт",
+    "economy": "Экономика",
+    "weather": "Погода"
   }
-
 }

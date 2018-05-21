@@ -4,7 +4,6 @@ import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
 import { Input } from 'valuelink/tags'
 import BaseModal from '../modal/BaseModal'
-import { TIME_ZONES } from "../../util/timezones";
 import { modalCloseEvent, modalSaveEvent } from '../../actions/pages/newEvent'
 import { getGasCalculation } from '../../util/gasPriceOracle';
 import { deployed } from '../../util/contracts';
@@ -106,13 +105,10 @@ class ModalConfirm extends Component {
         <dt>{this.props.translate('pages.new_event.form.tags.label')}</dt>
         <dd>{this.props.formData.tags.join(', ')}</dd>
 
-        <dt>{this.props.translate('pages.new_event.form.time_zone')}</dt>
-        <dd>{TIME_ZONES[this.props.formData.timeZone]}</dd>
-
-        <dt>{this.props.translate('pages.new_event.form.date_start')}</dt>
+        <dt>{this.props.translate('pages.new_event.form.dates.date_start')}</dt>
         <dd>{this.props.formData.startTime.format('LLL')}</dd>
 
-        <dt>{this.props.translate('pages.new_event.form.date_end')}</dt>
+        <dt>{this.props.translate('pages.new_event.form.dates.date_end')}</dt>
         <dd>{this.props.formData.endTime.format('LLL')}</dd>
 
         <dt>{this.props.translate('pages.new_event.form.description')}</dt>
