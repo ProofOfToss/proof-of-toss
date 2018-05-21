@@ -203,6 +203,14 @@
         "bet_sum": "Bet sum",
         "confirm": "Confirm"
       }
+    },
+    "faucet": {
+      "address": "Address",
+      "amount": "Amount",
+      "add": "Add",
+      "submitQueryError": "Please, try again later",
+      "fetchingTransaction": "Transaction <span class='alert-link'>${ txHash }</span> is pending.",
+      "successTransaction": "Transaction completed successfully"
     }
   },
   "categories": {

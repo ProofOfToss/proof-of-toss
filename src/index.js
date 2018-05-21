@@ -18,6 +18,8 @@ import Event from './pages/event/Event';
 import MyBets from './pages/user/MyBets';
 import Withdraw from './pages/user/withdraw';
 
+import Faucet from './pages/faucet/Index';
+
 //Admin components
 import AdminEvent from './pages/admin/event/Index';
 import NewEvent from './pages/new_event/NewEvent';
@@ -51,6 +53,8 @@ function renderReactDOM() {
 
       <Route path='cabinet/my_bets' component={MyBets} onEnter={ checkAuthorization } />
       <Route path='cabinet/withdraw' component={Withdraw} onEnter={ checkAuthorization } />
+
+      <Route path='faucet' component={Faucet} onEnter={ checkAuthorization } />
 
       <Route path="admin">
         <Route path='new_event' component={NewEvent} onEnter={ checkAuthorization } />
