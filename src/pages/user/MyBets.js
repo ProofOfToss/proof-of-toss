@@ -12,7 +12,7 @@ import overlayFactory from 'react-bootstrap-table2-overlay';
 import '../../styles/components/play_table.scss';
 
 import appConfig from "../../data/config.json"
-import { myBetsConditions } from '../../util/searchUtil';
+import { myBetsConditions, bidInfo } from '../../util/searchUtil';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -206,21 +206,6 @@ class MyBets extends Component {
         return Object.assign({tx: res._id}, res._source)
       }), 'event');
 
-      const bidInfo = (bid, event) => {
-        const bidResult = event.possibleResults[bid.result];
-        const coefficient = bidResult.customCoefficient > 0 ? bidResult.customCoefficient : bid.amount / bidResult.betSum;
-
-        return {
-          tx: bid.tx,
-          isWinningBet: event.result === bid.result,
-          bidResult: bidResult.description,
-          bidSum: bid.amount,
-          bidDate: bid.timestamp,
-          coefficient: coefficient,
-          prize: event.result === bid.result ? bid.amount * coefficient : 0,
-        };
-      };
-
       const data = _.map(res.hits.hits, '_source').reduce(
         (accumulator, event) => {
           const bids = bidsByEvents[event.address];
@@ -372,6 +357,7 @@ class MyBets extends Component {
                   dataField: "coefficient",
                   sort: false,
                   width: 150,
+                  formatter: (cell) => parseFloat(cell).toFixed(2),
                 },
                 {
                   text: this.props.translate('pages.play.columns.prize'),

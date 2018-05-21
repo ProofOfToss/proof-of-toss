@@ -137,4 +137,57 @@ function myPrizeBetConditions(currentAddress, eventHits) {
   return {conditions};
 }
 
-export {myBetsConditions, myPrizeConditions, myPrizeBetConditions, myRewardConditions};
+function bidInfo (bid, event) {
+  const eventFinished = event.result < 255;
+  const hasDefinedResult = event.result < 232;
+  const isOperatorEvent = false;
+  const bidResult = event.possibleResults[bid.result];
+  let coefficient, prize;
+
+  if (eventFinished && !hasDefinedResult) {
+    coefficient = '-';
+    prize = bid.amount;
+  } else {
+    if (isOperatorEvent) {
+      coefficient = parseFloat(bidResult.customCoefficient);
+      prize = event.result === bid.result ? parseFloat(bid.amount) * coefficient : 0;
+    } else {
+      let losersBetSum = 0;
+      let winnersBetSum = 0;
+      let winningResult, possibleResult, eventResult = parseInt(event.result, 10);
+
+      for (let i = 0; i < event.possibleResults.length; i++) {
+        possibleResult = parseInt(event.possibleResults[i].index, 10);
+        winningResult = hasDefinedResult ? eventResult : possibleResult;
+
+        if (possibleResult === winningResult) {
+          winnersBetSum += parseFloat(event.possibleResults[i].betSum);
+        } else {
+          losersBetSum += parseFloat(event.possibleResults[i].betSum);
+        }
+      }
+
+      coefficient = winnersBetSum > 0 ? parseFloat(bid.amount) / winnersBetSum : 0;
+
+      if (bid.result === event.result) {
+        prize = parseFloat(bid.amount) * 0.99 + losersBetSum * 0.99 * coefficient;
+      } else {
+        prize = 0;
+      }
+    }
+  }
+
+  return {
+    tx: bid.tx,
+    isWinningBet: event.result === bid.result,
+    bidResult: bidResult.description,
+    bidSum: bid.amount,
+    bidDate: bid.timestamp,
+    coefficient: coefficient,
+    prize: prize,
+    index: bid.index,
+    hasDefinedResult: hasDefinedResult,
+  };
+}
+
+export {myBetsConditions, myPrizeConditions, myPrizeBetConditions, myRewardConditions, bidInfo};

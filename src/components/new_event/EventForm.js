@@ -163,7 +163,7 @@ class EventForm extends Component {
 
         <SourceUrlField onChange={this.handleFieldsChange} showErrors={this.state.showErrors} />
 
-        <ResultsField onChange={this.handleFieldsChange} showErrors={this.state.showErrors} />
+        <ResultsField onChange={this.handleFieldsChange} showErrors={this.state.showErrors} isOperatorEvent={false} />
 
         <Buttons deposit={this.state.formData.deposit} />
 
