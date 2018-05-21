@@ -4,6 +4,7 @@ import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
 
 import config from '../../data/config.json';
+import { denormalizeBalance } from './../../util/token';
 import {submitQuery} from "../../actions/pages/faucet";
 import BootstrapInput from '../../components/form/BootstrapInput';
 
@@ -18,7 +19,8 @@ class Index extends Component {
       showErrors: false,
       errors: {},
       address: props.address,
-      amount: 1
+      amount: 1,
+
     }
   }
 
@@ -30,14 +32,11 @@ class Index extends Component {
     event.preventDefault();
 
     if (this.isValid()) {
-      const faucetUrl = `${config.faucetUrl}/toss_faucet/?account=${this.state.address}&sum=${this.state.amount}`;
+      const faucetUrl = `${config.faucetUrl}?account=${this.state.address}&sum=${denormalizeBalance(this.state.amount)}`;
       this.props.submitQuery(faucetUrl);
-
-
-      return;
+    } else {
+      this.setState({showErrors: true});
     }
-
-    this.setState({showErrors: true});
   }
 
   render() {
@@ -70,13 +69,13 @@ class Index extends Component {
                           attr={amountAttr} horizontal={true} />
           <div className="form-group">
             <div className="col-sm-offset-2 col-sm-10">
-              <button type="submit" className="btn btn-default">{this.props.translate('pages.faucet.add')}</button>
+              <button type="submit" disabled={!!this.props._submitQuery || !!this.props.fetchingTransactionStatus} className="btn btn-default">{this.props.translate('pages.faucet.add')}</button>
             </div>
           </div>
         </form>
 
         {this.props.fetchingTransactionStatus && <div className="alert alert-warning" role="alert">
-          {this.props.translate('pages.faucet.fetchingTransaction', {txHash: this.props.txHash})}
+          {this.props.translate('pages.faucet.fetchingTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash}" target="_blank"}>${this.props.txHash}</a>`})}
         </div>}
 
         {this.props.successTransaction && <div className="alert alert-success alert-dismissible" role="alert">
@@ -100,6 +99,7 @@ function mapPropsToState(state) {
     address: state.user.address,
     fetchingTransactionStatus: state.faucet.fetchingTransactionStatus,
     submitQueryError: state.faucet.submitQueryError,
+    _submitQuery: state.faucet.submitQuery,
     txHash: state.faucet.txHash,
     successTransaction: state.faucet.successTransaction,
     translate: getTranslate(state.locale)
