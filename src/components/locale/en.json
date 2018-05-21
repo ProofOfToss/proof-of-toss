@@ -83,6 +83,7 @@
     },
     "new_event": {
       "saved": "Event successfully saved",
+      "low_balance": "Your balance should be more than 1 Toss",
       "gas_limit": "Gas limit",
       "gas_price": "Gas price",
       "sync_whitelist": "Please sync whitelist",

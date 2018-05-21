@@ -22,7 +22,13 @@ class NewEvent extends Component {
               <h1>New event</h1>
               {
                 this.props.isWhitelisted
-                  ? <EventForm ref={ev => this.event = ev} />
+                  ? (
+                    this.props.balance >= 1
+                      ? <EventForm ref={ev => this.event = ev} />
+                      : <div>
+                        <p>{this.props.translate('pages.new_event.low_balance')}</p>
+                      </div>
+                  )
                   : <div>
                       <p>{this.props.translate('access_denied')}</p>
                   </div>
@@ -39,6 +45,7 @@ function mapPropsToState(state) {
   return {
     translate: getTranslate(state.locale),
     isWhitelisted: state.user.isWhitelisted,
+    balance: state.token.balance,
   };
 }
 
