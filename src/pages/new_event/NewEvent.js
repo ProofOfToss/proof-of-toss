@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import EventForm from '../../components/new_event/EventForm';
+import { formatBalance } from './../../util/token';
 
 class NewEvent extends Component {
   constructor(props) {
@@ -23,7 +24,7 @@ class NewEvent extends Component {
               {
                 this.props.isWhitelisted
                   ? (
-                    this.props.balance >= 1
+                    formatBalance(this.props.balance) >= 1
                       ? <EventForm ref={ev => this.event = ev} />
                       : <div>
                         <p>{this.props.translate('pages.new_event.low_balance')}</p>
