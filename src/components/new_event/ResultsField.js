@@ -77,7 +77,7 @@ class ResultsField extends Component {
 
     this.resultLink = Link.state(this, 'result')
       .check( v => v, this.props.translate('validation.required'))
-      .check( v => v.length >= 3, this.props.translate('validation.min_length', {min: 3}));
+      .check( v => v.length >= 1, this.props.translate('validation.min_length', {min: 1}));
 
     this.resultLinkCoefficient = Link.state(this, 'resultCoefficient')
       .check( v => parseFloat(v) >= 1, this.props.translate('validation.range', {min: 1, max: 99}))
