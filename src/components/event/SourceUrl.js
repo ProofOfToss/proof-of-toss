@@ -4,21 +4,24 @@ import { getTranslate } from 'react-localize-redux';
 
 class SourceUrl extends Component {
 
-  renderUrl() {
-    var expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
-    var regex = new RegExp(expression);
-
-    if (this.props.sourceUrl.match(regex)) {
-      return <a href={this.props.sourceUrl} target="_blank">{this.props.sourceUrl}</a>
-    }
-
-    return this.props.sourceUrl
-  }
-
   render() {
+    const expression = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/gi;
+    const regex = new RegExp(expression);
+
     return <dl className="dl-horizontal">
       <dt>{this.props.translate('pages.event.labels.source_url')}</dt>
-      <dd>{this.renderUrl()}</dd>
+      <dd>
+        <ul className="list-unstyled">
+          {this.props.sourceUrl.split(',').map((sourceUrl, key) => {
+              if (sourceUrl.match(regex)) {
+                return <li key={key}><a href={sourceUrl} target="_blank">{sourceUrl}</a></li>
+              }
+
+              return <li key={key}>this.props.sourceUrl</li>
+            })
+          }
+        </ul>
+      </dd>
     </dl>
   }
 }

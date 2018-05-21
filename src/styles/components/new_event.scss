@@ -10,4 +10,8 @@
 
 .modal-confirm-new-event {
   display: block;
+
+  dd.sourceUrl {
+    word-wrap: break-word;
+  }
 }
