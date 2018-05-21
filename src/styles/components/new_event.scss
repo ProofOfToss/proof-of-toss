@@ -6,6 +6,17 @@
   .alert {
     display: inline-block;
   }
+
+  .results-list {
+    &__result-row:not(:last-child) {
+      border-bottom: 1px dashed #eeeeee;
+      padding-bottom: 5px;
+    }
+
+    &__result-name {
+      word-wrap: break-word;
+    }
+  }
 }
 
 .modal-confirm-new-event {
