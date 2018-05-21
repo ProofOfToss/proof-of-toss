@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import Link from '../routing/Link'
 import { getTranslate } from 'react-localize-redux';
 import NavbarUser from './NavbarUser';
 import Language from './Language';
@@ -95,7 +95,8 @@ class Header extends Component {
 const mapStateToProps = state => ({
   isAuthenticated: state.user.isAuthenticated,
   translate: getTranslate(state.locale),
-  currentAddress: state.user.address
+  currentAddress: state.user.address,
+  isWhitelisted: state.user.isWhitelisted,
 });
 
 export default connect(mapStateToProps)(Header);
