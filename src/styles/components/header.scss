@@ -1,0 +1,26 @@
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
+
+header {
+  .navbar {
+    @media (max-width: $screen-sm-min - 1) {
+      margin-bottom: 10px;
+    }
+
+    .navbar-text.address {
+      @media (max-width: $screen-sm-min - 1) {
+        display: none;
+      }
+    }
+  }
+
+  > .address {
+    @media (max-width: $screen-sm-min - 1) {
+      margin-bottom: 10px;
+    }
+
+
+    @media (min-width: $screen-sm-min) {
+      display: none;
+    }
+  }
+}

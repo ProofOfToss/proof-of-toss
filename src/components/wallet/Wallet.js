@@ -29,12 +29,15 @@ class Wallet extends Component {
   render() {
     return(
       <React.Fragment>
-        <li className="navbar-text">
+        <p className="navbar-text address">
+          {this.props.currentAddress}
+        </p>
+        <p className="navbar-text">
           {this.props.balance !== null ? <span>Balance: {formatBalance(this.props.balance, this.props.decimals)} TOSS</span> : 'Wallet info'}
-        </li>
-        <li className="navbar-text logout-button">
+        </p>
+        <p className="navbar-text logout-button">
           { this.renderLogoutButton() }
-        </li>
+        </p>
       </React.Fragment>
     )
   }
