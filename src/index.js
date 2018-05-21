@@ -96,6 +96,8 @@ function checkAuthentication(address, redirectToSignIn) {
   if (isAuthenticated(address)) {
     store.dispatch(authenticateUser(address));
   } else {
+    global.jQuery('.modal').modal('hide');
+
     store.dispatch(logoutUser());
 
     if (redirectToSignIn === true) {
@@ -128,6 +130,8 @@ getWeb3
       results.web3.eth.getAccounts(function (err, accounts) {
         if (accounts.length === 0) {
           if (hasAccounts !== false) {
+            global.jQuery('.modal').modal('hide');
+
             // Wallet is locked
             store.dispatch(lockWallet());
             store.dispatch(logoutUser());
