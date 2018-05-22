@@ -87,12 +87,12 @@ class ResultsField extends Component {
     }
 
     return <Fragment>
-      <div className="form-group">
+      <div className="form-group results-list">
         <label htmlFor="event[result]">{ this.props.translate('pages.new_event.form.results.label')}*</label>
         <div className="container">
           {this.state.results.map((result, key) => {
-            return <div className="row bottom-margin-5" key={key}>
-              <div className="col-xs-1">{result.description}</div>
+            return <div className="row bottom-margin-5 results-list__result-row" key={key}>
+              <div className="col-xs-5 results-list__result-name">{result.description}</div>
               <div className="col-xs-1">{result.coefficient}</div>
               <div className="col-xs-1">
                 <a className="btn btn-default btn-xs" onClick={() => {this.removeResult(key)}}>
