@@ -34,6 +34,7 @@ class DatePicker extends Component {
               <span className="btn btn-default" onClick={openCalendar}>{this.props.translate('buttons.open')}</span>
             </span>
           </div>
+          <span className="help-block">{this.props.translate('pages.new_event.form.dates.help')}</span>
         </div>
       </div>
     </Fragment>

@@ -32,7 +32,6 @@ class EventForm extends Component {
         bidType: '',
         deposit: 0,
         tags: [],
-        timeZone: config.timeZones.default,
         startTime: DEFAULT_START_TIME,
         endTime: DEFAULT_END_TIME,
         description: '',

@@ -100,9 +100,11 @@
           "label": "Tags",
           "error": "You should add at least one tag"
         },
-        "time_zone": "Time zone",
-        "date_start": "Start time",
-        "date_end": "End time",
+        "dates": {
+          "date_start": "Start time",
+          "date_end": "End time",
+          "help": "Select your own local time of an event"
+        },
         "description": "Description",
         "source_url": {
           "label": "Source url",
