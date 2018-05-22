@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import Link from './components/routing/Link'
 import { connect } from 'react-redux';
 import initLocale  from './components/locale/init'
 import Header  from './components/navbar_user/Header';
