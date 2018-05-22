@@ -42,6 +42,11 @@
   "header": {
     "address": "Адрес"
   },
+  "footer": {
+    "terms_conditions": "Terms & Conditions",
+    "privacy": "Privacy",
+    "about": "About"
+  },
   "pages": {
     "home": {
       "title": "Можно начинать!"
