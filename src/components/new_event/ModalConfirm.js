@@ -119,7 +119,7 @@ class ModalConfirm extends Component {
         <dd>{this.props.formData.description}</dd>
 
         <dt>{this.props.translate('pages.new_event.form.source_url.label')}</dt>
-        <dd className="sourceUrl">
+        <dd>
           <ul className="list-unstyled">
             {
               this.props.formData.sourceUrls.map((sourceUrl, key) => {
