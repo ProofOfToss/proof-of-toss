@@ -63,13 +63,14 @@ export const betMapping = {
 
 export class IndexingUtil {
   /**
-   * @param EVENT_INDEX
-   * @param TAG_INDEX
-   * @param esClient
-   * @param logger
-   * @param web3
-   * @param contractAPIs
-   * @param forceRefresh
+   * @param {string}  EVENT_INDEX
+   * @param {string}  TAG_INDEX
+   * @param {string}  BET_INDEX
+   * @param {object}  esClient
+   * @param {object}  logger
+   * @param {object}  web3
+   * @param {object}  contractAPIs
+   * @param {boolean} forceRefresh
    */
   constructor(EVENT_INDEX, TAG_INDEX, BET_INDEX, esClient, logger, web3, contractAPIs, forceRefresh = false) {
     this.EVENT_INDEX = EVENT_INDEX;
@@ -177,7 +178,7 @@ export class IndexingUtil {
         'description': eventData.results[i].description
       }});
 
-      const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum, 10), 0);
+      const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum), 0);
 
       let tags = eventData.tags.map((tag) => { return {'locale': eventData.locale, 'name': tag}});
 
