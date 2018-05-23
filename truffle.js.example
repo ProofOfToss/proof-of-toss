@@ -3,7 +3,7 @@ require('babel-register');
 const Web3 = require('web3');
 const HDWalletProvider = require('truffle-hdwallet-provider');
 
-const mnemonic = 'frame luggage drop rail energy fog essay stuff boring heavy gasp price';
+const mnemonic = 'ROPSTEN_MNEMONIC';
 
 module.exports = {
   networks: {
@@ -17,7 +17,7 @@ module.exports = {
     },
     ropsten: {
       provider: function() {
-        return new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/2z9JJBmsyJCcF80q8MsU')
+        return new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/ROPSTEN_INFURA_ID')
       },
       network_id: '3',
       gas: 4500000,

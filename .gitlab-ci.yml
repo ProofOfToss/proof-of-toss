@@ -25,7 +25,7 @@ deploy_demo:
     - rm -rf node_modules
     - nvm use system
     - npm install
-    - cp truffle.js.example truffle.js
+    - ./truffle-config-gen.sh
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/config.json $CI_PROJECT_DIR/src/data/
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
     - mkdir $CI_PROJECT_DIR/build
@@ -54,7 +54,7 @@ deploy_demo_reindex:
     - rm -rf node_modules
     - nvm use system
     - npm install
-    - cp truffle.js.example truffle.js
+    - ./truffle-config-gen.sh
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/config.json $CI_PROJECT_DIR/src/data/
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
     - mkdir $CI_PROJECT_DIR/build
@@ -86,7 +86,7 @@ deploy_demo_contracts:
     - rm -rf node_modules
     - nvm use system
     - npm install
-    - cp truffle.js.example truffle.js
+    - ./truffle-config-gen.sh
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/config.json $CI_PROJECT_DIR/src/data/
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
     - mkdir $CI_PROJECT_DIR/build
@@ -120,7 +120,7 @@ deploy_demo_full:
     - rm -rf node_modules
     - nvm use system
     - npm install
-    - cp truffle.js.example truffle.js
+    - ./truffle-config-gen.sh
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/config.json $CI_PROJECT_DIR/src/data/
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
     - mkdir $CI_PROJECT_DIR/build
@@ -151,7 +151,7 @@ deploy_production:
     - rm -rf node_modules
     - nvm use system
     - npm install
-    - cp truffle.js.example truffle.js
+    - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
@@ -176,7 +176,7 @@ deploy_production_reindex:
     - rm -rf node_modules
     - nvm use system
     - npm install
-    - cp truffle.js.example truffle.js
+    - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
@@ -201,7 +201,7 @@ deploy_production_contracts:
     - rm -rf node_modules
     - nvm use system
     - npm install
-    - cp truffle.js.example truffle.js
+    - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
@@ -228,7 +228,7 @@ deploy_production_full:
     - rm -rf node_modules
     - nvm use system
     - npm install
-    - cp truffle.js.example truffle.js
+    - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
