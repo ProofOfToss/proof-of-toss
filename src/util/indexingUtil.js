@@ -5,6 +5,8 @@ import util from 'util';
 import { formatBalance } from './token'
 import { decodeEventMethod } from './web3Util'
 
+const BigNumber = require('bignumber.js');
+
 export const tagMapping = {
   'mappings': {
     'tag': {
@@ -174,11 +176,11 @@ export class IndexingUtil {
         'index': i,
         'customCoefficient': result[0],
         'betCount': result[1],
-        'betSum': formatBalance(result[2]),
+        'betSum': new BigNumber(result[2]),
         'description': eventData.results[i].description
       }});
 
-      const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum), 0);
+      const bidSum = possibleResults.reduce((accumulator, result) => accumulator.plus(result.betSum), new BigNumber(0));
 
       let tags = eventData.tags.map((tag) => { return {'locale': eventData.locale, 'name': tag}});
 
@@ -186,7 +188,7 @@ export class IndexingUtil {
         'name': eventData.name,
         'description': eventData.description,
         'bidType': eventData.bidType,
-        'bidSum': bidSum,
+        'bidSum': formatBalance(bidSum.toString()),
         'deposit': formatBalance(deposit),
         'address': _event.eventAddress,
         'createdBy': creator,
@@ -357,13 +359,13 @@ export class IndexingUtil {
         const possibleResults = (await Promise.all(promises)).map((result, i) => {return {
           'index': i,
           'betCount': result[1],
-          'betSum': formatBalance(result[2]),
+          'betSum': new BigNumber(result[2])
         }});
 
-        const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum), 0);
+        const bidSum = possibleResults.reduce((accumulator, result) => accumulator.plus(result.betSum), new BigNumber(0));
 
         const doc = {
-          'bidSum': bidSum,
+          'bidSum': formatBalance(bidSum.toString()),
           'result': result,
           'possibleResults': possibleResults,
           'bettor': betCount > 0 ? [sender] : [],
