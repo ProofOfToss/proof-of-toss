@@ -129,7 +129,6 @@ const esClient = new AwsEsPublicClient(
 
   try {
     main = await Main.deployed();
-    token = await Token.deployed();
     eventBase = await EventBase.deployed();
   } catch (error) {
     fatal(error);
@@ -191,7 +190,9 @@ const esClient = new AwsEsPublicClient(
     } catch (error) {
       fatal(error, `Error while fetching events from block #${i}`);
     }
+  }
 
+  for(let i = cacheState.lastUpdateBlock; i < blockNumber; i += step) {
     logger.info(`Caching event updates from block #${i}`);
 
     const update_events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: cacheState.lastUpdateBlock + step});
