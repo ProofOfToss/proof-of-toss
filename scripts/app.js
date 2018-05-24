@@ -363,7 +363,7 @@ const esClient = new AwsEsPublicClient(
 
       tryWatchEvents();
       tryWatchEventUpdates();
-    }, 1000 * 60);
+    }, 1000 * 20);
   } catch (err) {
     fatal(err);
   }
