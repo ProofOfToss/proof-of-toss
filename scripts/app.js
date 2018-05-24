@@ -134,6 +134,8 @@ const esClient = new AwsEsPublicClient(
     fatal(error);
   }
 
+  logger.info('Trying to resolve cache_state.json');
+
   const cacheStateFile = path.resolve(__dirname, 'cache_state.json');
 
   /**
@@ -163,7 +165,12 @@ const esClient = new AwsEsPublicClient(
     return fs.writeFileSync(cacheStateFile, JSON.stringify(cacheState) + '\n');
   }
 
+  logger.info(`Trying to find first block.`);
+  logger.info(`Token.transactionHash: ${Token.transactionHash}.`);
+
   const firstBlock = (await callAsync(web3.eth.getTransactionReceipt.bind(web3.eth, Token.transactionHash))).blockNumber;
+
+  logger.info(`First block: #${firstBlock}`);
 
   let cacheState = readCacheState({lastBlock: firstBlock, lastUpdateBlock: firstBlock});
   const blockNumber = await callAsync(web3.eth.getBlockNumber);
@@ -230,6 +237,8 @@ const esClient = new AwsEsPublicClient(
 
     try {
       if (eventsWatchObject && eventsWatchObject.requestManager) {
+        logger.info('Stopping watching new events.');
+
         await callAsync(eventsWatchObject.stopWatching.bind(eventsWatchObject));
       }
     } catch (err) {
@@ -291,6 +300,8 @@ const esClient = new AwsEsPublicClient(
 
     try {
       if (eventUpdatesWatchObject && eventUpdatesWatchObject.requestManager) {
+        logger.info('Stopping watching event updates.');
+
         await callAsync(eventUpdatesWatchObject.stopWatching.bind(eventUpdatesWatchObject));
       }
     } catch (err) {
