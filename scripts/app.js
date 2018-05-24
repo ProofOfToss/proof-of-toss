@@ -9,6 +9,7 @@ import Config from 'truffle-config';
 import Resolver from 'truffle-resolver';
 import {IndexingUtil} from '../src/util/indexingUtil';
 import callAsync from '../src/util/web3Util';
+import tokenJson from '../build/contracts/Token.json';
 
 import log4js from 'log4js';
 
@@ -129,6 +130,7 @@ const esClient = new AwsEsPublicClient(
 
   try {
     main = await Main.deployed();
+    token = await Token.deployed();
     eventBase = await EventBase.deployed();
   } catch (error) {
     fatal(error);
@@ -165,10 +167,14 @@ const esClient = new AwsEsPublicClient(
     return fs.writeFileSync(cacheStateFile, JSON.stringify(cacheState) + '\n');
   }
 
+  logger.info(`Network id: ${Token.network_id}`);
   logger.info(`Trying to find first block.`);
-  logger.info(`Token.transactionHash: ${Token.transactionHash}.`);
 
-  const firstBlock = (await callAsync(web3.eth.getTransactionReceipt.bind(web3.eth, Token.transactionHash))).blockNumber;
+  const tokenTransactionHash = tokenJson.networks[Token.network_id].transactionHash;
+
+  logger.info(`Token.transactionHash: ${tokenTransactionHash}.`);
+
+  const firstBlock = (await callAsync(web3.eth.getTransactionReceipt.bind(web3.eth, tokenTransactionHash))).blockNumber;
 
   logger.info(`First block: #${firstBlock}`);
 
@@ -349,6 +355,9 @@ const esClient = new AwsEsPublicClient(
   };
 
   try {
+    tryWatchEvents();
+    tryWatchEventUpdates();
+
     setInterval(() => {
       logger.info('Auto retry retryWatchEvents() and retryWatchEventUpdates() after 1 minute.');
 
