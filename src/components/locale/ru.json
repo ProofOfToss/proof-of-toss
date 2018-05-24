@@ -115,6 +115,10 @@
           "move_up": "Up",
           "move_down": "Down",
           "error": "You should add at least two results"
+        },
+        "errors": {
+          "start_time": "Start date should be after 1 hour",
+          "end_time": "End date should be after 1 hour of now and after start time"
         }
       },
       "modal": {

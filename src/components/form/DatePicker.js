@@ -31,10 +31,10 @@ class DatePicker extends Component {
           <div className="input-group">
             <input {...props} />
             <span className="input-group-btn">
-              <span className="btn btn-default" onClick={openCalendar}>{this.props.translate('buttons.open')}</span>
+              <span className={'btn ' + (this.props.error ? 'btn-danger' : 'btn-default')} onClick={openCalendar}>{this.props.translate('buttons.open')}</span>
             </span>
           </div>
-          <span className="help-block">{this.props.translate('pages.new_event.form.dates.help')}</span>
+          {this.props.error && <span className="help-block">{this.props.error}</span>}
         </div>
       </div>
     </Fragment>
@@ -48,6 +48,10 @@ class DatePicker extends Component {
     return {...defaultInputProps, ...(this.props.inputProps || {})}
   }
 }
+
+DatePicker.defaultProps = {
+  error: false
+};
 
 function mapStateToProps(state) {
   return {

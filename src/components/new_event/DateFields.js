@@ -12,8 +12,8 @@ class DateFields extends Component {
   constructor(props) {
     super(props);
 
-    this.isValidStartDate = this.isValidStartDate.bind(this);
-    this.isValidEndDate = this.isValidEndDate.bind(this);
+    this.showStartTimeError = this.showStartTimeError.bind(this);
+    this.showEndTimeError = this.showEndTimeError.bind(this);
     this.onChangeStartTime = this.onChangeStartTime.bind(this);
     this.onChangeEndTime = this.onChangeEndTime.bind(this);
     this.getEndDateInputProps = this.getEndDateInputProps.bind(this);
@@ -22,7 +22,9 @@ class DateFields extends Component {
       formData: {
         startTime: DEFAULT_START_TIME,
         endTime: DEFAULT_END_TIME
-      }
+      },
+      startTimeError: false,
+      endTimeError: false
     }
   }
 
@@ -54,12 +56,21 @@ class DateFields extends Component {
     this.props.onChange({'endTime': currentDate});
   }
 
-  isValidStartDate(currentDate) {
-    return currentDate.isSameOrAfter(moment().add(1, 'hour'), 'day');
+  static isValidStartDate(currentDate, unit = 'day') {
+    return currentDate.isSameOrAfter(moment().add(1, 'hour'), unit);
   }
 
-  isValidEndDate(currentDate) {
-    return currentDate.isSameOrAfter(this.state.formData.startTime, 'day');
+  static isValidEndDate(currentDate, startDate, unit = 'day') {
+    return DateFields.isValidStartDate(startDate, unit) && currentDate.isSameOrAfter(startDate, unit);
+  }
+
+  showStartTimeError() {
+    return false === DateFields.isValidStartDate(this.state.formData.startTime, 'minute') && this.props.showErrors;
+  }
+
+  showEndTimeError() {
+    return false === DateFields.isValidEndDate(this.state.formData.endTime, this.state.formData.startTime, 'minute')
+      && this.props.showErrors;
   }
 
   calculateStartTimeConstraints() {
@@ -104,18 +115,30 @@ class DateFields extends Component {
 
   render() {
     return <Fragment>
-      <div className="form-group">
-        <label htmlFor="event[date_start]">{this.props.translate('pages.new_event.form.dates.date_start')}*</label>
-        <DatePicker isValidDate={this.isValidStartDate} onChange={this.onChangeStartTime}
-          timeConstraints={this.calculateStartTimeConstraints()} timeFormat="H:mm"
-          value={this.state.formData.startTime}/>
+      <div className={"form-group" + (this.showStartTimeError() ? ' has-error' : '')}>
+        <label htmlFor="event[date_start]">{this.props.translate('pages.new_event.form.dates.date_start')}*<br />
+          <small>{this.props.translate('pages.new_event.form.dates.help')}</small>
+        </label>
+        <DatePicker
+          isValidDate={(currentDate) => {return DateFields.isValidStartDate(currentDate)}}
+          onChange={this.onChangeStartTime}
+          timeConstraints={this.calculateStartTimeConstraints()}
+          timeFormat="H:mm"
+          value={this.state.formData.startTime}
+          error={this.showStartTimeError() ? this.props.translate('pages.new_event.form.errors.start_time') : false} />
       </div>
 
-      <div className="form-group">
-        <label htmlFor="event[date_end]">{this.props.translate('pages.new_event.form.dates.date_end')}*</label>
-        <DatePicker isValidDate={this.isValidEndDate} onChange={this.onChangeEndTime}
-            timeConstraints={this.calculateEndTimeConstraints()} timeFormat="H:mm" inputProps={this.getEndDateInputProps()}
-            value={this.state.formData.endTime}
+      <div className={"form-group" + (this.showEndTimeError() ? ' has-error' : '')}>
+        <label htmlFor="event[date_end]">{this.props.translate('pages.new_event.form.dates.date_end')}*<br />
+          <small>{this.props.translate('pages.new_event.form.dates.help')}</small>
+        </label>
+        <DatePicker
+          isValidDate={(currentDate) => {return DateFields.isValidEndDate(currentDate, this.state.formData.endTime)}}
+          onChange={this.onChangeEndTime}
+          timeConstraints={this.calculateEndTimeConstraints()}
+          timeFormat="H:mm" inputProps={this.getEndDateInputProps()}
+          value={this.state.formData.endTime}
+          error={this.showEndTimeError() ? this.props.translate('pages.new_event.form.errors.end_time') : false}
          />
       </div>
     </Fragment>

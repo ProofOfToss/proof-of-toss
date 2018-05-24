@@ -79,6 +79,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     function init(address _token, address _whitelist, address _creator, uint256 _deposit, uint64 _startDate, uint64 _endDate, uint8 _resultsCount) public {
         require(msg.sender == owner);
         require(_resultsCount < 220); // 220 - 255 reserved for special results
+        require(_startDate >= now + 60 minutes);
         require(_startDate <= _endDate);
 
         token = Token(_token);
