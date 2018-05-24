@@ -7,15 +7,19 @@ const contract = require('truffle-contract');
 const main = contract(MainContract);
 const token = contract(TokenContract);
 
-function formatBalance(balance) {
+function formatBalance(balance, formatPrecision) {
+  if (typeof formatPrecision === 'undefined') {
+    formatPrecision = config.view.currency_precision;
+  }
+
   return (new BigNumber(balance))
-    .div(Math.pow(10, config.view.currency_precision))
-    .toFixed(config.view.currency_precision)
+    .div(Math.pow(10, config.view.token_precision))
+    .toFixed(formatPrecision)
     .replace(/\.?0+$/, '');
 }
 
 function denormalizeBalance(balance) {
-  return (new BigNumber(balance)).times(Math.pow(10, config.view.currency_precision)).toNumber();
+  return (new BigNumber(balance)).times(Math.pow(10, config.view.token_precision)).toNumber();
 }
 
 function getMyBalance(web3, address) {
