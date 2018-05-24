@@ -256,12 +256,12 @@ const esClient = new AwsEsPublicClient(
    */
   const watchEvents = () => {
     try {
-      logger.info(`Watching for new events`);
+      logger.info(`Watching for new events from block #${cacheState.lastBlock + 1} to latest block`);
 
-      eventsWatchObject = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
+      eventsWatchObject = main.NewEvent({}, {fromBlock: cacheState.lastBlock + 1, toBlock: 'latest'});
       eventsWatchObject.watch(async (error, response) => {
         if (error) {
-          logger.error(error, `Error while watching for new events starting from block #${cacheState.lastBlock}`);
+          logger.error(error, `Error while watching for new events starting from block #${cacheState.lastBlock + 1}`);
 
           return setTimeout(tryWatchEvents, 1000);
         }
@@ -319,12 +319,12 @@ const esClient = new AwsEsPublicClient(
    */
   const watchEventUpdates = () => {
     try {
-      logger.info(`Watching for event updates`);
+      logger.info(`Watching for event updates from block #${cacheState.lastUpdateBlock + 1} to latest block`);
 
-      eventUpdatesWatchObject = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: 'latest'});
+      eventUpdatesWatchObject = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock + 1, toBlock: 'latest'});
       eventUpdatesWatchObject.watch(async (error, response) => {
         if (error) {
-          logger.error(error, `Error while watching for events updates starting from block #${cacheState.lastUpdateBlock}`);
+          logger.error(error, `Error while watching for events updates starting from block #${cacheState.lastUpdateBlock + 1}`);
 
           return setTimeout(tryWatchEventUpdates, 1000);
         }

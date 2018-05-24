@@ -258,11 +258,13 @@ export class IndexingUtil {
       }
     }
 
+    this.logger.info('INDEX EVENTS');
     this.logger.info(body);
 
     await this.esClient.bulk({body, refresh: this.forceRefresh}).then((result) => {
 
       result.items.forEach(item => {
+        this.logger.info('INDEX EVENTS ITEMS');
         this.logger.info(item);
         if (item.error) {
           this.logger.error(item.error);
@@ -386,6 +388,7 @@ export class IndexingUtil {
           }
         });
 
+        this.logger.info('UPDATE EVENTS (doc)');
         this.logger.info(doc);
 
         if (betCount > 0) {
@@ -436,9 +439,11 @@ export class IndexingUtil {
       }
     }
 
+    this.logger.info('UPDATE EVENTS (body)');
     this.logger.info(body);
 
     await this.esClient.bulk({body, refresh: this.forceRefresh}).then((result) => {
+      this.logger.info('UPDATE EVENTS (result)');
       this.logger.info(util.inspect(result.items, {showHidden: false, depth: 10}));
     }).catch((error) => {
       this.logger.error(error);
