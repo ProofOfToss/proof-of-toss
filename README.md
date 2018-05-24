@@ -21,7 +21,7 @@ build – truffle artifacts directory
 build_webpack – built web-app
 config – build configuration
 contracts – smart contracts dir
-    ./ - project contracts
+    Main.sol, EventBase.sol, Event.sol, Whitelist.sol - project contracts
     installed_contracts – third party contracts
     test – contracts used in unit tests
     token-sale-contracts – TOSS Token smart contracts (git submodule https://github.com/ProofOfToss/token-sale-contracts)
