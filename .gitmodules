@@ -1,3 +1,3 @@
 [submodule "contracts/token-sale-contracts"]
-	path = contracts/token-sale-contracts
-	url = git@github.com:ProofOfToss/token-sale-contracts.git
+    path = contracts/token-sale-contracts
+    url = https://github.com/ProofOfToss/token-sale-contracts.git
