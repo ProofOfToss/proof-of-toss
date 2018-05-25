@@ -172,15 +172,25 @@ export class IndexingUtil {
         promises.push(event.possibleResults(i));
       }
 
-      const possibleResults = (await Promise.all(promises)).map((result, i) => {return {
+      let possibleResults = (await Promise.all(promises)).map((result, i) => {return {
         'index': i,
         'customCoefficient': result[0],
         'betCount': result[1],
-        'betSum': new BigNumber(result[2]),
+        'betSum': result[2],
         'description': eventData.results[i].description
       }});
 
-      const bidSum = possibleResults.reduce((accumulator, result) => accumulator.plus(result.betSum), new BigNumber(0));
+      const bidSum = possibleResults.reduce(
+        (accumulator, result) => accumulator.plus(new BigNumber(result.betSum)),
+        new BigNumber(0)
+      );
+
+      possibleResults = possibleResults.map((result, i) => {
+        return {
+          ...result,
+          'betSum': formatBalance(result.betSum)
+        };
+      });
 
       let tags = eventData.tags.map((tag) => { return {'locale': eventData.locale, 'name': tag}});
 
@@ -358,13 +368,23 @@ export class IndexingUtil {
           promises.push(event.possibleResults(i));
         }
 
-        const possibleResults = (await Promise.all(promises)).map((result, i) => {return {
+        let possibleResults = (await Promise.all(promises)).map((result, i) => {return {
           'index': i,
           'betCount': result[1],
-          'betSum': new BigNumber(result[2])
+          'betSum': result[2]
         }});
 
-        const bidSum = possibleResults.reduce((accumulator, result) => accumulator.plus(result.betSum), new BigNumber(0));
+        const bidSum = possibleResults.reduce(
+          (accumulator, result) => accumulator.plus(new BigNumber(result.betSum)),
+          new BigNumber(0)
+        );
+
+        possibleResults = possibleResults.map((result, i) => {
+          return {
+            ...result,
+            'betSum': formatBalance(result.betSum)
+          };
+        });
 
         const doc = {
           'bidSum': formatBalance(bidSum.toString()),
