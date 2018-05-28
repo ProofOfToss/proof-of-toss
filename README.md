@@ -21,6 +21,7 @@ build – truffle artifacts directory
 build_webpack – built web-app
 config – build configuration
 contracts – smart contracts dir
+    Main.sol, EventBase.sol, Event.sol, Whitelist.sol - project contracts
     installed_contracts – third party contracts
     test – contracts used in unit tests
     token-sale-contracts – TOSS Token smart contracts (git submodule https://github.com/ProofOfToss/token-sale-contracts)
@@ -80,8 +81,13 @@ To minimize gas usage Event smart contract contains no logic. All method calls a
 
 # How to install
 
+Clone this repository:
+```
+$ git clone https://github.com/ProofOfToss/proof-of-toss.git proof-of-toss
+```
+
 TOSS Token smart contracts are hosting in a separate repository (https://github.com/ProofOfToss/token-sale-contracts) and linked to contracts/token-sale-contracts via git submodule system.
-To initialize submodules run:
+To initialize submodules run in the project folder:
 ```
 $ git submodule init
 $ git submodule update 
@@ -109,6 +115,27 @@ $ npm install -g ganache-cli
 
 1. Copy `src/data/config.json.dist` to `src/data/config.json`
 
+1. Launch `ganache-cli`:
+    ```
+    $ ganache-cli
+    ```
+    You should see something like this:
+    ```
+    Ganache CLI v6.0.3 (ganache-core: 2.0.2)
+    
+    Available Accounts
+    ==================
+    (0) 0xcf917a1f7b9b71aa3e3046ec6969e4b210179521
+    (1) 0x369d6ef29adc68d4999e98edc07ecd65563d0945
+    
+    Private Keys
+    ==================
+    (0) da8790fd91894aac54f122810c7e940689eba4248eb82f672d69527451b13ef6
+    (1) 0272b60d17adb4d0df63b011b9d4fa6fbb6728f14e300807935002dff9b3fd35
+    ```
+    
+1. Install metamask extension in a browser and import first private key from the previous step
+
 1. Compile and deploy contracts:
     ```
     $ truffle compile
@@ -120,10 +147,11 @@ $ npm install -g ganache-cli
     $ npm run start
     ```
     
-1. For accessing admin pages account must be whitelisted. Whitelist is located at src/data/config.json
+1. For accessing admin pages account must be whitelisted. Whitelist is located at `src/data/config.json`
+Add address from 4 step to the `whitelist` key.
 To synchronize white list with blockchain run:
     ```
-    $ npm run sync-whitelist
+    $ npm run sync_whitelist
     ```
     It should be executed after each deploy.
 

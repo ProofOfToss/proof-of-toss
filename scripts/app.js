@@ -9,6 +9,7 @@ import Config from 'truffle-config';
 import Resolver from 'truffle-resolver';
 import {IndexingUtil} from '../src/util/indexingUtil';
 import callAsync from '../src/util/web3Util';
+import tokenJson from '../build/contracts/Token.json';
 
 import log4js from 'log4js';
 
@@ -135,6 +136,8 @@ const esClient = new AwsEsPublicClient(
     fatal(error);
   }
 
+  logger.info('Trying to resolve cache_state.json');
+
   const cacheStateFile = path.resolve(__dirname, 'cache_state.json');
 
   /**
@@ -164,7 +167,16 @@ const esClient = new AwsEsPublicClient(
     return fs.writeFileSync(cacheStateFile, JSON.stringify(cacheState) + '\n');
   }
 
-  const firstBlock = (await callAsync(web3.eth.getTransactionReceipt.bind(web3.eth, Token.transactionHash))).blockNumber;
+  logger.info(`Network id: ${Token.network_id}`);
+  logger.info(`Trying to find first block.`);
+
+  const tokenTransactionHash = tokenJson.networks[Token.network_id].transactionHash;
+
+  logger.info(`Token.transactionHash: ${tokenTransactionHash}.`);
+
+  const firstBlock = (await callAsync(web3.eth.getTransactionReceipt.bind(web3.eth, tokenTransactionHash))).blockNumber;
+
+  logger.info(`First block: #${firstBlock}`);
 
   let cacheState = readCacheState({lastBlock: firstBlock, lastUpdateBlock: firstBlock});
   const blockNumber = await callAsync(web3.eth.getBlockNumber);
@@ -191,7 +203,9 @@ const esClient = new AwsEsPublicClient(
     } catch (error) {
       fatal(error, `Error while fetching events from block #${i}`);
     }
+  }
 
+  for(let i = cacheState.lastUpdateBlock; i < blockNumber; i += step) {
     logger.info(`Caching event updates from block #${i}`);
 
     const update_events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: cacheState.lastUpdateBlock + step});
@@ -214,52 +228,56 @@ const esClient = new AwsEsPublicClient(
   logger.info(`Events to block #${blockNumber} cached`);
 
 
-  let watchEventRetryTimeout;
+  let eventsWatchObject;
+  let watchEventRetryTimeoutId;
   let watchEventRetryPending = false;
+
+  const tryWatchEvents = async () => {
+    if (watchEventRetryPending) {
+      return;
+    }
+
+    watchEventRetryPending = true;
+
+    clearTimeout(watchEventRetryTimeoutId);
+
+    try {
+      if (eventsWatchObject && eventsWatchObject.requestManager) {
+        logger.info('Stopping watching new events.');
+
+        await callAsync(eventsWatchObject.stopWatching.bind(eventsWatchObject));
+      }
+    } catch (err) {
+      logger.error(err);
+    }
+
+    watchEventRetryTimeoutId = setTimeout(() => {
+      watchEventRetryPending = false;
+      watchEvents();
+    }, 1000);
+  };
 
   /**
    * @returns {number}
    */
   const watchEvents = () => {
-    let events;
-
-    const retry = async () => {
-      if (watchEventRetryPending) {return;}
-      watchEventRetryPending = true;
-
-      clearTimeout(watchEventRetryTimeout);
-
-      try {
-        if (events && events.requestManager) {
-          await callAsync(events.stopWatching.bind(events));
-        }
-
-      } catch (err) {
-        logger.error(err);
-      }
-
-      watchEventRetryTimeout = setTimeout(() => {
-        watchEventRetryPending = false;
-        watchEvents();
-      }, 1000);
-    };
-
     try {
-      logger.info(`Watching for new events`);
+      logger.info(`Watching for new events from block #${cacheState.lastBlock + 1} to latest block`);
 
-      events = main.NewEvent({}, {fromBlock: cacheState.lastBlock, toBlock: 'latest'});
-
-      events.watch(async (error, response) => {
+      eventsWatchObject = main.NewEvent({}, {fromBlock: cacheState.lastBlock + 1, toBlock: 'latest'});
+      eventsWatchObject.watch(async (error, response) => {
         if (error) {
-          logger.error(error, `Error while watching for new events starting from block #${cacheState.lastBlock}`);
-          return setTimeout(retry, 1000);
+          logger.error(error, `Error while watching for new events starting from block #${cacheState.lastBlock + 1}`);
+
+          return setTimeout(tryWatchEvents, 1000);
         }
 
         try {
           await indexingUtil.indexEvents([response]);
         } catch (err) {
           logger.error(err, `Error while indexing new event at block #${response.blockNumber}`);
-          return setTimeout(retry, 1000);
+
+          return setTimeout(tryWatchEvents, 1000);
         }
 
         cacheState.lastBlock = response.blockNumber;
@@ -268,59 +286,61 @@ const esClient = new AwsEsPublicClient(
 
     } catch (err) {
       logger.error(err);
-      return setTimeout(retry, 1000);
-    }
 
-    setInterval(retry, 1000 * 60);
+      return setTimeout(tryWatchEvents, 1000);
+    }
   };
 
-
-  let watchEventUpdatesRetryTimeout;
+  let eventUpdatesWatchObject;
+  let watchEventUpdatesRetryTimeoutId;
   let watchEventUpdatesRetryPending = false;
+
+  const tryWatchEventUpdates = async () => {
+    if (watchEventUpdatesRetryPending) {
+      return;
+    }
+
+    watchEventUpdatesRetryPending = true;
+
+    clearTimeout(watchEventUpdatesRetryTimeoutId);
+
+    try {
+      if (eventUpdatesWatchObject && eventUpdatesWatchObject.requestManager) {
+        logger.info('Stopping watching event updates.');
+
+        await callAsync(eventUpdatesWatchObject.stopWatching.bind(eventUpdatesWatchObject));
+      }
+    } catch (err) {
+      logger.error(err);
+    }
+
+    watchEventUpdatesRetryTimeoutId = setTimeout(() => {
+      watchEventUpdatesRetryPending = false;
+      watchEventUpdates();
+    }, 1000);
+  };
 
   /**
    * @returns {number}
    */
   const watchEventUpdates = () => {
-    let events;
-
-    const retry = async () => {
-      if (watchEventUpdatesRetryPending) {return;}
-      watchEventUpdatesRetryPending = true;
-
-      clearTimeout(watchEventUpdatesRetryTimeout);
-
-      try {
-        if (events && events.requestManager) {
-          await callAsync(events.stopWatching.bind(events));
-        }
-
-      } catch (err) {
-        logger.error(err);
-      }
-
-      watchEventUpdatesRetryTimeout = setTimeout(() => {
-        watchEventUpdatesRetryPending = false;
-        watchEventUpdates();
-      }, 1000);
-    };
-
     try {
-      logger.info(`Watching for event updates`);
+      logger.info(`Watching for event updates from block #${cacheState.lastUpdateBlock + 1} to latest block`);
 
-      events = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock, toBlock: 'latest'});
-
-      events.watch(async (error, response) => {
+      eventUpdatesWatchObject = eventBase.Updated({}, {fromBlock: cacheState.lastUpdateBlock + 1, toBlock: 'latest'});
+      eventUpdatesWatchObject.watch(async (error, response) => {
         if (error) {
-          logger.error(error, `Error while watching for events updates starting from block #${cacheState.lastUpdateBlock}`);
-          return setTimeout(retry, 1000);
+          logger.error(error, `Error while watching for events updates starting from block #${cacheState.lastUpdateBlock + 1}`);
+
+          return setTimeout(tryWatchEventUpdates, 1000);
         }
 
         try {
           await indexingUtil.updateEvents([response]);
         } catch (err) {
           logger.error(err, `Error while indexing event update at block #${response.blockNumber}`);
-          return setTimeout(retry, 1000);
+
+          return setTimeout(tryWatchEventUpdates, 1000);
         }
 
         cacheState.lastUpdateBlock = response.blockNumber;
@@ -329,15 +349,21 @@ const esClient = new AwsEsPublicClient(
 
     } catch (err) {
       logger.error(err);
-      return setTimeout(retry, 1000);
-    }
 
-    setInterval(retry, 1000 * 60);
+      return setTimeout(tryWatchEventUpdates, 1000);
+    }
   };
 
   try {
-    watchEvents();
-    watchEventUpdates();
+    tryWatchEvents();
+    tryWatchEventUpdates();
+
+    setInterval(() => {
+      logger.info('Auto retry retryWatchEvents() and retryWatchEventUpdates() after 1 minute.');
+
+      tryWatchEvents();
+      tryWatchEventUpdates();
+    }, 1000 * 20);
   } catch (err) {
     fatal(err);
   }
