@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Link from 'valuelink'
 import { Input, TextArea } from 'valuelink/tags'
 import { getTranslate } from 'react-localize-redux';
+import moment from 'moment';
 import LanguageField from './LanguageField'
 import CategoriesField from './CategoryField'
 import TagsField from './TagsField'
@@ -25,6 +26,7 @@ class EventForm extends Component {
     this.state = {
       showErrors: false,
       showConfirmModal: false,
+      submitClick: moment(),
       formData: {
         language: config.languages.list[0].code,
         category: config.categories.default,
@@ -74,16 +76,18 @@ class EventForm extends Component {
 
     if (this.isValid()) {
       this.props.formSaveEvent(this.state.formData);
-      this.setState({showErrors: false});
+      this.setState({showErrors: false, submitClick: moment()});
 
       return;
     }
 
-    this.setState({showErrors: true});
+    this.setState({showErrors: true, submitClick: moment()});
   }
 
   isValid() {
-    return this.nameLink.error === undefined && this.descriptionLink.error === undefined
+    return DateFields.isValidStartDate(this.state.formData.startTime, 'minute') &&
+      DateFields.isValidEndDate(this.state.formData.endTime, this.state.formData.startTime, 'minute') &&
+      this.nameLink.error === undefined && this.descriptionLink.error === undefined
       && this.depositLink.error === undefined && this.bidTypeLink.error === undefined
       && this.state.formData.tags.length >= 1
       && this.state.formData.sourceUrls.length >= 1 && this.state.formData.results.length >= 2;
@@ -113,10 +117,6 @@ class EventForm extends Component {
     this.descriptionLink = Link.state(this, 'formData').at('description')
       .check( v => v, this.props.translate('validation.required'))
       .check( v => v.length >= 3, this.props.translate('validation.min_length', {min: 3}));
-
-
-    this.timeZoneLink = Link.state(this, 'formData').at('timeZone')
-      .check( v => v, this.props.translate('validation.required'));
 
     return <Fragment>
       <form onSubmit={this.handleSubmit} className="new-event">
@@ -150,7 +150,7 @@ class EventForm extends Component {
 
         <TagsField needToClear={this.props.saved} onChange={this.handleFieldsChange} showErrors={this.state.showErrors} />
 
-        <DateFields valueLinkTimeZone={this.timeZoneLink} onChange={this.handleFieldsChange} />
+        <DateFields onChange={this.handleFieldsChange} showErrors={this.state.showErrors} submitClick={this.state.submitClick} />
 
         <div className={"form-group" + (this.descriptionLink.error && this.state.showErrors ? ' has-error' : '')}>
           <label htmlFor="event[description]">{ this.props.translate('pages.new_event.form.description')}*</label>
