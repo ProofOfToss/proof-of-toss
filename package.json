@@ -111,7 +111,8 @@
     "truffle-resolver": "^4.0.1",
     "uport-connect": "^0.6.1",
     "valuelink": "^1.5.4",
-    "web3": "^0.20.3"
+    "web3": "^0.20.3",
+    "hoek": "^4.2.1"
   },
   "scripts": {
     "start_app": "babel-node scripts/app.js",
