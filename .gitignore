@@ -21,4 +21,3 @@ src/data/config.json
 src/data/private_config.json
 scripts/cache_state.json
 elasticsearch.log
-testfile2
