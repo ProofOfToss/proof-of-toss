@@ -128,8 +128,8 @@
           "error": "You should add at least two results"
         },
         "errors": {
-          "start_time": "Start date should be after 1 hour",
-          "end_time": "End date should be after 1 hour of now and after start time"
+          "start_time": "Start date should be after 20 minutes",
+          "end_time": "End date should be after 20 minutes of now and after start time"
         }
       },
       "modal": {

@@ -57,7 +57,7 @@ class DateFields extends Component {
   }
 
   static isValidStartDate(currentDate, unit = 'day') {
-    return currentDate.isSameOrAfter(moment().add(1, 'hour'), unit);
+    return currentDate.isSameOrAfter(moment().add(20, 'minute'), unit);
   }
 
   static isValidEndDate(currentDate, startDate, unit = 'day') {
