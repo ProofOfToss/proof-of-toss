@@ -1,10 +1,5 @@
 import { SAVE_TX, REMOVE_TX, SET_INTERVAL } from '../actions/tx';
 
-const initialState = {
-  'txStatuses': load(),
-  'watchInterval': null,
-};
-
 const LOCAL_STORAGE_KEY_TX_STATUS = 'LOCAL_STORAGE_KEY_TX_STATUS';
 
 function load() {
@@ -12,6 +7,11 @@ function load() {
 
   return json ? JSON.parse(json) : {};
 }
+
+const initialState = {
+  'txStatuses': load(),
+  'watchInterval': null,
+};
 
 const txReducer = (state = initialState, action) => {
   let txStatuses;

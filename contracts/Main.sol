@@ -77,7 +77,7 @@ contract Main is ERC223ReceivingContract, Seriality {
         // bypass tagsCount
         offset -= 1; // sizeOfUint(8);
 
-            EventBase _lastEvent = EventBase(address(new Event(address(eventBase))));
+        EventBase _lastEvent = EventBase(address(new Event(address(eventBase))));
 
         _lastEvent.init(address(token), address(whitelist), _creator, _deposit, _startDate, _endDate, _resultsCount);
 

@@ -59,9 +59,9 @@ export function watchTransactions() {
           try {
             const transactionReceipt = await callAsync(web3.eth.getTransactionReceipt.bind(web3.eth, tx.txHash));
 
-            if (transactionReceipt.blockHash) {
+            if (transactionReceipt && transactionReceipt.blockHash) {
 
-              if (transactionReceipt.success) {
+              if (parseInt(transactionReceipt.status, 16) === 1 && !transactionReceipt.error) {
                 saveTx(Object.assign(tx, {status: TX_STATUS_SUCCESSFUL}), dispatch);
               } else {
                 saveTx(Object.assign(tx, {status: TX_STATUS_REJECTED}), dispatch);
@@ -82,7 +82,7 @@ export function watchTransactions() {
               id: tx.data.betTxHash
             });
 
-            if(bet.found) {
+            if(bet.found && bet._source.withdrawn === true) {
               saveTx(Object.assign(tx, {status: TX_STATUS_INDEXED}), dispatch);
             }
 
@@ -94,7 +94,7 @@ export function watchTransactions() {
               id: tx.data.eventAddress
             });
 
-            if(event.found) {
+            if(event.found && event._source.withdrawn === true) {
               saveTx(Object.assign(tx, {status: TX_STATUS_INDEXED}), dispatch);
             }
 
