@@ -1,7 +1,7 @@
 # Architecture
 
 * Solidity smart-contracts
-    - developed using truffle [truffle 4.x](http://truffleframework.com/) [solc 0.4.x](http://solidity.readthedocs.io)
+    - developed using truffle [truffle 4.x](http://truffleframework.com/), [solc >= 0.4.22](http://solidity.readthedocs.io)
     - public MVP will be deployed to Ethereum blockchain. Product is planned to work on RSK blockchain
     - store data in compressed cost-effective format
 * Elasticsearch index
@@ -126,12 +126,19 @@ $ npm install -g ganache-cli
     ==================
     (0) 0xcf917a1f7b9b71aa3e3046ec6969e4b210179521
     (1) 0x369d6ef29adc68d4999e98edc07ecd65563d0945
+    (2) 0xec0705eb54789adf51627b8f0331bc657882eae8
+    (3) 0xaf1b1e1524d573eba5dae315c4e4972596b3de23
     
     Private Keys
     ==================
     (0) da8790fd91894aac54f122810c7e940689eba4248eb82f672d69527451b13ef6
     (1) 0272b60d17adb4d0df63b011b9d4fa6fbb6728f14e300807935002dff9b3fd35
+    (2) 08f2311c2b5dfd63e1486c400b8f43c1f50cd6d64d3d7d0a4dbf87b92c5cbc4e
+    (3) 0e785b00dde0d36b79c6e0003d3b44dbb88a29fe835b10217ab690a066988197
     ```
+    
+    By default `ganache-cli` creates 10 accounts. It is possible to use `--account` option to use specific addresses.
+    If you will do this create at least 4 accounts. It is necessary for contracts tests.
     
 1. Install metamask extension in a browser and import first private key from the previous step
 

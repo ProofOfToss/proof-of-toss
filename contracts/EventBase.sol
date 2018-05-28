@@ -212,10 +212,6 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     function hasDefinedResult() private constant returns (bool) {
         return resolvedResult < 220;
     }
-    
-//    function isPlayer() private constant returns (bool) {
-//        return usersBets[tx.origin].length > 0;
-//    }
 
     function calculateLosersBetSum() private view returns (uint256) {
         uint256 losersBetSum = 0;
@@ -303,7 +299,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
             return 0;
         }
 
-        if (state != States.Closed) {
+        if (getState() != States.Closed) {
             return 0;
         }
 
@@ -324,7 +320,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
             return 0;
         }
 
-        if (state != States.Closed || hasDefinedResult()) {
+        if (getState() != States.Closed || hasDefinedResult()) {
             return 0;
         }
 
@@ -359,11 +355,11 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     uint public lastWithdraw = 0;
 
     function withdraw() public {
-        require(withdraws[msg.sender] == 0);
+        require(withdraws[msg.sender] == 0, 'Withdraw already done');
 
         uint256 share = getShare(msg.sender);
 
-        require(share > 0);
+        require(share > 0, 'Share should be > 0');
 
         if (lastWithdraw == 0) {
             // TODO transfer jackpot

@@ -15,8 +15,10 @@ contract('Main', function(accounts) {
   const bidType = 'bid_type';
   const eventCategory = 'category_id';
   const eventLocale = 'en';
-  const eventStartDate = 1517406195;
-  const eventEndDate = 1580478195;
+
+  const now = Math.floor((new Date()).getTime() / 1000);
+  const eventStartDate = now - 24 * 3600;
+  const eventEndDate = now - 22 * 3600;
 
   const eventSourceUrl = 'source_url';
   const eventTags = ['tag1_name', 'tag2_name', 'tag3_name'];
@@ -37,7 +39,7 @@ contract('Main', function(accounts) {
   };
 
   it("should create new event and tranfer deposit. then deposit should returns", async function() {
-    var main, token, event, whitelist;
+    let main, token, event, whitelist;
 
     whitelist = await Whitelist.deployed();
     token = await Token.deployed();
@@ -103,6 +105,12 @@ contract('Main', function(accounts) {
     }).then(function(creator) {
 
       assert.equal(creator, accounts[0], "wrong creator");
+
+      return event.getShare(accounts[0], {from: accounts[0]})
+
+    }).then(function(share) {
+
+      assert.equal(share.toNumber(), 10000000, "1000 tokens wasn't on deposit");
 
       return token.balanceOf(accounts[0], {from: accounts[0]});
 
