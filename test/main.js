@@ -104,12 +104,6 @@ contract('Main', function(accounts) {
 
       assert.equal(creator, accounts[0], "wrong creator");
 
-      return event.getShare(accounts[0], {from: accounts[0]})
-
-    }).then(function(share) {
-
-      assert.equal(share.toNumber(), 10000000, "1000 tokens wasn't on deposit");
-
       return token.balanceOf(accounts[0], {from: accounts[0]});
 
     }).then(function(balance) {

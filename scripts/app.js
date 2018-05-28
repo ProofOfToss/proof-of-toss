@@ -1,5 +1,4 @@
 import appConfig from '../src/data/config.json';
-import appPrivateConfig from '../src/data/private_config.json';
 
 import fs from 'fs';
 import path from 'path';
@@ -32,8 +31,6 @@ const esClient = new AwsEsPublicClient(
   { log: 'error' },
   appConfig.elasticsearch.esNode,
   appConfig.elasticsearch.region,
-  /*appPrivateConfig.elasticsearch.accessKeyId,
-  appPrivateConfig.elasticsearch.secretAccessKey,*/
   appConfig.elasticsearch.useSSL
 );
 

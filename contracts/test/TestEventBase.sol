@@ -3,7 +3,7 @@ pragma solidity ^0.4.2;
 import "../EventBase.sol";
 
 contract TestEventBase is EventBase {
-    function TestEventBase(address _token) EventBase(_token) {}
+    constructor(address _token) public EventBase(_token) {}
 
     function setStartDate(uint64 _startDate) public {
         startDate = _startDate;
