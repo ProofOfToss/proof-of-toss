@@ -143,7 +143,7 @@ deploy_production:
     - demo
   when: manual
   only:
-    - master
+    - prod
   script:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
@@ -152,9 +152,11 @@ deploy_production:
     - npm install
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
-    - mkdir $CI_PROJECT_DIR/build
-    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
-    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
+    # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
+    # The results are saved in build dir which is kept in the repository.
+#    - mkdir $CI_PROJECT_DIR/build
+#    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
+#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
@@ -168,7 +170,7 @@ deploy_production_reindex:
     - demo
   when: manual
   only:
-    - master
+    - prod
   script:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
@@ -177,9 +179,11 @@ deploy_production_reindex:
     - npm install
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
-    - mkdir $CI_PROJECT_DIR/build
-    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
-    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
+    # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
+    # The results are saved in build dir which is kept in the repository.
+#    - mkdir $CI_PROJECT_DIR/build
+#    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
+#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
@@ -193,7 +197,7 @@ deploy_production_contracts:
     - demo
   when: manual
   only:
-    - master
+    - prod
   script:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
@@ -202,9 +206,11 @@ deploy_production_contracts:
     - npm install
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
-    - mkdir $CI_PROJECT_DIR/build
-    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
-    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
+    # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
+    # The results are saved in build dir which is kept in the repository.
+#    - mkdir $CI_PROJECT_DIR/build
+#    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
+#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
@@ -220,7 +226,7 @@ deploy_production_full:
     - demo
   when: manual
   only:
-    - master
+    - prod
   script:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
@@ -229,8 +235,10 @@ deploy_production_full:
     - npm install
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
-    - mkdir $CI_PROJECT_DIR/build
-    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate --reset
+    # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
+    # The results are saved in build dir which is kept in the repository.
+#    - mkdir $CI_PROJECT_DIR/build
+#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate --reset
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
