@@ -46,14 +46,14 @@
       "type": "fallback"
     }
   ],
-  "bytecode": "0x6060604052341561000f57600080fd5b6040516020806101858339810160405280805160018054600160a060020a03338116600160a060020a0319928316179092556000805492909316911617905550506101268061005f6000396000f30060606040526004361060485763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635001f3b5811460795780638da5cb5b1460b2575b3415605257600080fd5b6000543660008037600080366000845af43d806000803e818015607457816000f35b600080fd5b3415608357600080fd5b608960c2565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341560bc57600080fd5b608960de565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a7230582043d34f435a3f8a3cab4ec7cf3efd3f6861521381a737175acd87d587185cfe610029",
-  "deployedBytecode": "0x60606040526004361060485763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635001f3b5811460795780638da5cb5b1460b2575b3415605257600080fd5b6000543660008037600080366000845af43d806000803e818015607457816000f35b600080fd5b3415608357600080fd5b608960c2565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341560bc57600080fd5b608960de565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a7230582043d34f435a3f8a3cab4ec7cf3efd3f6861521381a737175acd87d587185cfe610029",
+  "bytecode": "0x6060604052341561000f57600080fd5b6040516020806101858339810160405280805160018054600160a060020a03338116600160a060020a0319928316179092556000805492909316911617905550506101268061005f6000396000f30060606040526004361060485763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635001f3b5811460795780638da5cb5b1460b2575b3415605257600080fd5b6000543660008037600080366000845af43d806000803e818015607457816000f35b600080fd5b3415608357600080fd5b608960c2565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341560bc57600080fd5b608960de565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820e70c38022efd44e0e7ffe8a904abd747e9d41894cc6cbe36bfb2c769670343cf0029",
+  "deployedBytecode": "0x60606040526004361060485763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635001f3b5811460795780638da5cb5b1460b2575b3415605257600080fd5b6000543660008037600080366000845af43d806000803e818015607457816000f35b600080fd5b3415608357600080fd5b608960c2565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341560bc57600080fd5b608960de565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820e70c38022efd44e0e7ffe8a904abd747e9d41894cc6cbe36bfb2c769670343cf0029",
   "sourceMap": "52:575:0:-;;;127:98;;;;;;;;;;;;;;;;;;;;;;167:5;:18;;-1:-1:-1;;;;;175:10:0;167:18;;-1:-1:-1;;;;;;167:18:0;;;;;;;:5;195:23;;;;;;;;;;;-1:-1:-1;;52:575:0;;;;;;",
   "deployedSourceMap": "52:575:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;303:1;297:8;341:12;336:3;331;318:36;432:1;427:3;413:12;408:3;399:7;394:3;381:53;465:14;517:10;512:3;507;492:36;548:6;555:21;;;;597:10;594:1;586:22;555:21;573:1;570;563:12;73:21;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;100:20;;;;;;;;;;;;73:21;;;;;;:::o;100:20::-;;;;;;:::o",
   "source": "pragma solidity ^0.4.2;\n\nimport \"./EventBase.sol\";\n\ncontract Event {\n    EventBase public base;\n    address public owner;\n\n    function Event(address _base) {\n        owner = msg.sender;\n        base = EventBase(_base);\n    }\n\n    function() public {\n        assembly {\n            let _target := sload(0)\n            calldatacopy(0x0, 0x0, calldatasize)\n            let retval := delegatecall(gas, _target, 0x0, calldatasize, 0x0, 0)\n            let returnsize := returndatasize\n            returndatacopy(0x0, 0x0, returnsize)\n            switch retval case 0 {revert(0, 0)} default {return (0, returnsize)}\n        }\n    }\n}\n",
-  "sourcePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/Event.sol",
+  "sourcePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/Event.sol",
   "ast": {
-    "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/Event.sol",
+    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/Event.sol",
     "exportedSymbols": {
       "Event": [
         29
@@ -74,12 +74,12 @@
         "src": "0:23:0"
       },
       {
-        "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/EventBase.sol",
+        "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/EventBase.sol",
         "file": "./EventBase.sol",
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 30,
-        "sourceUnit": 1346,
+        "sourceUnit": 1354,
         "src": "25:25:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -107,7 +107,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_EventBase_$1345",
+              "typeIdentifier": "t_contract$_EventBase_$1353",
               "typeString": "contract EventBase"
             },
             "typeName": {
@@ -115,10 +115,10 @@
               "id": 3,
               "name": "EventBase",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1345,
+              "referencedDeclaration": 1353,
               "src": "73:9:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_EventBase_$1345",
+                "typeIdentifier": "t_contract$_EventBase_$1353",
                 "typeString": "contract EventBase"
               }
             },
@@ -188,7 +188,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 12694,
+                        "referencedDeclaration": 12702,
                         "src": "175:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -236,7 +236,7 @@
                       "referencedDeclaration": 4,
                       "src": "195:4:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_EventBase_$1345",
+                        "typeIdentifier": "t_contract$_EventBase_$1353",
                         "typeString": "contract EventBase"
                       }
                     },
@@ -270,10 +270,10 @@
                         "name": "EventBase",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1345,
+                        "referencedDeclaration": 1353,
                         "src": "202:9:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_EventBase_$1345_$",
+                          "typeIdentifier": "t_type$_t_contract$_EventBase_$1353_$",
                           "typeString": "type(contract EventBase)"
                         }
                       },
@@ -287,13 +287,13 @@
                       "nodeType": "FunctionCall",
                       "src": "202:16:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_EventBase_$1345",
+                        "typeIdentifier": "t_contract$_EventBase_$1353",
                         "typeString": "contract EventBase"
                       }
                     },
                     "src": "195:23:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_EventBase_$1345",
+                      "typeIdentifier": "t_contract$_EventBase_$1353",
                       "typeString": "contract EventBase"
                     }
                   },
@@ -407,7 +407,7 @@
     "src": "0:628:0"
   },
   "legacyAST": {
-    "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/Event.sol",
+    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/Event.sol",
     "exportedSymbols": {
       "Event": [
         29
@@ -428,12 +428,12 @@
         "src": "0:23:0"
       },
       {
-        "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/EventBase.sol",
+        "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/EventBase.sol",
         "file": "./EventBase.sol",
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 30,
-        "sourceUnit": 1346,
+        "sourceUnit": 1354,
         "src": "25:25:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -461,7 +461,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_EventBase_$1345",
+              "typeIdentifier": "t_contract$_EventBase_$1353",
               "typeString": "contract EventBase"
             },
             "typeName": {
@@ -469,10 +469,10 @@
               "id": 3,
               "name": "EventBase",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1345,
+              "referencedDeclaration": 1353,
               "src": "73:9:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_EventBase_$1345",
+                "typeIdentifier": "t_contract$_EventBase_$1353",
                 "typeString": "contract EventBase"
               }
             },
@@ -542,7 +542,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 12694,
+                        "referencedDeclaration": 12702,
                         "src": "175:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -590,7 +590,7 @@
                       "referencedDeclaration": 4,
                       "src": "195:4:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_EventBase_$1345",
+                        "typeIdentifier": "t_contract$_EventBase_$1353",
                         "typeString": "contract EventBase"
                       }
                     },
@@ -624,10 +624,10 @@
                         "name": "EventBase",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1345,
+                        "referencedDeclaration": 1353,
                         "src": "202:9:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_EventBase_$1345_$",
+                          "typeIdentifier": "t_type$_t_contract$_EventBase_$1353_$",
                           "typeString": "type(contract EventBase)"
                         }
                       },
@@ -641,13 +641,13 @@
                       "nodeType": "FunctionCall",
                       "src": "202:16:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_EventBase_$1345",
+                        "typeIdentifier": "t_contract$_EventBase_$1353",
                         "typeString": "contract EventBase"
                       }
                     },
                     "src": "195:23:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_EventBase_$1345",
+                      "typeIdentifier": "t_contract$_EventBase_$1353",
                       "typeString": "contract EventBase"
                     }
                   },
@@ -766,5 +766,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-28T10:18:08.718Z"
+  "updatedAt": "2018-05-28T16:03:35.481Z"
 }

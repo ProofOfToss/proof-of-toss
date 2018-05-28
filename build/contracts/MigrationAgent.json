@@ -25,19 +25,19 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.21;\n\ncontract MigrationAgent\n{\n    function migrateFrom(address _from, uint256 _value) public;\n}\n",
-  "sourcePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
+  "sourcePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
   "ast": {
-    "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
+    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
     "exportedSymbols": {
       "MigrationAgent": [
-        11881
+        11889
       ]
     },
-    "id": 11882,
+    "id": 11890,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 11873,
+        "id": 11881,
         "literals": [
           "solidity",
           "^",
@@ -53,9 +53,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 11881,
+        "id": 11889,
         "linearizedBaseContracts": [
-          11881
+          11889
         ],
         "name": "MigrationAgent",
         "nodeType": "ContractDefinition",
@@ -63,7 +63,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 11880,
+            "id": 11888,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -71,15 +71,15 @@
             "name": "migrateFrom",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 11878,
+              "id": 11886,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 11875,
+                  "id": 11883,
                   "name": "_from",
                   "nodeType": "VariableDeclaration",
-                  "scope": 11880,
+                  "scope": 11888,
                   "src": "77:13:34",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -88,7 +88,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 11874,
+                    "id": 11882,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "77:7:34",
@@ -102,10 +102,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 11877,
+                  "id": 11885,
                   "name": "_value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 11880,
+                  "scope": 11888,
                   "src": "92:14:34",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -114,7 +114,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 11876,
+                    "id": 11884,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "92:7:34",
@@ -131,36 +131,36 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 11879,
+              "id": 11887,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "114:0:34"
             },
-            "scope": 11881,
+            "scope": 11889,
             "src": "56:59:34",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 11882,
+        "scope": 11890,
         "src": "26:91:34"
       }
     ],
     "src": "0:118:34"
   },
   "legacyAST": {
-    "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
+    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
     "exportedSymbols": {
       "MigrationAgent": [
-        11881
+        11889
       ]
     },
-    "id": 11882,
+    "id": 11890,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 11873,
+        "id": 11881,
         "literals": [
           "solidity",
           "^",
@@ -176,9 +176,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 11881,
+        "id": 11889,
         "linearizedBaseContracts": [
-          11881
+          11889
         ],
         "name": "MigrationAgent",
         "nodeType": "ContractDefinition",
@@ -186,7 +186,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 11880,
+            "id": 11888,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -194,15 +194,15 @@
             "name": "migrateFrom",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 11878,
+              "id": 11886,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 11875,
+                  "id": 11883,
                   "name": "_from",
                   "nodeType": "VariableDeclaration",
-                  "scope": 11880,
+                  "scope": 11888,
                   "src": "77:13:34",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -211,7 +211,7 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 11874,
+                    "id": 11882,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
                     "src": "77:7:34",
@@ -225,10 +225,10 @@
                 },
                 {
                   "constant": false,
-                  "id": 11877,
+                  "id": 11885,
                   "name": "_value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 11880,
+                  "scope": 11888,
                   "src": "92:14:34",
                   "stateVariable": false,
                   "storageLocation": "default",
@@ -237,7 +237,7 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 11876,
+                    "id": 11884,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
                     "src": "92:7:34",
@@ -254,19 +254,19 @@
             },
             "payable": false,
             "returnParameters": {
-              "id": 11879,
+              "id": 11887,
               "nodeType": "ParameterList",
               "parameters": [],
               "src": "114:0:34"
             },
-            "scope": 11881,
+            "scope": 11889,
             "src": "56:59:34",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 11882,
+        "scope": 11890,
         "src": "26:91:34"
       }
     ],
@@ -278,5 +278,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-28T10:18:09.081Z"
+  "updatedAt": "2018-05-28T16:03:35.951Z"
 }
