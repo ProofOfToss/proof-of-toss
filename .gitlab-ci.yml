@@ -124,7 +124,6 @@ deploy_demo_full:
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/config.json $CI_PROJECT_DIR/src/data/
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
     - mkdir $CI_PROJECT_DIR/build
-    - rsync -hrlv --delete /srv/www/proof-of-toss-demo.axioma.lv/htdocs/build/ $CI_PROJECT_DIR/build/
     - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate --reset
     - npm run build
     - echo "Deploy to Demo"
@@ -231,7 +230,6 @@ deploy_production_full:
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
     - mkdir $CI_PROJECT_DIR/build
-    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
     - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate --reset
     - npm run build
     - echo "Deloy to production server"
