@@ -5,10 +5,15 @@ import Config from 'truffle-config';
 import Resolver from 'truffle-resolver';
 import log4js from 'log4js';
 import callAsync from '../src/util/web3Util';
+import { denormalizeBalance } from '../src/util/token';
 
 const argv = require('yargs-parser')(process.argv.slice(2));
 const address = '0x' + argv._[0].toString();
+let tokens = 1000000;
 
+if (argv._.length > 1) {
+  tokens = argv._[1].toString();
+}
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -74,10 +79,10 @@ logger.level = 'debug';
     fatal(error);
   }
 
-  console.log(`Generating 10000000000000 TOSS for ${address}`);
+  console.log(`Generating ${tokens} TOSS for ${address}`);
 
   await token.setUnpausedWallet(address, true, {from: accounts[0]});
 
-  await token.mint(address, 10000000000000, {from: accounts[0]});
+  await token.mint(address, denormalizeBalance(tokens), {from: accounts[0]});
 
 })(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error); });

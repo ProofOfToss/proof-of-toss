@@ -2,16 +2,24 @@ import MainContract from '../../build/contracts/Main.json'
 import TokenContract from '../../build/contracts/Token.json'
 import config from '../data/config.json'
 
+const BigNumber = require('bignumber.js');
 const contract = require('truffle-contract');
 const main = contract(MainContract);
 const token = contract(TokenContract);
 
-function formatBalance(balance) {
-  return (parseInt(balance, 10) / Math.pow(10, config.view.currency_precision)).toFixed(config.view.currency_precision).replace(/\.?0+$/, '');
+function formatBalance(balance, formatPrecision) {
+  if (typeof formatPrecision === 'undefined') {
+    formatPrecision = config.view.currency_precision;
+  }
+
+  return (new BigNumber(balance))
+    .div(Math.pow(10, config.view.token_precision))
+    .toFixed(formatPrecision)
+    .replace(/\.?0+$/, '');
 }
 
 function denormalizeBalance(balance) {
-  return Math.floor(parseFloat(balance) * Math.pow(10, config.view.currency_precision));
+  return (new BigNumber(balance)).times(Math.pow(10, config.view.token_precision)).toNumber();
 }
 
 function getMyBalance(web3, address) {

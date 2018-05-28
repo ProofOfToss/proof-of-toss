@@ -5,6 +5,8 @@ import util from 'util';
 import { formatBalance } from './token'
 import { decodeEventMethod } from './web3Util'
 
+const BigNumber = require('bignumber.js');
+
 export const tagMapping = {
   'mappings': {
     'tag': {
@@ -63,13 +65,14 @@ export const betMapping = {
 
 export class IndexingUtil {
   /**
-   * @param EVENT_INDEX
-   * @param TAG_INDEX
-   * @param esClient
-   * @param logger
-   * @param web3
-   * @param contractAPIs
-   * @param forceRefresh
+   * @param {string}  EVENT_INDEX
+   * @param {string}  TAG_INDEX
+   * @param {string}  BET_INDEX
+   * @param {object}  esClient
+   * @param {object}  logger
+   * @param {object}  web3
+   * @param {object}  contractAPIs
+   * @param {boolean} forceRefresh
    */
   constructor(EVENT_INDEX, TAG_INDEX, BET_INDEX, esClient, logger, web3, contractAPIs, forceRefresh = false) {
     this.EVENT_INDEX = EVENT_INDEX;
@@ -169,15 +172,25 @@ export class IndexingUtil {
         promises.push(event.possibleResults(i));
       }
 
-      const possibleResults = (await Promise.all(promises)).map((result, i) => {return {
+      let possibleResults = (await Promise.all(promises)).map((result, i) => {return {
         'index': i,
         'customCoefficient': result[0],
         'betCount': result[1],
-        'betSum': formatBalance(result[2]),
+        'betSum': result[2],
         'description': eventData.results[i].description
       }});
 
-      const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum, 10), 0);
+      const bidSum = possibleResults.reduce(
+        (accumulator, result) => accumulator.plus(new BigNumber(result.betSum)),
+        new BigNumber(0)
+      );
+
+      possibleResults = possibleResults.map((result, i) => {
+        return {
+          ...result,
+          'betSum': formatBalance(result.betSum)
+        };
+      });
 
       let tags = eventData.tags.map((tag) => { return {'locale': eventData.locale, 'name': tag}});
 
@@ -185,7 +198,7 @@ export class IndexingUtil {
         'name': eventData.name,
         'description': eventData.description,
         'bidType': eventData.bidType,
-        'bidSum': bidSum,
+        'bidSum': formatBalance(bidSum.toString()),
         'deposit': formatBalance(deposit),
         'address': _event.eventAddress,
         'createdBy': creator,
@@ -255,11 +268,13 @@ export class IndexingUtil {
       }
     }
 
+    this.logger.info('INDEX EVENTS');
     this.logger.info(body);
 
     await this.esClient.bulk({body, refresh: this.forceRefresh}).then((result) => {
 
       result.items.forEach(item => {
+        this.logger.info('INDEX EVENTS ITEMS');
         this.logger.info(item);
         if (item.error) {
           this.logger.error(item.error);
@@ -353,16 +368,26 @@ export class IndexingUtil {
           promises.push(event.possibleResults(i));
         }
 
-        const possibleResults = (await Promise.all(promises)).map((result, i) => {return {
+        let possibleResults = (await Promise.all(promises)).map((result, i) => {return {
           'index': i,
           'betCount': result[1],
-          'betSum': formatBalance(result[2]),
+          'betSum': result[2]
         }});
 
-        const bidSum = possibleResults.reduce((accumulator, result) => accumulator + parseFloat(result.betSum), 0);
+        const bidSum = possibleResults.reduce(
+          (accumulator, result) => accumulator.plus(new BigNumber(result.betSum)),
+          new BigNumber(0)
+        );
+
+        possibleResults = possibleResults.map((result, i) => {
+          return {
+            ...result,
+            'betSum': formatBalance(result.betSum)
+          };
+        });
 
         const doc = {
-          'bidSum': bidSum,
+          'bidSum': formatBalance(bidSum.toString()),
           'result': result,
           'possibleResults': possibleResults,
           'bettor': betCount > 0 ? [sender] : [],
@@ -383,6 +408,7 @@ export class IndexingUtil {
           }
         });
 
+        this.logger.info('UPDATE EVENTS (doc)');
         this.logger.info(doc);
 
         if (betCount > 0) {
@@ -433,9 +459,11 @@ export class IndexingUtil {
       }
     }
 
+    this.logger.info('UPDATE EVENTS (body)');
     this.logger.info(body);
 
     await this.esClient.bulk({body, refresh: this.forceRefresh}).then((result) => {
+      this.logger.info('UPDATE EVENTS (result)');
       this.logger.info(util.inspect(result.items, {showHidden: false, depth: 10}));
     }).catch((error) => {
       this.logger.error(error);
