@@ -197,11 +197,6 @@ This script will handle blockchain events and save them in [elastic search](http
 $ truffle --network test test
 ```
 
-#### Frontend tests
-```
-$ npm run test
-```
-
 # How to build frontend
 To create `html` and `js` files execute:
 ```

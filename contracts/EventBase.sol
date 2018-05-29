@@ -253,7 +253,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return (betsSum, winnersBetSum, losersBetSum);
     }
  
-    function getPrize(uint _userBet) private view returns (uint256) {
+    function getPrize(uint _userBet) public view returns (uint256) {
         if (state != States.Closed) {
             return 0;
         }
@@ -284,7 +284,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return 0;
     }
 
-    function getRefund(uint _userBet) private view returns (uint256) {
+    function getRefund(uint _userBet) public view returns (uint256) {
         if (state != States.Closed || hasDefinedResult()) {
             return 0;
         }
@@ -294,7 +294,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return bets[usersBets[tx.origin][_userBet]].amount;
     }
 
-    function getEventCreatorReward() private view returns (uint256) {
+    function getEventCreatorReward() public view returns (uint256) {
         if (tx.origin != creator) {
             return 0;
         }
@@ -315,7 +315,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return deposit.mul(2);
     }
 
-    function getEventCreatorRefund() private view returns (uint256) {
+    function getEventCreatorRefund() public view returns (uint256) {
         if (tx.origin != creator) {
             return 0;
         }
