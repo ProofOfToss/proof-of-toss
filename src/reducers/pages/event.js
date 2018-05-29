@@ -14,6 +14,11 @@ const initialState = {
   fetched: false,
   eventData: {},
   newBetData: {},
+
+  resolveModalId: null,
+  newBetModalId: null,
+  withdrawModalId: null,
+
   showNewBetModal: false,
   newBetSaving: false,
   newBetSaved: false,
@@ -50,7 +55,8 @@ const eventReducer = (state = initialState, action) => {
           result: action.result,
           resultIndex: action.resultIndex,
           amount: action.amount
-        }
+        },
+        newBetModalId: null
       };
 
     case MODAL_ADD_NEW_BET_CLOSE_EVENT:
@@ -60,35 +66,38 @@ const eventReducer = (state = initialState, action) => {
         newBetSaving: false,
         newBetSaved: false,
         newBetError: false,
-        newBetData: {}
+        newBetData: {},
+        newBetModalId: null
       };
 
     case ADD_NEW_BET_ADDING_EVENT:
       return {
         ...state,
-        newBetSaving: true
+        newBetSaving: true,
+        newBetModalId: action.modalId,
       };
 
     case ADD_NEW_BET_ADDED_EVENT:
-      return {
+      return action.modalId === state.newBetModalId ? {
         ...state,
         newBetData: {},
         newBetSaving: false,
         newBetSaved: true
-      };
+      } : state;
 
     case ADD_NEW_BET_ERROR_EVENT:
-      return {
+      return action.modalId === state.newBetModalId ? {
         ...state,
         newBetError: action.error
-      };
+      } : state;
 
     //Resolve modal
     case MODAL_RESOLVE_SHOW_EVENT:
       return {
         ...state,
         showResolveModal: true,
-        resolveResult: action.result
+        resolveResult: action.result,
+        resolveModalId: null,
       };
 
     case MODAL_RESOLVE_CLOSE_EVENT:
@@ -98,36 +107,39 @@ const eventReducer = (state = initialState, action) => {
         resolveApproving: false,
         resolveApproved: false,
         resolveApproveError: false,
-        resolveResult: {}
+        resolveResult: {},
+        resolveModalId: null,
       };
 
     case MODAL_RESOLVE_APPROVING_EVENT:
       return {
         ...state,
-        resolveApproving: true
+        resolveApproving: true,
+        resolveModalId: action.modalId
       };
 
     case MODAL_RESOLVE_APPROVED_EVENT:
-      return {
+      return action.modalId === state.resolveModalId ? {
         ...state,
         resolveApproving: false,
         resolveApproved: true,
         resolveResult: {}
-      };
+      } : state;
 
     case MODAL_RESOLVE_APPROVE_ERROR_EVENT:
-      return {
+      return action.modalId === state.resolveModalId ? {
         ...state,
         resolveApproving: false,
         resolveApproveError: action.error
-      };
+      } : state;
 
     //Withdraw modal
     case MODAL_WITHDRAW_SHOW_EVENT:
       return {
         ...state,
         showWithdrawModal: true,
-        withdraw: action.withdraw
+        withdraw: action.withdraw,
+        withdrawModalId: null
       };
 
     case MODAL_WITHDRAW_CLOSE_EVENT:
@@ -137,28 +149,30 @@ const eventReducer = (state = initialState, action) => {
         withdrawApproving: false,
         withdrawApproved: false,
         withdrawApproveError: false,
-        withdraw: {}
+        withdraw: {},
+        withdrawModalId: null
       };
 
     case MODAL_WITHDRAW_APPROVING_EVENT:
       return {
         ...state,
-        withdrawApproving: true
+        withdrawApproving: true,
+        withdrawModalId: action.modalId
       };
 
     case MODAL_WITHDRAW_APPROVED_EVENT:
-      return {
+      return action.modalId === state.withdrawModalId ? {
         ...state,
         withdrawApproved: true,
         withdraw: {}
-      };
+      } : state;
 
     case MODAL_WITHDRAW_APPROVE_ERROR_EVENT:
-      return {
+      return action.modalId === state.withdrawModalId ? {
         ...state,
         withdrawApproving: false,
         withdrawApproveError: action.error
-      };
+      } : state;
 
     //Did not happen
     case DID_NOT_HAPPEN_EVENT:

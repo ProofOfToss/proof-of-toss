@@ -6,7 +6,8 @@ const initialState = {
   save_error: false,
   saved: false,
   showConfirmModal: false,
-  formData: {}
+  formData: {},
+  modalId: null,
 };
 
 const newEventReducer = (state = initialState, action) => {
@@ -17,12 +18,14 @@ const newEventReducer = (state = initialState, action) => {
         ...state,
         showConfirmModal: true,
         saved: false,
-        formData: action.formData
+        formData: action.formData,
+        modalId: null
       };
     case MODAL_SAVE_EVENT:
       return {
         ...state,
-        saving: true
+        saving: true,
+        modalId: action.modalId
       };
     case MODAL_CLOSE_EVENT:
       return {
@@ -30,21 +33,22 @@ const newEventReducer = (state = initialState, action) => {
         showConfirmModal: false,
         saving: false,
         saved: false,
-        save_error: false
+        save_error: false,
+        modalId: null
       };
     case SAVE_ERROR_EVENT:
-      return {
+      return action.modalId === state.modalId ? {
         ...state,
         saving: false,
         save_error: action.error
-      };
+      } : state;
     case SAVED_EVENT:
-      return {
+      return action.modalId === state.modalId ? {
         ...state,
         saving: false,
         saved: true,
         formData: {}
-      };
+      } : state;
 
     default:
       return state;
