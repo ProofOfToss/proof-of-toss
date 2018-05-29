@@ -1,14 +1,14 @@
 {
   "contractName": "SizeOf",
   "abi": [],
-  "bytecode": "0x60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a723058203379b7707fc7061c9684aa5d6ad68a2538f203b119704f9f79490da254c58b0a0029",
-  "deployedBytecode": "0x6060604052600080fd00a165627a7a723058203379b7707fc7061c9684aa5d6ad68a2538f203b119704f9f79490da254c58b0a0029",
+  "bytecode": "0x60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a723058208ce358ce8adc75d4fe84137c13eed28a7c019410b452a333190d8f72387d81de0029",
+  "deployedBytecode": "0x6060604052600080fd00a165627a7a723058208ce358ce8adc75d4fe84137c13eed28a7c019410b452a333190d8f72387d81de0029",
   "sourceMap": "148:2062:9:-;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "148:2062:9:-;;;;;",
   "source": "pragma solidity ^0.4.2;\n\n/**\n * @title SizeOf\n * @dev The SizeOf return the size of the solidity types in byte\n * @author pouladzade@gmail.com\n */\n\ncontract  SizeOf {\n    \n    function sizeOfString(string _in) internal pure  returns(uint _size){\n        _size = bytes(_in).length / 32;\n         if(bytes(_in).length % 32 != 0) \n            _size++;\n            \n        _size++; // first 32 bytes is reserved for the size of the string     \n        _size *= 32;\n    }\n\n    function sizeOfInt(uint16 _postfix) internal pure  returns(uint size){\n\n        assembly{\n            switch _postfix\n                case 8 { size := 1 }\n                case 16 { size := 2 }\n                case 24 { size := 3 }\n                case 32 { size := 4 }\n                case 40 { size := 5 }\n                case 48 { size := 6 }\n                case 56 { size := 7 }\n                case 64 { size := 8 }\n                case 72 { size := 9 }\n                case 80 { size := 10 }\n                case 88 { size := 11 }\n                case 96 { size := 12 }\n                case 104 { size := 13 }\n                case 112 { size := 14 }\n                case 120 { size := 15 }\n                case 128 { size := 16 }\n                case 136 { size := 17 }\n                case 144 { size := 18 }\n                case 152 { size := 19 }\n                case 160 { size := 20 }\n                case 168 { size := 21 }\n                case 176 { size := 22 }\n                case 184 { size := 23 }\n                case 192 { size := 24 }\n                case 200 { size := 25 }\n                case 208 { size := 26 }\n                case 216 { size := 27 }\n                case 224 { size := 28 }\n                case 232 { size := 29 }\n                case 240 { size := 30 }\n                case 248 { size := 31 }\n                case 256 { size := 32 }\n                default  { size := 32 }\n        }\n\n    }\n    \n    function sizeOfUint(uint16 _postfix) internal pure  returns(uint size){\n        return sizeOfInt(_postfix);\n    }\n\n    function sizeOfAddress() internal pure  returns(uint8){\n        return 20; \n    }\n    \n    function sizeOfBool() internal pure  returns(uint8){\n        return 1; \n    }\n    \n\n}\n",
-  "sourcePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/SizeOf.sol",
+  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/SizeOf.sol",
   "ast": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/SizeOf.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/SizeOf.sol",
     "exportedSymbols": {
       "SizeOf": [
         4199
@@ -1260,7 +1260,7 @@
     "src": "0:2211:9"
   },
   "legacyAST": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/SizeOf.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/SizeOf.sol",
     "exportedSymbols": {
       "SizeOf": [
         4199
@@ -2517,5 +2517,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-28T16:03:35.658Z"
+  "updatedAt": "2018-05-29T10:33:34.868Z"
 }

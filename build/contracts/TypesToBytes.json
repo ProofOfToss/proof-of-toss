@@ -13,9 +13,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.2;\n\n/**\n * @title TypesToBytes\n * @dev The TypesToBytes contract converts the standard solidity types to the byte array\n * @author pouladzade@gmail.com\n */\n\ncontract TypesToBytes {\n \n    function TypesToBytes() internal {\n        \n    }\n    function addressToBytes(uint _offst, address _input, bytes memory _output) internal pure {\n\n        assembly {\n            mstore(add(_output, _offst), _input)\n        }\n    }\n\n    function bytes32ToBytes(uint _offst, bytes32 _input, bytes memory _output) internal pure {\n\n        assembly {\n            mstore(add(_output, _offst), _input)\n            mstore(add(add(_output, _offst),32), add(_input,32))\n        }\n    }\n\n    function bytes2ToBytes(uint _offst, bytes2 _input, bytes memory _output) internal pure {\n        assembly {\n            mstore(add(_output, _offst), _input)\n            mstore8(add(add(_output, _offst),1), add(_input,1))\n            mstore8(add(add(_output, _offst),2), add(_input,2))\n        }\n    }\n    \n    function boolToBytes(uint _offst, bool _input, bytes memory _output) internal pure {\n        uint8 x = _input == false ? 0 : 1;\n        assembly {\n            mstore(add(_output, _offst), x)\n        }\n    }\n    \n    function stringToBytes(uint _offst, bytes memory _input, bytes memory _output) internal {\n        uint256 stack_size = _input.length / 32;\n        if(_input.length % 32 > 0) stack_size++;\n        \n        assembly {\n            let index := 0\n            stack_size := add(stack_size,1)//adding because of 32 first bytes memory as the length\n        loop:\n            \n            mstore(add(_output, _offst), mload(add(_input,mul(index,32))))\n            _offst := sub(_offst , 32)\n            index := add(index ,1)\n            jumpi(loop , lt(index,stack_size))\n        }\n    }\n\n    function intToBytes(uint _offst, int _input, bytes memory  _output) internal pure {\n\n        assembly {\n            mstore(add(_output, _offst), _input)\n        }\n    } \n    \n    function uintToBytes(uint _offst, uint _input, bytes memory _output) internal pure {\n\n        assembly {\n            mstore(add(_output, _offst), _input)\n        }\n    }   \n\n}\n",
-  "sourcePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/TypesToBytes.sol",
+  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/TypesToBytes.sol",
   "ast": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/TypesToBytes.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/TypesToBytes.sol",
     "exportedSymbols": {
       "TypesToBytes": [
         4309
@@ -1640,7 +1640,7 @@
     "src": "0:2156:10"
   },
   "legacyAST": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/TypesToBytes.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/TypesToBytes.sol",
     "exportedSymbols": {
       "TypesToBytes": [
         4309
@@ -3270,5 +3270,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-28T16:03:35.660Z"
+  "updatedAt": "2018-05-29T10:33:34.869Z"
 }

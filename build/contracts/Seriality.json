@@ -8,14 +8,14 @@
       "type": "constructor"
     }
   ],
-  "bytecode": "0x60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a723058204b4770630d5dfad3ccfe1976fe7430514e37564dcba90b2740d91d4fbc10ff720029",
-  "deployedBytecode": "0x6060604052600080fd00a165627a7a723058204b4770630d5dfad3ccfe1976fe7430514e37564dcba90b2740d91d4fbc10ff720029",
+  "bytecode": "0x60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a723058206a6b9953fc5c8776ee96182da916cfd33174b888103bcf4f0c3798cada615b370029",
+  "deployedBytecode": "0x6060604052600080fd00a165627a7a723058206a6b9953fc5c8776ee96182da916cfd33174b888103bcf4f0c3798cada615b370029",
   "sourceMap": "289:102:8:-;;;353:36;;;;;;;;289:102;;;;;;",
   "deployedSourceMap": "289:102:8:-;;;;;",
   "source": "pragma solidity ^0.4.2;\n\n/**\n * @title Seriality\n * @dev The Seriality contract is the main interface for serializing data using the TypeToBytes, BytesToType and SizeOf\n * @author pouladzade@gmail.com\n */\n \nimport \"./BytesToTypes.sol\";\nimport \"./TypesToBytes.sol\";\nimport \"./SizeOf.sol\";\n\ncontract Seriality is BytesToTypes, TypesToBytes, SizeOf {\n\n    function Seriality() public {\n\n    }\n}\n",
-  "sourcePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/Seriality.sol",
+  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/Seriality.sol",
   "ast": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/Seriality.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/Seriality.sol",
     "exportedSymbols": {
       "Seriality": [
         4123
@@ -36,7 +36,7 @@
         "src": "0:23:8"
       },
       {
-        "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/BytesToTypes.sol",
+        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/BytesToTypes.sol",
         "file": "./BytesToTypes.sol",
         "id": 4110,
         "nodeType": "ImportDirective",
@@ -47,7 +47,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/TypesToBytes.sol",
+        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/TypesToBytes.sol",
         "file": "./TypesToBytes.sol",
         "id": 4111,
         "nodeType": "ImportDirective",
@@ -58,7 +58,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/SizeOf.sol",
+        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/SizeOf.sol",
         "file": "./SizeOf.sol",
         "id": 4112,
         "nodeType": "ImportDirective",
@@ -185,7 +185,7 @@
     "src": "0:392:8"
   },
   "legacyAST": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/Seriality.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/Seriality.sol",
     "exportedSymbols": {
       "Seriality": [
         4123
@@ -206,7 +206,7 @@
         "src": "0:23:8"
       },
       {
-        "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/BytesToTypes.sol",
+        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/BytesToTypes.sol",
         "file": "./BytesToTypes.sol",
         "id": 4110,
         "nodeType": "ImportDirective",
@@ -217,7 +217,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/TypesToBytes.sol",
+        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/TypesToBytes.sol",
         "file": "./TypesToBytes.sol",
         "id": 4111,
         "nodeType": "ImportDirective",
@@ -228,7 +228,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/installed_contracts/Seriality/SizeOf.sol",
+        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/installed_contracts/Seriality/SizeOf.sol",
         "file": "./SizeOf.sol",
         "id": 4112,
         "nodeType": "ImportDirective",
@@ -360,5 +360,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-28T16:03:35.657Z"
+  "updatedAt": "2018-05-29T10:33:34.868Z"
 }

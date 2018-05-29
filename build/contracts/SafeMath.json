@@ -1,14 +1,14 @@
 {
   "contractName": "SafeMath",
   "abi": [],
-  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f30073000000000000000000000000000000000000000030146060604052600080fd00a165627a7a723058208e146a6618a39487c6da489719727592f9c0c7fc36dbddf46c46c78155cc0dd30029",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146060604052600080fd00a165627a7a723058208e146a6618a39487c6da489719727592f9c0c7fc36dbddf46c46c78155cc0dd30029",
+  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f30073000000000000000000000000000000000000000030146060604052600080fd00a165627a7a72305820de62ccf1f2a46a58af3ef3c8e0d99ce74709771d5022049cd66de6be2f29c76f0029",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146060604052600080fd00a165627a7a72305820de62ccf1f2a46a58af3ef3c8e0d99ce74709771d5022049cd66de6be2f29c76f0029",
   "sourceMap": "116:623:27:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
   "deployedSourceMap": "116:623:27:-;;;;;;;;",
   "source": "pragma solidity ^0.4.21;\n\n/**\n * @title SafeMath\n * @dev Math operations with safety checks that throw on error\n */\nlibrary SafeMath {\n    function mul(uint256 a, uint256 b) internal pure returns (uint256) {\n        if (a == 0) {\n            return 0;\n        }\n        uint256 c = a * b;\n        assert(c / a == b);\n        return c;\n    }\n    function div(uint256 a, uint256 b) internal pure returns (uint256) {\n        uint256 c = a / b;\n        return c;\n    }\n    function sub(uint256 a, uint256 b) internal pure returns (uint256) {\n        assert(b <= a);\n        return a - b;\n    }\n    function add(uint256 a, uint256 b) internal pure returns (uint256) {\n        uint256 c = a + b;\n        assert(c >= a);\n        return c;\n    }\n}\n",
-  "sourcePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/SafeMath.sol",
+  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/SafeMath.sol",
   "ast": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/SafeMath.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/SafeMath.sol",
     "exportedSymbols": {
       "SafeMath": [
         11189
@@ -1237,7 +1237,7 @@
     "src": "0:740:27"
   },
   "legacyAST": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/SafeMath.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/SafeMath.sol",
     "exportedSymbols": {
       "SafeMath": [
         11189
@@ -2471,5 +2471,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-28T16:03:35.616Z"
+  "updatedAt": "2018-05-29T10:33:34.865Z"
 }

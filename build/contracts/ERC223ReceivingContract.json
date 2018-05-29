@@ -29,9 +29,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.21;\n\n/*\n* Contract that is working with ERC223 tokens\n*/\ncontract ERC223ReceivingContract {\n    function tokenFallback(address _from, uint _value, bytes _data) public;\n}\n",
-  "sourcePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/ERC223ReceivingContract.sol",
+  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/ERC223ReceivingContract.sol",
   "ast": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/ERC223ReceivingContract.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/ERC223ReceivingContract.sol",
     "exportedSymbols": {
       "ERC223ReceivingContract": [
         10928
@@ -180,7 +180,7 @@
     "src": "0:191:24"
   },
   "legacyAST": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/ERC223ReceivingContract.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/ERC223ReceivingContract.sol",
     "exportedSymbols": {
       "ERC223ReceivingContract": [
         10928
@@ -334,5 +334,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-28T16:03:35.933Z"
+  "updatedAt": "2018-05-29T10:33:34.914Z"
 }

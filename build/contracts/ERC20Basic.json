@@ -85,9 +85,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.21;\n\n/**\n * @title ERC20Basic\n * @dev Simpler version of ERC20 interface\n * @dev see https://github.com/ethereum/EIPs/issues/179\n * This code is taken from openZeppelin without any changes.\n */\ncontract ERC20Basic {\n    function totalSupply() public view returns (uint256);\n    function balanceOf(address who) public view returns (uint256);\n    function transfer(address to, uint256 value) public returns (bool);\n    event Transfer(address indexed from, address indexed to, uint256 value);\n}\n",
-  "sourcePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/ERC20Basic.sol",
+  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/ERC20Basic.sol",
   "ast": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/ERC20Basic.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/ERC20Basic.sol",
     "exportedSymbols": {
       "ERC20Basic": [
         11424
@@ -472,7 +472,7 @@
     "src": "0:513:31"
   },
   "legacyAST": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/ERC20Basic.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/ERC20Basic.sol",
     "exportedSymbols": {
       "ERC20Basic": [
         11424
@@ -862,5 +862,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-28T16:03:35.941Z"
+  "updatedAt": "2018-05-29T10:33:34.916Z"
 }

@@ -25,9 +25,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.21;\n\ncontract MigrationAgent\n{\n    function migrateFrom(address _from, uint256 _value) public;\n}\n",
-  "sourcePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
+  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
   "ast": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
     "exportedSymbols": {
       "MigrationAgent": [
         11889
@@ -150,7 +150,7 @@
     "src": "0:118:34"
   },
   "legacyAST": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
     "exportedSymbols": {
       "MigrationAgent": [
         11889
@@ -278,5 +278,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-28T16:03:35.951Z"
+  "updatedAt": "2018-05-29T10:33:34.918Z"
 }

@@ -180,9 +180,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.21;\n\nimport './ERC20Basic.sol';\n\n/**\n * @title ERC20 interface\n * @dev see https://github.com/ethereum/EIPs/issues/20\n * This code is taken from openZeppelin without any changes.\n */\ncontract ERC20 is ERC20Basic {\n    function allowance(address owner, address spender) public view returns (uint256);\n    function transferFrom(address from, address to, uint256 value) public returns (bool);\n    function approve(address spender, uint256 value) public returns (bool);\n    event Approval(address indexed owner, address indexed spender, uint256 value);\n}\n",
-  "sourcePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/ERC20.sol",
+  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/ERC20.sol",
   "ast": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/ERC20.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/ERC20.sol",
     "exportedSymbols": {
       "ERC20": [
         11392
@@ -203,7 +203,7 @@
         "src": "0:24:30"
       },
       {
-        "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/ERC20Basic.sol",
+        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/ERC20Basic.sol",
         "file": "./ERC20Basic.sol",
         "id": 11352,
         "nodeType": "ImportDirective",
@@ -705,7 +705,7 @@
     "src": "0:572:30"
   },
   "legacyAST": {
-    "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/ERC20.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/ERC20.sol",
     "exportedSymbols": {
       "ERC20": [
         11392
@@ -726,7 +726,7 @@
         "src": "0:24:30"
       },
       {
-        "absolutePath": "/home/gitlab-runner/builds/eb462ed4/0/axioma/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/ERC20Basic.sol",
+        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/ERC20Basic.sol",
         "file": "./ERC20Basic.sol",
         "id": 11352,
         "nodeType": "ImportDirective",
@@ -1233,5 +1233,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-28T16:03:35.940Z"
+  "updatedAt": "2018-05-29T10:33:34.916Z"
 }
