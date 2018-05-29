@@ -30,6 +30,7 @@ import NotFound from './pages/not_found/NotFound';
 // Redux Store
 import store from './store';
 import { initWeb3, lockWallet, unlockWallet, changeAddress, web3LostConnection } from './actions/web3';
+import { watchTransactions } from './actions/tx';
 
 // Put ReactDOM.render() to a function because we need to wrap the rendering with web3 detection
 function renderReactDOM() {
@@ -164,6 +165,8 @@ getWeb3
         }
       });
     }, 500);
+
+    store.dispatch(watchTransactions());
 
     renderReactDOM();
   })

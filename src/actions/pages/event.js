@@ -5,6 +5,7 @@ import { formatBalance, denormalizeBalance } from './../../util/token';
 import { toBytesTruffle as toBytes } from '../../util/serialityUtil';
 import appConfig from "../../data/config.json";
 import {refreshBalance} from "../token";
+import {newTx} from "../tx";
 
 export const FETCHED_EVENT = 'FETCHED_EVENT';
 export const FETCHING_ERROR_EVENT = 'FETCHING_ERROR_EVENT';
@@ -215,22 +216,41 @@ export const modalWithdrawApprove = (gasLimit, gasPrice) => {
       const eventBase = contract(EventBaseContract);
       eventBase.setProvider(getState().web3.web3.currentProvider);
       const eventBaseInstance = eventBase.at(getState().event.withdraw.address);
+      let transactionResult;
 
       switch (getState().event.withdraw.type) {
         case 'userBet':
-          await eventBaseInstance.withdrawPrize(getState().event.withdraw.userBet, {
+          transactionResult = await eventBaseInstance.withdrawPrize(getState().event.withdraw.userBet, {
             from: getState().user.address,
             gasPrice: gasPrice,
             gas: gasLimit
           });
 
+          dispatch(
+            newTx(
+              'withdrawPrize_' + getState().event.withdraw.betTx,
+              transactionResult.tx,
+              'withdrawPrize',
+              {betTxHash: getState().event.withdraw.betTx}
+            )
+          );
+
           break;
         case 'eventCreatorReward':
-          await eventBaseInstance.withdrawReward({
+          transactionResult = await eventBaseInstance.withdrawReward({
             from: getState().user.address,
             gasPrice: gasPrice,
             gas: gasLimit
           });
+
+          dispatch(
+            newTx(
+              'withdrawReward_' + eventBaseInstance.address,
+              transactionResult.tx,
+              'withdrawReward',
+              {eventAddress: eventBaseInstance.address}
+            )
+          );
 
           break;
         default:

@@ -12,6 +12,7 @@ import overlayFactory from 'react-bootstrap-table2-overlay';
 import { modalWithdrawShow } from '../../../actions/pages/event';
 import { refreshBalance } from '../../../actions/token';
 import store from '../../../store';
+import { TX_STATUS_DEFAULT, TX_STATUS_REJECTED } from '../../../actions/tx';
 import '../../../styles/components/play_table.scss';
 
 import appConfig from "../../../data/config.json"
@@ -120,11 +121,12 @@ class PlayerWithdraw extends Component {
     }, this.update);
   }
 
-  modalWithdrawShow(event, userBet) {
+  modalWithdrawShow(event, userBet, betTx) {
     const withdraw = {
       address: event,
       type: 'userBet',
       userBet,
+      betTx,
     };
 
     this.props.modalWithdrawShow(withdraw);
@@ -382,10 +384,17 @@ class PlayerWithdraw extends Component {
                 sort: false,
                 width: 200,
                 formatter: (cell, row) => {
+                  let txStatus = this.props.txStatuses['withdrawPrize_' + row.tx];
+                  txStatus = txStatus ? txStatus : {status: TX_STATUS_DEFAULT};
+
                   return (
-                    <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index)}}>
-                      {row.hasDefinedResult ? `Withdraw ${cell} TOSS` : `Get back ${cell} TOSS`}
-                    </span>
+                    (txStatus.status === TX_STATUS_REJECTED || txStatus.status === TX_STATUS_DEFAULT)
+                      ? <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index, row.tx)}}>
+                        {row.hasDefinedResult ? `Withdraw ${cell} TOSS` : `Get back ${cell} TOSS`}
+                      </span>
+                      : <span className="btn btn-primary" disabled="disabled">
+                        {row.hasDefinedResult ? `Withdraw ${cell} TOSS` : `Get back ${cell} TOSS`}
+                      </span>
                   );
                 }
               },
@@ -436,6 +445,7 @@ function mapStateToProps(state) {
     locale: _.find(state.locale.languages, (l) => l.active).code,
     esClient: state.elastic.client,
     withdrawApproved: state.event.withdrawApproved,
+    txStatuses: state.tx.txStatuses,
   };
 }
 
