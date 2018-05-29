@@ -21,12 +21,12 @@
     "withdraw": "Withdraw"
   },
   "errors": {
-    "denied_transaction": "You have denied transaction",
-    "unexpected_error": "There have been an unexpected error. Please try again!"
+    "denied_transaction": "Transaction is denied.",
+    "unexpected_error": "An error. Please try again!"
   },
   "validation": {
-    "required": "Is required",
-    "min_length": "This value is too short. It should have ${ min } character or more.",
+    "required": "Required",
+    "min_length": "This value is too short. It should has ${ min } character or more.",
     "range": "This value should be between ${ min } and ${ max } or less",
     "to_small": "This value should be more than ${ value } TOSS",
     "to_big": "This value should be less than ${ value } TOSS",
@@ -53,10 +53,10 @@
   },
   "pages": {
     "home": {
-      "title": "Good to Go!"
+      "title": "Start!"
     },
     "login": {
-      "error": "Error while login with this address"
+      "error": "An error while login with this address"
     },
     "wallet": {
       "send": {
@@ -69,8 +69,8 @@
         "currency_balance": "${ currency } balance",
         "gas_limit": "Gas limit",
         "gas_price": "Gas price",
-        "unexpected_error": "There have been an unexpected error. Please try again!",
-        "user_denied_tx": "You have denied transaction."
+        "unexpected_error": "An error. Please try again!",
+        "user_denied_tx": "The transaction is denied."
       },
       "info": {
         "your_balance": "Your balance"
@@ -87,12 +87,12 @@
       "header": "Event results"
     },
     "new_event": {
-      "saved": "Event successfully saved",
+      "saved": "Event is successfully saved",
       "low_balance": "Your balance should be more than 1 Toss",
       "gas_limit": "Gas limit",
       "gas_price": "Gas price",
       "sync_whitelist": "Please sync whitelist",
-      "estimate_gas_error": "Error of calculation estimate gas",
+      "estimate_gas_error": "Error of calculation gas estimation",
       "fee": "Fee",
       "form": {
         "language": "Language",
@@ -103,19 +103,23 @@
         "submit": "Submit",
         "tags": {
           "label": "Tags",
-          "error": "You should add at least one tag"
+          "error": "Please add at least one tag"
         },
         "dates": {
           "date_start": "Start time",
           "date_end": "End time",
-          "help": "Select your own local time of an event"
+          "help": "Select your own local time of an event",
+          "errors": {
+            "start_time": "Start date should be after 20 minutes",
+            "end_time": "End date should be after 20 minutes of now and after start time"
+          }
         },
         "description": "Description",
         "source_url": {
-          "label": "Source url",
+          "label": "Url source",
           "add_new": "Add new",
           "remove": "Remove",
-          "error": "You should add at least one source"
+          "error": "Please add at least one source"
         },
         "results": {
           "label": "Results",
@@ -125,11 +129,7 @@
           "remove": "Remove",
           "move_up": "Up",
           "move_down": "Down",
-          "error": "You should add at least two results"
-        },
-        "errors": {
-          "start_time": "Start date should be after 20 minutes",
-          "end_time": "End date should be after 20 minutes of now and after start time"
+          "error": "Please add at least two results"
         }
       },
       "modal": {
@@ -141,7 +141,7 @@
       "more": "More",
       "empty": "No results",
       "loading": "Loading...",
-      "search": "Search for...",
+      "search": "Searching for...",
       "columns": {
         "name": "Name",
         "tags": "Tags",
@@ -175,16 +175,16 @@
       "newBet": "Add bet",
       "bet_amount": "Amount of the bet",
       "your_bet": "Your bet",
-      "saved": "Bet successfully added",
-      "estimate_gas_error": "Error of calculation estimate gas",
+      "saved": "Bet is successfully added",
+      "estimate_gas_error": "Error of calculation gas estimation",
       "modal_resolve_title": "Resolve result",
       "resolve_approved": "Result approved",
-      "did_not_happen": "Did't happen",
+      "did_not_happen": "Did not happen",
       "errors": {
         "bidding": {
           "time_is_over": "Time is over",
-          "invalid_status": "Invalid event status for adding bets",
-          "not_enough_tokens": "Not enough tokens for betting"
+          "invalid_status": "Invalid status",
+          "not_enough_tokens": "Not enough tokens to place the bet"
         },
         "resolve": {
           "need_finished": "Need finished status for resolve",
@@ -199,7 +199,7 @@
         "start_time": "Start date",
         "end_time": "End date",
         "description": "Description",
-        "source_url": "Source url",
+        "source_url": "Url source",
         "tags": "Tags"
       },
       "states": {
@@ -234,5 +234,4 @@
     "economy": "Economy",
     "weather": "Weather"
   }
-
 }
