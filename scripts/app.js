@@ -1,5 +1,4 @@
 import appConfig from '../src/data/config.json';
-import appPrivateConfig from '../src/data/private_config.json';
 
 import fs from 'fs';
 import path from 'path';
