@@ -110,8 +110,8 @@
           "date_end": "End time",
           "help": "Select your own local time of an event",
           "errors": {
-            "start_time": "Start date should be after 20 minutes",
-            "end_time": "End date should be after 20 minutes of now and after start time"
+            "start_time": "The event (date and time) should not start earlier than in 20 minutes",
+            "end_time": "End date and time should be 20 minutes later than now and later than start time"
           }
         },
         "description": "Description",
@@ -168,7 +168,7 @@
       "my_bets": "My bets",
       "my_events": "My events",
       "modal_withdraw_title": "Withdraw",
-      "withdraw_approved": "Withdraw approved"
+      "withdraw_approved": "Withdrawal approved"
     },
     "event": {
       "fetching": "Loading event information...",
@@ -224,7 +224,7 @@
       "amount": "Amount",
       "add": "Add",
       "submitQueryError": "Please, try again later",
-      "fetchingTransaction": "Transaction <span class='alert-link'>${ txHash }</span> is pending.",
+      "fetchingTransaction": "Transaction <span class='alert-link'>${ txHash }</span> is processing.",
       "successTransaction": "Transaction completed successfully"
     }
   },
