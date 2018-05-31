@@ -7,10 +7,7 @@ pragma solidity ^0.4.2;
  */
 
 contract TypesToBytes {
- 
-    function TypesToBytes() internal {
-        
-    }
+
     function addressToBytes(uint _offst, address _input, bytes memory _output) internal pure {
 
         assembly {
