@@ -112,7 +112,7 @@
         },
         "description": "Description",
         "source_url": {
-          "label": "Source url",
+          "label": "Sources",
           "add_new": "Add new",
           "remove": "Remove",
           "error": "You should add at least one source"
@@ -199,7 +199,7 @@
         "start_time": "Start date",
         "end_time": "End date",
         "description": "Description",
-        "source_url": "Source url",
+        "source_url": "Sources",
         "tags": "Tags"
       },
       "states": {
