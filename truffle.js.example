@@ -2,10 +2,12 @@
 require('babel-register');
 const Web3 = require('web3');
 const HDWalletProvider = require('truffle-hdwallet-provider');
+const path = require('path');
 
 const mnemonic = 'ROPSTEN_MNEMONIC';
 
 module.exports = {
+  contracts_build_directory: path.join(__dirname, 'build'),
   networks: {
     development: {
       gas: 6721975,

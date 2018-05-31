@@ -118,7 +118,7 @@ function getGasPrices(web3) {
 
       resolve({
         min: minGasPrice,
-        avg: avgGasPrice,
+        avg: avgGasPrice < 21000000000 ? 21000000000 : avgGasPrice,
         max: maxGasPrice,
       });
     })

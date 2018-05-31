@@ -5,6 +5,7 @@ import Config from 'truffle-config';
 import Resolver from 'truffle-resolver';
 import log4js from 'log4js';
 import callAsync from '../src/util/web3Util';
+import { denormalizeBalance } from '../src/util/token';
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -76,6 +77,6 @@ logger.level = 'debug';
   await token.setUnpausedWallet(main.address, true, {from: accounts[0]});
   await token.grantToSetUnpausedWallet(main.address, true, {from: accounts[0]});
 
-  await token.mint(accounts[0], 10000000000000, {from: accounts[0]});
+  await token.mint(accounts[0], denormalizeBalance(100000), {from: accounts[0]});
 
 })(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error); });

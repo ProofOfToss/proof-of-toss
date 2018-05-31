@@ -20,12 +20,7 @@ contract Main is ERC223ReceivingContract, Seriality {
         _;
     }
 
-    function transferOwnership(address newOwner) public onlyOwner {
-        require(newOwner != address(0));
-        owner = newOwner;
-    }
-
-    function Main(address _token, address _whitelist, address _eventBase) {
+    constructor(address _token, address _whitelist, address _eventBase) public {
         owner = msg.sender;
 
         token = Token(_token);
@@ -33,13 +28,18 @@ contract Main is ERC223ReceivingContract, Seriality {
         eventBase = EventBase(_eventBase);
     }
 
-    function getToken() constant returns (address) {
+    function transferOwnership(address newOwner) public onlyOwner {
+        require(newOwner != address(0));
+        owner = newOwner;
+    }
+
+    function getToken() public constant returns (address) {
         return address(token);
     }
 
     event NewEvent(address indexed eventAddress, uint64 deposit, bytes eventData);
 
-    function tokenFallback(address _from, uint _value, bytes memory _data) {
+    function tokenFallback(address _from, uint _value, bytes memory _data) public {
         token.transfer(newEvent(_from, uint64(_value), _data), _value);
     }
 
@@ -77,7 +77,7 @@ contract Main is ERC223ReceivingContract, Seriality {
         // bypass tagsCount
         offset -= 1; // sizeOfUint(8);
 
-            EventBase _lastEvent = EventBase(address(new Event(address(eventBase))));
+        EventBase _lastEvent = EventBase(address(new Event(address(eventBase))));
 
         _lastEvent.init(address(token), address(whitelist), _creator, _deposit, _startDate, _endDate, _resultsCount);
 

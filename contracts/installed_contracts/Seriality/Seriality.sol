@@ -12,7 +12,4 @@ import "./SizeOf.sol";
 
 contract Seriality is BytesToTypes, TypesToBytes, SizeOf {
 
-    function Seriality() public {
-
-    }
 }

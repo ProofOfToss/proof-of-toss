@@ -70,16 +70,14 @@
     "webpack-dev-server": "1.16.2",
     "webpack-manifest-plugin": "1.1.0",
     "whatwg-fetch": "1.0.0",
-    "aws-sdk": "^2.194.0",
     "glob": "^7.1.2",
     "redux-logger": "^3.0.6"
   },
   "dependencies": {
     "abi-decoder": "^1.1.0",
-    "aws-sdk": "^2.192.0",
+    "aws-sdk": "^2.194.0",
     "babel-cli": "^6.26.0",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "bignumber.js": "^6.0.0",
+    "bignumber.js": "^7.2.1",
     "bootstrap-tagsinput": "^0.7.1",
     "compressjs": "^1.0.3",
     "elasticsearch": "^14.1.0",
@@ -111,7 +109,8 @@
     "truffle-resolver": "^4.0.1",
     "uport-connect": "^0.6.1",
     "valuelink": "^1.5.4",
-    "web3": "^0.20.3"
+    "web3": "^0.20.3",
+    "hoek": "^4.2.1"
   },
   "scripts": {
     "start_app": "babel-node scripts/app.js",
