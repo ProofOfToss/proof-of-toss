@@ -5,7 +5,6 @@
 .idea/
 snippets/
 build/
-build_prod/
 deploy.sh
 deploy-aws.sh
 deploy-demo.sh
