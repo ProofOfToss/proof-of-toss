@@ -153,9 +153,9 @@ deploy_production:
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
     # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
-    # The results are saved in build dir which is kept in the repository.
-#    - mkdir $CI_PROJECT_DIR/build
-#    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
+    # The results are saved in build_prod dir which is kept in the repository.
+    - mkdir $CI_PROJECT_DIR/build
+    - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
 #    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
     - echo "Deloy to production server"
@@ -180,9 +180,9 @@ deploy_production_reindex:
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
     # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
-    # The results are saved in build dir which is kept in the repository.
-#    - mkdir $CI_PROJECT_DIR/build
-#    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
+    # The results are saved in build_prod dir which is kept in the repository.
+    - mkdir $CI_PROJECT_DIR/build
+    - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
 #    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
     - echo "Deloy to production server"
@@ -207,9 +207,9 @@ deploy_production_contracts:
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
     # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
-    # The results are saved in build dir which is kept in the repository.
-#    - mkdir $CI_PROJECT_DIR/build
-#    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
+    # The results are saved in build_prod dir which is kept in the repository.
+    - mkdir $CI_PROJECT_DIR/build
+    - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
 #    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
     - npm run build
     - echo "Deloy to production server"
@@ -235,10 +235,8 @@ deploy_production_full:
     - npm install
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
-    # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
-    # The results are saved in build dir which is kept in the repository.
-#    - mkdir $CI_PROJECT_DIR/build
-#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate --reset
+    - mkdir $CI_PROJECT_DIR/build
+    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate --reset
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
