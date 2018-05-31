@@ -32,8 +32,6 @@ const esClient = new AwsEsPublicClient(
   { log: 'error' },
   appConfig.elasticsearch.esNode,
   appConfig.elasticsearch.region,
-  /*appPrivateConfig.elasticsearch.accessKeyId,
-  appPrivateConfig.elasticsearch.secretAccessKey,*/
   appConfig.elasticsearch.useSSL
 );
 

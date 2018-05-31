@@ -37,7 +37,7 @@ contract SerialityTest is Seriality {
         intToBytes(offset, out1, buffer);
         offset -= sizeOfInt(256);
 
-        Sample1Serializing(buffer);
+        emit Sample1Serializing(buffer);
     }
 
     function testSample1(bytes memory buffer) public returns(int n1, int8 n2, uint24 n3, string n4,string n5) {
@@ -70,7 +70,7 @@ contract SerialityTest is Seriality {
 
         n1 = bytesToInt256(offset, buffer);
 
-        Sample1(n1, n2, n3, n4, n5);
+        emit Sample1(n1, n2, n3, n4, n5);
     }
 
     event Sample2(int8 n1, int24 n2, uint32 n3, int128 n4, address n5, address n6);
@@ -105,7 +105,7 @@ contract SerialityTest is Seriality {
 
         n6 = bytesToAddress(offset, buffer);
 
-        Sample2(n1, n2, n3, n4, n5, n6);
+        emit Sample2(n1, n2, n3, n4, n5, n6);
     }
 
 
@@ -116,6 +116,6 @@ contract SerialityTest is Seriality {
 
         n1 = bytesToAddress(offset, buffer);
 
-        Sample3(n1, buffer);
+        emit Sample3(n1, buffer);
     }
 }
