@@ -6,7 +6,8 @@ const initialState = {
   save_error: false,
   saved: false,
   showConfirmModal: false,
-  formData: {}
+  formData: {},
+  eventAddress: null
 };
 
 const newEventReducer = (state = initialState, action) => {
@@ -43,6 +44,7 @@ const newEventReducer = (state = initialState, action) => {
         ...state,
         saving: false,
         saved: true,
+        eventAddress: action.payload,
         formData: {}
       };
 
