@@ -4,6 +4,7 @@
 .gradle/
 .idea/
 snippets/
+build/
 deploy.sh
 deploy-aws.sh
 deploy-demo.sh
