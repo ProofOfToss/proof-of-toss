@@ -6,7 +6,7 @@ contract Event {
     EventBase public base;
     address public owner;
 
-    function Event(address _base) {
+    constructor(address _base) public {
         owner = msg.sender;
         base = EventBase(_base);
     }

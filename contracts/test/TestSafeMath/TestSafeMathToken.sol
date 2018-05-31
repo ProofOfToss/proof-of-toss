@@ -17,7 +17,7 @@ contract TestSafeMathToken {
         balanceOf[_user] += _value;
     }
 
-    function transfer(address to, uint value) {
+    function transfer(address to, uint value) public {
         balanceOf[msg.sender] = balanceOf[msg.sender].sub(value);
         balanceOf[to] = balanceOf[to].add(value);
     }
