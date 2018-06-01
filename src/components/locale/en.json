@@ -168,6 +168,8 @@
       "my_bets": "My bets",
       "my_events": "My events",
       "modal_withdraw_title": "Withdraw",
+      "modal_event_data": "Event data",
+      "modal_fees_data": "Fees data",
       "withdraw_approved": "Withdraw approved"
     },
     "event": {
@@ -200,7 +202,8 @@
         "end_time": "End date",
         "description": "Description",
         "source_url": "Source url",
-        "tags": "Tags"
+        "tags": "Tags",
+        "resolved_result": "Resolved result"
       },
       "states": {
         "state_0": "Created",

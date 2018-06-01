@@ -157,6 +157,8 @@
       "my_bets": "My bets",
       "my_events": "My events",
       "modal_withdraw_title": "Withdraw",
+      "modal_event_data": "Данные о событии",
+      "modal_fees_data": "Данные о комиссии",
       "withdraw_approved": "Withdraw approved"
     },
     "event": {
@@ -179,7 +181,8 @@
         "end_time": "Время окончания",
         "description": "Описание",
         "source_url": "Источник результата",
-        "tags": "Тэги"
+        "tags": "Тэги",
+        "resolved_result": "Разрешенный результат"
       },
       "result": {
         "name": "Результат",
