@@ -165,7 +165,7 @@ class EventForm extends Component {
 
         <ResultsField onChange={this.handleFieldsChange} showErrors={this.state.showErrors} isOperatorEvent={false} />
 
-        <Buttons deposit={this.state.formData.deposit} />
+        <Buttons />
 
       </form>
 

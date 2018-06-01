@@ -10,9 +10,13 @@ class BaseModal extends Component {
     global.jQuery(ReactDOM.findDOMNode(this)).on('hidden.bs.modal', this.props.handleHideModal);
   }
 
+  componentWillUnmount() {
+    global.jQuery(this.modal).modal('hide');
+  }
+
   render() {
     return (
-      <div className="modal fade in">
+      <div className="modal fade in" ref={(input) => {this.modal = input }}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">

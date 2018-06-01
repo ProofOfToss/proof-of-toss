@@ -87,7 +87,7 @@
       "header": "Event results"
     },
     "new_event": {
-      "saved": "Event successfully saved",
+      "saved": "Event successfully saved. You will be redirected to the event page after 5 seconds.",
       "low_balance": "Your balance should be more than 1 Toss",
       "gas_limit": "Gas limit",
       "gas_price": "Gas price",
