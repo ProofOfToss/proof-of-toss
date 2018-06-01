@@ -26,6 +26,7 @@
     "range": "This value should be between ${ min } and ${ max } or less",
     "to_small": "This value should be more than ${ value } TOSS",
     "to_big": "This value should be less than ${ value } TOSS",
+    "invalid_address": "Неправильный адрес",
     "token": {
       "sum_is_nan": "Sum should be a number",
       "sum_is_too_small": "Sum should be >= 0.0001 TOSS",
