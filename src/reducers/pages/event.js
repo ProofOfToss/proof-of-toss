@@ -15,6 +15,7 @@ const initialState = {
   eventData: {},
   newBetData: {},
   showNewBetModal: false,
+  showWithdrawModal: false,
   newBetSaving: false,
   newBetSaved: false,
   newBetError: false,
@@ -137,7 +138,8 @@ const eventReducer = (state = initialState, action) => {
         withdrawApproving: false,
         withdrawApproved: false,
         withdrawApproveError: false,
-        withdraw: {}
+        withdraw: {},
+        eventData: {}
       };
 
     case MODAL_WITHDRAW_APPROVING_EVENT:
