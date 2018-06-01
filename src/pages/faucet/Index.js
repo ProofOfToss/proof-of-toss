@@ -32,7 +32,7 @@ class Index extends Component {
     event.preventDefault();
 
     if (this.isValid()) {
-      const faucetUrl = `${config.faucetUrl}?account=${this.state.address}&sum=${denormalizeBalance(this.state.amount)}`;
+      const faucetUrl = `${config.faucetUrl}?account=${this.state.address}&sum=${denormalizeBalance(this.state.amount).toString()}`;
       this.props.submitQuery(faucetUrl);
     } else {
       this.setState({showErrors: true});

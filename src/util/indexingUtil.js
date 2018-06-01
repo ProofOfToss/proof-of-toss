@@ -4,8 +4,7 @@ import callAsync from './web3Util';
 import util from 'util';
 import { formatBalance } from './token'
 import { decodeEventMethod } from './web3Util'
-
-const BigNumber = require('bignumber.js');
+import BigNumber from './bignumber';
 
 export const tagMapping = {
   'mappings': {
