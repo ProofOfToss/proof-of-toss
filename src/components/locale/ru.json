@@ -102,7 +102,7 @@
         "description": "Description",
         "source_url": {
           "label": "Source url",
-          "add_new": "Add new",
+          "add_new": "Add",
           "remove": "Remove",
           "error": "You should add at least one source"
         },
@@ -110,7 +110,7 @@
           "label": "Results",
           "name": "Name",
           "coefficient": "Coefficient",
-          "add_new": "Add new",
+          "add_new": "Add",
           "remove": "Remove",
           "move_up": "Up",
           "move_down": "Down",
