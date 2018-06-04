@@ -2,10 +2,10 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { getTranslate } from 'react-localize-redux';
-import DatePicker from "../form/DatePicker";
 import 'react-datetime/css/react-datetime.css'
+import Datetime from "react-datetime";
 
-export const DEFAULT_START_TIME = moment().add(1, 'hours');
+export const DEFAULT_START_TIME = moment();
 export const DEFAULT_END_TIME = DEFAULT_START_TIME.clone();
 
 class DateFields extends Component {
@@ -115,34 +115,36 @@ class DateFields extends Component {
 
   render() {
     return <Fragment>
-      <div className={"form-group" + (this.showStartTimeError() ? ' has-error' : '')}>
-        <label htmlFor="event[date_start]">{this.props.translate('pages.new_event.form.dates.date_start')}*<br />
-          <small>{this.props.translate('pages.new_event.form.dates.help')}</small>
-        </label>
-        <DatePicker
-          isValidDate={(currentDate) => {return DateFields.isValidStartDate(currentDate)}}
-          onChange={this.onChangeStartTime}
-          timeConstraints={this.calculateStartTimeConstraints()}
-          timeFormat="H:mm"
-          value={this.state.formData.startTime}
-          error={this.showStartTimeError() ? this.props.translate('pages.new_event.form.errors.start_time') : false} />
-      </div>
-
-      <div className={"form-group" + (this.showEndTimeError() ? ' has-error' : '')}>
-        <label htmlFor="event[date_end]">{this.props.translate('pages.new_event.form.dates.date_end')}*<br />
-          <small>{this.props.translate('pages.new_event.form.dates.help')}</small>
-        </label>
-        <DatePicker
-          isValidDate={(currentDate) => {return DateFields.isValidEndDate(currentDate, this.state.formData.endTime)}}
-          onChange={this.onChangeEndTime}
-          timeConstraints={this.calculateEndTimeConstraints()}
-          timeFormat="H:mm" inputProps={this.getEndDateInputProps()}
-          value={this.state.formData.endTime}
-          error={this.showEndTimeError() ? this.props.translate('pages.new_event.form.errors.end_time') : false}
-         />
+      <div className="row">
+        <div className="col-md-6">
+          <div className="form-group">
+            <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_start') }</label>
+            <Datetime
+              isValidDate={(currentDate) => {return DateFields.isValidStartDate(currentDate)}}
+              onChange={this.onChangeStartTime}
+              timeConstraints={this.calculateStartTimeConstraints()}
+              value={this.state.formData.startTime}
+              timeFormat={false}
+              error={this.showStartTimeError() ? this.props.translate('pages.play.columns.date_start') : false} />
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="form-group">
+            <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_end') }</label>
+            <Datetime
+              isValidDate={(currentDate) => {return DateFields.isValidEndDate(currentDate, this.state.formData.endTime)}}
+              onChange={this.onChangeEndTime}
+              timeConstraints={this.calculateEndTimeConstraints()}
+              inputProps={this.getEndDateInputProps()}
+              value={this.state.formData.endTime}
+              timeFormat={false}
+              error={this.showEndTimeError() ? this.props.translate('pages.play.columns.date_end') : false}
+            />
+          </div>
+        </div>
       </div>
     </Fragment>
-    ;
+      ;
   }
 }
 
