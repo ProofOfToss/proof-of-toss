@@ -8,6 +8,7 @@ const initialState = {
   showConfirmModal: false,
   formData: {},
   modalId: null,
+  eventAddress: null
 };
 
 const newEventReducer = (state = initialState, action) => {
@@ -47,6 +48,7 @@ const newEventReducer = (state = initialState, action) => {
         ...state,
         saving: false,
         saved: true,
+        eventAddress: action.payload,
         formData: {}
       } : state;
 

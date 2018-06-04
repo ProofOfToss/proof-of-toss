@@ -20,6 +20,7 @@ const initialState = {
   withdrawModalId: null,
 
   showNewBetModal: false,
+  showWithdrawModal: false,
   newBetSaving: false,
   newBetSaved: false,
   newBetError: false,
@@ -150,6 +151,7 @@ const eventReducer = (state = initialState, action) => {
         withdrawApproved: false,
         withdrawApproveError: false,
         withdraw: {},
+        eventData: {},
         withdrawModalId: null
       };
 

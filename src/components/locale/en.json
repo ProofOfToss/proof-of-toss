@@ -56,7 +56,11 @@
       "title": "Good to Go!"
     },
     "login": {
-      "error": "Error while login with this address"
+      "error": "Error while login with this address",
+      "not_connted_to_rpc": "Looks like that MetaMask is not connected to RPC server. Please check the connection.",
+      "please_install_metamask": "Please install or activate MetaMask extension.",
+      "i_have_enabled_metamask": "I have installed and activated it!",
+      "metamask_locked": "MetaMask is disabled. Please enable it to authorize!"
     },
     "wallet": {
       "send": {
@@ -87,7 +91,7 @@
       "header": "Event results"
     },
     "new_event": {
-      "saved": "Event successfully saved",
+      "saved": "Event successfully saved. You will be redirected to the event page after 5 seconds.",
       "low_balance": "Your balance should be more than 1 Toss",
       "gas_limit": "Gas limit",
       "gas_price": "Gas price",
@@ -113,7 +117,7 @@
         "description": "Description",
         "source_url": {
           "label": "Source url",
-          "add_new": "Add new",
+          "add_new": "Add",
           "remove": "Remove",
           "error": "You should add at least one source"
         },
@@ -121,7 +125,7 @@
           "label": "Results",
           "name": "Name",
           "coefficient": "Coefficient",
-          "add_new": "Add new",
+          "add_new": "Add",
           "remove": "Remove",
           "move_up": "Up",
           "move_down": "Down",
@@ -168,6 +172,8 @@
       "my_bets": "My bets",
       "my_events": "My events",
       "modal_withdraw_title": "Withdraw",
+      "modal_event_data": "Event data",
+      "modal_fees_data": "Fees data",
       "withdraw_approved": "Withdraw approved"
     },
     "event": {
@@ -200,7 +206,8 @@
         "end_time": "End date",
         "description": "Description",
         "source_url": "Source url",
-        "tags": "Tags"
+        "tags": "Tags",
+        "resolved_result": "Resolved result"
       },
       "states": {
         "state_0": "Created",
