@@ -4,7 +4,7 @@ import { getTranslate } from 'react-localize-redux';
 
 import { modalResolveShow } from '../../../actions/pages/event';
 import ResultItem from './ResultItem';
-import { STATUS_FINISHED } from "../../../util/eventUtil";
+import { STATUS_FINISHED, STATUS_CLOSED } from "../../../util/eventUtil";
 
 import ModalResolve from './ModalResolve';
 
@@ -46,8 +46,15 @@ class ResultsList extends Component {
         />
       }, this)}
       </tbody></table>
+
       {this.props.status === STATUS_FINISHED &&
         <div href="#" className="btn btn-primary" onClick={this.didNotHappen}>
+          {this.props.translate('pages.event.did_not_happen')}
+        </div>
+      }
+
+      {this.props.status === STATUS_CLOSED && this.props.resolvedResult === 254 &&
+        <div className="did_not_happen_success">
           {this.props.translate('pages.event.did_not_happen')}
         </div>
       }
