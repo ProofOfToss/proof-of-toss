@@ -13,6 +13,7 @@ import '../../styles/components/play_table.scss';
 
 import appConfig from "../../data/config.json"
 import { myBetsConditions, bidInfo } from '../../util/searchUtil';
+import { formatWithdrawal } from '../../util/token';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -364,6 +365,7 @@ class MyBets extends Component {
                   dataField: "prize",
                   sort: false,
                   width: 200,
+                  formatter: (cell) => formatWithdrawal(cell)
                 },
                 {
                   text: '',
