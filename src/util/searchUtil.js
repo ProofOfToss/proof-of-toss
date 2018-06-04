@@ -46,6 +46,8 @@ function filterEventsConditions(locale, q, fromTimestamp, toTimestamp) {
     });
   }
 
+  console.log(fromTimestamp, JSON.stringify(conditions));
+
   return {conditions, shouldConditions};
 }
 
