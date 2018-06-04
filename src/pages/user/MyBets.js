@@ -274,7 +274,7 @@ class MyBets extends Component {
 
           <form className="form" onSubmit={this.handleSubmit}>
 
-            <DateFields onChange={this.handleFieldsChange} />
+            <DateFields onChange={this.handleFieldsChange} defaultStartTime={this.state.fromDate} defaultEndTime={this.state.toDate}/>
 
             <div className="row">
               <div className="col-md-6">

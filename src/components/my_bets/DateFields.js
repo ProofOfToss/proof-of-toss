@@ -5,9 +5,6 @@ import { getTranslate } from 'react-localize-redux';
 import 'react-datetime/css/react-datetime.css'
 import Datetime from "react-datetime";
 
-export const DEFAULT_START_TIME = moment();
-export const DEFAULT_END_TIME = DEFAULT_START_TIME.clone();
-
 class DateFields extends Component {
   constructor(props) {
     super(props);
@@ -20,8 +17,8 @@ class DateFields extends Component {
 
     this.state = {
       formData: {
-        startTime: DEFAULT_START_TIME,
-        endTime: DEFAULT_END_TIME
+        startTime: props.defaultStartTime || undefined,
+        endTime: props.defaultEndTime || undefined
       },
       startTimeError: false,
       endTimeError: false
@@ -34,7 +31,7 @@ class DateFields extends Component {
     this.setState({
       formData: {
         ...this.state.formData,
-        startTime: currentDate,
+        startTime: currentDate ? currentDate : undefined,
         endTime: endTime,
       }
     });
@@ -49,7 +46,7 @@ class DateFields extends Component {
     this.setState({
       formData: {
         ...this.state.formData,
-        endTime: currentDate.clone()
+        endTime: currentDate ? currentDate.clone() : undefined
       }
     });
 
@@ -57,11 +54,11 @@ class DateFields extends Component {
   }
 
   static isValidStartDate(currentDate, unit = 'day') {
-    return currentDate.isSameOrAfter(moment().add(20, 'minute'), unit);
+    return !!currentDate && currentDate.isSameOrAfter(moment().add(20, 'minute'), unit);
   }
 
-  static isValidEndDate(currentDate, startDate, unit = 'day') {
-    return DateFields.isValidStartDate(startDate, unit) && currentDate.isSameOrAfter(startDate, unit);
+  static isValidEndDate(currentDate, startDate, endDate, unit = 'day') {
+    return !startDate || (!!currentDate && DateFields.isValidStartDate(startDate, unit) && currentDate.isSameOrAfter(startDate, unit));
   }
 
   showStartTimeError() {
@@ -69,12 +66,12 @@ class DateFields extends Component {
   }
 
   showEndTimeError() {
-    return false === DateFields.isValidEndDate(this.state.formData.endTime, this.state.formData.startTime, 'minute')
+    return false === DateFields.isValidEndDate(this.state.formData.endTime, this.state.formData.startTime, this.state.formData.startTime, 'minute')
       && this.props.showErrors;
   }
 
   calculateStartTimeConstraints() {
-    if(this.state.formData.startTime.isSame(moment(), 'day')) {
+    if(this.state.formData.startTime && this.state.formData.startTime.isSame(moment(), 'day')) {
       return {
         hours: {
           min: moment().hours()
@@ -86,7 +83,7 @@ class DateFields extends Component {
   }
 
   calculateEndTimeConstraints() {
-    if(this.state.formData.endTime.isSame(this.state.formData.startTime, 'day')) {
+    if(this.state.formData.endTime && this.state.formData.endTime.isSame(this.state.formData.startTime, 'day')) {
       let timeConstraints = {
         hours: {
           min: this.state.formData.startTime.hours()
@@ -132,7 +129,7 @@ class DateFields extends Component {
           <div className="form-group">
             <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_end') }</label>
             <Datetime
-              isValidDate={(currentDate) => {return DateFields.isValidEndDate(currentDate, this.state.formData.endTime)}}
+              isValidDate={(currentDate) => {return DateFields.isValidEndDate(currentDate, this.state.formData.endTime, this.state.formData.startTime)}}
               onChange={this.onChangeEndTime}
               timeConstraints={this.calculateEndTimeConstraints()}
               inputProps={this.getEndDateInputProps()}
