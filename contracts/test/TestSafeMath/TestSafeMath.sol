@@ -37,7 +37,7 @@ contract TestSafeMath {
     mapping (address => uint[]) public usersBets;
     mapping (address => Vote) public votes;
 
-    function TestSafeMath() public {
+    constructor() public {
         token = new TestSafeMathToken();
 
         owner = msg.sender;
@@ -191,7 +191,7 @@ contract TestSafeMath {
      * Should be public in real contract
      */
     function withdrawBettor(uint256 betIndex, address user) private returns (uint256) {
-        Bet bet = bets[betIndex];
+        Bet memory bet = bets[betIndex];
 
         assert(bet.bettor == user);
         assert(bet.result == resolvedResult);
@@ -246,13 +246,13 @@ contract TestSafeMath {
     /*-----------------------Withdraw judge----------------------*/
 
     function withdrawVoter(address user) private returns (uint256) {
-        Vote vote = votes[user];
+        Vote memory vote = votes[user];
 
         assert(vote.result == resolvedResult);
 
         uint256 eventCreatorPercent = calculateHalfPercentBetsSum();
         uint64 incorrectVotesSum = calculateIncorrectVotesSum();
-        Result result = possibleResults[vote.result];
+        Result memory result = possibleResults[vote.result];
 
         uint64 votersCorrectSum = result.voteSum;
         uint256 voterReward = 0;
@@ -278,21 +278,21 @@ contract TestSafeMath {
     /**
      * Return 423 tokens
      */
-    function withdrawVoter0() public view returns (uint256) {
+    function withdrawVoter0() public returns (uint256) {
         return withdrawVoter(0x1);
     }
 
     /**
      * Return 846 tokens
      */
-    function withdrawVoter26() public view returns (uint256) {
+    function withdrawVoter26() public returns (uint256) {
         return withdrawVoter(0x26);
     }
 
     /**
     * Throw exception
     */
-    function withdrawVoter46() public view returns (uint256) {
+    function withdrawVoter46() public returns (uint256) {
         return withdrawVoter(0x46);
     }
 

@@ -51,6 +51,11 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
     event Updated(address _contract, bytes _data);
 
+    constructor(address _token) public {
+        owner = msg.sender;
+        token = Token(_token);
+    }
+
     function updated(address _contract, bytes _data) public {
         uint codeLength;
 
@@ -69,11 +74,6 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
     function userBetsCount(address _user) public constant returns(uint) {
         return usersBets[_user].length;
-    }
-
-    function EventBase(address _token) {
-        owner = msg.sender;
-        token = Token(_token);
     }
 
     function init(address _token, address _whitelist, address _creator, uint256 _deposit, uint64 _startDate, uint64 _endDate, uint8 _resultsCount) public {
@@ -132,15 +132,15 @@ contract EventBase is ERC223ReceivingContract, Seriality {
             newBet(result, _value);
 
         } else if (action == 2) {
-            throw; // Not implemented
+            revert(); // Not implemented
         } else if (action == 3) {
-            throw; // Not implemented
+            revert(); // Not implemented
         } else {
-            throw; // Invalid action
+            revert(); // Invalid action
         }
     }
 
-    function getState() constant returns (States) {
+    function getState() public constant returns (States) {
         if(now < startDate) { // time.checkTime(startDate)
             if(bets.length > 0) {
                 return States.Accepted;
@@ -190,7 +190,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         base.updated(address(this), buffer);
     }
 
-    function resolve(uint8 result) stateTransitions {
+    function resolve(uint8 result) public stateTransitions {
         require(whitelist.whitelist(msg.sender) == true);
         require(state == States.Finished);
         require(result < resultsCount || result >= 220);
@@ -202,20 +202,16 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         base.updated(address(this), empty);
     }
 
-    function getUserBets(address _user) view returns (uint[]) {
+    function getUserBets(address _user) public view returns (uint[]) {
         return usersBets[_user];
     }
 
-    function isOperatorEvent() constant returns (bool) {
+    function isOperatorEvent() private pure returns (bool) {
         return false;
     }
 
-    function hasDefinedResult() constant internal returns (bool) {
+    function hasDefinedResult() private constant returns (bool) {
         return resolvedResult < 220;
-    }
-    
-    function isPlayer() constant returns (bool) {
-        return usersBets[tx.origin].length > 0;
     }
 
     function calculateLosersBetSum() private view returns (uint256) {
@@ -258,14 +254,14 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return (betsSum, winnersBetSum, losersBetSum);
     }
  
-    function getPrize(uint _userBet) constant returns (uint256) {
+    function getPrize(uint _userBet) public view returns (uint256) {
         if (state != States.Closed) {
             return 0;
         }
 
         require(_userBet < usersBets[tx.origin].length);
 
-        Bet bet = bets[usersBets[tx.origin][_userBet]];
+        Bet memory bet = bets[usersBets[tx.origin][_userBet]];
 
         if (bet.result == resolvedResult) {
             if (isOperatorEvent()) {
@@ -289,7 +285,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return 0;
     }
 
-    function getRefund(uint _userBet) constant returns (uint256) {
+    function getRefund(uint _userBet) public view returns (uint256) {
         if (state != States.Closed || hasDefinedResult()) {
             return 0;
         }
@@ -299,12 +295,12 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return bets[usersBets[tx.origin][_userBet]].amount;
     }
 
-    function getEventCreatorReward() constant returns (uint256) {
+    function getEventCreatorReward() public view returns (uint256) {
         if (tx.origin != creator) {
             return 0;
         }
 
-        if (state != States.Closed) {
+        if (getState() != States.Closed) {
             return 0;
         }
 
@@ -320,12 +316,12 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return deposit.mul(2);
     }
 
-    function getEventCreatorRefund() constant returns (uint256) {
+    function getEventCreatorRefund() public view returns (uint256) {
         if (tx.origin != creator) {
             return 0;
         }
 
-        if (state != States.Closed || hasDefinedResult()) {
+        if (getState() != States.Closed || hasDefinedResult()) {
             return 0;
         }
 
@@ -338,15 +334,15 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return deposit;
     }
 
-    function getShare(address user) constant returns (uint) {
+    function getShare(address user) public view returns (uint) {
         uint share = 0;
 
         share = share.add(getEventCreatorReward());
         share = share.add(getEventCreatorRefund());
 
-        uint betsCount = usersBets[tx.origin].length;
+        uint betsAmount = usersBets[tx.origin].length;
 
-        for(uint i = 0; i < betsCount; i++) {
+        for(uint i = 0; i < betsAmount; i++) {
             share = share.add(getPrize(i));
             share = share.add(getRefund(i));
         }
@@ -359,12 +355,12 @@ contract EventBase is ERC223ReceivingContract, Seriality {
     mapping(address => uint) public withdraws; // User address => withdrawal timestamp
     uint public lastWithdraw = 0;
 
-    function withdraw() {
-        require(withdraws[msg.sender] == 0);
+    function withdraw() public {
+        require(withdraws[msg.sender] == 0, 'Withdraw already done');
 
         uint256 share = getShare(msg.sender);
 
-        require(share > 0);
+        require(share > 0, 'Share should be > 0');
 
         if (lastWithdraw == 0) {
             // TODO transfer jackpot
@@ -381,7 +377,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
     mapping(address => mapping(uint => uint)) public betWithdraws; // User address => userBet index => withdrawal timestamp
 
-    function withdrawPrize(uint bet) {
+    function withdrawPrize(uint bet) public {
         require(betWithdraws[msg.sender][bet] == 0);
 
         uint share = getPrize(bet).add(getRefund(bet));
@@ -400,7 +396,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
     mapping(address => uint) public rewardWithdraws; // User address => withdrawal timestamp
 
-    function withdrawReward() {
+    function withdrawReward() public {
         require(tx.origin == creator) ;
         require(rewardWithdraws[msg.sender] == 0);
 

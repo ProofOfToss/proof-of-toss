@@ -15,9 +15,6 @@ class ResultsList extends Component {
     super(props);
 
     this.state = {
-      betAmount_0: 0,
-      betAmount_1: 0,
-      betAmount_2: 0,
       showErrors: false,
       errors: {},
       allowBiddingError: null

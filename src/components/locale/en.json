@@ -21,12 +21,12 @@
     "withdraw": "Withdraw"
   },
   "errors": {
-    "denied_transaction": "Transaction is denied.",
+    "denied_transaction": "The transaction is denied.",
     "unexpected_error": "An error. Please try again!"
   },
   "validation": {
     "required": "Required",
-    "min_length": "This value is too short. It should has ${ min } character or more.",
+    "min_length": "This value is too short. It should have ${ min } character or more.",
     "range": "This value should be between ${ min } and ${ max } or less",
     "to_small": "This value should be more than ${ value } TOSS",
     "to_big": "This value should be less than ${ value } TOSS",
@@ -56,7 +56,11 @@
       "title": "Start!"
     },
     "login": {
-      "error": "An error while login with this address"
+      "error": "An error while login with this address",
+      "not_connted_to_rpc": "Looks like that MetaMask is not connected to RPC server. Please check the connection.",
+      "please_install_metamask": "Please install or activate MetaMask extension.",
+      "i_have_enabled_metamask": "I have installed and activated it!",
+      "metamask_locked": "MetaMask is disabled. Please enable it to authorize!"
     },
     "wallet": {
       "send": {
@@ -87,7 +91,7 @@
       "header": "Event results"
     },
     "new_event": {
-      "saved": "Event is successfully saved",
+      "saved": "Event successfully saved. You will be redirected to the event page after 5 seconds.",
       "low_balance": "Your balance should be more than 1 Toss",
       "gas_limit": "Gas limit",
       "gas_price": "Gas price",
@@ -116,8 +120,8 @@
         },
         "description": "Description",
         "source_url": {
-          "label": "Url source",
-          "add_new": "Add new",
+          "label": "Sources",
+          "add_new": "Add",
           "remove": "Remove",
           "error": "Please add at least one source"
         },
@@ -125,7 +129,7 @@
           "label": "Results",
           "name": "Name",
           "coefficient": "Coefficient",
-          "add_new": "Add new",
+          "add_new": "Add",
           "remove": "Remove",
           "move_up": "Up",
           "move_down": "Down",
@@ -168,6 +172,8 @@
       "my_bets": "My bets",
       "my_events": "My events",
       "modal_withdraw_title": "Withdraw",
+      "modal_event_data": "Event data",
+      "modal_fees_data": "Fees data",
       "withdraw_approved": "Withdrawal approved"
     },
     "event": {
@@ -199,8 +205,9 @@
         "start_time": "Start date",
         "end_time": "End date",
         "description": "Description",
-        "source_url": "Url source",
-        "tags": "Tags"
+        "source_url": "Sources",
+        "tags": "Tags",
+        "resolved_result": "Resolved result"
       },
       "states": {
         "state_0": "Created",

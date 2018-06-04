@@ -23,6 +23,7 @@ services:
     mem_limit: 2g
     cap_add:
       - IPC_LOCK
+
   kibana:
     image: docker.elastic.co/kibana/kibana:5.4.0
     container_name: kibana_540
@@ -32,33 +33,24 @@ services:
       - ./kibana.yml:/usr/share/kibana/config/kibana.yml
     ports:
       - 5601:5601
+
   headPlugin:
     image: mobz/elasticsearch-head:5
     container_name: head_540
     ports:
       - 9100:9100
 
-  rsk:
-    build:
-      context: .
-      dockerfile: docker/rsk/Dockerfile
-    expose:
-      - 4444
-    ports:
-      - 50505:50505
-    volumes:
-      - ./docker/rsk/rsk:/etc/rsk
-
   testrpc:
-    image: trufflesuite/ganache-cli:v7.0.0-beta.0
+    image: trufflesuite/ganache-cli:latest
     entrypoint:
       - node
       - ./build/cli.node.js
       - -b=1
       - -a=5
-      - --account=0xca908fc0a71f7f72216d5f21e1073f64b86c8e9f010f5f8c86c21c9115a7ea98,0x65
-      - --account="0xeb2b67a6c57cb0b9502df9514d74fd18a77d57ab87691f6b58bfaa87d1ea3353,0x66"
-      - --account="0x15367f932a858b6e75037340e63dc38e6e0e8367b6bd08d2ae2faba4e165fff8,0x67"
+      - --account=0xda8790fd91894aac54f122810c7e940689eba4248eb82f672d69527451b13ef6,1000000000
+      - --account=0x0272b60d17adb4d0df63b011b9d4fa6fbb6728f14e300807935002dff9b3fd35,1000000000
+      - --account=0x08f2311c2b5dfd63e1486c400b8f43c1f50cd6d64d3d7d0a4dbf87b92c5cbc4e,1000000000
+      - --account=0x0e785b00dde0d36b79c6e0003d3b44dbb88a29fe835b10217ab690a066988197,1000000000
     ports:
       - 8545:8545
 
@@ -70,10 +62,8 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - rsk
       - testrpc
     links:
-      - rsk:rsk
       - testrpc:testrpc
     volumes:
       - ./config:/home/app/config

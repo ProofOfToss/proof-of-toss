@@ -376,7 +376,7 @@ class PlayerWithdraw extends Component {
                 dataField: "coefficient",
                 sort: false,
                 width: 150,
-                formatter: (cell) => parseFloat(cell).toFixed(2),
+                formatter: (cell) => isNaN(parseFloat(cell)) ? '-' : parseFloat(cell).toFixed(2),
               },
               {
                 text: this.props.translate('pages.play.columns.prize'),
