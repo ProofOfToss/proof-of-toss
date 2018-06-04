@@ -21,11 +21,11 @@
     "withdraw": "Withdraw"
   },
   "errors": {
-    "denied_transaction": "You have denied transaction",
-    "unexpected_error": "There have been an unexpected error. Please try again!"
+    "denied_transaction": "The transaction is denied.",
+    "unexpected_error": "An error. Please try again!"
   },
   "validation": {
-    "required": "Is required",
+    "required": "Required",
     "min_length": "This value is too short. It should have ${ min } character or more.",
     "range": "This value should be between ${ min } and ${ max } or less",
     "to_small": "This value should be more than ${ value } TOSS",
@@ -53,10 +53,10 @@
   },
   "pages": {
     "home": {
-      "title": "Good to Go!"
+      "title": "Start!"
     },
     "login": {
-      "error": "Error while login with this address",
+      "error": "An error while login with this address",
       "not_connted_to_rpc": "Looks like that MetaMask is not connected to RPC server. Please check the connection.",
       "please_install_metamask": "Please install or activate MetaMask extension.",
       "i_have_enabled_metamask": "I have installed and activated it!",
@@ -73,8 +73,8 @@
         "currency_balance": "${ currency } balance",
         "gas_limit": "Gas limit",
         "gas_price": "Gas price",
-        "unexpected_error": "There have been an unexpected error. Please try again!",
-        "user_denied_tx": "You have denied transaction."
+        "unexpected_error": "An error. Please try again!",
+        "user_denied_tx": "The transaction is denied."
       },
       "info": {
         "your_balance": "Your balance"
@@ -96,7 +96,7 @@
       "gas_limit": "Gas limit",
       "gas_price": "Gas price",
       "sync_whitelist": "Please sync whitelist",
-      "estimate_gas_error": "Error of calculation estimate gas",
+      "estimate_gas_error": "Error of calculation gas estimation",
       "fee": "Fee",
       "form": {
         "language": "Language",
@@ -107,19 +107,23 @@
         "submit": "Submit",
         "tags": {
           "label": "Tags",
-          "error": "You should add at least one tag"
+          "error": "Please add at least one tag"
         },
         "dates": {
           "date_start": "Start time",
           "date_end": "End time",
-          "help": "Select your own local time of an event"
+          "help": "Select your own local time of an event",
+          "errors": {
+            "start_time": "The event (date and time) should not start earlier than in 20 minutes",
+            "end_time": "End date and time should be 20 minutes later than now and later than start time"
+          }
         },
         "description": "Description",
         "source_url": {
-          "label": "Source url",
+          "label": "Sources",
           "add_new": "Add",
           "remove": "Remove",
-          "error": "You should add at least one source"
+          "error": "Please add at least one source"
         },
         "results": {
           "label": "Results",
@@ -129,11 +133,7 @@
           "remove": "Remove",
           "move_up": "Up",
           "move_down": "Down",
-          "error": "You should add at least two results"
-        },
-        "errors": {
-          "start_time": "Start date should be after 20 minutes",
-          "end_time": "End date should be after 20 minutes of now and after start time"
+          "error": "Please add at least two results"
         }
       },
       "modal": {
@@ -145,7 +145,7 @@
       "more": "More",
       "empty": "No results",
       "loading": "Loading...",
-      "search": "Search for...",
+      "search": "Searching for...",
       "columns": {
         "name": "Name",
         "tags": "Tags",
@@ -174,23 +174,23 @@
       "modal_withdraw_title": "Withdraw",
       "modal_event_data": "Event data",
       "modal_fees_data": "Fees data",
-      "withdraw_approved": "Withdraw approved"
+      "withdraw_approved": "Withdrawal approved"
     },
     "event": {
       "fetching": "Loading event information...",
       "newBet": "Add bet",
       "bet_amount": "Amount of the bet",
       "your_bet": "Your bet",
-      "saved": "Bet successfully added",
-      "estimate_gas_error": "Error of calculation estimate gas",
+      "saved": "Bet is successfully added",
+      "estimate_gas_error": "Error of calculation gas estimation",
       "modal_resolve_title": "Resolve result",
       "resolve_approved": "Result approved",
-      "did_not_happen": "Did't happen",
+      "did_not_happen": "Did not happen",
       "errors": {
         "bidding": {
           "time_is_over": "Time is over",
-          "invalid_status": "Invalid event status for adding bets",
-          "not_enough_tokens": "Not enough tokens for betting"
+          "invalid_status": "Invalid status",
+          "not_enough_tokens": "Not enough tokens to place the bet"
         },
         "resolve": {
           "need_finished": "Need finished status for resolve",
@@ -205,7 +205,7 @@
         "start_time": "Start date",
         "end_time": "End date",
         "description": "Description",
-        "source_url": "Source url",
+        "source_url": "Sources",
         "tags": "Tags",
         "resolved_result": "Resolved result"
       },
@@ -231,7 +231,7 @@
       "amount": "Amount",
       "add": "Add",
       "submitQueryError": "Please, try again later",
-      "fetchingTransaction": "Transaction <span class='alert-link'>${ txHash }</span> is pending.",
+      "fetchingTransaction": "Transaction <span class='alert-link'>${ txHash }</span> is processing.",
       "successTransaction": "Transaction completed successfully"
     }
   },
@@ -241,5 +241,4 @@
     "economy": "Economy",
     "weather": "Weather"
   }
-
 }
