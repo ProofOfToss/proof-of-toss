@@ -37,9 +37,11 @@ class Event extends Component {
 
   render() {
     if(!this.props.fetched) {
-      return <div className='alert alert-info' role='alert'>
-        {this.props.translate('pages.event.fetching')}
-      </div>;
+      return <main className="container event">
+        <div className='alert alert-info' role='alert'>
+          {this.props.translate('pages.event.fetching')}
+        </div>
+      </main>;
     }
 
     return(

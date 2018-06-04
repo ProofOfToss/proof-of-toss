@@ -111,7 +111,9 @@ export const modalAddNewBetClose = () => ({
 
 export const modalAddNewBetAdd = (gasLimit, gasPrice) => {
   return async (dispatch, getState) => {
-    dispatch({type: ADD_NEW_BET_ADDING_EVENT});
+    const modalId = (new Date()).getTime();
+
+    dispatch({type: ADD_NEW_BET_ADDING_EVENT, modalId});
 
     const tokenInstance = (await deployed(getState().web3.web3, 'token')).tokenInstance;
 
@@ -131,7 +133,7 @@ export const modalAddNewBetAdd = (gasLimit, gasPrice) => {
       );
 
       dispatch(refreshBalance(getState().user.address));
-      dispatch({type: ADD_NEW_BET_ADDED_EVENT});
+      dispatch({type: ADD_NEW_BET_ADDED_EVENT, modalId});
     } catch (e) {
       let msg;
       const translate = getTranslate(getState().locale);
@@ -146,7 +148,7 @@ export const modalAddNewBetAdd = (gasLimit, gasPrice) => {
         msg = translate('errors.unexpected_error');
       }
 
-      dispatch({type: ADD_NEW_BET_ERROR_EVENT, error: msg});
+      dispatch({type: ADD_NEW_BET_ERROR_EVENT, error: msg, modalId});
     }
   }
 };
@@ -162,7 +164,9 @@ export const modalResolveClose = (result) => ({
 
 export const modalResolveApprove = (gasLimit, gasPrice) => {
   return async (dispatch, getState) => {
-    dispatch({type: MODAL_RESOLVE_APPROVING_EVENT});
+    const modalId = (new Date()).getTime();
+
+    dispatch({type: MODAL_RESOLVE_APPROVING_EVENT, modalId});
 
     try {
       const contract = require('truffle-contract');
@@ -176,7 +180,7 @@ export const modalResolveApprove = (gasLimit, gasPrice) => {
         gas: gasLimit
       });
 
-      dispatch({type: MODAL_RESOLVE_APPROVED_EVENT});
+      dispatch({type: MODAL_RESOLVE_APPROVED_EVENT, modalId});
     } catch (e) {
 
       let msg;
@@ -193,7 +197,7 @@ export const modalResolveApprove = (gasLimit, gasPrice) => {
         msg = translate('errors.unexpected_error');
       }
 
-      dispatch({type: MODAL_RESOLVE_APPROVE_ERROR_EVENT, error: msg});
+      dispatch({type: MODAL_RESOLVE_APPROVE_ERROR_EVENT, error: msg, modalId});
     }
   }
 };
@@ -209,7 +213,9 @@ export const modalWithdrawClose = (result) => ({
 
 export const modalWithdrawApprove = (gasLimit, gasPrice) => {
   return async (dispatch, getState) => {
-    dispatch({type: MODAL_WITHDRAW_APPROVING_EVENT});
+    const modalId = (new Date()).getTime();
+
+    dispatch({type: MODAL_WITHDRAW_APPROVING_EVENT, modalId});
 
     try {
       const contract = require('truffle-contract');
@@ -257,7 +263,7 @@ export const modalWithdrawApprove = (gasLimit, gasPrice) => {
           throw new Error('Invalid withdrawal type');
       }
 
-      dispatch({type: MODAL_WITHDRAW_APPROVED_EVENT});
+      dispatch({type: MODAL_WITHDRAW_APPROVED_EVENT, tx: transactionResult.tx, modalId});
     } catch (e) {
 
       let msg;
@@ -274,7 +280,7 @@ export const modalWithdrawApprove = (gasLimit, gasPrice) => {
         msg = translate('errors.unexpected_error');
       }
 
-      dispatch({type: MODAL_WITHDRAW_APPROVE_ERROR_EVENT, error: msg});
+      dispatch({type: MODAL_WITHDRAW_APPROVE_ERROR_EVENT, error: msg, modalId});
     }
   }
 };

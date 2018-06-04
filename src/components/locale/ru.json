@@ -52,7 +52,11 @@
       "title": "Можно начинать!"
     },
     "login": {
-      "error": "Ошибка входа под этим аккаунтом"
+      "error": "Ошибка входа под этим аккаунтом",
+      "not_connted_to_rpc": "Скорее всего, MetaMask не подключен к RPC серверу. Пожалуйста, проверьте соединение.",
+      "please_install_metamask": "Пожалуйста установите и активируйте плагин MetaMask.",
+      "i_have_enabled_metamask": "Я установил и активировал его!",
+      "metamask_locked": "MetaMask отключен. Пожалуйста, включите его, чтобы авторизироваться!"
     },
     "wallet": {
       "send": {
@@ -102,7 +106,7 @@
         "description": "Description",
         "source_url": {
           "label": "Source url",
-          "add_new": "Add new",
+          "add_new": "Add",
           "remove": "Remove",
           "error": "You should add at least one source"
         },
@@ -110,7 +114,7 @@
           "label": "Results",
           "name": "Name",
           "coefficient": "Coefficient",
-          "add_new": "Add new",
+          "add_new": "Add",
           "remove": "Remove",
           "move_up": "Up",
           "move_down": "Down",
@@ -157,6 +161,8 @@
       "my_bets": "My bets",
       "my_events": "My events",
       "modal_withdraw_title": "Withdraw",
+      "modal_event_data": "Данные о событии",
+      "modal_fees_data": "Данные о комиссии",
       "withdraw_approved": "Withdraw approved"
     },
     "event": {
@@ -179,7 +185,8 @@
         "end_time": "Время окончания",
         "description": "Описание",
         "source_url": "Источник результата",
-        "tags": "Тэги"
+        "tags": "Тэги",
+        "resolved_result": "Разрешенный результат"
       },
       "result": {
         "name": "Результат",

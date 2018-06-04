@@ -112,14 +112,14 @@ class EventForm extends Component {
     this.depositLink = Link.state(this, 'formData').at('deposit')
       .check( v => !isNaN(parseFloat(v)), this.props.translate('validation.event.deposit_is_nan'))
       .check( v => parseFloat(v) >= 1, this.props.translate('validation.to_small', {value: 1}))
-      .check( v => parseFloat(v) <= this.props.balance, this.props.translate('validation.to_big', {value: this.props.balance}));
+      .check( v => parseFloat(v) <= this.props.normalizeBalance, this.props.translate('validation.to_big', {value: this.props.normalizeBalance}));
 
     this.descriptionLink = Link.state(this, 'formData').at('description')
       .check( v => v, this.props.translate('validation.required'))
       .check( v => v.length >= 3, this.props.translate('validation.min_length', {min: 3}));
 
     return <Fragment>
-      <form onSubmit={this.handleSubmit} className="new-event">
+      <form onSubmit={this.handleSubmit} className="new-event" noValidate >
         <LanguageField valueLink={this.languageLink} />
 
         <CategoriesField valueLink={this.categoryLink} />
@@ -142,7 +142,8 @@ class EventForm extends Component {
 
         <div className={"form-group" + (this.depositLink.error && this.state.showErrors ? ' has-error' : '')}>
           <label htmlFor="event[deposit]">{ this.props.translate('pages.new_event.form.deposit')}*</label>
-          <Input valueLink={ this.depositLink } type='number' id="event[deposit]" className='form-control' />
+          <Input valueLink={ this.depositLink } type='number' id="event[deposit]" className='form-control'
+                 min="1" max={this.props.normalizeBalance} />
           {this.depositLink.error && this.state.showErrors &&
             <span id="helpBlock" className="help-block">{this.depositLink.error || ''}</span>
           }
@@ -164,7 +165,7 @@ class EventForm extends Component {
 
         <ResultsField onChange={this.handleFieldsChange} showErrors={this.state.showErrors} isOperatorEvent={false} />
 
-        <Buttons deposit={this.state.formData.deposit} />
+        <Buttons />
 
       </form>
 
@@ -178,6 +179,7 @@ function mapStateToProps(state) {
     saved: state.newEvent.saved,
     showConfirmModal: state.newEvent.showConfirmModal,
     balance: state.token.balance,
+    normalizeBalance: state.token.normalizeBalance,
     translate: getTranslate(state.locale)
   };
 }
