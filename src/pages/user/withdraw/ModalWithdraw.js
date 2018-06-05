@@ -88,14 +88,20 @@ class ModalWithdraw extends Component {
 
     return <div className="modal-resolve">
       {this.props.withdrawApproveError &&
-      <div className='alert alert-danger' role='alert'>
-        {this.props.withdrawApproveError}
-      </div>
+        <div className='alert alert-danger' role='alert'>
+          {this.props.withdrawApproveError}
+        </div>
       }
 
       {this.state.estimateGasError &&
         <div className='alert alert-danger' role='alert'>
           {this.props.translate('pages.event.estimate_gas_error')}
+        </div>
+      }
+
+      {this.props.withdrawApproving &&
+        <div className='alert alert-info' role='alert'>
+          {this.props.translate('pages.withdraw.withdraw_approving')}
         </div>
       }
 

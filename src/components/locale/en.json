@@ -73,6 +73,7 @@
         "currency_balance": "${ currency } balance",
         "gas_limit": "Gas limit",
         "gas_price": "Gas price",
+        "sending_tokens": "Tokens are sending. Check metamask extension for the transaction info.",
         "unexpected_error": "An error. Please try again!",
         "user_denied_tx": "The transaction is denied."
       },
@@ -91,6 +92,7 @@
       "header": "Event results"
     },
     "new_event": {
+      "saving": "Event is saving. Check metamask extension for the transaction info.",
       "saved": "Event successfully saved. You will be redirected to the event page after 5 seconds.",
       "low_balance": "Your balance should be more than 1 Toss",
       "gas_limit": "Gas limit",
@@ -174,6 +176,7 @@
       "modal_withdraw_title": "Withdraw",
       "modal_event_data": "Event data",
       "modal_fees_data": "Fees data",
+      "withdraw_approving": "Withdraw is approving. Check metamask extension for the transaction info.",
       "withdraw_approved": "Withdrawal approved"
     },
     "event": {
@@ -181,9 +184,11 @@
       "newBet": "Add bet",
       "bet_amount": "Amount of the bet",
       "your_bet": "Your bet",
+      "new_bet_saving": "Bet is saving. Check metamask extension for the transaction info.",
       "saved": "Bet is successfully added",
       "estimate_gas_error": "Error of calculation gas estimation",
       "modal_resolve_title": "Resolve result",
+      "resolve_approving": "Result is approving. Check metamask extension for the transaction info.",
       "resolve_approved": "Result approved",
       "did_not_happen": "Did not happen",
       "errors": {
