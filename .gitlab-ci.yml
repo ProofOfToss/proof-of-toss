@@ -148,7 +148,7 @@ deploy_production:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
     - rm -rf node_modules
-    - nvm use system
+    - /home/ubuntu/.nvm/nvm.sh
     - npm install
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
@@ -173,7 +173,7 @@ deploy_production_reindex:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
     - rm -rf node_modules
-    - nvm use system
+    - /home/ubuntu/.nvm/nvm.sh
     - npm install
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
@@ -198,7 +198,7 @@ deploy_production_contracts:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
     - rm -rf node_modules
-    - nvm use system
+    - /home/ubuntu/.nvm/nvm.sh
     - npm install
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
@@ -225,7 +225,7 @@ deploy_production_full:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
     - rm -rf node_modules
-    - nvm use system
+    - /home/ubuntu/.nvm/nvm.sh
     - npm install
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
