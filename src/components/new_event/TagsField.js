@@ -1,19 +1,24 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import TagsInput from 'react-tagsinput'
+import TagsInput from 'react-tagsinput';
+import Autosuggest from 'react-autosuggest';
 import { getTranslate } from 'react-localize-redux';
+import { fetchTags } from '../../util/tagsUtil';
+import _ from "lodash";
 import '../../styles/components/tags_input.scss'
 
 class TagsField extends Component {
   constructor(props) {
     super(props);
 
+    this.renderInput = this.renderInput.bind(this);
     this.onChangeTags = this.onChangeTags.bind(this);
 
     this.state = {
       formData: {
         tags: []
-      }
+      },
+      suggestions: []
     }
   }
 
@@ -46,12 +51,39 @@ class TagsField extends Component {
     )
   }
 
-  renderInput(props) {
+  renderInput({addTag, ...props}) {
     let {onChange, value, ...other} = props;
-    delete other.addTag;
+
+    const handleOnChange = (e, {newValue, method}) => {
+      if (method === 'enter') {
+        e.preventDefault()
+      } else {
+
+        fetchTags(this.props.esClient, newValue, this.props.locale).then((result) => {
+          console.log(result);
+          this.setState({
+            suggestions: result
+          })
+        });
+        props.onChange(e)
+      }
+    };
+
     return (
-      <input type='text' onChange={onChange} value={value} maxLength="16" {...other} />
-    )
+      <Autosuggest
+        ref={props.ref}
+        suggestions={this.state.suggestions}
+        shouldRenderSuggestions={(value) => value && value.trim().length > 0}
+        getSuggestionValue={(suggestion) => suggestion.name}
+        renderSuggestion={(suggestion) => <span>{suggestion.name}</span>}
+        inputProps={{...props, onChange: handleOnChange}}
+        onSuggestionSelected={(e, {suggestion}) => {
+          addTag(suggestion.name)
+        }}
+        onSuggestionsClearRequested={() => {}}
+        onSuggestionsFetchRequested={() => {}}
+      />
+    );
   }
 
   _showErrors() {
@@ -80,7 +112,9 @@ class TagsField extends Component {
 
 function mapStateToProps(state) {
   return {
-    translate: getTranslate(state.locale)
+    translate: getTranslate(state.locale),
+    esClient: state.elastic.client,
+    locale: _.find(state.locale.languages, (l) => l.active).code,
   };
 }
 
