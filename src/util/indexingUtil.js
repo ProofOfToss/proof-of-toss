@@ -53,6 +53,7 @@ export const betMapping = {
         'event': {'type': 'keyword'},
         'eventResult': {'type': 'integer'},
         'index': {'type': 'integer'},
+        'userIndex': {'type': 'integer'},
         'timestamp': {'type': 'date'},
         'bettor': {'type': 'keyword'},
         'result': {'type': 'integer'},
@@ -309,6 +310,7 @@ export class IndexingUtil {
 
         let action;
         let betCount = 0;
+        let userBetIndex = 0;
         let rewardWithdrawn = false;
         let prizeWithdrawn = [];
 
@@ -318,10 +320,23 @@ export class IndexingUtil {
 
             let parsed = fromBytes(
               data,
+              {type: 'uint', size: 256, key: 'userBetIndex'},
               {type: 'uint', size: 256, key: 'betCount'},
             );
 
             betCount = parsed.parsedData.betCount;
+            userBetIndex = parsed.parsedData.userBetIndex;
+
+            /*const _userBetsCount = await event.userBetsCount(sender);
+
+            for (let i = 0, betIndex; i < _userBetsCount; i++) {
+              betIndex = await event.usersBets(sender, i);
+
+              if (betIndex === betCount - 1) {
+                userBetIndex = betIndex;
+                break;
+              }
+            }*/
 
             break;
 
@@ -418,6 +433,7 @@ export class IndexingUtil {
           body.push({
             event: address,
             index: betCount - 1,
+            userIndex: userBetIndex - 1,
             timestamp: bet[0],
             bettor: bet[1],
             result: bet[2],
