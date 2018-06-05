@@ -1,3 +1,12 @@
+// Usage:
+// $ babel-node debug_event.js MAIN_ADDRESS EVENT_ADDRESS FROM_BLOCK TO_BLOCK
+// * MAIN_ADDRESS: the address of Main contract which was used to create Event contract (without leading 0x)
+// * EVENT_ADDRESS: the address of Event contract (without leading 0x)
+// * FROM_BLOCK: a number of block to filter from
+// * TO_BLOCK: a number of block to filter to
+// Usage example:
+// babel-node debug_event.js 460e426c63c19d267140e693472b6535cc5a826d 974b9a84483fe3830eead8b5cdc2227cd424f4cf 3329870 3329880
+
 import appConfig from '../src/data/config.json';
 
 import fs from 'fs';
