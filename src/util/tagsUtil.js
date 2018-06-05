@@ -6,7 +6,7 @@ const TAG_INDEX = 'toss_tag_' + appConfig.elasticsearch.indexPostfix;
 
 async function fetchTags(esClient, q, locale) {
 
-  console.log(q);
+  q = q.replace('_', '\_');
 
   const res = await esClient.search({
     index: TAG_INDEX,

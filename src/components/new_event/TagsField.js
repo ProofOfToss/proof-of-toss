@@ -26,7 +26,8 @@ class TagsField extends Component {
     this.setState({
       formData: {
         tags: tags
-      }
+      },
+      suggestions: []
     });
 
     this.props.onChange({tags: tags})
@@ -52,7 +53,6 @@ class TagsField extends Component {
   }
 
   renderInput({addTag, ...props}) {
-    let {onChange, value, ...other} = props;
 
     const handleOnChange = (e, {newValue, method}) => {
       if (method === 'enter') {
@@ -60,11 +60,11 @@ class TagsField extends Component {
       } else {
 
         fetchTags(this.props.esClient, newValue, this.props.locale).then((result) => {
-          console.log(result);
           this.setState({
             suggestions: result
           })
         });
+
         props.onChange(e)
       }
     };
