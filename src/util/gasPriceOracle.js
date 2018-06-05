@@ -104,7 +104,7 @@ function getGasPrices(web3) {
       for (let i = 0; i < transactionsByBlocks.length; i++) {
         const minMax = _.reduce(transactionsByBlocks[i], ({min, max}, tx) => {
 
-          let gasPrice = Number(tx.gasPrice);
+          let gasPrice = tx ? Number(tx.gasPrice) : 21000000000;
           return {
             min: gasPrice < min ? gasPrice : min,
             max: gasPrice > max ? gasPrice : max,
