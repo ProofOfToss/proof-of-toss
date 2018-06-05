@@ -24,7 +24,7 @@ export const eventMapping = {
       'properties': {
         'name': {'type': 'text'},
         'description': {'type': 'text'},
-        'bidType': {'type': 'keyword'},
+        'bidType': {'type': 'text'},
         'address': {'type': 'keyword'},
         'createdBy': {'type': 'keyword'},
         'createdAt': {'type': 'date'},
