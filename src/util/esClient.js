@@ -83,9 +83,16 @@ export default class AwsEsClient extends elasticsearch.Client {
 
 export class AwsEsPublicClient extends elasticsearch.Client {
   constructor(config, esNode, region, useSSL = true) {
-    let hostName = `${esNode}.${region}.es.amazonaws.com`;
-    let port = useSSL ? 443 : 80;
-    let endpoint = `http${useSSL ? 's' : ''}://${hostName}:${port}`;
+    let endpoint;
+
+    if (esNode.match(/^http.+/)) {
+      endpoint = esNode;
+
+    } else {
+      let hostName = `${esNode}.${region}.es.amazonaws.com`;
+      let port = useSSL ? 443 : 80;
+      endpoint = `http${useSSL ? 's' : ''}://${hostName}:${port}`;
+    }
 
     super(
       Object.assign(

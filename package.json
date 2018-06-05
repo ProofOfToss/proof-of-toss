@@ -106,6 +106,7 @@
     "truffle-config": "^1.0.4",
     "truffle-contract": "^3.0.3",
     "truffle-hdwallet-provider": "0.0.3",
+    "truffle-hdwallet-provider-privkey": "*",
     "truffle-resolver": "^4.0.1",
     "uport-connect": "^0.6.1",
     "valuelink": "^1.5.4",
