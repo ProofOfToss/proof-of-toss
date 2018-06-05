@@ -158,7 +158,7 @@ deploy_production:
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
-    - ssh $AWS_HOST_LOGIN "/home/ubuntu/.nvm/nvm.sh; cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; pm2 restart event_watcher"
+    - ssh $AWS_HOST_LOGIN "/home/ubuntu/.nvm/nvm.sh; cd /home/ec2-user/proof-of-toss; git pull origin master; /home/ubuntu/.nvm/versions/node/v7.10.1/bin/npm install; /home/ubuntu/.nvm/versions/node/v7.10.1/bin/pm2 restart event_watcher"
 
 deploy_production_reindex:
   stage: deploy
