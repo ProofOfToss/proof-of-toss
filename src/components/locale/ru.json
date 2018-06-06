@@ -77,7 +77,9 @@
         "unexpected_error": "Неизвестная ошибка. Пожалуйста, попробуйте позднее!"
       },
       "info": {
-        "your_balance": "Ваш баланс"
+        "your_balance": "Ваш баланс",
+        "block_sum": "Заблокировано",
+        "cant_send_paused": "Невозможно отправить токены из за паузы"
       },
       "transactions_list": {
         "time": "Время",
