@@ -195,7 +195,7 @@ class ModalSend extends Component {
     if (!this.state.formPrestine || !this.state.addressPrestine) {
       addressLink
         .check( v => v, strings().validation.required)
-        .check( validateTossAddress, 'Invalid address');
+        .check( validateTossAddress, this.props.translate('validation.invalid_address'));
     }
 
     if (!this.state.formPrestine || !this.state.sumPrestine) {
@@ -262,11 +262,19 @@ class ModalSend extends Component {
     const {addressLink, sumLink, feeLink} = this.validateForm();
 
     return <form>
-      <div className='has-error'>
-        <div className='control-label'>
+
+      {this.state.errors.length > 0 &&
+        <div className='alert alert-danger' role='alert'>
           { this._renderErrors() }
         </div>
-      </div>
+      }
+
+      {this.state.waiting &&
+        <div className='alert alert-info' role='alert'>
+          {this.props.translate('pages.wallet.send.sending_tokens')}
+        </div>
+      }
+
       <div className='form-group'>
         <label>{ this.props.translate('pages.wallet.send.balance') }: { formatBalance(this.props.balance) } {config.view.token_symbol}</label>
       </div>

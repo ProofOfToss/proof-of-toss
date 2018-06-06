@@ -69,6 +69,12 @@ class ModalResolve extends Component {
         </div>
       }
 
+      {this.props.resolveApproving &&
+        <div className='alert alert-info' role='alert'>
+          {this.props.translate('pages.event.resolve_approving')}
+        </div>
+      }
+
       <dl className="dl-horizontal">
 
         <dt>{this.props.translate('pages.event.result.name')}</dt>

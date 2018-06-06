@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
+import { validateTossAddress } from '../../util/validators';
 
 import config from '../../data/config.json';
 import { denormalizeBalance } from './../../util/token';
@@ -32,7 +33,7 @@ class Index extends Component {
     event.preventDefault();
 
     if (this.isValid()) {
-      const faucetUrl = `${config.faucetUrl}?account=${this.state.address}&sum=${denormalizeBalance(this.state.amount)}`;
+      const faucetUrl = `${config.faucetUrl}?account=${this.state.address}&sum=${denormalizeBalance(this.state.amount).toString()}`;
       this.props.submitQuery(faucetUrl);
     } else {
       this.setState({showErrors: true});
@@ -41,7 +42,8 @@ class Index extends Component {
 
   render() {
     const addressLink = Link.state(this, 'address')
-      .check( v => v, this.props.translate('validation.required'));
+      .check( v => v, this.props.translate('validation.required'))
+      .check( validateTossAddress, this.props.translate('validation.invalid_address'));
 
     const amountLink = Link.state(this, 'amount')
       .check( v => v, this.props.translate('validation.required'))

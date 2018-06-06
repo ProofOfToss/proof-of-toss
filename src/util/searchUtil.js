@@ -33,7 +33,7 @@ function filterEventsConditions(locale, q, fromTimestamp, toTimestamp) {
     });
   }
 
-  if (fromTimestamp || toTimestamp) {
+  if ((fromTimestamp || toTimestamp) && (fromTimestamp !== toTimestamp)) {
     const condition = {};
 
     if (fromTimestamp) { condition.gte = fromTimestamp; }
@@ -45,6 +45,8 @@ function filterEventsConditions(locale, q, fromTimestamp, toTimestamp) {
       }
     });
   }
+
+  console.log(fromTimestamp, JSON.stringify(conditions));
 
   return {conditions, shouldConditions};
 }

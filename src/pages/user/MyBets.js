@@ -10,9 +10,11 @@ import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
 import '../../styles/components/play_table.scss';
+import DateFields from './../../components/my_bets/DateFields';
 
 import appConfig from "../../data/config.json"
 import { myBetsConditions, bidInfo } from '../../util/searchUtil';
+import { formatWithdrawal } from '../../util/token';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -36,6 +38,7 @@ class MyBets extends Component {
     this.getUrlParams = this.getUrlParams.bind(this);
     this.update = this.update.bind(this);
     this.updateDebounce = this.updateDebounce.bind(this);
+    this.handleFieldsChange = this.handleFieldsChange.bind(this);
   }
 
   getUrlParams() {
@@ -239,6 +242,16 @@ class MyBets extends Component {
     }
   }
 
+  handleFieldsChange(state) {
+    if (state.startTime) {
+      this.onChangeFromDate(state.startTime);
+    }
+
+    if (state.endTime) {
+      this.onChangeToDate(state.endTime);
+    }
+  }
+
   render() {
     const { data, categories } = this.state;
 
@@ -262,20 +275,7 @@ class MyBets extends Component {
 
           <form className="form" onSubmit={this.handleSubmit}>
 
-            <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_start') }</label>
-                  <Datetime value={this.state.fromDate} timeFormat={false} closeOnSelect={true} onChange={this.onChangeFromDate} isValidDate={this.isValidDate} />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_end') }</label>
-                  <Datetime value={this.state.toDate} timeFormat={false} closeOnSelect={true} onChange={this.onChangeToDate} isValidDate={this.isValidDate} />
-                </div>
-              </div>
-            </div>
+            <DateFields onChange={this.handleFieldsChange} defaultStartTime={this.state.fromDate} defaultEndTime={this.state.toDate}/>
 
             <div className="row">
               <div className="col-md-6">
@@ -364,6 +364,7 @@ class MyBets extends Component {
                   dataField: "prize",
                   sort: false,
                   width: 200,
+                  formatter: (cell) => formatWithdrawal(cell)
                 },
                 {
                   text: '',
