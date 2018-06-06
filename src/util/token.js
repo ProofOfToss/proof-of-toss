@@ -7,6 +7,14 @@ const contract = require('truffle-contract');
 const main = contract(MainContract);
 const token = contract(TokenContract);
 
+function formatWithdrawal(withdrawalSum, formatPrecision) {
+  if (typeof formatPrecision === 'undefined') {
+    formatPrecision = config.view.withdrawal_precision;
+  }
+
+  return (new BigNumber(withdrawalSum)).toFixed(formatPrecision).replace(/\.?0+$/, '');
+}
+
 function formatBalance(balance, formatPrecision) {
   if (typeof formatPrecision === 'undefined') {
     formatPrecision = config.view.currency_precision;
@@ -165,6 +173,7 @@ export {
   getMySBTCBalance,
   getMyTransactions,
   getDecimals,
+  formatWithdrawal,
   formatBalance,
   denormalizeBalance,
   calculateGasPrice

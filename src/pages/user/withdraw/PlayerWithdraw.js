@@ -17,6 +17,7 @@ import '../../../styles/components/play_table.scss';
 
 import appConfig from "../../../data/config.json"
 import { myPrizeConditions, myPrizeBetConditions, bidInfo } from '../../../util/searchUtil';
+import { formatWithdrawal } from '../../../util/token';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -390,10 +391,10 @@ class PlayerWithdraw extends Component {
                   return (
                     (txStatus.status === TX_STATUS_REJECTED || txStatus.status === TX_STATUS_DEFAULT)
                       ? <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index, row.tx)}}>
-                        {row.hasDefinedResult ? `Withdraw ${cell} TOSS` : `Get back ${cell} TOSS`}
+                        {row.hasDefinedResult ? `Withdraw ${formatWithdrawal(cell)} TOSS` : `Get back ${formatWithdrawal(cell)} TOSS`}
                       </span>
                       : <span className="btn btn-primary" disabled="disabled">
-                        {row.hasDefinedResult ? `Withdraw ${cell} TOSS` : `Get back ${cell} TOSS`}
+                        {row.hasDefinedResult ? `Withdraw ${formatWithdrawal(cell)} TOSS` : `Get back ${formatWithdrawal(cell)} TOSS`}
                       </span>
                   );
                 }
