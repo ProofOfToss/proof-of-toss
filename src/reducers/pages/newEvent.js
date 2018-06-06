@@ -26,6 +26,7 @@ const newEventReducer = (state = initialState, action) => {
       return {
         ...state,
         saving: true,
+        save_error: false,
         modalId: action.modalId
       };
     case MODAL_CLOSE_EVENT:

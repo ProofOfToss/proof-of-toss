@@ -77,6 +77,12 @@ class ModalNewBet extends Component {
         </div>
       }
 
+      {this.props.newBetSaving &&
+        <div className='alert alert-info' role='alert'>
+          {this.props.translate('pages.event.new_bet_saving')}
+        </div>
+      }
+
       <dl className="dl-horizontal">
 
         <dt>{this.props.translate('pages.event.result.name')}</dt>

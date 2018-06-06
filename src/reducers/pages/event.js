@@ -74,6 +74,7 @@ const eventReducer = (state = initialState, action) => {
     case ADD_NEW_BET_ADDING_EVENT:
       return {
         ...state,
+        newBetError: false,
         newBetSaving: true,
         newBetModalId: action.modalId,
       };
@@ -89,6 +90,7 @@ const eventReducer = (state = initialState, action) => {
     case ADD_NEW_BET_ERROR_EVENT:
       return action.modalId === state.newBetModalId ? {
         ...state,
+        newBetSaving: false,
         newBetError: action.error
       } : state;
 
@@ -116,6 +118,7 @@ const eventReducer = (state = initialState, action) => {
       return {
         ...state,
         resolveApproving: true,
+        resolveApproveError: false,
         resolveModalId: action.modalId
       };
 
@@ -159,6 +162,7 @@ const eventReducer = (state = initialState, action) => {
       return {
         ...state,
         withdrawApproving: true,
+        withdrawApproveError: false,
         withdrawModalId: action.modalId
       };
 
