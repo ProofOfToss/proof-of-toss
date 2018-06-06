@@ -48,9 +48,9 @@ contract Main is ERC223ReceivingContract, Seriality {
     // ... | string result_3Description | string result_2Description | string result_1Description
     // string sourceUrl
     // string description
+    // string bidType
     // string name
     // bytes32 category
-    // bytes32 bidType
     // bytes2 locale
     // ... | uint64 result_3Coefficient | uint64 result_2Coefficient | uint64 result_1Coefficient
     // uint8 tagsCount | uint8 resultsCount | uint64 endDate | uint64 startDate

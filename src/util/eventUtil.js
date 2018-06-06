@@ -12,9 +12,9 @@ export const STATUS_DISTRIBUTED = 6;
 function serializeEvent(eventData) {
   let toBytesArgs = [
     {type: 'string', size: 2, value: eventData.locale}, // locale
-    {type: 'string', size: 32, value: eventData.bidType}, // bidType
     {type: 'string', size: 32, value: eventData.category}, // category
     {type: 'string', value: eventData.name}, // name
+    {type: 'string', value: eventData.bidType}, // bidType
     {type: 'string', value: eventData.description}, // description
     {type: 'string', value: eventData.sourceUrl}, // sourceUrl
   ];
@@ -84,9 +84,9 @@ function deserializeEvent(bytes) {
   parsed = fromBytes(
     bytes,
     {type: 'string', size: 2, key: 'locale'},
-    {type: 'string', size: 32, key: 'bidType'},
     {type: 'string', size: 32, key: 'category'},
     {type: 'string', key: 'name'},
+    {type: 'string', key: 'bidType'},
     {type: 'string', key: 'description'},
     {type: 'string', key: 'sourceUrl'},
   );
