@@ -19,6 +19,19 @@ contract Main is ERC223ReceivingContract, Seriality {
         _;
     }
 
+    modifier contractOnly(address _to) {
+        uint256 codeLength;
+
+        assembly {
+        // Retrieve the size of the code on target address, this needs assembly .
+        codeLength := extcodesize(_to)
+        }
+
+        require(codeLength > 0);
+
+        _;
+    }
+
     constructor(address _token, address _whitelist, address _eventBase) public {
         owner = msg.sender;
 
@@ -40,6 +53,11 @@ contract Main is ERC223ReceivingContract, Seriality {
 
     function tokenFallback(address _from, uint _value, bytes memory _data) public {
         token.transfer(newEvent(_from, uint64(_value), _data), _value);
+    }
+
+    function updateEventBase(address _eventBase) public onlyOwner contractOnly(_eventBase) {
+        require(_eventBase != address(0));
+        eventBase = EventBase(_eventBase);
     }
 
     function newEvent(address _creator, uint64 _deposit, bytes memory buffer) internal returns (address) {
