@@ -71,7 +71,7 @@ function renderReactDOM() {
   ReactDOM.render((
     <Provider store={store}>
       <Router history={history}>
-        <Route component={ App }>
+        <Route component={ App } onEnter={checkRouteLocale} >
 
           <Route path="/:locale/" >
             {routes}
@@ -97,7 +97,6 @@ function checkAuthentication(address, redirectToSignIn) {
   if (isAuthenticated(address)) {
     store.dispatch(authenticateUser(address));
   } else {
-    global.jQuery('.modal').modal('hide');
 
     store.dispatch(logoutUser());
 
@@ -131,7 +130,6 @@ getWeb3
       results.web3.eth.getAccounts(function (err, accounts) {
         if (accounts.length === 0) {
           if (hasAccounts !== false) {
-            global.jQuery('.modal').modal('hide');
 
             // Wallet is locked
             store.dispatch(lockWallet());

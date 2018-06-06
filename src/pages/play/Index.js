@@ -179,8 +179,6 @@ class Index extends Component {
       }
     });
 
-    console.log('this.props.routeName', this.props.routeName);
-
     if(this.props.routeName !== 'admin/event_results') {
       conditions.push({
         range: {

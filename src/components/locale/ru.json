@@ -1,14 +1,14 @@
 {
   "access_denied": "Доступ запрещен",
   "notfound": {
-    "error": "Error 404: File Not Found",
-    "message": "The requested file could not be found."
+    "error": "Ошибка 404: Страница не найдена",
+    "message": "Запрошенный файл не найден"
   },
   "form": {
     "event": {
-      "name": "Name",
-      "deposit": "Deposit",
-      "submit": "Submit"
+      "name": "Имя",
+      "deposit": "Депозит",
+      "submit": "Внести"
     }
   },
   "buttons": {
@@ -16,149 +16,166 @@
     "create": "Создать",
     "add": "Добавить",
     "cancel": "Отмена",
-    "open": "Отрыть",
-    "resolve": "Resolve",
-    "withdraw": "Withdraw"
+    "open": "Открыть",
+    "resolve": "Отметить как выигрышный",
+    "withdraw": "Cнять"
+  },
+  "errors": {
+    "denied_transaction": "Транзакция отменена.",
+    "unexpected_error": "Неизвестная ошибка. Пожалуйста, попробуйте позднее!"
   },
   "validation": {
-    "required": "Is required",
-    "min_length": "This value is too short. It should have ${ min } character or more.",
-    "range": "This value should be between ${ min } and ${ max } or less",
-    "to_small": "This value should be more than ${ value } TOSS",
-    "to_big": "This value should be less than ${ value } TOSS",
+    "required": "Требуется проверка",
+    "min_length": "Слишком короткое значение. Значение должно быть ${ min } символов или больше",
+    "range": "Значение должно быть между ${ min } и ${ max } или меньше",
+    "to_small": "Значение должно быть больше чем ${ value } TOCC",
+    "to_big": " Значение должно быть меньше чем ${ value } TOCC",
     "invalid_address": "Неправильный адрес",
     "token": {
-      "sum_is_nan": "Sum should be a number",
-      "sum_is_too_small": "Sum should be >= 0.0001 TOSS",
-      "sum_is_too_big": "Sum should not exceed your balance",
-      "fee_is_nan": "Fee should be a number",
-      "fee_is_too_small": "Fee should be >= ",
-      "wrong_precision": "Maximum precision of TOSS sum is 4 decimal points.",
-      "invalid_delimiter": "Decimals delimeter must be \".\""
+      "sum_is_nan": "Значение должно быть в цифрах",
+      "sum_is_too_small": "Сумма должна быть >= 0.0001 ТОСС",
+      "sum_is_too_big": "Сумма не должна превышать Ваш баланс",
+      "fee_is_nan": "Значение должно быть в цифрах",
+      "fee_is_too_small": "Значение должно быть >= ",
+      "wrong_precision": "Максимальная точность TOCC 4 десятичных знака.",
+      "invalid_delimiter": "Разделитель десятичных знаков должен быть\".\""
     },
     "event": {
-      "deposit_is_nan": "Deposit should be a number"
+      "deposit_is_nan": "Укажите депозит в цифрах"
     }
   },
   "header": {
     "address": "Адрес"
   },
   "footer": {
-    "terms_conditions": "Terms & Conditions",
-    "privacy": "Privacy",
-    "about": "About"
+    "terms_conditions": "Условия и положения",
+    "privacy": "Конфиденциальность",
+    "about": "О нас"
   },
   "pages": {
     "home": {
       "title": "Можно начинать!"
     },
     "login": {
-      "error": "Ошибка входа под этим аккаунтом"
+      "error": "Ошибка входа под этим аккаунтом",
+      "not_connted_to_rpc": "Скорее всего, MetaMask не подключен к RPC серверу. Пожалуйста, проверьте соединение.",
+      "please_install_metamask": "Пожалуйста установите и активируйте плагин MetaMask.",
+      "i_have_enabled_metamask": "Я установил и активировал его!",
+      "metamask_locked": "MetaMask отключен. Пожалуйста, включите его, чтобы авторизироваться!"
     },
     "wallet": {
       "send": {
         "title": "Отправка",
         "balance": "Баланс",
-        "block_sum": "Block sum",
-        "address": "Address",
-        "sum": "Sum",
-        "fee": "Fee",
-        "currency_balance": "${ currency } balance",
-        "gas_limit": "Gas limit",
-        "gas_price": "Gas price"
+        "block_sum": "Сумма заблокирована",
+        "address": "Адрес",
+        "sum": "Сумма",
+        "fee": "Комиссия",
+        "currency_balance": "${ currency } баланс ",
+        "gas_limit": "Максимальное количество газа",
+        "gas_price": "Стоимость газа",
+        "denied_transaction": "Транзакция отменена.",
+        "unexpected_error": "Неизвестная ошибка. Пожалуйста, попробуйте позднее!"
       },
       "info": {
         "your_balance": "Ваш баланс"
       },
       "transactions_list": {
-        "time": "Time",
-        "type": "Type",
-        "wallet_number": "Wallet number",
-        "sum": "Sum",
-        "fee": "Fee"
+        "time": "Время",
+        "type": "Вид",
+        "wallet_number": "Номер кошелька",
+        "sum": "Сумма",
+        "fee": "Комиссия"
       }
     },
+    "event_results": {
+      "header": "Результаты событий"
+    },
     "new_event": {
-      "saved": "Event successfully saved",
-      "low_balance": "Your balance should be more than 1 Toss",
-      "gas_limit": "Gas limit",
-      "gas_price": "Gas price",
+      "saved": "Событие успешно сохранено",
+      "low_balance": "Баланс должен быть больше 1 Toss",
+      "gas_limit": "Максимальное количество газа",
+      "gas_price": "Стоимость газа",
+      "sync_whitelist": "Пожалуйста, синхронизируйте whitelist",
       "estimate_gas_error": "Ошибка расчета затрат газа",
+      "fee": "Комиссия",
       "form": {
-        "language": "Language",
-        "category": "Category",
-        "name": "Name",
-        "bid_type": "Bid type",
-        "deposit": "Deposit",
-        "submit": "Submit",
+        "language": "Язык",
+        "category": "Категория",
+        "name": "Название",
+        "bid_type": "Вид ставки",
+        "deposit": "Депозит",
+        "submit": "Внести",
         "tags": {
-          "label": "Tags",
-          "error": "You should add at least one tag"
+          "label": "Тэги",
+          "error": "Пожалуйста, добавьте хотя бы один тэг"
         },
         "dates": {
-          "date_start": "Start time",
-          "date_end": "End time",
-          "help": "Выбирете ваше локальное время события"
+          "date_start": "Время начала",
+          "date_end": "Время окончания",
+          "help": "Выберите ваше локальное время события",
+          "errors": {
+            "start_time": "Дата и время начала события должны быть не раньше, чем через 20 минут",
+            "end_time": "Дата и время окончания события должны быть не раньше, чем через 20 минут и позже времени начала события"
+          }
         },
-        "description": "Description",
+        "description": "Описание",
         "source_url": {
-          "label": "Source url",
-          "add_new": "Add new",
-          "remove": "Remove",
-          "error": "You should add at least one source"
+          "label": "Источник результата",
+          "add_new": "Добавить",
+          "remove": "Удалить",
+          "error": "Пожалуйста, добавьте хотя бы один источник"
         },
         "results": {
-          "label": "Results",
-          "name": "Name",
-          "coefficient": "Coefficient",
-          "add_new": "Add new",
-          "remove": "Remove",
-          "move_up": "Up",
-          "move_down": "Down",
-          "error": "You should add at least two results"
-        },
-        "errors": {
-          "start_time": "Start date should be after 20 minutes",
-          "end_time": "End date should be after 20 minutes of now and after start time"
+          "label": "Результаты",
+          "name": "Название",
+          "coefficient": "Коэффициент",
+          "add_new": "Добавить",
+          "remove": "Удалить",
+          "move_up": "Вверх",
+          "move_down": "Вниз",
+          "error": "Пожалуйста, добавьте хотя бы два исхода"
         }
       },
       "modal": {
-        "submit": "Create"
+        "submit": "Создать"
       }
     },
     "play": {
-      "header": "Play",
-      "more": "More",
-      "empty": "No results",
-      "loading": "Loading...",
-      "search": "Search for...",
+      "header": "Играть",
+      "more": "Ещё",
+      "empty": "Нет результатов",
+      "loading": "Загрузка...",
+      "search": "Поиск...",
       "columns": {
-        "name": "Name",
-        "tags": "Tags",
-        "category": "Category",
-        "bid_type": "Bid Type",
-        "start_date": "Start Date",
-        "end_date": "End Date",
-        "bid_sum": "Bid Sum",
-        "date_start": "Start time",
-        "date_end": "End time",
-        "bid_date": "Bid date",
-        "bid_result": "Bid result",
-        "result_coefficient": "Result coefficient",
-        "prize": "Prize",
-        "deposit": "Deposit",
-        "reward": "Reward/Refund"
+        "name": "Название",
+        "tags": "Тэги",
+        "category": "Категория",
+        "bid_type": "Вид ставки",
+        "start_date": "Дата начала",
+        "end_date": "Дата окончания",
+        "bid_sum": "Сумма ставки",
+        "date_start": "Время начала",
+        "date_end": "Время окончания",
+        "bid_date": "Дата ставки",
+        "bid_result": "Исход",
+        "result_coefficient": "Коэффициент результата",
+        "prize": "Выигрыш",
+        "deposit": "Депозит",
+        "reward": "Вознаграждение / Возврат"
       }
     },
     "my_bets": {
-      "header": "My bets"
+      "header": "Мои ставки"
     },
     "withdraw": {
-      "header": "Withdraw",
-      "my_bets": "My bets",
-      "my_events": "My events",
-      "modal_withdraw_title": "Withdraw",
-      "withdraw_approved": "Withdraw approved"
+      "header": "Cнять",
+      "my_bets": "Мои ставки",
+      "my_events": "Мои события",
+      "modal_withdraw_title": "Cнять",
+      "modal_event_data": "Данные о событии",
+      "modal_fees_data": "Данные о комиссии",
+      "withdraw_approved": "Снятие подтверждено"
     },
     "event": {
       "fetching": "Загрузка события...",
@@ -166,36 +183,57 @@
       "bet_amount": "Сумма ставки",
       "your_bet": "Ваша ставка",
       "saved": "Ставка добавлена",
-      "estimate_gas_error": "Error of calculation estimate gas",
-      "allow_bidding_errors": {
-        "time_is_over": "Time is over",
-        "invalid_status": "Неверный статус для добавляения ставки",
-        "not_enough_tokens": "Not enough tokens for betting"
+      "estimate_gas_error": "Неверный расчёт газа",
+      "modal_resolve_title": "Принять решение",
+      "resolve_approved": "Результат одобрен",
+      "did_not_happen": "Событие не произошло",
+      "errors": {
+        "bidding": {
+          "time_is_over": "Время истекло",
+          "invalid_status": "Недопустимый статус",
+          "not_enough_tokens": "Недостаточно токенов, чтобы сделать ставку"
+        },
+        "resolve": {
+          "need_finished": "Для решения требуется, чтобы событие завершилось",
+          "already_closed": "Событие завершилось"
+        }
       },
       "labels": {
-        "name": "Названеи события",
+        "name": "Название события",
         "bid_type": "Тип ставки",
         "category": "Категория",
+        "state": "Статус",
         "start_time": "Время начала",
         "end_time": "Время окончания",
         "description": "Описание",
         "source_url": "Источник результата",
-        "tags": "Тэги"
+        "tags": "Тэги",
+        "resolved_result": "Разрешенный результат"
+      },
+      "states": {
+        "state_0": "Создано",
+        "state_1": "Опубликовано",
+        "state_2": "Принято",
+        "state_3": "Началось",
+        "state_4": "Закончилось",
+        "state_5": "Закрыто",
+        "state_6": "Распределено"
       },
       "result": {
         "name": "Результат",
         "coefficient": "Коэффициент",
         "bet_count": "Количество ставок",
-        "bet_sum": "Сумма ставок"
+        "bet_sum": "Сумма ставок",
+        "confirm": "Подтвердить"
       }
     },
     "faucet": {
-      "address": "Address",
-      "amount": "Amount",
-      "add": "Add",
-      "submitQueryError": "Please, try again later",
-      "fetchingTransaction": "Transaction <span class='alert-link'>${ txHash }</span> is pending.",
-      "successTransaction": "Transaction completed successfully"
+      "address": "Адрес",
+      "amount": "Сумма",
+      "add": "Добавить",
+      "submitQueryError": "Пожалуйста, попробуйте ещё раз позже",
+      "fetchingTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> находится в обработке.",
+      "successTransaction": "Транзакция завершена успешно"
     }
   },
   "categories": {

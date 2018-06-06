@@ -1,7 +1,12 @@
 .event {
   .results {
+    th {
+      white-space: nowrap;
+    }
+
     td {
       vertical-align: middle;
+      word-break: break-all;
     }
   }
 }

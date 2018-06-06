@@ -13,12 +13,12 @@ class SourceUrl extends Component {
       <dd>
         <ul className="list-unstyled">
           {this.props.sourceUrl.split(',').map((sourceUrl, key) => {
-              if (sourceUrl.match(regex)) {
-                return <li key={key}><a href={sourceUrl} target="_blank">{sourceUrl}</a></li>
-              }
+            if (sourceUrl.match(regex)) {
+              return <li key={key}><a href={sourceUrl} target="_blank">{sourceUrl}</a></li>
+            }
 
-              return <li key={key}>this.props.sourceUrl</li>
-            })
+            return <li key={key}>{sourceUrl}</li>
+          })
           }
         </ul>
       </dd>
