@@ -1,8 +1,8 @@
 import MainContract from '../../build/contracts/Main.json'
 import TokenContract from '../../build/contracts/Token.json'
 import config from '../data/config.json'
+import BigNumber from './bignumber';
 
-const BigNumber = require('bignumber.js');
 const contract = require('truffle-contract');
 const main = contract(MainContract);
 const token = contract(TokenContract);
@@ -27,7 +27,7 @@ function formatBalance(balance, formatPrecision) {
 }
 
 function denormalizeBalance(balance) {
-  return (new BigNumber(balance)).times(Math.pow(10, config.view.token_precision)).toNumber();
+  return (new BigNumber(balance)).times(Math.pow(10, config.view.token_precision));
 }
 
 function getMyBalance(web3, address) {

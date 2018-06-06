@@ -30,6 +30,7 @@
     "range": "Значение должно быть между ${ min } и ${ max } или меньше",
     "to_small": "Значение должно быть больше чем ${ value } TOCC",
     "to_big": " Значение должно быть меньше чем ${ value } TOCC",
+    "invalid_address": "Неправильный адрес",
     "token": {
       "sum_is_nan": "Значение должно быть в цифрах",
       "sum_is_too_small": "Сумма должна быть >= 0.0001 ТОСС",
@@ -185,7 +186,7 @@
       "estimate_gas_error": "Неверный расчёт газа",
       "modal_resolve_title": "Принять решение",
       "resolve_approved": "Результат одобрен",
-      "did_not_happen": "Событие не произошло",	  
+      "did_not_happen": "Событие не произошло",
       "errors": {
         "bidding": {
           "time_is_over": "Время истекло",

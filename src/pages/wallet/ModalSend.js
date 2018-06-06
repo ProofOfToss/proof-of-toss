@@ -195,7 +195,7 @@ class ModalSend extends Component {
     if (!this.state.formPrestine || !this.state.addressPrestine) {
       addressLink
         .check( v => v, strings().validation.required)
-        .check( validateTossAddress, 'Invalid address');
+        .check( validateTossAddress, this.props.translate('validation.invalid_address'));
     }
 
     if (!this.state.formPrestine || !this.state.sumPrestine) {

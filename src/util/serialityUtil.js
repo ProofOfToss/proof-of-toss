@@ -1,4 +1,4 @@
-import {BigNumber} from 'bignumber.js';
+import BigNumber from './bignumber';
 
 /**
  * Converts serialized bytes from any format to strings-array format
