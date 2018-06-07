@@ -1,6 +1,7 @@
-import MainContract from '../../build/contracts/Main.json'
-import TokenContract from '../../build/contracts/Token.json'
-import config from '../data/config.json'
+import MainContract from '../../build/contracts/Main.json';
+import TokenContract from '../../build/contracts/Token.json';
+import config from '../data/config.json';
+import { deployed } from "./contracts";
 import BigNumber from './bignumber';
 
 const contract = require('truffle-contract');
@@ -164,6 +165,17 @@ function getMyAllowance(web3, address) {
         return allowance.toNumber();
       });
   })
+}
+
+export async function canSendTokens(web3, address) {
+  const tokenInstance = (await deployed(web3, 'token')).tokenInstance;
+  const paused = await tokenInstance.paused();
+
+  if(paused) {
+    return await tokenInstance.unpausedWallet(address);
+  }
+
+  return true;
 }
 
 export {

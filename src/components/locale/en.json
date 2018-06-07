@@ -79,7 +79,9 @@
         "user_denied_tx": "The transaction is denied."
       },
       "info": {
-        "your_balance": "Your balance"
+        "your_balance": "Your balance",
+        "block_sum": "Block sum",
+        "cant_send_paused": "Can not send tokens because of pause"
       },
       "transactions_list": {
         "time": "Time",
