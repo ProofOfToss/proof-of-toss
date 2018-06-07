@@ -5,9 +5,6 @@ import { getTranslate } from 'react-localize-redux';
 import DatePicker from "../form/DatePicker";
 import 'react-datetime/css/react-datetime.css'
 
-export const DEFAULT_START_TIME = moment().add(1, 'hours');
-export const DEFAULT_END_TIME = DEFAULT_START_TIME.clone();
-
 class DateFields extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +15,9 @@ class DateFields extends Component {
     this.onChangeEndTime = this.onChangeEndTime.bind(this);
     this.getEndDateInputProps = this.getEndDateInputProps.bind(this);
 
+    const DEFAULT_START_TIME = moment().add(1, 'hours');
+    const DEFAULT_END_TIME = DEFAULT_START_TIME.clone();
+
     this.state = {
       formData: {
         startTime: DEFAULT_START_TIME,
@@ -25,7 +25,11 @@ class DateFields extends Component {
       },
       startTimeError: false,
       endTimeError: false
-    }
+    };
+  }
+
+  componentDidMount() {
+    this.onChangeStartTime(this.state.formData.startTime);
   }
 
   onChangeStartTime(currentDate) {
@@ -123,7 +127,6 @@ class DateFields extends Component {
           isValidDate={(currentDate) => {return DateFields.isValidStartDate(currentDate)}}
           onChange={this.onChangeStartTime}
           timeConstraints={this.calculateStartTimeConstraints()}
-          timeFormat="H:mm"
           value={this.state.formData.startTime}
           error={this.showStartTimeError() ? this.props.translate('pages.new_event.form.errors.start_time') : false} />
       </div>
@@ -136,7 +139,7 @@ class DateFields extends Component {
           isValidDate={(currentDate) => {return DateFields.isValidEndDate(currentDate, this.state.formData.endTime)}}
           onChange={this.onChangeEndTime}
           timeConstraints={this.calculateEndTimeConstraints()}
-          timeFormat="H:mm" inputProps={this.getEndDateInputProps()}
+          inputProps={this.getEndDateInputProps()}
           value={this.state.formData.endTime}
           error={this.showEndTimeError() ? this.props.translate('pages.new_event.form.errors.end_time') : false}
          />
