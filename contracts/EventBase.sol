@@ -76,22 +76,61 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         return usersBets[_user].length;
     }
 
-    function init(address _token, address _whitelist, address _creator, uint256 _deposit, uint64 _startDate, uint64 _endDate, uint8 _resultsCount) public {
+    // Mapping:
+    // ... | string tagName_2 | string tagName_1
+    // ... | string result_3Description | string result_2Description | string result_1Description
+    // string sourceUrl
+    // string description
+    // string bidType
+    // string name
+    // bytes32 category
+    // bytes2 locale
+    // ... | uint64 result_3Coefficient | uint64 result_2Coefficient | uint64 result_1Coefficient
+    // uint8 tagsCount | uint8 resultsCount | uint64 endDate | uint64 startDate
+    function init(address _token, address _whitelist, address _creator, uint256 _deposit, bytes memory buffer) public {
         require(msg.sender == owner);
-        require(_resultsCount < 220); // 220 - 255 reserved for special results
-        require(_startDate > now + 20 minutes);
-        require(_startDate <= _endDate);
 
         token = Token(_token);
         whitelist = Whitelist(_whitelist);
+
+        uint64 _startDate;
+        uint64 _endDate;
+        uint8 _resultsCount;
+        uint64 _resultCoefficient;
+
+        uint offset = buffer.length;
+
+        _startDate = bytesToUint64(offset, buffer);
+        offset -= 8; // sizeOfUint(64);
+
+        require(_startDate > now + 20 minutes);
+
+        _endDate = bytesToUint64(offset, buffer);
+        offset -= 8; // sizeOfUint(64);
+
+        require(_startDate <= _endDate);
+
+        _resultsCount = bytesToUint8(offset, buffer);
+        offset -= 1; // sizeOfUint(8);
+
+        require(_resultsCount < 220); // 220 - 255 reserved for special results
+
+        // bypass tagsCount
+        offset -= 1; // sizeOfUint(8);
 
         creator = _creator;
         deposit = _deposit;
         startDate = _startDate;
         endDate = _endDate;
         resultsCount = _resultsCount;
-
         resolvedResult = 255;
+
+        for (uint i = 0; i < _resultsCount; i++) {
+            _resultCoefficient = bytesToUint64(offset, buffer);
+            offset -= 8; // sizeOfUint(64);
+
+            addResult(_resultCoefficient);
+        }
     }
 
     function addResult(uint64 customCoefficient) public {
@@ -253,7 +292,7 @@ contract EventBase is ERC223ReceivingContract, Seriality {
 
         return (betsSum, winnersBetSum, losersBetSum);
     }
- 
+
     function getPrize(uint _userBet) public view returns (uint256) {
         if (state != States.Closed) {
             return 0;
