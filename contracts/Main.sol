@@ -6,7 +6,7 @@ import "./EventBase.sol";
 import "./Whitelist.sol";
 import "./token-sale-contracts/TokenSale/ERC223ReceivingContract.sol";
 
-contract Main is ERC223ReceivingContract, Seriality {
+contract Main is ERC223ReceivingContract {
     Token token;
     Whitelist whitelist;
     EventBase public eventBase;
