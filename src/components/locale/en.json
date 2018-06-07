@@ -215,7 +215,8 @@
         "description": "Description",
         "source_url": "Sources",
         "tags": "Tags",
-        "resolved_result": "Resolved result"
+        "resolved_result": "Resolved result",
+        "withdrawal_amount": "Withdrawal amount"
       },
       "states": {
         "state_0": "Created",
