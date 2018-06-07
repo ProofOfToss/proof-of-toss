@@ -73,6 +73,8 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
         dispatch({type: SAVED_EVENT, payload: eventAddress.substr(0, 2) + eventAddress.substr(-40, 40)});
 
       }).catch(function(e) {
+        console.log(e);
+
         let msg;
         const translate = getTranslate(getState().locale);
         if (

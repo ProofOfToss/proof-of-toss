@@ -8,7 +8,9 @@ BigNumber.config({ EXPONENTIAL_AT: 30 });
 BigNumber.prototype.toDigits = BigNumber.prototype.precision;
 
 // Remove round method; extend decimalPlaces method accordingly.
-BigNumber.prototype.round = BigNumber.prototype.decimalPlaces;
+BigNumber.prototype.round = function ( dp, rm ) {
+  return this.decimalPlaces(dp || ~~dp, rm || BigNumber.HALF_UP);
+};
 
 // Remove methods: ceil, floor, and truncated.
 BigNumber.prototype.ceil = function () { return this.integerValue(BigNumber.ROUND_CEIL);};
