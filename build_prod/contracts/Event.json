@@ -46,14 +46,14 @@
       "type": "fallback"
     }
   ],
-  "bytecode": "0x6060604052341561000f57600080fd5b6040516020806101858339810160405280805160018054600160a060020a03338116600160a060020a0319928316179092556000805492909316911617905550506101268061005f6000396000f30060606040526004361060485763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635001f3b5811460795780638da5cb5b1460b2575b3415605257600080fd5b6000543660008037600080366000845af43d806000803e818015607457816000f35b600080fd5b3415608357600080fd5b608960c2565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341560bc57600080fd5b608960de565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820a72e6005d029e0d86ff6030430758e677f27c197dfc80f8feb75c7a0be99e5920029",
-  "deployedBytecode": "0x60606040526004361060485763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635001f3b5811460795780638da5cb5b1460b2575b3415605257600080fd5b6000543660008037600080366000845af43d806000803e818015607457816000f35b600080fd5b3415608357600080fd5b608960c2565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341560bc57600080fd5b608960de565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820a72e6005d029e0d86ff6030430758e677f27c197dfc80f8feb75c7a0be99e5920029",
-  "sourceMap": "52:575:0:-;;;127:98;;;;;;;;;;;;;;;;;;;;;;167:5;:18;;-1:-1:-1;;;;;175:10:0;167:18;;-1:-1:-1;;;;;;167:18:0;;;;;;;:5;195:23;;;;;;;;;;;-1:-1:-1;;52:575:0;;;;;;",
-  "deployedSourceMap": "52:575:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;303:1;297:8;341:12;336:3;331;318:36;432:1;427:3;413:12;408:3;399:7;394:3;381:53;465:14;517:10;512:3;507;492:36;548:6;555:21;;;;597:10;594:1;586:22;555:21;573:1;570;563:12;73:21;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;100:20;;;;;;;;;;;;73:21;;;;;;:::o;100:20::-;;;;;;:::o",
-  "source": "pragma solidity ^0.4.2;\n\nimport \"./EventBase.sol\";\n\ncontract Event {\n    EventBase public base;\n    address public owner;\n\n    function Event(address _base) {\n        owner = msg.sender;\n        base = EventBase(_base);\n    }\n\n    function() public {\n        assembly {\n            let _target := sload(0)\n            calldatacopy(0x0, 0x0, calldatasize)\n            let retval := delegatecall(gas, _target, 0x0, calldatasize, 0x0, 0)\n            let returnsize := returndatasize\n            returndatacopy(0x0, 0x0, returnsize)\n            switch retval case 0 {revert(0, 0)} default {return (0, returnsize)}\n        }\n    }\n}\n",
-  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/Event.sol",
+  "bytecode": "0x608060405234801561001057600080fd5b50604051602080610196833981016040525160018054600160a060020a0319908116331790915560008054600160a060020a03909316929091169190911790556101378061005f6000396000f30060806040526004361061004b5763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635001f3b581146100805780638da5cb5b146100be575b34801561005757600080fd5b506000543660008037600080366000845af43d806000803e81801561007b57816000f35b600080fd5b34801561008c57600080fd5b506100956100d3565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3480156100ca57600080fd5b506100956100ef565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a723058203b01a0c890a3a4b659ded3f7e8e1ee535cdab608eb67da91cc893612ddc2b5080029",
+  "deployedBytecode": "0x60806040526004361061004b5763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635001f3b581146100805780638da5cb5b146100be575b34801561005757600080fd5b506000543660008037600080366000845af43d806000803e81801561007b57816000f35b600080fd5b34801561008c57600080fd5b506100956100d3565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3480156100ca57600080fd5b506100956100ef565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a723058203b01a0c890a3a4b659ded3f7e8e1ee535cdab608eb67da91cc893612ddc2b5080029",
+  "sourceMap": "52:579:0:-;;;127:102;8:9:-1;5:2;;;30:1;27;20:12;5:2;127:102:0;;;;;;;;;;;;;171:5;:18;;-1:-1:-1;;;;;;171:18:0;;;179:10;171:18;;;;:5;199:23;;-1:-1:-1;;;;;199:23:0;;;;;;;;;;;;;52:579;;;;;;",
+  "deployedSourceMap": "52:579:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;52:579:0;307:1;301:8;345:12;340:3;335;322:36;436:1;431:3;417:12;412:3;403:7;398:3;385:53;469:14;521:10;516:3;511;496:36;552:6;559:21;;;;601:10;598:1;590:22;559:21;577:1;574;567:12;73:21;;8:9:-1;5:2;;;30:1;27;20:12;5:2;73:21:0;;;;;;;;;;;;;;;;;;;;;;;100:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;100:20:0;;;;73:21;;;;;;:::o;100:20::-;;;;;;:::o",
+  "source": "pragma solidity ^0.4.2;\n\nimport \"./EventBase.sol\";\n\ncontract Event {\n    EventBase public base;\n    address public owner;\n\n    constructor(address _base) public {\n        owner = msg.sender;\n        base = EventBase(_base);\n    }\n\n    function() public {\n        assembly {\n            let _target := sload(0)\n            calldatacopy(0x0, 0x0, calldatasize)\n            let retval := delegatecall(gas, _target, 0x0, calldatasize, 0x0, 0)\n            let returnsize := returndatasize\n            returndatacopy(0x0, 0x0, returnsize)\n            switch retval case 0 {revert(0, 0)} default {return (0, returnsize)}\n        }\n    }\n}\n",
+  "sourcePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/Event.sol",
   "ast": {
-    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/Event.sol",
+    "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/Event.sol",
     "exportedSymbols": {
       "Event": [
         29
@@ -74,12 +74,12 @@
         "src": "0:23:0"
       },
       {
-        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/EventBase.sol",
+        "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/EventBase.sol",
         "file": "./EventBase.sol",
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 30,
-        "sourceUnit": 1354,
+        "sourceUnit": 1427,
         "src": "25:25:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -107,7 +107,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_EventBase_$1353",
+              "typeIdentifier": "t_contract$_EventBase_$1426",
               "typeString": "contract EventBase"
             },
             "typeName": {
@@ -115,10 +115,10 @@
               "id": 3,
               "name": "EventBase",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1353,
+              "referencedDeclaration": 1426,
               "src": "73:9:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_EventBase_$1353",
+                "typeIdentifier": "t_contract$_EventBase_$1426",
                 "typeString": "contract EventBase"
               }
             },
@@ -155,7 +155,7 @@
             "body": {
               "id": 22,
               "nodeType": "Block",
-              "src": "157:68:0",
+              "src": "161:68:0",
               "statements": [
                 {
                   "expression": {
@@ -172,7 +172,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 6,
-                      "src": "167:5:0",
+                      "src": "171:5:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -188,8 +188,8 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 12702,
-                        "src": "175:3:0",
+                        "referencedDeclaration": 12722,
+                        "src": "179:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
@@ -203,13 +203,13 @@
                       "memberName": "sender",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "175:10:0",
+                      "src": "179:10:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "167:18:0",
+                    "src": "171:18:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -217,7 +217,7 @@
                   },
                   "id": 15,
                   "nodeType": "ExpressionStatement",
-                  "src": "167:18:0"
+                  "src": "171:18:0"
                 },
                 {
                   "expression": {
@@ -234,9 +234,9 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 4,
-                      "src": "195:4:0",
+                      "src": "199:4:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_EventBase_$1353",
+                        "typeIdentifier": "t_contract$_EventBase_$1426",
                         "typeString": "contract EventBase"
                       }
                     },
@@ -252,7 +252,7 @@
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 8,
-                          "src": "212:5:0",
+                          "src": "216:5:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -270,10 +270,10 @@
                         "name": "EventBase",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1353,
-                        "src": "202:9:0",
+                        "referencedDeclaration": 1426,
+                        "src": "206:9:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_EventBase_$1353_$",
+                          "typeIdentifier": "t_type$_t_contract$_EventBase_$1426_$",
                           "typeString": "type(contract EventBase)"
                         }
                       },
@@ -285,21 +285,21 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "202:16:0",
+                      "src": "206:16:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_EventBase_$1353",
+                        "typeIdentifier": "t_contract$_EventBase_$1426",
                         "typeString": "contract EventBase"
                       }
                     },
-                    "src": "195:23:0",
+                    "src": "199:23:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_EventBase_$1353",
+                      "typeIdentifier": "t_contract$_EventBase_$1426",
                       "typeString": "contract EventBase"
                     }
                   },
                   "id": 21,
                   "nodeType": "ExpressionStatement",
-                  "src": "195:23:0"
+                  "src": "199:23:0"
                 }
               ]
             },
@@ -309,7 +309,7 @@
             "isConstructor": true,
             "isDeclaredConst": false,
             "modifiers": [],
-            "name": "Event",
+            "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 9,
@@ -321,7 +321,7 @@
                   "name": "_base",
                   "nodeType": "VariableDeclaration",
                   "scope": 23,
-                  "src": "142:13:0",
+                  "src": "139:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -332,7 +332,7 @@
                     "id": 7,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "142:7:0",
+                    "src": "139:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -342,17 +342,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "141:15:0"
+              "src": "138:15:0"
             },
             "payable": false,
             "returnParameters": {
               "id": 10,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "157:0:0"
+              "src": "161:0:0"
             },
             "scope": 29,
-            "src": "127:98:0",
+            "src": "127:102:0",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -361,14 +361,14 @@
             "body": {
               "id": 27,
               "nodeType": "Block",
-              "src": "249:376:0",
+              "src": "253:376:0",
               "statements": [
                 {
                   "externalReferences": [],
                   "id": 26,
                   "nodeType": "InlineAssembly",
                   "operations": "{\n    let _target := sload(0)\n    calldatacopy(0x0, 0x0, calldatasize())\n    let retval := delegatecall(gas(), _target, 0x0, calldatasize(), 0x0, 0)\n    let returnsize := returndatasize()\n    returndatacopy(0x0, 0x0, returnsize)\n    switch retval\n    case 0 {\n        revert(0, 0)\n    }\n    default {\n        return(0, returnsize)\n    }\n}",
-                  "src": "259:366:0"
+                  "src": "263:366:0"
                 }
               ]
             },
@@ -384,30 +384,30 @@
               "id": 24,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "239:2:0"
+              "src": "243:2:0"
             },
             "payable": false,
             "returnParameters": {
               "id": 25,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "249:0:0"
+              "src": "253:0:0"
             },
             "scope": 29,
-            "src": "231:394:0",
+            "src": "235:394:0",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 30,
-        "src": "52:575:0"
+        "src": "52:579:0"
       }
     ],
-    "src": "0:628:0"
+    "src": "0:632:0"
   },
   "legacyAST": {
-    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/Event.sol",
+    "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/Event.sol",
     "exportedSymbols": {
       "Event": [
         29
@@ -428,12 +428,12 @@
         "src": "0:23:0"
       },
       {
-        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/EventBase.sol",
+        "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/EventBase.sol",
         "file": "./EventBase.sol",
         "id": 2,
         "nodeType": "ImportDirective",
         "scope": 30,
-        "sourceUnit": 1354,
+        "sourceUnit": 1427,
         "src": "25:25:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -461,7 +461,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_EventBase_$1353",
+              "typeIdentifier": "t_contract$_EventBase_$1426",
               "typeString": "contract EventBase"
             },
             "typeName": {
@@ -469,10 +469,10 @@
               "id": 3,
               "name": "EventBase",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1353,
+              "referencedDeclaration": 1426,
               "src": "73:9:0",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_EventBase_$1353",
+                "typeIdentifier": "t_contract$_EventBase_$1426",
                 "typeString": "contract EventBase"
               }
             },
@@ -509,7 +509,7 @@
             "body": {
               "id": 22,
               "nodeType": "Block",
-              "src": "157:68:0",
+              "src": "161:68:0",
               "statements": [
                 {
                   "expression": {
@@ -526,7 +526,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 6,
-                      "src": "167:5:0",
+                      "src": "171:5:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
@@ -542,8 +542,8 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 12702,
-                        "src": "175:3:0",
+                        "referencedDeclaration": 12722,
+                        "src": "179:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
                           "typeString": "msg"
@@ -557,13 +557,13 @@
                       "memberName": "sender",
                       "nodeType": "MemberAccess",
                       "referencedDeclaration": null,
-                      "src": "175:10:0",
+                      "src": "179:10:0",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
                         "typeString": "address"
                       }
                     },
-                    "src": "167:18:0",
+                    "src": "171:18:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -571,7 +571,7 @@
                   },
                   "id": 15,
                   "nodeType": "ExpressionStatement",
-                  "src": "167:18:0"
+                  "src": "171:18:0"
                 },
                 {
                   "expression": {
@@ -588,9 +588,9 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 4,
-                      "src": "195:4:0",
+                      "src": "199:4:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_EventBase_$1353",
+                        "typeIdentifier": "t_contract$_EventBase_$1426",
                         "typeString": "contract EventBase"
                       }
                     },
@@ -606,7 +606,7 @@
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
                           "referencedDeclaration": 8,
-                          "src": "212:5:0",
+                          "src": "216:5:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -624,10 +624,10 @@
                         "name": "EventBase",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1353,
-                        "src": "202:9:0",
+                        "referencedDeclaration": 1426,
+                        "src": "206:9:0",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_EventBase_$1353_$",
+                          "typeIdentifier": "t_type$_t_contract$_EventBase_$1426_$",
                           "typeString": "type(contract EventBase)"
                         }
                       },
@@ -639,21 +639,21 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "202:16:0",
+                      "src": "206:16:0",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_EventBase_$1353",
+                        "typeIdentifier": "t_contract$_EventBase_$1426",
                         "typeString": "contract EventBase"
                       }
                     },
-                    "src": "195:23:0",
+                    "src": "199:23:0",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_EventBase_$1353",
+                      "typeIdentifier": "t_contract$_EventBase_$1426",
                       "typeString": "contract EventBase"
                     }
                   },
                   "id": 21,
                   "nodeType": "ExpressionStatement",
-                  "src": "195:23:0"
+                  "src": "199:23:0"
                 }
               ]
             },
@@ -663,7 +663,7 @@
             "isConstructor": true,
             "isDeclaredConst": false,
             "modifiers": [],
-            "name": "Event",
+            "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 9,
@@ -675,7 +675,7 @@
                   "name": "_base",
                   "nodeType": "VariableDeclaration",
                   "scope": 23,
-                  "src": "142:13:0",
+                  "src": "139:13:0",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -686,7 +686,7 @@
                     "id": 7,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "142:7:0",
+                    "src": "139:7:0",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -696,17 +696,17 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "141:15:0"
+              "src": "138:15:0"
             },
             "payable": false,
             "returnParameters": {
               "id": 10,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "157:0:0"
+              "src": "161:0:0"
             },
             "scope": 29,
-            "src": "127:98:0",
+            "src": "127:102:0",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
@@ -715,14 +715,14 @@
             "body": {
               "id": 27,
               "nodeType": "Block",
-              "src": "249:376:0",
+              "src": "253:376:0",
               "statements": [
                 {
                   "externalReferences": [],
                   "id": 26,
                   "nodeType": "InlineAssembly",
                   "operations": "{\n    let _target := sload(0)\n    calldatacopy(0x0, 0x0, calldatasize())\n    let retval := delegatecall(gas(), _target, 0x0, calldatasize(), 0x0, 0)\n    let returnsize := returndatasize()\n    returndatacopy(0x0, 0x0, returnsize)\n    switch retval\n    case 0 {\n        revert(0, 0)\n    }\n    default {\n        return(0, returnsize)\n    }\n}",
-                  "src": "259:366:0"
+                  "src": "263:366:0"
                 }
               ]
             },
@@ -738,33 +738,33 @@
               "id": 24,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "239:2:0"
+              "src": "243:2:0"
             },
             "payable": false,
             "returnParameters": {
               "id": 25,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "249:0:0"
+              "src": "253:0:0"
             },
             "scope": 29,
-            "src": "231:394:0",
+            "src": "235:394:0",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 30,
-        "src": "52:575:0"
+        "src": "52:579:0"
       }
     ],
-    "src": "0:628:0"
+    "src": "0:632:0"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.21+commit.dfe3193c.Emscripten.clang"
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-29T10:33:34.851Z"
+  "updatedAt": "2018-06-08T15:45:56.640Z"
 }

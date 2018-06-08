@@ -45,24 +45,24 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x6060604052341561000f57600080fd5b6040516020806101fb8339810160405280805160008054600160a060020a03909216600160a060020a031990921691909117905550506101a7806100546000396000f30060606040526004361061004b5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166321df0da78114610050578063f2403dcd1461008c575b600080fd5b341561005b57600080fd5b6100636100c0565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341561009757600080fd5b6100be73ffffffffffffffffffffffffffffffffffffffff600435811690602435166100dc565b005b60005473ffffffffffffffffffffffffffffffffffffffff1690565b60005473ffffffffffffffffffffffffffffffffffffffff1663b58e521683836040517c010000000000000000000000000000000000000000000000000000000063ffffffff851602815273ffffffffffffffffffffffffffffffffffffffff928316600482015291166024820152604401600060405180830381600087803b151561016757600080fd5b5af1151561017457600080fd5b50505050505600a165627a7a7230582098009e82fb9e1ca1ea31fbba764e9d795a0127f6f74bac547e20acd451a2f8190029",
-  "deployedBytecode": "0x60606040526004361061004b5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166321df0da78114610050578063f2403dcd1461008c575b600080fd5b341561005b57600080fd5b6100636100c0565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b341561009757600080fd5b6100be73ffffffffffffffffffffffffffffffffffffffff600435811690602435166100dc565b005b60005473ffffffffffffffffffffffffffffffffffffffff1690565b60005473ffffffffffffffffffffffffffffffffffffffff1663b58e521683836040517c010000000000000000000000000000000000000000000000000000000063ffffffff851602815273ffffffffffffffffffffffffffffffffffffffff928316600482015291166024820152604401600060405180830381600087803b151561016757600080fd5b5af1151561017457600080fd5b50505050505600a165627a7a7230582098009e82fb9e1ca1ea31fbba764e9d795a0127f6f74bac547e20acd451a2f8190029",
-  "sourceMap": "86:332:14:-;;;135:79;;;;;;;;;;;;;;;;;;;;;;186:5;:21;;-1:-1:-1;;;;;186:21:14;;;-1:-1:-1;;;;;;186:21:14;;;;;;;;;-1:-1:-1;;86:332:14;;;;;;",
-  "deployedSourceMap": "86:332:14:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;220:85;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;311:105;;;;;;;;;;;;;;;;;;;;;;;220:85;258:7;292:5;;;220:85;:::o;311:105::-;371:5;;;;:19;391:6;399:9;371:38;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;371:38:14;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;311:105;;:::o",
-  "source": "pragma solidity ^0.4.2;\n\nimport \"../token-sale-contracts/TokenSale/Token/Token.sol\";\n\ncontract BlockingGranter {\n    Token token;\n\n    function BlockingGranter(address _token) {\n        token = Token(_token);\n    }\n\n    function getToken() constant returns (address) {\n        return address(token);\n    }\n\n    function grant(address _owner, address _contract) {\n        token.allowBlocking(_owner, _contract);\n    }\n}\n",
-  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/test/BlockingGranter.sol",
+  "bytecode": "0x608060405234801561001057600080fd5b506040516020806101f3833981016040525160008054600160a060020a03909216600160a060020a03199092169190911790556101a1806100526000396000f30060806040526004361061004b5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166321df0da78114610050578063f2403dcd1461008e575b600080fd5b34801561005c57600080fd5b506100656100c4565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b34801561009a57600080fd5b506100c273ffffffffffffffffffffffffffffffffffffffff600435811690602435166100e0565b005b60005473ffffffffffffffffffffffffffffffffffffffff1690565b60008054604080517fb58e521600000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff868116600483015285811660248301529151919092169263b58e5216926044808201939182900301818387803b15801561015957600080fd5b505af115801561016d573d6000803e3d6000fd5b5050505050505600a165627a7a723058202b772b842da095c42291fd539f6de5ee6dcc60fd76228ecc17053bb3adf9572b0029",
+  "deployedBytecode": "0x60806040526004361061004b5763ffffffff7c010000000000000000000000000000000000000000000000000000000060003504166321df0da78114610050578063f2403dcd1461008e575b600080fd5b34801561005c57600080fd5b506100656100c4565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b34801561009a57600080fd5b506100c273ffffffffffffffffffffffffffffffffffffffff600435811690602435166100e0565b005b60005473ffffffffffffffffffffffffffffffffffffffff1690565b60008054604080517fb58e521600000000000000000000000000000000000000000000000000000000815273ffffffffffffffffffffffffffffffffffffffff868116600483015285811660248301529151919092169263b58e5216926044808201939182900301818387803b15801561015957600080fd5b505af115801561016d573d6000803e3d6000fd5b5050505050505600a165627a7a723058202b772b842da095c42291fd539f6de5ee6dcc60fd76228ecc17053bb3adf9572b0029",
+  "sourceMap": "86:340:14:-;;;135:73;8:9:-1;5:2;;;30:1;27;20:12;5:2;135:73:14;;;;;;;;;;;;;180:5;:21;;-1:-1:-1;;;;;180:21:14;;;-1:-1:-1;;;;;;180:21:14;;;;;;;;;86:340;;;;;;",
+  "deployedSourceMap": "86:340:14:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;214:92;;8:9:-1;5:2;;;30:1;27;20:12;5:2;214:92:14;;;;;;;;;;;;;;;;;;;;;;;312:112;;8:9:-1;5:2;;;30:1;27;20:12;5:2;-1:-1;312:112:14;;;;;;;;;;;;;;214:92;259:7;293:5;;;214:92;:::o;312:112::-;379:5;;;:38;;;;;;:5;:38;;;;;;;;;;;;;;;;:5;;;;;:19;;:38;;;;;;;;;;;:5;;:38;;;5:2:-1;;;;30:1;27;20:12;5:2;379:38:14;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;379:38:14;;;;312:112;;:::o",
+  "source": "pragma solidity ^0.4.2;\n\nimport \"../token-sale-contracts/TokenSale/Token/Token.sol\";\n\ncontract BlockingGranter {\n    Token token;\n\n    constructor(address _token) public {\n        token = Token(_token);\n    }\n\n    function getToken() public constant returns (address) {\n        return address(token);\n    }\n\n    function grant(address _owner, address _contract) public {\n        token.allowBlocking(_owner, _contract);\n    }\n}\n",
+  "sourcePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/test/BlockingGranter.sol",
   "ast": {
-    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/test/BlockingGranter.sol",
+    "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/test/BlockingGranter.sol",
     "exportedSymbols": {
       "BlockingGranter": [
-        6949
+        6967
       ]
     },
-    "id": 6950,
+    "id": 6968,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6908,
+        "id": 6926,
         "literals": [
           "solidity",
           "^",
@@ -73,12 +73,12 @@
         "src": "0:23:14"
       },
       {
-        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/Token.sol",
+        "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/Token.sol",
         "file": "../token-sale-contracts/TokenSale/Token/Token.sol",
-        "id": 6909,
+        "id": 6927,
         "nodeType": "ImportDirective",
-        "scope": 6950,
-        "sourceUnit": 12690,
+        "scope": 6968,
+        "sourceUnit": 12708,
         "src": "25:59:14",
         "symbolAliases": [],
         "unitAlias": ""
@@ -89,35 +89,35 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 6949,
+        "id": 6967,
         "linearizedBaseContracts": [
-          6949
+          6967
         ],
         "name": "BlockingGranter",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 6911,
+            "id": 6929,
             "name": "token",
             "nodeType": "VariableDeclaration",
-            "scope": 6949,
+            "scope": 6967,
             "src": "117:11:14",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_Token_$12689",
+              "typeIdentifier": "t_contract$_Token_$12707",
               "typeString": "contract Token"
             },
             "typeName": {
               "contractScope": null,
-              "id": 6910,
+              "id": 6928,
               "name": "Token",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12689,
+              "referencedDeclaration": 12707,
               "src": "117:5:14",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Token_$12689",
+                "typeIdentifier": "t_contract$_Token_$12707",
                 "typeString": "contract Token"
               }
             },
@@ -126,28 +126,28 @@
           },
           {
             "body": {
-              "id": 6922,
+              "id": 6940,
               "nodeType": "Block",
-              "src": "176:38:14",
+              "src": "170:38:14",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 6920,
+                    "id": 6938,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 6916,
+                      "id": 6934,
                       "name": "token",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 6911,
-                      "src": "186:5:14",
+                      "referencedDeclaration": 6929,
+                      "src": "180:5:14",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Token_$12689",
+                        "typeIdentifier": "t_contract$_Token_$12707",
                         "typeString": "contract Token"
                       }
                     },
@@ -158,12 +158,12 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 6918,
+                          "id": 6936,
                           "name": "_token",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 6913,
-                          "src": "200:6:14",
+                          "referencedDeclaration": 6931,
+                          "src": "194:6:14",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -177,18 +177,18 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 6917,
+                        "id": 6935,
                         "name": "Token",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 12689,
-                        "src": "194:5:14",
+                        "referencedDeclaration": 12707,
+                        "src": "188:5:14",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Token_$12689_$",
+                          "typeIdentifier": "t_type$_t_contract$_Token_$12707_$",
                           "typeString": "type(contract Token)"
                         }
                       },
-                      "id": 6919,
+                      "id": 6937,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -196,43 +196,43 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "194:13:14",
+                      "src": "188:13:14",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Token_$12689",
+                        "typeIdentifier": "t_contract$_Token_$12707",
                         "typeString": "contract Token"
                       }
                     },
-                    "src": "186:21:14",
+                    "src": "180:21:14",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Token_$12689",
+                      "typeIdentifier": "t_contract$_Token_$12707",
                       "typeString": "contract Token"
                     }
                   },
-                  "id": 6921,
+                  "id": 6939,
                   "nodeType": "ExpressionStatement",
-                  "src": "186:21:14"
+                  "src": "180:21:14"
                 }
               ]
             },
             "documentation": null,
-            "id": 6923,
+            "id": 6941,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
             "modifiers": [],
-            "name": "BlockingGranter",
+            "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6914,
+              "id": 6932,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6913,
+                  "id": 6931,
                   "name": "_token",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6923,
-                  "src": "160:14:14",
+                  "scope": 6941,
+                  "src": "147:14:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -240,10 +240,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6912,
+                    "id": 6930,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "160:7:14",
+                    "src": "147:7:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -253,26 +253,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "159:16:14"
+              "src": "146:16:14"
             },
             "payable": false,
             "returnParameters": {
-              "id": 6915,
+              "id": 6933,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "176:0:14"
+              "src": "170:0:14"
             },
-            "scope": 6949,
-            "src": "135:79:14",
+            "scope": 6967,
+            "src": "135:73:14",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 6932,
+              "id": 6950,
               "nodeType": "Block",
-              "src": "267:38:14",
+              "src": "268:38:14",
               "statements": [
                 {
                   "expression": {
@@ -280,14 +280,14 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 6929,
+                        "id": 6947,
                         "name": "token",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6911,
-                        "src": "292:5:14",
+                        "referencedDeclaration": 6929,
+                        "src": "293:5:14",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Token_$12689",
+                          "typeIdentifier": "t_contract$_Token_$12707",
                           "typeString": "contract Token"
                         }
                       }
@@ -295,24 +295,24 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_Token_$12689",
+                          "typeIdentifier": "t_contract$_Token_$12707",
                           "typeString": "contract Token"
                         }
                       ],
-                      "id": 6928,
+                      "id": 6946,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "lValueRequested": false,
                       "nodeType": "ElementaryTypeNameExpression",
-                      "src": "284:7:14",
+                      "src": "285:7:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_type$_t_address_$",
                         "typeString": "type(address)"
                       },
                       "typeName": "address"
                     },
-                    "id": 6930,
+                    "id": 6948,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -320,21 +320,21 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "284:14:14",
+                    "src": "285:14:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     }
                   },
-                  "functionReturnParameters": 6927,
-                  "id": 6931,
+                  "functionReturnParameters": 6945,
+                  "id": 6949,
                   "nodeType": "Return",
-                  "src": "277:21:14"
+                  "src": "278:21:14"
                 }
               ]
             },
             "documentation": null,
-            "id": 6933,
+            "id": 6951,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -342,23 +342,23 @@
             "name": "getToken",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6924,
+              "id": 6942,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "237:2:14"
+              "src": "231:2:14"
             },
             "payable": false,
             "returnParameters": {
-              "id": 6927,
+              "id": 6945,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6926,
+                  "id": 6944,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6933,
-                  "src": "258:7:14",
+                  "scope": 6951,
+                  "src": "259:7:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -366,10 +366,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6925,
+                    "id": 6943,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "258:7:14",
+                    "src": "259:7:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -379,19 +379,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "257:9:14"
+              "src": "258:9:14"
             },
-            "scope": 6949,
-            "src": "220:85:14",
+            "scope": 6967,
+            "src": "214:92:14",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 6947,
+              "id": 6965,
               "nodeType": "Block",
-              "src": "361:55:14",
+              "src": "369:55:14",
               "statements": [
                 {
                   "expression": {
@@ -399,12 +399,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 6943,
+                        "id": 6961,
                         "name": "_owner",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6935,
-                        "src": "391:6:14",
+                        "referencedDeclaration": 6953,
+                        "src": "399:6:14",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -412,12 +412,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 6944,
+                        "id": 6962,
                         "name": "_contract",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6937,
-                        "src": "399:9:14",
+                        "referencedDeclaration": 6955,
+                        "src": "407:9:14",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -437,32 +437,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 6940,
+                        "id": 6958,
                         "name": "token",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6911,
-                        "src": "371:5:14",
+                        "referencedDeclaration": 6929,
+                        "src": "379:5:14",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Token_$12689",
+                          "typeIdentifier": "t_contract$_Token_$12707",
                           "typeString": "contract Token"
                         }
                       },
-                      "id": 6942,
+                      "id": 6960,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "allowBlocking",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 12513,
-                      "src": "371:19:14",
+                      "referencedDeclaration": 12531,
+                      "src": "379:19:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$returns$__$",
                         "typeString": "function (address,address) external"
                       }
                     },
-                    "id": 6945,
+                    "id": 6963,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -470,20 +470,20 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "371:38:14",
+                    "src": "379:38:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 6946,
+                  "id": 6964,
                   "nodeType": "ExpressionStatement",
-                  "src": "371:38:14"
+                  "src": "379:38:14"
                 }
               ]
             },
             "documentation": null,
-            "id": 6948,
+            "id": 6966,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -491,16 +491,16 @@
             "name": "grant",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6938,
+              "id": 6956,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6935,
+                  "id": 6953,
                   "name": "_owner",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6948,
-                  "src": "326:14:14",
+                  "scope": 6966,
+                  "src": "327:14:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -508,10 +508,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6934,
+                    "id": 6952,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "326:7:14",
+                    "src": "327:7:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -522,11 +522,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 6937,
+                  "id": 6955,
                   "name": "_contract",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6948,
-                  "src": "342:17:14",
+                  "scope": 6966,
+                  "src": "343:17:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -534,10 +534,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6936,
+                    "id": 6954,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "342:7:14",
+                    "src": "343:7:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -547,40 +547,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "325:35:14"
+              "src": "326:35:14"
             },
             "payable": false,
             "returnParameters": {
-              "id": 6939,
+              "id": 6957,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "361:0:14"
+              "src": "369:0:14"
             },
-            "scope": 6949,
-            "src": "311:105:14",
+            "scope": 6967,
+            "src": "312:112:14",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 6950,
-        "src": "86:332:14"
+        "scope": 6968,
+        "src": "86:340:14"
       }
     ],
-    "src": "0:419:14"
+    "src": "0:427:14"
   },
   "legacyAST": {
-    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/test/BlockingGranter.sol",
+    "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/test/BlockingGranter.sol",
     "exportedSymbols": {
       "BlockingGranter": [
-        6949
+        6967
       ]
     },
-    "id": 6950,
+    "id": 6968,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 6908,
+        "id": 6926,
         "literals": [
           "solidity",
           "^",
@@ -591,12 +591,12 @@
         "src": "0:23:14"
       },
       {
-        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/Token.sol",
+        "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/Token.sol",
         "file": "../token-sale-contracts/TokenSale/Token/Token.sol",
-        "id": 6909,
+        "id": 6927,
         "nodeType": "ImportDirective",
-        "scope": 6950,
-        "sourceUnit": 12690,
+        "scope": 6968,
+        "sourceUnit": 12708,
         "src": "25:59:14",
         "symbolAliases": [],
         "unitAlias": ""
@@ -607,35 +607,35 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 6949,
+        "id": 6967,
         "linearizedBaseContracts": [
-          6949
+          6967
         ],
         "name": "BlockingGranter",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "constant": false,
-            "id": 6911,
+            "id": 6929,
             "name": "token",
             "nodeType": "VariableDeclaration",
-            "scope": 6949,
+            "scope": 6967,
             "src": "117:11:14",
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_Token_$12689",
+              "typeIdentifier": "t_contract$_Token_$12707",
               "typeString": "contract Token"
             },
             "typeName": {
               "contractScope": null,
-              "id": 6910,
+              "id": 6928,
               "name": "Token",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12689,
+              "referencedDeclaration": 12707,
               "src": "117:5:14",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Token_$12689",
+                "typeIdentifier": "t_contract$_Token_$12707",
                 "typeString": "contract Token"
               }
             },
@@ -644,28 +644,28 @@
           },
           {
             "body": {
-              "id": 6922,
+              "id": 6940,
               "nodeType": "Block",
-              "src": "176:38:14",
+              "src": "170:38:14",
               "statements": [
                 {
                   "expression": {
                     "argumentTypes": null,
-                    "id": 6920,
+                    "id": 6938,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
                     "lValueRequested": false,
                     "leftHandSide": {
                       "argumentTypes": null,
-                      "id": 6916,
+                      "id": 6934,
                       "name": "token",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 6911,
-                      "src": "186:5:14",
+                      "referencedDeclaration": 6929,
+                      "src": "180:5:14",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Token_$12689",
+                        "typeIdentifier": "t_contract$_Token_$12707",
                         "typeString": "contract Token"
                       }
                     },
@@ -676,12 +676,12 @@
                       "arguments": [
                         {
                           "argumentTypes": null,
-                          "id": 6918,
+                          "id": 6936,
                           "name": "_token",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 6913,
-                          "src": "200:6:14",
+                          "referencedDeclaration": 6931,
+                          "src": "194:6:14",
                           "typeDescriptions": {
                             "typeIdentifier": "t_address",
                             "typeString": "address"
@@ -695,18 +695,18 @@
                             "typeString": "address"
                           }
                         ],
-                        "id": 6917,
+                        "id": 6935,
                         "name": "Token",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 12689,
-                        "src": "194:5:14",
+                        "referencedDeclaration": 12707,
+                        "src": "188:5:14",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Token_$12689_$",
+                          "typeIdentifier": "t_type$_t_contract$_Token_$12707_$",
                           "typeString": "type(contract Token)"
                         }
                       },
-                      "id": 6919,
+                      "id": 6937,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
@@ -714,43 +714,43 @@
                       "lValueRequested": false,
                       "names": [],
                       "nodeType": "FunctionCall",
-                      "src": "194:13:14",
+                      "src": "188:13:14",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Token_$12689",
+                        "typeIdentifier": "t_contract$_Token_$12707",
                         "typeString": "contract Token"
                       }
                     },
-                    "src": "186:21:14",
+                    "src": "180:21:14",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Token_$12689",
+                      "typeIdentifier": "t_contract$_Token_$12707",
                       "typeString": "contract Token"
                     }
                   },
-                  "id": 6921,
+                  "id": 6939,
                   "nodeType": "ExpressionStatement",
-                  "src": "186:21:14"
+                  "src": "180:21:14"
                 }
               ]
             },
             "documentation": null,
-            "id": 6923,
+            "id": 6941,
             "implemented": true,
             "isConstructor": true,
             "isDeclaredConst": false,
             "modifiers": [],
-            "name": "BlockingGranter",
+            "name": "",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6914,
+              "id": 6932,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6913,
+                  "id": 6931,
                   "name": "_token",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6923,
-                  "src": "160:14:14",
+                  "scope": 6941,
+                  "src": "147:14:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -758,10 +758,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6912,
+                    "id": 6930,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "160:7:14",
+                    "src": "147:7:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -771,26 +771,26 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "159:16:14"
+              "src": "146:16:14"
             },
             "payable": false,
             "returnParameters": {
-              "id": 6915,
+              "id": 6933,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "176:0:14"
+              "src": "170:0:14"
             },
-            "scope": 6949,
-            "src": "135:79:14",
+            "scope": 6967,
+            "src": "135:73:14",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 6932,
+              "id": 6950,
               "nodeType": "Block",
-              "src": "267:38:14",
+              "src": "268:38:14",
               "statements": [
                 {
                   "expression": {
@@ -798,14 +798,14 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 6929,
+                        "id": 6947,
                         "name": "token",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6911,
-                        "src": "292:5:14",
+                        "referencedDeclaration": 6929,
+                        "src": "293:5:14",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Token_$12689",
+                          "typeIdentifier": "t_contract$_Token_$12707",
                           "typeString": "contract Token"
                         }
                       }
@@ -813,24 +813,24 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_Token_$12689",
+                          "typeIdentifier": "t_contract$_Token_$12707",
                           "typeString": "contract Token"
                         }
                       ],
-                      "id": 6928,
+                      "id": 6946,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": true,
                       "lValueRequested": false,
                       "nodeType": "ElementaryTypeNameExpression",
-                      "src": "284:7:14",
+                      "src": "285:7:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_type$_t_address_$",
                         "typeString": "type(address)"
                       },
                       "typeName": "address"
                     },
-                    "id": 6930,
+                    "id": 6948,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -838,21 +838,21 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "284:14:14",
+                    "src": "285:14:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
                     }
                   },
-                  "functionReturnParameters": 6927,
-                  "id": 6931,
+                  "functionReturnParameters": 6945,
+                  "id": 6949,
                   "nodeType": "Return",
-                  "src": "277:21:14"
+                  "src": "278:21:14"
                 }
               ]
             },
             "documentation": null,
-            "id": 6933,
+            "id": 6951,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": true,
@@ -860,23 +860,23 @@
             "name": "getToken",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6924,
+              "id": 6942,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "237:2:14"
+              "src": "231:2:14"
             },
             "payable": false,
             "returnParameters": {
-              "id": 6927,
+              "id": 6945,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6926,
+                  "id": 6944,
                   "name": "",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6933,
-                  "src": "258:7:14",
+                  "scope": 6951,
+                  "src": "259:7:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -884,10 +884,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6925,
+                    "id": 6943,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "258:7:14",
+                    "src": "259:7:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -897,19 +897,19 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "257:9:14"
+              "src": "258:9:14"
             },
-            "scope": 6949,
-            "src": "220:85:14",
+            "scope": 6967,
+            "src": "214:92:14",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
           },
           {
             "body": {
-              "id": 6947,
+              "id": 6965,
               "nodeType": "Block",
-              "src": "361:55:14",
+              "src": "369:55:14",
               "statements": [
                 {
                   "expression": {
@@ -917,12 +917,12 @@
                     "arguments": [
                       {
                         "argumentTypes": null,
-                        "id": 6943,
+                        "id": 6961,
                         "name": "_owner",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6935,
-                        "src": "391:6:14",
+                        "referencedDeclaration": 6953,
+                        "src": "399:6:14",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -930,12 +930,12 @@
                       },
                       {
                         "argumentTypes": null,
-                        "id": 6944,
+                        "id": 6962,
                         "name": "_contract",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6937,
-                        "src": "399:9:14",
+                        "referencedDeclaration": 6955,
+                        "src": "407:9:14",
                         "typeDescriptions": {
                           "typeIdentifier": "t_address",
                           "typeString": "address"
@@ -955,32 +955,32 @@
                       ],
                       "expression": {
                         "argumentTypes": null,
-                        "id": 6940,
+                        "id": 6958,
                         "name": "token",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 6911,
-                        "src": "371:5:14",
+                        "referencedDeclaration": 6929,
+                        "src": "379:5:14",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Token_$12689",
+                          "typeIdentifier": "t_contract$_Token_$12707",
                           "typeString": "contract Token"
                         }
                       },
-                      "id": 6942,
+                      "id": 6960,
                       "isConstant": false,
                       "isLValue": false,
                       "isPure": false,
                       "lValueRequested": false,
                       "memberName": "allowBlocking",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 12513,
-                      "src": "371:19:14",
+                      "referencedDeclaration": 12531,
+                      "src": "379:19:14",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_address_$returns$__$",
                         "typeString": "function (address,address) external"
                       }
                     },
-                    "id": 6945,
+                    "id": 6963,
                     "isConstant": false,
                     "isLValue": false,
                     "isPure": false,
@@ -988,20 +988,20 @@
                     "lValueRequested": false,
                     "names": [],
                     "nodeType": "FunctionCall",
-                    "src": "371:38:14",
+                    "src": "379:38:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_tuple$__$",
                       "typeString": "tuple()"
                     }
                   },
-                  "id": 6946,
+                  "id": 6964,
                   "nodeType": "ExpressionStatement",
-                  "src": "371:38:14"
+                  "src": "379:38:14"
                 }
               ]
             },
             "documentation": null,
-            "id": 6948,
+            "id": 6966,
             "implemented": true,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -1009,16 +1009,16 @@
             "name": "grant",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 6938,
+              "id": 6956,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 6935,
+                  "id": 6953,
                   "name": "_owner",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6948,
-                  "src": "326:14:14",
+                  "scope": 6966,
+                  "src": "327:14:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1026,10 +1026,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6934,
+                    "id": 6952,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "326:7:14",
+                    "src": "327:7:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1040,11 +1040,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 6937,
+                  "id": 6955,
                   "name": "_contract",
                   "nodeType": "VariableDeclaration",
-                  "scope": 6948,
-                  "src": "342:17:14",
+                  "scope": 6966,
+                  "src": "343:17:14",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -1052,10 +1052,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 6936,
+                    "id": 6954,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "342:7:14",
+                    "src": "343:7:14",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -1065,33 +1065,33 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "325:35:14"
+              "src": "326:35:14"
             },
             "payable": false,
             "returnParameters": {
-              "id": 6939,
+              "id": 6957,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "361:0:14"
+              "src": "369:0:14"
             },
-            "scope": 6949,
-            "src": "311:105:14",
+            "scope": 6967,
+            "src": "312:112:14",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 6950,
-        "src": "86:332:14"
+        "scope": 6968,
+        "src": "86:340:14"
       }
     ],
-    "src": "0:419:14"
+    "src": "0:427:14"
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.21+commit.dfe3193c.Emscripten.clang"
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-05-29T10:37:55.327Z"
+  "updatedAt": "2018-06-08T15:48:57.741Z"
 }
