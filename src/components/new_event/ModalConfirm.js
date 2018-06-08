@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
 import { Input } from 'valuelink/tags'
+import { withRouter } from "react-router";
 import BaseModal from '../modal/BaseModal'
 import { modalCloseEvent, modalSaveEvent } from '../../actions/pages/newEvent'
 import { getGasCalculation } from '../../util/gasPriceOracle';
@@ -86,6 +87,12 @@ class ModalConfirm extends Component {
         </div>
       }
 
+      {this.props.saving &&
+        <div className='alert alert-info' role='alert'>
+          {this.props.translate('pages.new_event.saving')}
+        </div>
+      }
+
       <dl className="dl-horizontal">
         <dt>{this.props.translate('pages.new_event.form.language')}</dt>
         <dd>{this.props.formData.language}</dd>
@@ -154,7 +161,6 @@ class ModalConfirm extends Component {
 
             <dt>{this.props.translate('pages.new_event.gas_limit')}</dt>
             <dd>{this.state.gasLimit}</dd>
-
             <dt>{this.props.translate('pages.new_event.gas_price')}</dt>
             <dd>{Number(this.props.web3.toWei(this.state.fee / this.state.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei'}</dd>
           </div>
@@ -164,6 +170,10 @@ class ModalConfirm extends Component {
   }
 
   _savedContent() {
+    setTimeout(() => {
+      this.props.router.push(`/${this.props.router.params.locale}/event/${this.props.eventAddress}`);
+    }, 5000);
+
     return <div className='alert alert-success' role='alert'>
       {this.props.translate('pages.new_event.saved')}
     </div>
@@ -209,7 +219,6 @@ class ModalConfirm extends Component {
       .check( v => parseFloat(v) >= this.state.minFee, this.props.translate('validation.token.fee_is_too_small') + this.state.minFee + ' ' + config.view.currency_symbol);
 
     return(
-
       <main className='container'>
         <div>
           <BaseModal handleHideModal={this.props.modalClose} buttons={this._buttons()} title={ this.props.translate('pages.new_event.modal.submit')} >
@@ -229,6 +238,7 @@ function mapStateToProps(state) {
     saved: state.newEvent.saved,
     save_error: state.newEvent.save_error,
     formData: state.newEvent.formData,
+    eventAddress: state.newEvent.eventAddress,
     sbtcBalance: state.token.sbtcBalance,
     translate: getTranslate(state.locale),
   };
@@ -239,4 +249,4 @@ const mapDispatchToProps = {
   saveEvent: modalSaveEvent
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalConfirm);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ModalConfirm));

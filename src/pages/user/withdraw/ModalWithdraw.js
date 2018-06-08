@@ -5,9 +5,10 @@ import Link from 'valuelink'
 import EventBaseContract from '../../../../build/contracts/EventBase.json';
 import { Input } from 'valuelink/tags'
 import BaseModal from '../../../components/modal/BaseModal'
-import { modalWithdrawClose, modalWithdrawApprove } from '../../../actions/pages/event'
+import { modalWithdrawClose, modalWithdrawApprove, fetchEvent, resetEvent } from '../../../actions/pages/event'
 import { getGasCalculation } from '../../../util/gasPriceOracle';
 import config from '../../../data/config.json';
+import CategoryUtil from '../../../util/CategoryUtil';
 
 class ModalWithdraw extends Component {
 
@@ -15,6 +16,7 @@ class ModalWithdraw extends Component {
     super(props);
 
     this.approveHandler = this.approveHandler.bind(this);
+    this.categoryUtil = new CategoryUtil(props.translate);
 
     this.state = {
       gasLimit: undefined,
@@ -56,6 +58,8 @@ class ModalWithdraw extends Component {
 
       console.log('gasCalculation', gasCalculation);
 
+      this.props.fetchEvent(this.props.withdraw.address);
+
       this.setState({
         gasLimit: gasCalculation.gasLimit,
         gasPrice: gasCalculation.gasPrice,
@@ -72,6 +76,10 @@ class ModalWithdraw extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.resetEvent();
+  }
+
   approveHandler() {
     this.props.modalWithdrawApprove(this.state.gasLimit, Math.round(this.props.web3.toWei(this.state.fee / this.state.gasLimit)));
   }
@@ -80,9 +88,9 @@ class ModalWithdraw extends Component {
 
     return <div className="modal-resolve">
       {this.props.withdrawApproveError &&
-      <div className='alert alert-danger' role='alert'>
-        {this.props.withdrawApproveError}
-      </div>
+        <div className='alert alert-danger' role='alert'>
+          {this.props.withdrawApproveError}
+        </div>
       }
 
       {this.state.estimateGasError &&
@@ -91,25 +99,60 @@ class ModalWithdraw extends Component {
         </div>
       }
 
+      {this.props.withdrawApproving &&
+        <div className='alert alert-info' role='alert'>
+          {this.props.translate('pages.withdraw.withdraw_approving')}
+        </div>
+      }
+
       <dl className="dl-horizontal">
 
-        {this.state.gasLimit && <div className="fees-block">
-            <dt className="fees-block-fee-label">{ this.props.translate('pages.wallet.send.fee') } ({config.view.currency_symbol})</dt>
-            <dd className="fees-block-fee-field">
-              <div className={ this.links.fee.error ? 'form-group has-error' : 'form-group' }>
-                <Input valueLink={ this.links.fee } type='number' className='form-control' id='event[fee]' placeholder={ this.props.translate('pages.new_event.fee') } />
-                <span className='help-block'>{ this.links.fee.error || '' }</span>
-              </div>
-            </dd>
+        {this.state.gasLimit && <div>
 
-            <dt>{this.props.translate('pages.wallet.send.currency_balance', {currency: config.view.currency_symbol})}</dt>
-            <dd>{this.props.sbtcBalance.toFixed(config.view.currency_precision)}</dd>
+            <div className="event-info-block">
+              <dt><h4>{this.props.translate('pages.withdraw.modal_event_data')}</h4></dt>
+              <dd></dd>
 
-            <dt>{this.props.translate('pages.new_event.gas_limit')}</dt>
-            <dd>{this.state.gasLimit}</dd>
+              <dt>{this.props.translate('pages.event.labels.name')}</dt>
+              <dd>{this.props.eventData.name}</dd>
 
-            <dt>{this.props.translate('pages.new_event.gas_price')}</dt>
-            <dd>{Number(this.props.web3.toWei(this.state.fee / this.state.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei'}</dd>
+              <dt>{this.props.translate('pages.event.labels.description')}</dt>
+              <dd>{this.props.eventData.description}</dd>
+
+              <dt>{this.props.translate('pages.event.labels.resolved_result')}</dt>
+              <dd>{this.props.eventData.resolvedResultDescription}</dd>
+
+              <dt>{this.props.translate('pages.event.labels.source_url')}</dt>
+              <dd>{this.props.eventData.sourceUrl}</dd>
+
+              <dt>{this.props.translate('pages.event.labels.category')}</dt>
+              <dd>{this.categoryUtil.getName(this.props.eventData.category)}</dd>
+
+              <dt>{this.props.translate('pages.event.labels.withdrawal_amount')}</dt>
+              <dd>{this.props.withdraw.withdrawalAmount} TOSS</dd>
+            </div>
+
+            <div className="fees-block">
+              <dt><h4>{this.props.translate('pages.withdraw.modal_fees_data')}</h4></dt>
+              <dd></dd>
+
+              <dt className="fees-block-fee-label">{ this.props.translate('pages.wallet.send.fee') } ({config.view.currency_symbol})</dt>
+              <dd className="fees-block-fee-field">
+                <div className={ this.links.fee.error ? 'form-group has-error' : 'form-group' }>
+                  <Input valueLink={ this.links.fee } type='number' className='form-control' id='event[fee]' placeholder={ this.props.translate('pages.new_event.fee') } />
+                  <span className='help-block'>{ this.links.fee.error || '' }</span>
+                </div>
+              </dd>
+
+              <dt>{this.props.translate('pages.wallet.send.currency_balance', {currency: config.view.currency_symbol})}</dt>
+              <dd>{this.props.sbtcBalance.toFixed(config.view.currency_precision)}</dd>
+
+              <dt>{this.props.translate('pages.new_event.gas_limit')}</dt>
+              <dd>{this.state.gasLimit}</dd>
+
+              <dt>{this.props.translate('pages.new_event.gas_price')}</dt>
+              <dd>{Number(this.props.web3.toWei(this.state.fee / this.state.gasLimit, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei'}</dd>
+            </div>
           </div>
         }
       </dl>
@@ -184,13 +227,15 @@ function mapStateToProps(state) {
     withdraw: state.event.withdraw,
     withdrawApproveError: state.event.withdrawApproveError,
     withdrawApproving: state.event.withdrawApproving,
-    withdrawApproved: state.event.withdrawApproved,
+    withdrawApproved: state.event.withdrawApproved
   };
 }
 
 const mapDispatchToProps = {
   modalWithdrawClose,
-  modalWithdrawApprove
+  modalWithdrawApprove,
+  fetchEvent,
+  resetEvent
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalWithdraw);

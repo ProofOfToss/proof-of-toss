@@ -143,7 +143,7 @@ deploy_production:
     - demo
   when: manual
   only:
-    - master
+    - prod
   script:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
@@ -152,13 +152,15 @@ deploy_production:
     - npm install
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
+    # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
+    # The results are saved in build_prod dir which is kept in the repository.
     - mkdir $CI_PROJECT_DIR/build
-    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
-    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
+    - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
+#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
-    - ssh $AWS_HOST_LOGIN "cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; pm2 restart event_watcher"
+    - ssh $AWS_HOST_LOGIN "bash -c '/home/ubuntu/.nvm/nvm.sh; cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; pm2 restart event_watcher'"
 
 deploy_production_reindex:
   stage: deploy
@@ -168,7 +170,7 @@ deploy_production_reindex:
     - demo
   when: manual
   only:
-    - master
+    - prod
   script:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
@@ -177,13 +179,15 @@ deploy_production_reindex:
     - npm install
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
+    # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
+    # The results are saved in build_prod dir which is kept in the repository.
     - mkdir $CI_PROJECT_DIR/build
-    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
-    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
+    - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
+#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
-    - ssh $AWS_HOST_LOGIN "cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; pm2 stop event_watcher; npm run renew_es_index; rm -f scripts/cache_state.json; pm2 restart event_watcher"
+    - ssh $AWS_HOST_LOGIN "bash -c '/home/ubuntu/.nvm/nvm.sh; cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; pm2 stop event_watcher; npm run renew_es_index; rm -f scripts/cache_state.json; pm2 restart event_watcher'"
 
 deploy_production_contracts:
   stage: deploy
@@ -193,7 +197,7 @@ deploy_production_contracts:
     - demo
   when: manual
   only:
-    - master
+    - prod
   script:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
@@ -202,15 +206,17 @@ deploy_production_contracts:
     - npm install
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
+    # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
+    # The results are saved in build_prod dir which is kept in the repository.
     - mkdir $CI_PROJECT_DIR/build
-    - rsync -hrlv --delete /home/gitlab-runner/toss_production_build/build/ $CI_PROJECT_DIR/build/
-    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
+    - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
+#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
     - echo "Deloy to event-watcher server"
     - scp -r ./build $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/
-    - ssh $AWS_HOST_LOGIN "cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; pm2 stop event_watcher; npm run renew_es_index; rm -f scripts/cache_state.json; pm2 restart event_watcher"
+    - ssh $AWS_HOST_LOGIN "bash -c '/home/ubuntu/.nvm/nvm.sh; cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; pm2 stop event_watcher; npm run renew_es_index; rm -f scripts/cache_state.json; pm2 restart event_watcher'"
 
 deploy_production_full:
   stage: deploy
@@ -220,7 +226,7 @@ deploy_production_full:
     - demo
   when: manual
   only:
-    - master
+    - prod
   script:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
@@ -236,5 +242,5 @@ deploy_production_full:
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
     - echo "Deloy to event-watcher server"
     - scp -r ./build $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/
-    - ssh $AWS_HOST_LOGIN "cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; pm2 stop event_watcher; npm run renew_es_index; rm -f scripts/cache_state.json; pm2 restart event_watcher"
+    - ssh $AWS_HOST_LOGIN "bash -c 'cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; pm2 stop event_watcher; npm run renew_es_index; rm -f scripts/cache_state.json; pm2 restart event_watcher'"
 

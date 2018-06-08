@@ -4,8 +4,7 @@ import callAsync from './web3Util';
 import util from 'util';
 import { formatBalance } from './token'
 import { decodeEventMethod } from './web3Util'
-
-const BigNumber = require('bignumber.js');
+import BigNumber from './bignumber';
 
 export const tagMapping = {
   'mappings': {
@@ -24,7 +23,7 @@ export const eventMapping = {
       'properties': {
         'name': {'type': 'text'},
         'description': {'type': 'text'},
-        'bidType': {'type': 'keyword'},
+        'bidType': {'type': 'text'},
         'address': {'type': 'keyword'},
         'createdBy': {'type': 'keyword'},
         'createdAt': {'type': 'date'},

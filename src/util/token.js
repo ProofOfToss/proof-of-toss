@@ -1,11 +1,20 @@
-import MainContract from '../../build/contracts/Main.json'
-import TokenContract from '../../build/contracts/Token.json'
-import config from '../data/config.json'
+import MainContract from '../../build/contracts/Main.json';
+import TokenContract from '../../build/contracts/Token.json';
+import config from '../data/config.json';
+import { deployed } from "./contracts";
+import BigNumber from './bignumber';
 
-const BigNumber = require('bignumber.js');
 const contract = require('truffle-contract');
 const main = contract(MainContract);
 const token = contract(TokenContract);
+
+function formatWithdrawal(withdrawalSum, formatPrecision) {
+  if (typeof formatPrecision === 'undefined') {
+    formatPrecision = config.view.withdrawal_precision;
+  }
+
+  return (new BigNumber(withdrawalSum)).toFixed(formatPrecision).replace(/\.?0+$/, '');
+}
 
 function formatBalance(balance, formatPrecision) {
   if (typeof formatPrecision === 'undefined') {
@@ -19,7 +28,7 @@ function formatBalance(balance, formatPrecision) {
 }
 
 function denormalizeBalance(balance) {
-  return (new BigNumber(balance)).times(Math.pow(10, config.view.token_precision)).toNumber();
+  return (new BigNumber(balance)).times(Math.pow(10, config.view.token_precision));
 }
 
 function getMyBalance(web3, address) {
@@ -158,6 +167,17 @@ function getMyAllowance(web3, address) {
   })
 }
 
+export async function canSendTokens(web3, address) {
+  const tokenInstance = (await deployed(web3, 'token')).tokenInstance;
+  const paused = await tokenInstance.paused();
+
+  if(paused) {
+    return await tokenInstance.unpausedWallet(address);
+  }
+
+  return true;
+}
+
 export {
   getMyBalance,
   getMyAllowance,
@@ -165,6 +185,7 @@ export {
   getMySBTCBalance,
   getMyTransactions,
   getDecimals,
+  formatWithdrawal,
   formatBalance,
   denormalizeBalance,
   calculateGasPrice

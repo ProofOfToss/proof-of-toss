@@ -4,23 +4,30 @@ import { getTranslate } from 'react-localize-redux';
 import TransactionsList from './TransactionsList'
 import ModalDeposit from './ModalDeposit'
 import ModalSend from "./ModalSend";
-import { formatBalance } from './../../util/token'
+import { formatBalance, canSendTokens } from './../../util/token';
 
 class Index extends Component {
   constructor(props) {
-    super(props)
+    super(props);
 
-    this.handleDepositShowModal = this.handleDepositShowModal.bind(this)
-    this.handleDepositHideModal = this.handleDepositHideModal.bind(this)
-    this.handleSendShowModal = this.handleSendShowModal.bind(this)
-    this.handleSendHideModal = this.handleSendHideModal.bind(this)
+    this.handleDepositShowModal = this.handleDepositShowModal.bind(this);
+    this.handleDepositHideModal = this.handleDepositHideModal.bind(this);
+    this.handleSendShowModal = this.handleSendShowModal.bind(this);
+    this.handleSendHideModal = this.handleSendHideModal.bind(this);
 
     this.state = {
+      canSend: false,
       view: {
         showDepositModal: false,
         showSendModal: false
       }
     }
+  }
+
+  async componentWillMount() {
+    this.setState({
+      canSend: await canSendTokens(this.props.web3, this.props.currentAddress)
+    });
   }
 
   handleDepositShowModal() {
@@ -43,16 +50,25 @@ class Index extends Component {
     return(
       <main className="container wallet-index">
         <h1>TOSS</h1>
+
+        {this.state.canSend === false &&
+          <div className='alert alert-info' role='alert'>
+            {this.props.translate('pages.wallet.info.cant_send_paused')}
+          </div>
+        }
+
         <dl className="dl-horizontal">
           <dt>{ this.props.translate('pages.wallet.info.your_balance')}</dt>
           <dd>{ formatBalance(this.props.balance, this.props.decimals) }</dd>
 
-          <dt>Block sum</dt>
+          <dt>{ this.props.translate('pages.wallet.info.block_sum')}</dt>
           <dd>{ formatBalance(this.props.blockedBalance, this.props.decimals) }</dd>
 
           <dt />
           <dd>
-            <button className="btn btn-primary" onClick={this.handleSendShowModal}>Send</button >
+            {this.state.canSend &&
+              <button className="btn btn-primary" onClick={this.handleSendShowModal}>Send</button>
+            }
             <button className="btn btn-primary" onClick={this.handleDepositShowModal}>Deposit</button >
           </dd>
         </dl>
@@ -69,6 +85,7 @@ class Index extends Component {
 function mapPropsToState(state) {
   return {
     web3: state.web3.web3,
+    currentAddress:  state.user.address,
     balance: state.token.balance,
     blockedBalance: state.token.blockedBalance,
     decimals: state.token.decimals,

@@ -1,7 +1,22 @@
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
+
 .event {
   .results {
+    th {
+      white-space: nowrap;
+    }
+
     td {
       vertical-align: middle;
+      word-break: break-all;
     }
+  }
+
+  .did_not_happen_success {
+    float: left;
+    padding: 6px 12px;
+    border-radius: 4px;
+    color: #ffffff;
+    background-color: $brand-success;
   }
 }

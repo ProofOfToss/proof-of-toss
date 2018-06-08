@@ -17,6 +17,7 @@ import '../../../styles/components/play_table.scss';
 
 import appConfig from "../../../data/config.json"
 import { myPrizeConditions, myPrizeBetConditions, bidInfo } from '../../../util/searchUtil';
+import { formatWithdrawal } from '../../../util/token';
 
 const LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE = 'LOCAL_STORAGE_KEY_PLAY_PAGE_SIZE';
 const EVENT_INDEX = 'toss_event_' + appConfig.elasticsearch.indexPostfix;
@@ -121,12 +122,13 @@ class PlayerWithdraw extends Component {
     }, this.update);
   }
 
-  modalWithdrawShow(event, userBet, betTx) {
+  modalWithdrawShow(event, userBet, betTx, withdrawalAmount) {
     const withdraw = {
       address: event,
       type: 'userBet',
       userBet,
       betTx,
+      withdrawalAmount
     };
 
     this.props.modalWithdrawShow(withdraw);
@@ -376,7 +378,7 @@ class PlayerWithdraw extends Component {
                 dataField: "coefficient",
                 sort: false,
                 width: 150,
-                formatter: (cell) => parseFloat(cell).toFixed(2),
+                formatter: (cell) => isNaN(parseFloat(cell)) ? '-' : parseFloat(cell).toFixed(2),
               },
               {
                 text: this.props.translate('pages.play.columns.prize'),
@@ -389,11 +391,11 @@ class PlayerWithdraw extends Component {
 
                   return (
                     (txStatus.status === TX_STATUS_REJECTED || txStatus.status === TX_STATUS_DEFAULT)
-                      ? <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index, row.tx)}}>
-                        {row.hasDefinedResult ? `Withdraw ${cell} TOSS` : `Get back ${cell} TOSS`}
+                      ? <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index, row.tx, cell)}}>
+                        {row.hasDefinedResult ? `Withdraw ${formatWithdrawal(cell)} TOSS` : `Get back ${formatWithdrawal(cell)} TOSS`}
                       </span>
                       : <span className="btn btn-primary" disabled="disabled">
-                        {row.hasDefinedResult ? `Withdraw ${cell} TOSS` : `Get back ${cell} TOSS`}
+                        {row.hasDefinedResult ? `Withdraw ${formatWithdrawal(cell)} TOSS` : `Get back ${formatWithdrawal(cell)} TOSS`}
                       </span>
                   );
                 }

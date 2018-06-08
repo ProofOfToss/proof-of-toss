@@ -39,7 +39,7 @@ class SignIn extends Component {
 
   handleLogin() {
     if (this.props.web3HasConnection === false) {
-      this.setState({loginFailed: true, errorMessage: 'Looks like that MetaMask is not connected to RPC server. Please check the connection.'});
+      this.setState({loginFailed: true, errorMessage: this.props.translate('pages.login.not_connted_to_rpc')});
     } else {
       this.setState({loginFailed: false, errorMessage: ''});
     }
@@ -74,8 +74,8 @@ class SignIn extends Component {
       return (
         <div>
           <div className="alert alert-danger" role="alert">
-            <p>Please install or activate MetaMask extension.</p>
-            <p><a href="#" onClick={ () => { /*window.location.reload()*/ } }>I have installed and activated it!</a></p>
+            <p>{ this.props.translate('pages.login.please_install_metamask') }</p>
+            <p><a href="#" onClick={ () => { /*window.location.reload()*/ } }>{ this.props.translate('pages.login.i_have_enabled_metamask') }</a></p>
           </div>
 
           <div className="panel panel-default">
@@ -112,7 +112,7 @@ class SignIn extends Component {
     if (this.props.isWalletLocked === true) {
       return (
         <div>
-          <div className="alert alert-danger" role="alert">Please unlock your wallet to proceed!</div>
+          <div className="alert alert-danger" role="alert">{ this.props.translate('pages.login.metamask_locked') }</div>
 
           <div className="panel panel-default">
             <div className="panel-body">

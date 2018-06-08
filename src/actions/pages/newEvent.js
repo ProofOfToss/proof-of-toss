@@ -64,16 +64,17 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
         });
 
       }).then(async function (transactionResult) {
-
         const event = decodeEvent(web3, transactionResult.receipt.logs, main, 'NewEvent');
 
         return event.eventAddress;
 
       }).then((eventAddress) => {
 
-        dispatch({type: SAVED_EVENT});
+        dispatch({type: SAVED_EVENT, payload: eventAddress.substr(0, 2) + eventAddress.substr(-40, 40)});
 
       }).catch(function(e) {
+        console.log(e);
+
         let msg;
         const translate = getTranslate(getState().locale);
         if (
