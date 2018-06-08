@@ -6,8 +6,11 @@ const path = require('path');
 
 const mnemonic = 'ROPSTEN_MNEMONIC';
 
+const fs = require('fs');
+const build_dir = fs.readFileSync(path.join(__dirname, 'build_dir.conf'), 'utf8');
+
 module.exports = {
-  contracts_build_directory: path.join(__dirname, 'build/contracts'),
+  contracts_build_directory: path.join(__dirname, build_dir, 'contracts'),
   networks: {
     development: {
       gas: 6721975,
