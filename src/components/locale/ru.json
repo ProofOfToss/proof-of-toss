@@ -85,6 +85,10 @@
     },
     "copyright": "&copy; ${ year } Proof of Toss. Все права защищены"
   },
+  "pagination": {
+    "previous_label": "Назад",
+    "next_label": "Вперед"
+  },
   "pages": {
     "home": {
       "title": "Можно начинать!"

@@ -85,6 +85,10 @@
     },
     "copyright": "&copy; ${ year } Proof of Toss. All rights reserved"
   },
+  "pagination": {
+    "previous_label": "Previous",
+    "next_label": "Next"
+  },
   "pages": {
     "home": {
       "title": "Start!"

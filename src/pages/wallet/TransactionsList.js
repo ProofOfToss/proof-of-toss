@@ -72,6 +72,8 @@ class TransactionList extends Component {
           {this.state.showPagination &&
             <ReactPaginate
                breakLabel={<a href="">...</a>}
+               previousLabel={this.props.translate('pagination.previous_label')}
+               nextLabel={this.props.translate('pagination.next_label')}
                breakClassName={"break-me"}
                pageCount={this.state.pageCount}
                initialPage={page}
