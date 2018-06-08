@@ -21,7 +21,7 @@ class EventResults extends Component {
     return (<main className="container">
       <div>
         <div className="pure-u-1-1">
-          <h1>Event results</h1>
+          <h1>{this.props.translate('pages.event_results.header')}</h1>
           <div>
             <p>{this.props.translate('access_denied')}</p>
           </div>

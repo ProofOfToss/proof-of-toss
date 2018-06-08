@@ -35,7 +35,7 @@ class Wallet extends Component {
           {this.props.currentAddress}
         </p>
         <p className="navbar-text">
-          {this.props.balance !== null ? <span title={ formatBalance(this.props.balance, config.view.token_precision) + " TOSS" }>{this.props.translate('header.wallet.balance')}: {formatBalance(this.props.balance)} TOSS</span> : this.props.translate('header.wallet.info')}
+          {this.props.balance !== null ? <span title={ formatBalance(this.props.balance, config.view.token_precision) + config.view.token_symbol }>{this.props.translate('header.wallet.balance')}: {formatBalance(this.props.balance)} {config.view.token_symbol}</span> : this.props.translate('header.wallet.info')}
         </p>
         <p className="navbar-text logout-button">
           { this.renderLogoutButton() }
