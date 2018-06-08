@@ -14,7 +14,7 @@ class MainInfo extends Component {
   render() {
     return <Fragment>
       <dl className="dl-horizontal">
-        <dt>{this.props.translate('pages.event.labels.name')} 123</dt>
+        <dt>{this.props.translate('pages.event.labels.name')}</dt>
         <dd>{this.props.eventData.name}</dd>
       </dl>
       <dl className="dl-horizontal">
