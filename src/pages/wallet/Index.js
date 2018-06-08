@@ -67,9 +67,9 @@ class Index extends Component {
           <dt />
           <dd>
             {this.state.canSend &&
-              <button className="btn btn-primary" onClick={this.handleSendShowModal}>Send</button>
+              <button className="btn btn-primary" onClick={this.handleSendShowModal}>{this.props.translate('pages.wallet.actions.send')}</button>
             }
-            <button className="btn btn-primary" onClick={this.handleDepositShowModal}>Deposit</button >
+            <button className="btn btn-primary" onClick={this.handleDepositShowModal}>{this.props.translate('pages.wallet.actions.deposit')}</button >
           </dd>
         </dl>
 

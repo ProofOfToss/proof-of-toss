@@ -36,7 +36,7 @@
       "sum_is_too_small": "Sum should be >= 0.0001 TOSS",
       "sum_is_too_big": "Sum should not exceed your balance",
       "fee_is_nan": "Fee should be a number",
-      "fee_is_too_small": "Fee should be >= ",
+      "fee_is_too_small": "Fee should be >= ${ fee } ${ symbol }",
       "wrong_precision": "Maximum precision of TOSS sum is 4 decimal points.",
       "invalid_delimiter": "Decimals delimeter must be \".\""
     },
@@ -44,13 +44,43 @@
       "deposit_is_nan": "Deposit should be a number"
     }
   },
+  "language": {
+    "ru": "Russian",
+    "en": "English"
+  },
   "header": {
-    "address": "Address"
+    "address": "Address",
+    "language": "Language",
+    "nav": {
+      "play": "Play",
+      "wallet": "Wallet",
+      "cabinet": "Cabinet",
+      "cabinet_my_bets": "My bets",
+      "cabinet_withdraw": "Withdraw",
+      "faucet": "Faucet",
+      "admin_area": "Admin area",
+      "admin_area_new_event": "New event",
+      "admin_area_event_results": "Event results",
+      "toggle_navigation": "Toggle navigation",
+      "proof_of_toss": "Proof of Toss",
+      "logout": "Logout"
+    },
+    "wallet": {
+      "balance": "Balance",
+      "info": "Wallet info"
+    }
   },
   "footer": {
     "terms_conditions": "Terms & Conditions",
     "privacy": "Privacy",
-    "about": "About"
+    "about": "About",
+    "nav": {
+      "play": "Play",
+      "wallet": "Wallet",
+      "my_bets": "My bets",
+      "withdraw": "Withdraw"
+    },
+    "copyright": "&copy; ${ year } Proof of Toss. All rights reserved"
   },
   "pages": {
     "home": {
@@ -76,19 +106,43 @@
         "gas_price": "Gas price",
         "sending_tokens": "Tokens are sending. Check metamask extension for the transaction info.",
         "unexpected_error": "An error. Please try again!",
-        "user_denied_tx": "The transaction is denied."
+        "user_denied_tx": "The transaction is denied.",
+        "sent_success_msg": "${ amount } ${ symbol } successfully sent to ${ address }",
+        "transaction": {
+          "tx": "Tx",
+          "block_number": "Block number",
+          "gas_used": "Gas used",
+          "gas_price": "Gas price",
+          "fee": "Fee"
+        },
+        "buttons": {
+          "close": "Close",
+          "cancel": "Cancel",
+          "send": "Send"
+        }
+      },
+      "deposit": {
+        "cancel": "Cancel",
+        "instruction": "How to deposit? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse aliquam erat lacus, in vulputate lorem venenatis ac. Mauris euismod, tortor vel cursus faucibus, lorem felis porttitor neque, non convallis lectus libero euismod nulla. Cras in nisi vitae nisi fermentum eleifend et et quam. Aliquam mollis sem commodo, auctor ante ut, vulputate quam. Praesent facilisis libero molestie elit laoreet tempus. Nam massa tortor, viverra vitae erat ut, tempor gravida odio. Nunc vestibulum egestas ultrices. Vestibulum faucibus hendrerit nibh sed porta. Suspendisse id elementum lectus, vel gravida arcu.",
+        "address": "Address",
+        "modal_title": "Deposit TOSS"
       },
       "info": {
         "your_balance": "Your balance",
         "block_sum": "Block sum",
         "cant_send_paused": "Can not send tokens because of pause"
       },
+      "actions": {
+        "send": "Send",
+        "deposit": "Deposit"
+      },
       "transactions_list": {
         "time": "Time",
         "type": "Type",
         "wallet_number": "Wallet number",
         "sum": "Sum",
-        "fee": "Fee"
+        "fee": "Fee",
+        "no_transactions": "No transactions"
       }
     },
     "event_results": {

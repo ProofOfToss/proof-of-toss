@@ -9,6 +9,9 @@ class Footer extends Component {
     super(props);
 
     this.renderFooterMenu = this.renderFooterMenu.bind(this);
+    this.state = {
+      currentYear: (new Date()).getFullYear()
+    };
   }
 
   renderFooterMenu() {
@@ -21,20 +24,20 @@ class Footer extends Component {
 
         <div className="col-xs-2 col-md-2">
           <ul className="list-unstyled" role="menu">
-            <li><Link to="/" className="pure-menu-link">Play</Link></li>
+            <li><Link to="/" className="pure-menu-link">{this.props.translate('footer.nav.play')}</Link></li>
           </ul>
         </div>
 
         <div className="col-xs-2 col-md-2">
           <ul className="list-unstyled" role="menu">
-            <li><Link to="/wallet" className="pure-menu-link">Wallet</Link></li>
+            <li><Link to="/wallet" className="pure-menu-link">{this.props.translate('footer.nav.wallet')}</Link></li>
           </ul>
         </div>
 
         <div className="col-xs-2 col-md-2">
           <ul className="list-unstyled" role="menu">
-            <li><Link to="/cabinet/my_bets" className="pure-menu-link">My bets</Link></li>
-            <li><Link to="/cabinet/withdraw" className="pure-menu-link">Withdraw</Link></li>
+            <li><Link to="/cabinet/my_bets" className="pure-menu-link">{this.props.translate('footer.nav.my_bets')}</Link></li>
+            <li><Link to="/cabinet/withdraw" className="pure-menu-link">{this.props.translate('footer.nav.withdraw')}</Link></li>
           </ul>
         </div>
       </div>
@@ -54,7 +57,7 @@ class Footer extends Component {
               <a href="https://toss.pro" target="_blank">{this.props.translate('footer.about')}</a>
             </div>
             <div className="col-md-6">
-              <p className="muted pull-right">© 2017 Proof of toos. All rights reserved</p>
+              <p className="muted pull-right">{this.props.translate('footer.copyright', {year: this.state.currentYear})}</p>
             </div>
           </div>
         </div>

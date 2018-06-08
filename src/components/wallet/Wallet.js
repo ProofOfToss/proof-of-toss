@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { withRouter } from "react-router";
+import { getTranslate } from 'react-localize-redux';
 
 import { formatBalance } from './../../util/token'
 import { logout } from './../../util/auth';
@@ -22,7 +23,7 @@ class Wallet extends Component {
   renderLogoutButton() {
     return (
       <span onClick={ () => { logout(this.props.currentAddress, this.handleSuccessfulLogout) } }>
-        Logout
+        {this.props.translate('header.nav.logout')}
       </span>
     );
   }
@@ -34,7 +35,7 @@ class Wallet extends Component {
           {this.props.currentAddress}
         </p>
         <p className="navbar-text">
-          {this.props.balance !== null ? <span title={ formatBalance(this.props.balance, config.view.token_precision) + " TOSS" }>Balance: {formatBalance(this.props.balance)} TOSS</span> : 'Wallet info'}
+          {this.props.balance !== null ? <span title={ formatBalance(this.props.balance, config.view.token_precision) + " TOSS" }>{this.props.translate('header.wallet.balance')}: {formatBalance(this.props.balance)} TOSS</span> : this.props.translate('header.wallet.info')}
         </p>
         <p className="navbar-text logout-button">
           { this.renderLogoutButton() }
@@ -48,7 +49,8 @@ function mapPropsToState(state) {
   return {
     web3: state.web3.web3,
     currentAddress: state.user.address,
-    balance: state.token.balance
+    balance: state.token.balance,
+    translate: getTranslate(state.locale)
   };
 }
 

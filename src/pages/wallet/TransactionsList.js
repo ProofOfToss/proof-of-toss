@@ -1,9 +1,8 @@
 import React, { Component, Fragment } from 'react'
 import ReactPaginate from 'react-paginate';
-import { getActiveLanguage } from 'react-localize-redux';
+import { getActiveLanguage, getTranslate } from 'react-localize-redux';
 import { browserHistory } from 'react-router'
 import { connect } from 'react-redux';
-import { strings } from '../../util/i18n';
 import TransactionItem from './TransactionItem'
 import { fetchTransactions } from '../../actions/pages/wallet'
 
@@ -56,11 +55,11 @@ class TransactionList extends Component {
           <table className="table">
             <thead>
             <tr>
-              <th>{strings().pages.wallet.transactions_list.time}</th>
-              <th>{strings().pages.wallet.transactions_list.type}</th>
-              <th>{strings().pages.wallet.transactions_list.wallet_number}</th>
-              <th>{strings().pages.wallet.transactions_list.sum}</th>
-              <th>{strings().pages.wallet.transactions_list.fee}</th>
+              <th>{this.props.translate('pages.wallet.transactions_list.time')}</th>
+              <th>{this.props.translate('pages.wallet.transactions_list.type')}</th>
+              <th>{this.props.translate('pages.wallet.transactions_list.wallet_number')}</th>
+              <th>{this.props.translate('pages.wallet.transactions_list.sum')}</th>
+              <th>{this.props.translate('pages.wallet.transactions_list.fee')}</th>
             </tr>
             </thead>
             <tbody>
@@ -87,7 +86,7 @@ class TransactionList extends Component {
           }
         </Fragment>
     } else {
-        content = <div className="well">No transactions</div>
+        content = <div className="well">{this.props.translate('pages.wallet.transactions_list.no_transactions')}</div>
     }
 
     return(
@@ -102,7 +101,8 @@ function mapStateToProps(state) {
   return {
     web3: state.web3.web3,
     transactions: state.wallet.transactions,
-    currentLanguage: getActiveLanguage(state.locale).code
+    currentLanguage: getActiveLanguage(state.locale).code,
+    translate: getTranslate(state.locale)
   };
 }
 
