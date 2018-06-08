@@ -69,33 +69,6 @@ class ResultsList extends Component {
     });
   }
 
-  renderAllowBidding() {
-    return <Fragment>
-      <table className="table table-striped results"><tbody>
-      <tr>
-        <th>{this.props.translate('pages.event.result.name')}</th>
-        <th>{this.props.translate('pages.event.result.coefficient')}</th>
-        <th>{this.props.translate('pages.event.result.bet_count')}</th>
-        <th>{this.props.translate('pages.event.result.bet_sum')}</th>
-        <th />
-      </tr>
-      {this.props.results.map((result, key) => {
-
-        return <tr key={key}>
-          <td>{result.description}</td>
-          <td>{result.coefficient}</td>
-          <td>{result.betCount}</td>
-          <td>{result.betSum}</td>
-          <td>
-            {this.renderAddBetColumn(key)}
-          </td>
-        </tr>
-      }, this)}
-      </tbody></table>
-      {this.props.showNewBetModal ? <ModalNewBet eventInstance={this.props.eventInstance} /> : null}
-    </Fragment>
-  }
-
   renderAddBetColumn(key) {
     if(this.props.balance > 0) {
 
@@ -132,6 +105,32 @@ class ResultsList extends Component {
         .check(v => parseFloat(v) <= this.props.balance, this.props.translate('validation.to_big', {value: this.props.balance}))
       ;
     });
+
+    return <Fragment>
+      <table className="table table-striped results"><tbody>
+      <tr>
+        <th>{this.props.translate('pages.event.result.name')}</th>
+        <th>{this.props.translate('pages.event.result.coefficient')}</th>
+        <th>{this.props.translate('pages.event.result.bet_count')}</th>
+        <th>{this.props.translate('pages.event.result.bet_sum')}</th>
+        <th />
+      </tr>
+      {this.props.results.map((result, key) => {
+
+        return <tr className={result.resolved ? 'success' : ''} key={key}>
+          <td>{result.description}</td>
+          <td>{result.coefficient}</td>
+          <td>{result.betCount}</td>
+          <td>{result.betSum}</td>
+          <td>
+            {this.state.allowBiddingError ? this.renderDisallowBidding() : this.renderAddBetColumn(key)}
+          </td>
+        </tr>
+      }, this)}
+      </tbody></table>
+      {this.props.showNewBetModal ? <ModalNewBet eventInstance={this.props.eventInstance} /> : null}
+    </Fragment>
+
 
     let content = '';
     if(this.state.allowBiddingError) {
