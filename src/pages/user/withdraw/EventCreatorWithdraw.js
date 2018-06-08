@@ -121,10 +121,11 @@ class EventCreatorWithdraw extends Component {
     }, this.update);
   }
 
-  modalWithdrawShow(event) {
+  modalWithdrawShow(event, withdrawalAmount) {
     const withdraw = {
       address: event,
       type: 'eventCreatorReward',
+      withdrawalAmount
     };
 
     this.props.modalWithdrawShow(withdraw);
@@ -358,7 +359,7 @@ class EventCreatorWithdraw extends Component {
 
                   return (
                     (txStatus.status === TX_STATUS_REJECTED || txStatus.status === TX_STATUS_DEFAULT)
-                      ? <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address)}}>
+                      ? <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, cell)}}>
                         {row.hasDefinedResult ? `Withdraw ${formatWithdrawal(cell)} TOSS` : `Get back ${formatWithdrawal(cell)} TOSS`}
                       </span>
                       : <span className="btn btn-primary" disabled="disabled">

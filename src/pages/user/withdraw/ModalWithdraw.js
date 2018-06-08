@@ -127,6 +127,9 @@ class ModalWithdraw extends Component {
 
               <dt>{this.props.translate('pages.event.labels.category')}</dt>
               <dd>{this.categoryUtil.getName(this.props.eventData.category)}</dd>
+
+              <dt>{this.props.translate('pages.event.labels.withdrawal_amount')}</dt>
+              <dd>{this.props.withdraw.withdrawalAmount} TOSS</dd>
             </div>
 
             <div className="fees-block">
@@ -224,7 +227,7 @@ function mapStateToProps(state) {
     withdraw: state.event.withdraw,
     withdrawApproveError: state.event.withdrawApproveError,
     withdrawApproving: state.event.withdrawApproving,
-    withdrawApproved: state.event.withdrawApproved,
+    withdrawApproved: state.event.withdrawApproved
   };
 }
 

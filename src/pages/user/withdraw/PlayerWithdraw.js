@@ -122,12 +122,13 @@ class PlayerWithdraw extends Component {
     }, this.update);
   }
 
-  modalWithdrawShow(event, userBet, betTx) {
+  modalWithdrawShow(event, userBet, betTx, withdrawalAmount) {
     const withdraw = {
       address: event,
       type: 'userBet',
       userBet,
       betTx,
+      withdrawalAmount
     };
 
     this.props.modalWithdrawShow(withdraw);
@@ -390,7 +391,7 @@ class PlayerWithdraw extends Component {
 
                   return (
                     (txStatus.status === TX_STATUS_REJECTED || txStatus.status === TX_STATUS_DEFAULT)
-                      ? <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index, row.tx)}}>
+                      ? <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index, row.tx, cell)}}>
                         {row.hasDefinedResult ? `Withdraw ${formatWithdrawal(cell)} TOSS` : `Get back ${formatWithdrawal(cell)} TOSS`}
                       </span>
                       : <span className="btn btn-primary" disabled="disabled">
