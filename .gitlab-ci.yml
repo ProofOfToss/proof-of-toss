@@ -156,6 +156,7 @@ deploy_production:
     # The results are saved in build_prod dir which is kept in the repository.
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
+    - echo "build" > build_dir.conf
 #    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
     - echo "Deloy to production server"
@@ -183,6 +184,7 @@ deploy_production_reindex:
     # The results are saved in build_prod dir which is kept in the repository.
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
+    - echo "build" > build_dir.conf
 #    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
     - echo "Deloy to production server"
@@ -210,6 +212,7 @@ deploy_production_contracts:
     # The results are saved in build_prod dir which is kept in the repository.
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
+    - echo "build" > build_dir.conf
 #    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
     - npm run build
     - echo "Deloy to production server"
@@ -236,6 +239,7 @@ deploy_production_full:
     - ./truffle-config-gen.sh
     - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
     - mkdir $CI_PROJECT_DIR/build
+    - echo "build" > build_dir.conf
     - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate --reset
     - npm run build
     - echo "Deloy to production server"

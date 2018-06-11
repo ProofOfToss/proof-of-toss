@@ -214,7 +214,8 @@
         "description": "Описание",
         "source_url": "Источник результата",
         "tags": "Тэги",
-        "resolved_result": "Разрешенный результат"
+        "resolved_result": "Разрешенный результат",
+        "withdrawal_amount": "Сумма получаемой выплаты"
       },
       "states": {
         "state_0": "Создано",

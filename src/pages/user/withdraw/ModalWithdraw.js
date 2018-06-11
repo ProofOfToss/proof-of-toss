@@ -28,11 +28,12 @@ class ModalWithdraw extends Component {
   }
 
   async componentWillMount() {
+    const contract = require('truffle-contract');
+    const eventBase = contract(EventBaseContract);
+    eventBase.setProvider(this.props.web3.currentProvider);
+    const eventBaseInstance = eventBase.at(this.props.withdraw.address);
+
     try {
-      const contract = require('truffle-contract');
-      const eventBase = contract(EventBaseContract);
-      eventBase.setProvider(this.props.web3.currentProvider);
-      const eventBaseInstance = eventBase.at(this.props.withdraw.address);
 
       let gasAmount;
 
@@ -69,7 +70,9 @@ class ModalWithdraw extends Component {
         console.log('state', this.state);
       });
     } catch (e) {
+      console.log([this.props.withdraw.userBet, eventBaseInstance.address]);
       console.log(e);
+
       this.setState({
         estimateGasError: true
       });
@@ -127,6 +130,9 @@ class ModalWithdraw extends Component {
 
               <dt>{this.props.translate('pages.event.labels.category')}</dt>
               <dd>{this.categoryUtil.getName(this.props.eventData.category)}</dd>
+
+              <dt>{this.props.translate('pages.event.labels.withdrawal_amount')}</dt>
+              <dd>{this.props.withdraw.withdrawalAmount} TOSS</dd>
             </div>
 
             <div className="fees-block">
@@ -224,7 +230,7 @@ function mapStateToProps(state) {
     withdraw: state.event.withdraw,
     withdrawApproveError: state.event.withdrawApproveError,
     withdrawApproving: state.event.withdrawApproving,
-    withdrawApproved: state.event.withdrawApproved,
+    withdrawApproved: state.event.withdrawApproved
   };
 }
 
