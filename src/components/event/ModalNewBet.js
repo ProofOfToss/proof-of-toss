@@ -34,10 +34,10 @@ class ModalNewBet extends Component {
 
       const gasAmount = await tokenInstance.transferToContract.estimateGas(
         this.props.eventData.address,
-        denormalizeBalance(this.props.newBetData.amount),
+        denormalizeBalance(this.props.newBetData.amount).toNumber(),
         toBytes(
           {type: 'uint', size: 8, value: 1}, // action – bet
-          {type: 'uint', size: 8, value: this.props.newBetData.resultIndex}, // result index
+          {type: 'uint', size: 8, value: this.props.newBetData.resultIndex} // result index
         ),
         {from: this.props.currentAddress}
       );

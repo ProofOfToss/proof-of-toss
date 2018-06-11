@@ -41,7 +41,7 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
 
       }).then(function(instance) {
         tokenContract = instance;
-        const deposit = denormalizeBalance(formData.deposit);
+        const deposit = denormalizeBalance(formData.deposit).toNumber();
 
         const bytes = serializeEvent({
           name: formData.name,
@@ -57,7 +57,7 @@ export const modalSaveEvent = (gasLimit, gasPrice) => {
           results: formData.results.map((result) => { return {'coefficient': result.coefficient || 0, 'description': result.description}; }),
         });
 
-        return tokenContract.transferToContract(mainContract.address, deposit, bytes, {
+        return tokenContract.transferToContract(mainContract.address, deposit.toNumber(), bytes, {
             from: getState().user.address,
             gasPrice: gasPrice,
             gas: gasLimit

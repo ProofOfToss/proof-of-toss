@@ -120,7 +120,7 @@ export const modalAddNewBetAdd = (gasLimit, gasPrice) => {
     try {
       await tokenInstance.transferToContract(
         getState().event.eventData.address,
-        denormalizeBalance(getState().event.newBetData.amount),
+        denormalizeBalance(getState().event.newBetData.amount).toNumber(),
         toBytes(
           {type: 'uint', size: 8, value: 1}, // action – bet
           {type: 'uint', size: 8, value: getState().event.newBetData.resultIndex}, // result index

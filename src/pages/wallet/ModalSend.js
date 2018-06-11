@@ -103,7 +103,7 @@ class ModalSend extends Component {
 
         return instance.transfer(
           this.state.address,
-          denormalizeBalance(this.state.sum),
+          denormalizeBalance(this.state.sum).toNumber(),
           {
             from: this.props.currentAddress,
             gasPrice: Math.round(this.props.web3.toWei(this.state.fee / this.state.gasLimit)),
@@ -124,7 +124,7 @@ class ModalSend extends Component {
           this.setState({ successTransaction: tx, waiting: false });
 
           store.dispatch(refreshBalance(this.props.currentAddress));
-          this.props.transactionSaved(tx, denormalizeBalance(this.state.sum));
+          this.props.transactionSaved(tx, denormalizeBalance(this.state.sum)).toNumber();
         });
 
       }).catch((e) => {
@@ -171,7 +171,7 @@ class ModalSend extends Component {
 
     token.deployed().then((instance) => {
 
-      return instance.transfer.estimateGas(address, denormalizeBalance(sum), {from: this.props.currentAddress});
+      return instance.transfer.estimateGas(address, denormalizeBalance(sum).toNumber(), {from: this.props.currentAddress});
 
     }).then((result) => {
       const gas = Math.round( Number(result) * 1.5); // x 1.5 to prevent surprise out-of-gas errors
