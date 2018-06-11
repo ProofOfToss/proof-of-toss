@@ -122,7 +122,7 @@ logger.level = 'debug';
     const bidType = faker.lorem.words();
 
     const tags = [faker.lorem.word(), faker.lorem.word(), faker.lorem.word()];
-    const results = [{description: 'result_description_1', coefficient: 1}, {description: 'result_description_2', coefficient: 2}, {description: 'result_description_3', coefficient: 3}];
+    const results = [{description: 'result_description_1', coefficient: 0}, {description: 'result_description_2', coefficient: 0}, {description: 'result_description_3', coefficient: 0}];
 
     const deposit = denormalizeBalance(faker.random.number({min: 10, max: 100}));
 
