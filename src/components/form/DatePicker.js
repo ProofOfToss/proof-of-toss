@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { getTranslate } from 'react-localize-redux';
+import { getTranslate, getActiveLanguage } from 'react-localize-redux';
 import Datetime from "react-datetime";
 import moment from "moment";
 
@@ -56,7 +56,8 @@ DatePicker.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    translate: getTranslate(state.locale)
+    translate: getTranslate(state.locale),
+    currentLanguage: getActiveLanguage(state.locale).code
   };
 }
 

@@ -7,7 +7,7 @@ class BasePage extends Component {
   render() {
     if(!this.props.isWhitelisted) {
       return <div className="container">
-        <h1>Access denied</h1>
+        <h1>{this.props.translate('access_denied')}</h1>
       </div>
     }
 

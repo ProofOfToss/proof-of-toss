@@ -216,7 +216,10 @@ class ModalConfirm extends Component {
     this.feeLink = Link.state(this, 'fee')
       .check( v => v, this.props.translate('validation.required'))
       .check( v => !isNaN(parseFloat(v)), this.props.translate('validation.token.fee_is_nan'))
-      .check( v => parseFloat(v) >= this.state.minFee, this.props.translate('validation.token.fee_is_too_small') + this.state.minFee + ' ' + config.view.currency_symbol);
+      .check( v => parseFloat(v) >= this.state.minFee, this.props.translate('validation.token.fee_is_too_small', {
+        fee: this.state.minFee,
+        symbol: config.view.currency_symbol
+      }));
 
     return(
       <main className='container'>

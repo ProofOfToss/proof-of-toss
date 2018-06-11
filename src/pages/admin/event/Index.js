@@ -35,7 +35,7 @@ class Index extends Component {
 
   renderEvent() {
     return( <Fragment>
-        <h1>Admin event page</h1>
+        <h1>{this.props.translate('pages.event_results.event_header')}</h1>
         <MainInfo eventData={this.props.eventData} />
         <TagsList tags={this.props.eventData.tag} />
         <ResultsList status={this.props.eventData.status}

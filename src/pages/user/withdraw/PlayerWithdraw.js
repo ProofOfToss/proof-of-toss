@@ -392,10 +392,30 @@ class PlayerWithdraw extends Component {
                   return (
                     (txStatus.status === TX_STATUS_REJECTED || txStatus.status === TX_STATUS_DEFAULT)
                       ? <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index, row.tx, cell)}}>
-                        {row.hasDefinedResult ? `Withdraw ${formatWithdrawal(cell)} TOSS` : `Get back ${formatWithdrawal(cell)} TOSS`}
+                        {
+                          row.hasDefinedResult
+                            ? this.props.translate('pages.play.withdraw_button', {
+                              amount: formatWithdrawal(cell),
+                              symbol: appConfig.view.token_symbol
+                            })
+                            : this.props.translate('pages.play.get_back_button', {
+                              amount: formatWithdrawal(cell),
+                              symbol: appConfig.view.token_symbol
+                            })
+                        }
                       </span>
                       : <span className="btn btn-primary" disabled="disabled">
-                        {row.hasDefinedResult ? `Withdraw ${formatWithdrawal(cell)} TOSS` : `Get back ${formatWithdrawal(cell)} TOSS`}
+                        {
+                          row.hasDefinedResult
+                            ? this.props.translate('pages.play.withdraw_button', {
+                              amount: formatWithdrawal(cell),
+                              symbol: appConfig.view.token_symbol
+                            })
+                            : this.props.translate('pages.play.get_back_button', {
+                              amount: formatWithdrawal(cell),
+                              symbol: appConfig.view.token_symbol
+                            })
+                        }
                       </span>
                   );
                 }

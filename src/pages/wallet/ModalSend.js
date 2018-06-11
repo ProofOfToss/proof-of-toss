@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import BaseModal from '../../components/modal/BaseModal'
 import CopyToClipboard from '../../components/clipboard/CopyToClipboard'
-import { strings } from '../../util/i18n';
 import config from '../../data/config.json';
 import { getGasPrices } from '../../util/gasPriceOracle';
 import { validateTossAddress } from '../../util/validators';
@@ -194,15 +193,15 @@ class ModalSend extends Component {
 
     if (!this.state.formPrestine || !this.state.addressPrestine) {
       addressLink
-        .check( v => v, strings().validation.required)
+        .check( v => v, this.props.translate('validation.required'))
         .check( validateTossAddress, this.props.translate('validation.invalid_address'));
     }
 
     if (!this.state.formPrestine || !this.state.sumPrestine) {
       sumLink
-        .check( v => v, strings().validation.required)
-        .check( v => !isNaN(parseFloat(v)), strings().validation.token.sum_is_nan)
-        .check( v => v.indexOf(',') === -1, strings().validation.token.invalid_delimiter)
+        .check( v => v, this.props.translate('validation.required'))
+        .check( v => !isNaN(parseFloat(v)), this.props.translate('validation.token.sum_is_nan'))
+        .check( v => v.indexOf(',') === -1, this.props.translate('validation.token.invalid_delimeter'))
         .check( v => {
           let splittedValue = (parseFloat(v) + '').split('.');
 
@@ -218,19 +217,22 @@ class ModalSend extends Component {
 
           // check max decimal points
           return splittedValue[1].length <= 4;
-        }, strings().validation.token.wrong_precision )
-        .check( v => parseFloat(v) >= config.view.token_min_send_value, strings().validation.token.sum_is_too_small)
+        }, this.props.translate('validation.token.wrong_precision') )
+        .check( v => parseFloat(v) >= config.view.token_min_send_value, this.props.translate('validation.token.sum_is_too_small'))
         .check(
           v => denormalizeBalance(v) <= this.props.balance,
-          strings().validation.token.sum_is_too_big
+          this.props.translate('validation.token.sum_is_too_big')
         );
     }
 
     if (!this.state.formPrestine || !this.state.feePrestine) {
       feeLink
-        .check( v => v, strings().validation.required)
-        .check( v => !isNaN(parseFloat(v)), strings().validation.token.fee_is_nan)
-        .check( v => parseFloat(v) >= this.state.minFee, strings().validation.token.fee_is_too_small + this.state.minFee + ' ' + config.view.currency_symbol);
+        .check( v => v, this.props.translate('validation.required'))
+        .check( v => !isNaN(parseFloat(v)), this.props.translate('validation.token.fee_is_nan'))
+        .check( v => parseFloat(v) >= this.state.minFee, this.props.translate('validation.token.fee_is_too_small', {
+          fee: this.state.minFee,
+          symbol: config.view.currency_symbol
+        }));
     }
 
     return {
@@ -310,21 +312,25 @@ class ModalSend extends Component {
   _renderTransaction() {
     return <div>
       <div className='alert alert-success' role='alert'>
-        {this.state.sum} {config.view.token_symbol} successfully sent to {this.state.address}
+        {this.props.translate('pages.wallet.send.sent_success_msg', {
+          amount: this.state.sum,
+          symbol: config.view.token_symbol,
+          address: this.state.address
+        })}
       </div>
       <div>
         <table className='table'>
           <tbody>
           <tr>
-            <th>Tx</th>
+            <th>{this.props.translate('pages.wallet.send.transaction.tx')}</th>
             <td>
               <CopyToClipboard style={{width: '300px'}} text={this.state.successResponse.tx} data={this.state.successResponse.tx} />
             </td>
           </tr>
-          <tr><th>Block number</th><td>{this.state.successResponse.receipt.blockNumber}</td></tr>
-          <tr><th>Gas used</th><td>{Number(this.state.successResponse.receipt.gasUsed)}</td></tr>
-          <tr><th>Gas price</th><td>{Number(this.state.successTransaction.gasPrice)}</td></tr>
-          <tr><th>Fee</th><td>{
+          <tr><th>{this.props.translate('pages.wallet.send.transaction.block_number')}</th><td>{this.state.successResponse.receipt.blockNumber}</td></tr>
+          <tr><th>{this.props.translate('pages.wallet.send.transaction.gas_used')}</th><td>{Number(this.state.successResponse.receipt.gasUsed)}</td></tr>
+          <tr><th>{this.props.translate('pages.wallet.send.transaction.gas_price')}</th><td>{Number(this.state.successTransaction.gasPrice)}</td></tr>
+          <tr><th>{this.props.translate('pages.wallet.send.transaction.fee')}</th><td>{
             this.props.web3.fromWei(
               Number(this.state.successTransaction.gasPrice) * Number(this.state.successResponse.receipt.gasUsed),
               'ether'
@@ -348,7 +354,7 @@ class ModalSend extends Component {
 
     if (this.state.successTransaction) {
       buttons = [{
-          title: 'Close',
+          title: this.props.translate('pages.wallet.send.buttons.close'),
           className: 'btn-primary',
           attrs: {
             'data-dismiss': 'modal'
@@ -357,7 +363,7 @@ class ModalSend extends Component {
       ];
     } else {
       buttons = [{
-        title: 'Cancel',
+        title: this.props.translate('pages.wallet.send.buttons.cancel'),
         className: 'btn-default',
         attrs: {
           'data-dismiss': 'modal',
@@ -365,7 +371,7 @@ class ModalSend extends Component {
         }
       },
         {
-          title: 'Send',
+          title: this.props.translate('pages.wallet.send.buttons.send'),
           className: 'btn-primary',
           attrs: {
             onClick: this.onSendClick,
