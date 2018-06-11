@@ -338,6 +338,7 @@ class MyBets extends Component {
                   dataField: "bidResult",
                   sort: false,
                   width: 150,
+                  formatter: (cell) => <span className="bid-result">{cell}</span>
                 },
                 {
                   text: this.props.translate('pages.play.columns.bid_sum'),
