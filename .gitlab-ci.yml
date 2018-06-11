@@ -219,7 +219,7 @@ deploy_production_contracts:
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
     - echo "Deloy to event-watcher server"
     - scp -r ./build $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/
-    - ssh $AWS_HOST_LOGIN "bash -c '/home/ubuntu/.nvm/nvm.sh; cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; pm2 stop event_watcher; npm run renew_es_index; rm -f scripts/cache_state.json; pm2 restart event_watcher'"
+    - ssh $AWS_HOST_LOGIN "bash -c 'export NVM_DIR=\"/home/ubuntu/.nvm\" && /home/ubuntu/.nvm/nvm.sh && export PATH=\"\$PATH:\$NVM_DIR/versions/node/v7.10.1/bin\" && cd /home/ec2-user/proof-of-toss; git pull origin master; npm install; pm2 stop event_watcher; npm run renew_es_index; rm -f scripts/cache_state.json; pm2 restart event_watcher'"
 
 deploy_production_full:
   stage: deploy
