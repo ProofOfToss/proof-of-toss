@@ -129,19 +129,7 @@ class ResultsList extends Component {
       }, this)}
       </tbody></table>
       {this.props.showNewBetModal ? <ModalNewBet eventInstance={this.props.eventInstance} /> : null}
-    </Fragment>
-
-
-    let content = '';
-    if(this.state.allowBiddingError) {
-      content = this.renderDisallowBidding();
-    } else {
-      content = this.renderAllowBidding();
-    }
-
-    return <div>
-      {content}
-    </div>
+    </Fragment>;
   }
 }
 
