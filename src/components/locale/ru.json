@@ -150,6 +150,7 @@
         "type": "Вид",
         "wallet_number": "Номер кошелька",
         "sum": "Сумма",
+        "no_transactions": "Нет транзакций",
         "fee": "Комиссия",
         "type_in": "входящиая",
         "type_out": "исходящая"
@@ -259,6 +260,7 @@
       "saved": "Ставка добавлена",
       "estimate_gas_error": "Неверный расчёт газа",
       "modal_resolve_title": "Принять решение",
+      "resolve_approving": "Одобрение результата. Статус транзакции можно проверить в metamask.",
       "resolve_approved": "Результат одобрен",
       "did_not_happen": "Событие не произошло",
       "errors": {
