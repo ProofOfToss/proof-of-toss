@@ -305,6 +305,9 @@ contract('Event', function(accounts) {
       }
     }));
 
+
+    console.log(bidsResult.hits.hits);
+
     assert.equal(bidsResult.hits.hits.length, 2, 'Invalid bets count');
     assert.equal(bidsResult.hits.hits[0]._source.bettor, accounts[0], 'Invalid bet');
     assert.equal(denormalizeBalance(bidsResult.hits.hits[0]._source.amount), 98765, 'Invalid bet');

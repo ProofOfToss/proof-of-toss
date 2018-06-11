@@ -28,11 +28,12 @@ class ModalWithdraw extends Component {
   }
 
   async componentWillMount() {
+    const contract = require('truffle-contract');
+    const eventBase = contract(EventBaseContract);
+    eventBase.setProvider(this.props.web3.currentProvider);
+    const eventBaseInstance = eventBase.at(this.props.withdraw.address);
+
     try {
-      const contract = require('truffle-contract');
-      const eventBase = contract(EventBaseContract);
-      eventBase.setProvider(this.props.web3.currentProvider);
-      const eventBaseInstance = eventBase.at(this.props.withdraw.address);
 
       let gasAmount;
 
@@ -69,7 +70,9 @@ class ModalWithdraw extends Component {
         console.log('state', this.state);
       });
     } catch (e) {
+      console.log([this.props.withdraw.userBet, eventBaseInstance.address]);
       console.log(e);
+
       this.setState({
         estimateGasError: true
       });

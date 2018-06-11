@@ -224,8 +224,10 @@ contract EventBase is ERC223ReceivingContract, Seriality {
         usersBets[tx.origin].push(bets.length - 1);
         state = States.Accepted;
 
-        bytes memory buffer = new bytes(sizeOfUint(256));
+        bytes memory buffer = new bytes(2 * sizeOfUint(256));
         uintToBytes(sizeOfUint(256), bets.length, buffer);
+        uintToBytes(2 * sizeOfUint(256), usersBets[tx.origin].length, buffer);
+
         base.updated(address(this), buffer);
     }
 
