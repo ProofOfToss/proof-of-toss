@@ -26,7 +26,7 @@ class DateFields extends Component {
   onChangeStartTime(currentDate) {
     if (Datetime.moment.isMoment(currentDate) && currentDate.isValid()) {
       const endTime = (this.state.formData.endTime < currentDate || !this.state.formData.endTime) ? currentDate : this.state.formData.endTime;
-      const clonedDate = currentDate.clone()
+      const clonedDate = endTime.clone()
         .set('hours', '0')
         .set('minutes', '0')
         .set('seconds', '0')
