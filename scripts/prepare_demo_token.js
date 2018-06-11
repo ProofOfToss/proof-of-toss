@@ -6,6 +6,7 @@ import Resolver from 'truffle-resolver';
 import log4js from 'log4js';
 import callAsync from '../src/util/web3Util';
 import { denormalizeBalance } from '../src/util/token';
+import { getDeployAccount } from './util/getDeployAccountUtil';
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -47,6 +48,7 @@ logger.level = 'debug';
   web3.eth.defaultAccount = coinbase;
 
   let token, main, accounts;
+  let deployAccount;
 
   await new Promise((resolve, reject) => {
     web3.eth.getAccounts((err, accs) => {
@@ -67,16 +69,25 @@ logger.level = 'debug';
   try {
     token = await Token.deployed();
     main = await Main.deployed();
+    deployAccount = getDeployAccount(accounts);
   } catch (error) {
     fatal(error);
   }
 
   // await token.setPause(false, {from: accounts[0]});
 
-  await token.setPause(true, {from: accounts[0]});
-  await token.setUnpausedWallet(main.address, true, {from: accounts[0]});
-  await token.grantToSetUnpausedWallet(main.address, true, {from: accounts[0]});
+  logger.info('Begin token.setPause');
+  await token.setPause(true, {from: deployAccount});
 
-  await token.mint(accounts[0], denormalizeBalance(100000), {from: accounts[0]});
+  logger.info('Begin token.setUnpausedWallet');
+  await token.setUnpausedWallet(main.address, true, {from: deployAccount});
 
+  logger.info('Begin token.grantToSetUnpausedWallet');
+  await token.grantToSetUnpausedWallet(main.address, true, {from: deployAccount});
+
+  logger.info('Begin token.mint');
+  await token.mint(deployAccount, denormalizeBalance(100000), {from: deployAccount});
+
+  logger.info('Done preparing demo token.');
+  process.exit(0);
 })(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error); });

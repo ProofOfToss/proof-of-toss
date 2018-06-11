@@ -22,6 +22,7 @@ module.exports = {
     },
     ropsten: {
       provider: function() {
+        // HDWalletProvider returns only 1 address by default. Set 4th parameter as number of addresses in constructor below.
         return new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/ROPSTEN_INFURA_ID')
       },
       network_id: '3',
