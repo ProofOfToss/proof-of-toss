@@ -3,22 +3,22 @@
   "abi": [],
   "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3006080604052600080fd00a165627a7a72305820b05e82a41b6c1516474c13a904d6ba103d9dd26d73ff50d4d198a80967c1d1730029",
   "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820b05e82a41b6c1516474c13a904d6ba103d9dd26d73ff50d4d198a80967c1d1730029",
-  "sourceMap": "289:61:8:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;289:61:8;;;;;;;",
-  "deployedSourceMap": "289:61:8:-;;;;;",
+  "sourceMap": "289:61:6:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;289:61:6;;;;;;;",
+  "deployedSourceMap": "289:61:6:-;;;;;",
   "source": "pragma solidity ^0.4.2;\n\n/**\n * @title Seriality\n * @dev The Seriality contract is the main interface for serializing data using the TypeToBytes, BytesToType and SizeOf\n * @author pouladzade@gmail.com\n */\n \nimport \"./BytesToTypes.sol\";\nimport \"./TypesToBytes.sol\";\nimport \"./SizeOf.sol\";\n\ncontract Seriality is BytesToTypes, TypesToBytes, SizeOf {\n\n}\n",
   "sourcePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/installed_contracts/Seriality/Seriality.sol",
   "ast": {
     "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/installed_contracts/Seriality/Seriality.sol",
     "exportedSymbols": {
       "Seriality": [
-        4145
+        2645
       ]
     },
-    "id": 4146,
+    "id": 2646,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 4135,
+        "id": 2635,
         "literals": [
           "solidity",
           "^",
@@ -26,38 +26,38 @@
           ".2"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:8"
+        "src": "0:23:6"
       },
       {
         "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/installed_contracts/Seriality/BytesToTypes.sol",
         "file": "./BytesToTypes.sol",
-        "id": 4136,
+        "id": 2636,
         "nodeType": "ImportDirective",
-        "scope": 4146,
-        "sourceUnit": 4134,
-        "src": "207:28:8",
+        "scope": 2646,
+        "sourceUnit": 2634,
+        "src": "207:28:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/installed_contracts/Seriality/TypesToBytes.sol",
         "file": "./TypesToBytes.sol",
-        "id": 4137,
+        "id": 2637,
         "nodeType": "ImportDirective",
-        "scope": 4146,
-        "sourceUnit": 4328,
-        "src": "236:28:8",
+        "scope": 2646,
+        "sourceUnit": 2828,
+        "src": "236:28:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/installed_contracts/Seriality/SizeOf.sol",
         "file": "./SizeOf.sol",
-        "id": 4138,
+        "id": 2638,
         "nodeType": "ImportDirective",
-        "scope": 4146,
-        "sourceUnit": 4222,
-        "src": "265:22:8",
+        "scope": 2646,
+        "sourceUnit": 2722,
+        "src": "265:22:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -67,93 +67,93 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 4139,
+              "id": 2639,
               "name": "BytesToTypes",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 4133,
-              "src": "311:12:8",
+              "referencedDeclaration": 2633,
+              "src": "311:12:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_BytesToTypes_$4133",
+                "typeIdentifier": "t_contract$_BytesToTypes_$2633",
                 "typeString": "contract BytesToTypes"
               }
             },
-            "id": 4140,
+            "id": 2640,
             "nodeType": "InheritanceSpecifier",
-            "src": "311:12:8"
+            "src": "311:12:6"
           },
           {
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 4141,
+              "id": 2641,
               "name": "TypesToBytes",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 4327,
-              "src": "325:12:8",
+              "referencedDeclaration": 2827,
+              "src": "325:12:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_TypesToBytes_$4327",
+                "typeIdentifier": "t_contract$_TypesToBytes_$2827",
                 "typeString": "contract TypesToBytes"
               }
             },
-            "id": 4142,
+            "id": 2642,
             "nodeType": "InheritanceSpecifier",
-            "src": "325:12:8"
+            "src": "325:12:6"
           },
           {
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 4143,
+              "id": 2643,
               "name": "SizeOf",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 4221,
-              "src": "339:6:8",
+              "referencedDeclaration": 2721,
+              "src": "339:6:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SizeOf_$4221",
+                "typeIdentifier": "t_contract$_SizeOf_$2721",
                 "typeString": "contract SizeOf"
               }
             },
-            "id": 4144,
+            "id": 2644,
             "nodeType": "InheritanceSpecifier",
-            "src": "339:6:8"
+            "src": "339:6:6"
           }
         ],
         "contractDependencies": [
-          4133,
-          4221,
-          4327
+          2633,
+          2721,
+          2827
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 4145,
+        "id": 2645,
         "linearizedBaseContracts": [
-          4145,
-          4221,
-          4327,
-          4133
+          2645,
+          2721,
+          2827,
+          2633
         ],
         "name": "Seriality",
         "nodeType": "ContractDefinition",
         "nodes": [],
-        "scope": 4146,
-        "src": "289:61:8"
+        "scope": 2646,
+        "src": "289:61:6"
       }
     ],
-    "src": "0:351:8"
+    "src": "0:351:6"
   },
   "legacyAST": {
     "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/installed_contracts/Seriality/Seriality.sol",
     "exportedSymbols": {
       "Seriality": [
-        4145
+        2645
       ]
     },
-    "id": 4146,
+    "id": 2646,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 4135,
+        "id": 2635,
         "literals": [
           "solidity",
           "^",
@@ -161,38 +161,38 @@
           ".2"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:23:8"
+        "src": "0:23:6"
       },
       {
         "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/installed_contracts/Seriality/BytesToTypes.sol",
         "file": "./BytesToTypes.sol",
-        "id": 4136,
+        "id": 2636,
         "nodeType": "ImportDirective",
-        "scope": 4146,
-        "sourceUnit": 4134,
-        "src": "207:28:8",
+        "scope": 2646,
+        "sourceUnit": 2634,
+        "src": "207:28:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/installed_contracts/Seriality/TypesToBytes.sol",
         "file": "./TypesToBytes.sol",
-        "id": 4137,
+        "id": 2637,
         "nodeType": "ImportDirective",
-        "scope": 4146,
-        "sourceUnit": 4328,
-        "src": "236:28:8",
+        "scope": 2646,
+        "sourceUnit": 2828,
+        "src": "236:28:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
       {
         "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/installed_contracts/Seriality/SizeOf.sol",
         "file": "./SizeOf.sol",
-        "id": 4138,
+        "id": 2638,
         "nodeType": "ImportDirective",
-        "scope": 4146,
-        "sourceUnit": 4222,
-        "src": "265:22:8",
+        "scope": 2646,
+        "sourceUnit": 2722,
+        "src": "265:22:6",
         "symbolAliases": [],
         "unitAlias": ""
       },
@@ -202,80 +202,80 @@
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 4139,
+              "id": 2639,
               "name": "BytesToTypes",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 4133,
-              "src": "311:12:8",
+              "referencedDeclaration": 2633,
+              "src": "311:12:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_BytesToTypes_$4133",
+                "typeIdentifier": "t_contract$_BytesToTypes_$2633",
                 "typeString": "contract BytesToTypes"
               }
             },
-            "id": 4140,
+            "id": 2640,
             "nodeType": "InheritanceSpecifier",
-            "src": "311:12:8"
+            "src": "311:12:6"
           },
           {
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 4141,
+              "id": 2641,
               "name": "TypesToBytes",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 4327,
-              "src": "325:12:8",
+              "referencedDeclaration": 2827,
+              "src": "325:12:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_TypesToBytes_$4327",
+                "typeIdentifier": "t_contract$_TypesToBytes_$2827",
                 "typeString": "contract TypesToBytes"
               }
             },
-            "id": 4142,
+            "id": 2642,
             "nodeType": "InheritanceSpecifier",
-            "src": "325:12:8"
+            "src": "325:12:6"
           },
           {
             "arguments": null,
             "baseName": {
               "contractScope": null,
-              "id": 4143,
+              "id": 2643,
               "name": "SizeOf",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 4221,
-              "src": "339:6:8",
+              "referencedDeclaration": 2721,
+              "src": "339:6:6",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_SizeOf_$4221",
+                "typeIdentifier": "t_contract$_SizeOf_$2721",
                 "typeString": "contract SizeOf"
               }
             },
-            "id": 4144,
+            "id": 2644,
             "nodeType": "InheritanceSpecifier",
-            "src": "339:6:8"
+            "src": "339:6:6"
           }
         ],
         "contractDependencies": [
-          4133,
-          4221,
-          4327
+          2633,
+          2721,
+          2827
         ],
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 4145,
+        "id": 2645,
         "linearizedBaseContracts": [
-          4145,
-          4221,
-          4327,
-          4133
+          2645,
+          2721,
+          2827,
+          2633
         ],
         "name": "Seriality",
         "nodeType": "ContractDefinition",
         "nodes": [],
-        "scope": 4146,
-        "src": "289:61:8"
+        "scope": 2646,
+        "src": "289:61:6"
       }
     ],
-    "src": "0:351:8"
+    "src": "0:351:6"
   },
   "compiler": {
     "name": "solc",
@@ -283,5 +283,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-08T15:45:56.772Z"
+  "updatedAt": "2018-06-11T07:17:21.701Z"
 }
