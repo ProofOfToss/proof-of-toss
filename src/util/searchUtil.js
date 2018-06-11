@@ -44,6 +44,12 @@ function filterEventsConditions(locale, q, fromTimestamp, toTimestamp) {
         startDate: condition
       }
     });
+  } else if ((fromTimestamp || toTimestamp) && (fromTimestamp === toTimestamp)) {
+    conditions.push({
+      term: {
+        startDate: fromTimestamp
+      }
+    });
   }
 
   console.log(fromTimestamp, JSON.stringify(conditions));
