@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getTranslate, getActiveLanguage } from 'react-localize-redux';
 import Datetime from "react-datetime";
-import moment from "moment";
 
 class DatePicker extends Component {
 
@@ -21,7 +20,7 @@ class DatePicker extends Component {
         renderInput={this.renderInput}
         inputProps={this.getInputProps()}
         className="date-picker"
-        locale={moment.locale()}
+        locale={this.props.currentLanguage}
       />
   }
 
@@ -56,7 +55,8 @@ DatePicker.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    translate: getTranslate(state.locale)
+    translate: getTranslate(state.locale),
+    currentLanguage: getActiveLanguage(state.locale).code
   };
 }
 
