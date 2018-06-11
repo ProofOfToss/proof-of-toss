@@ -310,7 +310,8 @@
       "add": "Добавить",
       "submitQueryError": "Пожалуйста, попробуйте ещё раз позже",
       "fetchingTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> находится в обработке.",
-      "successTransaction": "Транзакция завершена успешно"
+      "successTransaction": "Транзакция завершена успешно",
+      "submittingQuery": "Отправляем запрос на faucet..."
     }
   },
   "categories": {

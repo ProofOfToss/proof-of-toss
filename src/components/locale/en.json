@@ -310,7 +310,8 @@
       "add": "Add",
       "submitQueryError": "Please, try again later",
       "fetchingTransaction": "Transaction <span class='alert-link'>${ txHash }</span> is processing.",
-      "successTransaction": "Transaction completed successfully"
+      "successTransaction": "Transaction completed successfully",
+      "submittingQuery": "Sending query to faucet..."
     }
   },
   "categories": {
