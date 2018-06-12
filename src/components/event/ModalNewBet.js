@@ -86,7 +86,7 @@ class ModalNewBet extends Component {
       <dl className="dl-horizontal">
 
         <dt>{this.props.translate('pages.event.result.name')}</dt>
-        <dd>{this.props.newBetData.result.description}</dd>
+        <dd className="result-description">{this.props.newBetData.result.description}</dd>
 
         <dt>{this.props.translate('pages.event.result.coefficient')}</dt>
         <dd>{this.props.newBetData.result.coefficient}</dd>
