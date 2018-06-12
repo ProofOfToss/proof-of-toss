@@ -25,19 +25,19 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.21;\n\ncontract MigrationAgent\n{\n    function migrateFrom(address _from, uint256 _value) public;\n}\n",
-  "sourcePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
+  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
   "ast": {
-    "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
     "exportedSymbols": {
       "MigrationAgent": [
-        7347
+        11923
       ]
     },
-    "id": 7348,
+    "id": 11924,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 7339,
+        "id": 11915,
         "literals": [
           "solidity",
           "^",
@@ -45,7 +45,7 @@
           ".21"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:27"
+        "src": "0:24:34"
       },
       {
         "baseContracts": [],
@@ -53,9 +53,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 7347,
+        "id": 11923,
         "linearizedBaseContracts": [
-          7347
+          11923
         ],
         "name": "MigrationAgent",
         "nodeType": "ContractDefinition",
@@ -63,7 +63,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 7346,
+            "id": 11922,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -71,16 +71,16 @@
             "name": "migrateFrom",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 7344,
+              "id": 11920,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 7341,
+                  "id": 11917,
                   "name": "_from",
                   "nodeType": "VariableDeclaration",
-                  "scope": 7346,
-                  "src": "77:13:27",
+                  "scope": 11922,
+                  "src": "77:13:34",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -88,10 +88,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 7340,
+                    "id": 11916,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "77:7:27",
+                    "src": "77:7:34",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -102,11 +102,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 7343,
+                  "id": 11919,
                   "name": "_value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 7346,
-                  "src": "92:14:27",
+                  "scope": 11922,
+                  "src": "92:14:34",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -114,10 +114,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 7342,
+                    "id": 11918,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "92:7:27",
+                    "src": "92:7:34",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -127,40 +127,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "76:31:27"
+              "src": "76:31:34"
             },
             "payable": false,
             "returnParameters": {
-              "id": 7345,
+              "id": 11921,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "114:0:27"
+              "src": "114:0:34"
             },
-            "scope": 7347,
-            "src": "56:59:27",
+            "scope": 11923,
+            "src": "56:59:34",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 7348,
-        "src": "26:91:27"
+        "scope": 11924,
+        "src": "26:91:34"
       }
     ],
-    "src": "0:118:27"
+    "src": "0:118:34"
   },
   "legacyAST": {
-    "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
     "exportedSymbols": {
       "MigrationAgent": [
-        7347
+        11923
       ]
     },
-    "id": 7348,
+    "id": 11924,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 7339,
+        "id": 11915,
         "literals": [
           "solidity",
           "^",
@@ -168,7 +168,7 @@
           ".21"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:27"
+        "src": "0:24:34"
       },
       {
         "baseContracts": [],
@@ -176,9 +176,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 7347,
+        "id": 11923,
         "linearizedBaseContracts": [
-          7347
+          11923
         ],
         "name": "MigrationAgent",
         "nodeType": "ContractDefinition",
@@ -186,7 +186,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 7346,
+            "id": 11922,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -194,16 +194,16 @@
             "name": "migrateFrom",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 7344,
+              "id": 11920,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 7341,
+                  "id": 11917,
                   "name": "_from",
                   "nodeType": "VariableDeclaration",
-                  "scope": 7346,
-                  "src": "77:13:27",
+                  "scope": 11922,
+                  "src": "77:13:34",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -211,10 +211,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 7340,
+                    "id": 11916,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "77:7:27",
+                    "src": "77:7:34",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -225,11 +225,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 7343,
+                  "id": 11919,
                   "name": "_value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 7346,
-                  "src": "92:14:27",
+                  "scope": 11922,
+                  "src": "92:14:34",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -237,10 +237,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 7342,
+                    "id": 11918,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "92:7:27",
+                    "src": "92:7:34",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -250,27 +250,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "76:31:27"
+              "src": "76:31:34"
             },
             "payable": false,
             "returnParameters": {
-              "id": 7345,
+              "id": 11921,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "114:0:27"
+              "src": "114:0:34"
             },
-            "scope": 7347,
-            "src": "56:59:27",
+            "scope": 11923,
+            "src": "56:59:34",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 7348,
-        "src": "26:91:27"
+        "scope": 11924,
+        "src": "26:91:34"
       }
     ],
-    "src": "0:118:27"
+    "src": "0:118:34"
   },
   "compiler": {
     "name": "solc",
@@ -278,5 +278,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-11T07:17:21.970Z"
+  "updatedAt": "2018-06-12T11:29:04.090Z"
 }

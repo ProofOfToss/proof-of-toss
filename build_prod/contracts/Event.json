@@ -46,14 +46,14 @@
       "type": "fallback"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b50604051602080610196833981016040525160018054600160a060020a0319908116331790915560008054600160a060020a03909316929091169190911790556101378061005f6000396000f30060806040526004361061004b5763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635001f3b581146100805780638da5cb5b146100be575b34801561005757600080fd5b506000543660008037600080366000845af43d806000803e81801561007b57816000f35b600080fd5b34801561008c57600080fd5b506100956100d3565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3480156100ca57600080fd5b506100956100ef565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820c86229de95b6fb634c3494678fd05c2a90d4d9c1f083fd671739577271ad64170029",
-  "deployedBytecode": "0x60806040526004361061004b5763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635001f3b581146100805780638da5cb5b146100be575b34801561005757600080fd5b506000543660008037600080366000845af43d806000803e81801561007b57816000f35b600080fd5b34801561008c57600080fd5b506100956100d3565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3480156100ca57600080fd5b506100956100ef565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820c86229de95b6fb634c3494678fd05c2a90d4d9c1f083fd671739577271ad64170029",
+  "bytecode": "0x608060405234801561001057600080fd5b50604051602080610196833981016040525160018054600160a060020a0319908116331790915560008054600160a060020a03909316929091169190911790556101378061005f6000396000f30060806040526004361061004b5763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635001f3b581146100805780638da5cb5b146100be575b34801561005757600080fd5b506000543660008037600080366000845af43d806000803e81801561007b57816000f35b600080fd5b34801561008c57600080fd5b506100956100d3565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3480156100ca57600080fd5b506100956100ef565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820ef4398c8003c2448f2a0452064d130554d091db04da3e2f5312fb64ec87c09f90029",
+  "deployedBytecode": "0x60806040526004361061004b5763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416635001f3b581146100805780638da5cb5b146100be575b34801561005757600080fd5b506000543660008037600080366000845af43d806000803e81801561007b57816000f35b600080fd5b34801561008c57600080fd5b506100956100d3565b6040805173ffffffffffffffffffffffffffffffffffffffff9092168252519081900360200190f35b3480156100ca57600080fd5b506100956100ef565b60005473ffffffffffffffffffffffffffffffffffffffff1681565b60015473ffffffffffffffffffffffffffffffffffffffff16815600a165627a7a72305820ef4398c8003c2448f2a0452064d130554d091db04da3e2f5312fb64ec87c09f90029",
   "sourceMap": "52:579:0:-;;;127:102;8:9:-1;5:2;;;30:1;27;20:12;5:2;127:102:0;;;;;;;;;;;;;171:5;:18;;-1:-1:-1;;;;;;171:18:0;;;179:10;171:18;;;;:5;199:23;;-1:-1:-1;;;;;199:23:0;;;;;;;;;;;;;52:579;;;;;;",
   "deployedSourceMap": "52:579:0:-;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;52:579:0;307:1;301:8;345:12;340:3;335;322:36;436:1;431:3;417:12;412:3;403:7;398:3;385:53;469:14;521:10;516:3;511;496:36;552:6;559:21;;;;601:10;598:1;590:22;559:21;577:1;574;567:12;73:21;;8:9:-1;5:2;;;30:1;27;20:12;5:2;73:21:0;;;;;;;;;;;;;;;;;;;;;;;100:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;100:20:0;;;;73:21;;;;;;:::o;100:20::-;;;;;;:::o",
   "source": "pragma solidity ^0.4.2;\n\nimport \"./EventBase.sol\";\n\ncontract Event {\n    EventBase public base;\n    address public owner;\n\n    constructor(address _base) public {\n        owner = msg.sender;\n        base = EventBase(_base);\n    }\n\n    function() public {\n        assembly {\n            let _target := sload(0)\n            calldatacopy(0x0, 0x0, calldatasize)\n            let retval := delegatecall(gas, _target, 0x0, calldatasize, 0x0, 0)\n            let returnsize := returndatasize\n            returndatacopy(0x0, 0x0, returnsize)\n            switch retval case 0 {revert(0, 0)} default {return (0, returnsize)}\n        }\n    }\n}\n",
-  "sourcePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/Event.sol",
+  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/Event.sol",
   "ast": {
-    "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/Event.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/Event.sol",
     "exportedSymbols": {
       "Event": [
         29
@@ -74,7 +74,7 @@
         "src": "0:23:0"
       },
       {
-        "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/EventBase.sol",
+        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/EventBase.sol",
         "file": "./EventBase.sol",
         "id": 2,
         "nodeType": "ImportDirective",
@@ -188,7 +188,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 8162,
+                        "referencedDeclaration": 12738,
                         "src": "179:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -407,7 +407,7 @@
     "src": "0:632:0"
   },
   "legacyAST": {
-    "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/Event.sol",
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/Event.sol",
     "exportedSymbols": {
       "Event": [
         29
@@ -428,7 +428,7 @@
         "src": "0:23:0"
       },
       {
-        "absolutePath": "/home/dmitrya2e/Work/Projects/ProofOfToss/Code/proof-of-toss/contracts/EventBase.sol",
+        "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/EventBase.sol",
         "file": "./EventBase.sol",
         "id": 2,
         "nodeType": "ImportDirective",
@@ -542,7 +542,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 8162,
+                        "referencedDeclaration": 12738,
                         "src": "179:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -766,5 +766,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-11T07:17:21.544Z"
+  "updatedAt": "2018-06-12T11:29:04.024Z"
 }
