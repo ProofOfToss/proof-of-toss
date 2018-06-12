@@ -6,7 +6,8 @@ import moment from 'moment';
 
 import BootstrapInput from '../../components/form/BootstrapInput';
 
-import { STATUS_PUBLISHED, STATUS_ACCEPTED } from '../../util/eventUtil';
+import { STATUS_PUBLISHED, STATUS_ACCEPTED, STATUS_CLOSED } from '../../util/eventUtil';
+import { RESULT_DID_NOT_HAPPEN } from "../../classes/event";
 import ModalNewBet from './ModalNewBet';
 import { newBet } from '../../actions/pages/event';
 
@@ -128,6 +129,15 @@ class ResultsList extends Component {
         </tr>
       }, this)}
       </tbody></table>
+
+      {
+        this.props.status === STATUS_CLOSED &&
+        this.props.resolvedResult === RESULT_DID_NOT_HAPPEN &&
+        <div className="did_not_happen_success">
+          {this.props.translate('pages.event.did_not_happen')}
+        </div>
+      }
+
       {this.props.showNewBetModal ? <ModalNewBet eventInstance={this.props.eventInstance} /> : null}
     </Fragment>;
   }
