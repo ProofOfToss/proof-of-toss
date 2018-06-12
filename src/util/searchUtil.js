@@ -84,6 +84,12 @@ function myRewardConditions(locale, currentAddress, q, fromTimestamp, toTimestam
     }
   });
 
+  conditions.push({
+    range: {
+      'bidSum': {gt: 0},
+    }
+  });
+
   conditions.push({ // Event has result
     range: {
       result: {
