@@ -243,11 +243,11 @@ class MyBets extends Component {
   }
 
   handleFieldsChange(state) {
-    if (state.startTime) {
+    if (state.hasOwnProperty('startTime')) {
       this.onChangeFromDate(state.startTime);
     }
 
-    if (state.endTime) {
+    if (state.hasOwnProperty('endTime')) {
       this.onChangeToDate(state.endTime);
     }
   }

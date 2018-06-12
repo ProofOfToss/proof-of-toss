@@ -80,6 +80,10 @@ class Index extends Component {
           {this.props.translate('pages.faucet.fetchingTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash}" target="_blank"}>${this.props.txHash}</a>`})}
         </div>}
 
+        {this.props.submittingQuery && <div className="alert alert-warning" role="alert">
+          {this.props.translate('pages.faucet.submittingQuery')}
+        </div>}
+
         {this.props.successTransaction && <div className="alert alert-success alert-dismissible" role="alert">
           <button type="button" className="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           {this.props.translate('pages.faucet.successTransaction')}
@@ -104,6 +108,7 @@ function mapPropsToState(state) {
     _submitQuery: state.faucet.submitQuery,
     txHash: state.faucet.txHash,
     successTransaction: state.faucet.successTransaction,
+    submittingQuery: state.faucet.submitQuery,
     translate: getTranslate(state.locale)
   };
 }

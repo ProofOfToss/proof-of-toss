@@ -1,6 +1,0 @@
-{
-    "notfound": {
-        "error": "Error 404: File Not Found",
-        "message": "The requested file could not be found."
-    }
-}

@@ -44,6 +44,12 @@ function filterEventsConditions(locale, q, fromTimestamp, toTimestamp) {
         startDate: condition
       }
     });
+  } else if ((fromTimestamp || toTimestamp) && (fromTimestamp === toTimestamp)) {
+    conditions.push({
+      term: {
+        startDate: fromTimestamp
+      }
+    });
   }
 
   console.log(fromTimestamp, JSON.stringify(conditions));
@@ -188,6 +194,7 @@ function bidInfo (bid, event) {
     coefficient: coefficient,
     prize: prize,
     index: bid.index,
+    userIndex: bid.userIndex,
     hasDefinedResult: hasDefinedResult,
   };
 }

@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
+import { getTranslate } from 'react-localize-redux';
 import { formatBalance } from './../../util/token'
 
 class TransactionItem extends Component {
   render() {
 
-    const type = this.props.currentAddress === this.props.item.to ? 'in' : 'out';
+    const type = this.props.currentAddress === this.props.item.to ? this.props.translate('pages.wallet.transactions_list.type_in') : this.props.translate('pages.wallet.transactions_list.type_out');
     const wallet = this.props.currentAddress === this.props.item.to ? this.props.item.from : this.props.item.to
 
     return(
@@ -23,7 +24,8 @@ class TransactionItem extends Component {
 function mapPropsToState(state) {
   return {
     currentAddress: state.web3.currentAddress,
-    decimals: state.token.decimals
+    decimals: state.token.decimals,
+    translate: getTranslate(state.locale)
   };
 }
 

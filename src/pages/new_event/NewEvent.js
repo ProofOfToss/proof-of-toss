@@ -20,7 +20,7 @@ class NewEvent extends Component {
         <div>
           {
             this.state.eventAddress === null && <div className="pure-u-1-1">
-              <h1>New event</h1>
+              <h1>{this.props.translate('pages.new_event.header')}</h1>
               {
                 this.props.isWhitelisted
                   ? (

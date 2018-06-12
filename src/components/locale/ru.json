@@ -1,5 +1,6 @@
 {
   "access_denied": "Доступ запрещен",
+  "web3_lost_connection": "Нет соединения с RPC сервером. Пожалуйста, проверьте, что MetaMask подключен к одному из RPC серверов.",
   "notfound": {
     "error": "Ошибка 404: Страница не найдена",
     "message": "Запрошенный файл не найден"
@@ -18,7 +19,9 @@
     "cancel": "Отмена",
     "open": "Открыть",
     "resolve": "Отметить как выигрышный",
-    "withdraw": "Cнять"
+    "withdraw": "Cнять",
+    "save": "Сохранить",
+    "close": "Закрыть"
   },
   "errors": {
     "denied_transaction": "Транзакция отменена.",
@@ -36,7 +39,7 @@
       "sum_is_too_small": "Сумма должна быть >= 0.0001 ТОСС",
       "sum_is_too_big": "Сумма не должна превышать Ваш баланс",
       "fee_is_nan": "Значение должно быть в цифрах",
-      "fee_is_too_small": "Значение должно быть >= ",
+      "fee_is_too_small": "Значение должно быть >= ${ fee } ${ symbol }",
       "wrong_precision": "Максимальная точность TOCC 4 десятичных знака.",
       "invalid_delimiter": "Разделитель десятичных знаков должен быть\".\""
     },
@@ -44,19 +47,54 @@
       "deposit_is_nan": "Укажите депозит в цифрах"
     }
   },
+  "language": {
+    "ru": "Русский",
+    "en": "Английский"
+  },
   "header": {
-    "address": "Адрес"
+    "address": "Адрес",
+    "language": "Язык",
+    "nav": {
+      "play": "Играть",
+      "wallet": "Кошелек",
+      "cabinet": "Кабинет",
+      "cabinet_my_bets": "Мои ставки",
+      "cabinet_withdraw": "Получить выигрыш",
+      "faucet": "Faucet",
+      "admin_area": "Админ. панель",
+      "admin_area_new_event": "Новое событие",
+      "admin_area_event_results": "Результаты событий",
+      "toggle_navigation": "Навигация",
+      "proof_of_toss": "Proof of Toss",
+      "logout": "Выйти"
+    },
+    "wallet": {
+      "balance": "Баланс",
+      "info": "Информация о кошельке"
+    }
   },
   "footer": {
     "terms_conditions": "Условия и положения",
     "privacy": "Конфиденциальность",
-    "about": "О нас"
+    "about": "О нас",
+    "nav": {
+      "play": "Играть",
+      "wallet": "Кошелек",
+      "my_bets": "Мои ставки",
+      "withdraw": "Получить выигрыш"
+    },
+    "copyright": "&copy; ${ year } Proof of Toss. Все права защищены"
+  },
+  "pagination": {
+    "previous_label": "Назад",
+    "next_label": "Вперед"
   },
   "pages": {
     "home": {
       "title": "Можно начинать!"
     },
     "login": {
+      "header": "Зайти",
       "error": "Ошибка входа под этим аккаунтом",
       "not_connted_to_rpc": "Скорее всего, MetaMask не подключен к RPC серверу. Пожалуйста, проверьте соединение.",
       "please_install_metamask": "Пожалуйста установите и активируйте плагин MetaMask.",
@@ -64,6 +102,7 @@
       "metamask_locked": "MetaMask отключен. Пожалуйста, включите его, чтобы авторизироваться!"
     },
     "wallet": {
+      "header": "TOSS",
       "send": {
         "title": "Отправка",
         "balance": "Баланс",
@@ -76,25 +115,53 @@
         "gas_price": "Стоимость газа",
         "sending_tokens": "Токены отправляются. Статус транзакции можно проверить в metamask.",
         "unexpected_error": "Неизвестная ошибка. Пожалуйста, попробуйте позднее!",
-        "user_denied_tx": "Транзакция отменена."
+        "user_denied_tx": "Транзакция отменена.",
+        "sent_success_msg": "${ amount } ${ symbol } успешно отправлены на адрес ${ address }",
+        "transaction": {
+          "tx": "Tx",
+          "block_number": "Номер блока",
+          "gas_used": "Использовано газа",
+          "gas_price": "Цена газа",
+          "fee": "Комиссия"
+        },
+        "buttons": {
+          "close": "Закрыть",
+          "cancel": "Отмена",
+          "send": "Отправить"
+        }
+      },
+      "deposit": {
+        "cancel": "Отмена",
+        "instruction": "Как внести депозит? Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse aliquam erat lacus, in vulputate lorem venenatis ac. Mauris euismod, tortor vel cursus faucibus, lorem felis porttitor neque, non convallis lectus libero euismod nulla. Cras in nisi vitae nisi fermentum eleifend et et quam. Aliquam mollis sem commodo, auctor ante ut, vulputate quam. Praesent facilisis libero molestie elit laoreet tempus. Nam massa tortor, viverra vitae erat ut, tempor gravida odio. Nunc vestibulum egestas ultrices. Vestibulum faucibus hendrerit nibh sed porta. Suspendisse id elementum lectus, vel gravida arcu.",
+        "address": "Адрес",
+        "modal_title": "Внести депозит"
       },
       "info": {
         "your_balance": "Ваш баланс",
         "block_sum": "Заблокировано",
         "cant_send_paused": "Невозможно отправить токены из за паузы"
       },
+      "actions": {
+        "send": "Отправить",
+        "deposit": "Внести депозит"
+      },
       "transactions_list": {
         "time": "Время",
         "type": "Вид",
         "wallet_number": "Номер кошелька",
         "sum": "Сумма",
-        "fee": "Комиссия"
+        "no_transactions": "Нет транзакций",
+        "fee": "Комиссия",
+        "type_in": "входящиая",
+        "type_out": "исходящая"
       }
     },
     "event_results": {
-      "header": "Результаты событий"
+      "header": "Результаты событий",
+      "event_header": "Разрешить событие"
     },
     "new_event": {
+      "header": "Новое событие",
       "saving": "Событие сохраняется. Статус транзакции можно проверить в metamask.",
       "saved": "Событие успешно сохранено",
       "low_balance": "Баланс должен быть больше 1 Toss",
@@ -151,6 +218,8 @@
       "empty": "Нет результатов",
       "loading": "Загрузка...",
       "search": "Поиск...",
+      "withdraw_button": "Вывести выигрыш - ${ amount } ${ symbol }",
+      "get_back_button": "Получить назад ${ amount } ${ symbol }",
       "columns": {
         "name": "Название",
         "tags": "Тэги",
@@ -191,6 +260,7 @@
       "saved": "Ставка добавлена",
       "estimate_gas_error": "Неверный расчёт газа",
       "modal_resolve_title": "Принять решение",
+      "resolve_approving": "Одобрение результата. Статус транзакции можно проверить в metamask.",
       "resolve_approved": "Результат одобрен",
       "did_not_happen": "Событие не произошло",
       "errors": {
@@ -240,7 +310,8 @@
       "add": "Добавить",
       "submitQueryError": "Пожалуйста, попробуйте ещё раз позже",
       "fetchingTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> находится в обработке.",
-      "successTransaction": "Транзакция завершена успешно"
+      "successTransaction": "Транзакция завершена успешно",
+      "submittingQuery": "Отправляем запрос на faucet..."
     }
   },
   "categories": {

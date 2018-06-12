@@ -37,7 +37,8 @@ const faucetReducer = (state = initialState, action) => {
     case FETCHING_TRANSACTION_STATUS:
       return {
         ...state,
-        fetchingTransactionStatus: true
+        fetchingTransactionStatus: true,
+        submitQuery: false
       };
 
     case TRANSACTION_STATUS_SUCCESS:
