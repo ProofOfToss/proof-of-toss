@@ -123,7 +123,7 @@ class ModalWithdraw extends Component {
               <dd>{this.props.eventData.description}</dd>
 
               <dt>{this.props.translate('pages.event.labels.resolved_result')}</dt>
-              <dd>{this.props.eventData.resolvedResultDescription}</dd>
+              <dd className="result-description">{this.props.eventData.resolvedResultDescription}</dd>
 
               <dt>{this.props.translate('pages.event.labels.source_url')}</dt>
               <dd>{this.props.eventData.sourceUrl}</dd>
