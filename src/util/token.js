@@ -1,8 +1,10 @@
-import MainContract from '../../build/contracts/Main.json';
-import TokenContract from '../../build/contracts/Token.json';
+import {getBuiltContract} from './buildDir';
 import config from '../data/config.json';
 import { deployed } from "./contracts";
 import BigNumber from './bignumber';
+
+const MainContract = getBuiltContract('Main');
+const TokenContract = getBuiltContract('Token');
 
 const contract = require('truffle-contract');
 const main = contract(MainContract);

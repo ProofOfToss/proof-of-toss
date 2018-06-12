@@ -2,12 +2,14 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
-import EventBaseContract from '../../../../build/contracts/EventBase.json';
+import {getBuiltContract} from '../../../util/buildDir';
 import { Input } from 'valuelink/tags'
 import BaseModal from '../../modal/BaseModal'
 import { modalResolveClose, modalResolveApprove } from '../../../actions/pages/event'
 import { getGasCalculation } from '../../../util/gasPriceOracle';
 import config from '../../../data/config.json';
+
+const EventBaseContract = getBuiltContract('EventBase');
 
 class ModalResolve extends Component {
 

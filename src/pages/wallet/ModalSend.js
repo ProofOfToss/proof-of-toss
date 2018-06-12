@@ -8,11 +8,13 @@ import { getGasPrices } from '../../util/gasPriceOracle';
 import { validateTossAddress } from '../../util/validators';
 import Link from 'valuelink'
 import { Input } from 'valuelink/tags'
-import TokenContract from '../../../build/contracts/Token.json'
+import {getBuiltContract} from '../../util/buildDir';
 import { refreshBalance } from '../../actions/token'
 import { transactionSaved } from '../../actions/pages/wallet'
 import store from '../../store';
 import { formatBalance, denormalizeBalance } from './../../util/token'
+
+const TokenContract = getBuiltContract('Token');
 
 class ModalSend extends Component {
 

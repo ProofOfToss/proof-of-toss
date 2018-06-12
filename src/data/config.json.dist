@@ -1,5 +1,7 @@
 {
   "network": "test",
+  "base_build_dir": "build",
+
   "elasticsearch": {
     "esNode": "search-xxx-xxxxxxxxxxxx",
     "region": "eu-central-1",

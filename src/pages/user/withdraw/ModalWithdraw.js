@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
-import EventBaseContract from '../../../../build/contracts/EventBase.json';
+import {getBuiltContract} from '../../../util/buildDir';
 import { Input } from 'valuelink/tags'
 import BaseModal from '../../../components/modal/BaseModal'
 import { modalWithdrawClose, modalWithdrawApprove, fetchEvent, resetEvent } from '../../../actions/pages/event'
 import { getGasCalculation } from '../../../util/gasPriceOracle';
 import config from '../../../data/config.json';
 import CategoryUtil from '../../../util/CategoryUtil';
+
+const EventBaseContract = getBuiltContract('EventBase');
 
 class ModalWithdraw extends Component {
 

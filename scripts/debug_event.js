@@ -18,7 +18,6 @@ import Resolver from 'truffle-resolver';
 import {IndexingUtil} from '../src/util/indexingUtil';
 import { deserializeEvent } from '../src/util/eventUtil';
 import callAsync from '../src/util/web3Util';
-import tokenJson from '../build/contracts/Token.json';
 
 (async () => {
   const web3 = new Web3();
