@@ -24,24 +24,40 @@ class DateFields extends Component {
   }
 
   onChangeStartTime(currentDate) {
-    const endTime = (this.state.formData.endTime < currentDate || !this.state.formData.endTime) ? currentDate.clone() : this.state.formData.endTime;
+    if (Datetime.moment.isMoment(currentDate) && currentDate.isValid()) {
+      const endTime = (this.state.formData.endTime < currentDate || !this.state.formData.endTime) ? currentDate : this.state.formData.endTime;
+      const clonedDate = endTime.clone()
+        .set('hours', '0')
+        .set('minutes', '0')
+        .set('seconds', '0')
+        .set('milliseconds', '0');
 
-    this.setState({
-      formData: {
-        ...this.state.formData,
-        startTime: currentDate ? currentDate : undefined,
-        endTime: endTime,
-      }
-    });
+      this.setState({
+        formData: {
+          ...this.state.formData,
+          startTime: currentDate ? currentDate : undefined,
+          endTime: clonedDate,
+        }
+      });
 
-    this.props.onChange({
-      'startTime': currentDate,
-      'endTime': endTime
-    });
+      this.props.onChange({
+        'startTime': currentDate,
+        'endTime': clonedDate
+      });
+    } else if (!currentDate) {
+      this.setState({
+        formData: {
+          ...this.state.formData,
+          startTime:  undefined
+        }
+      });
+
+      this.props.onChange({'startTime': undefined});
+    }
   }
 
   onChangeEndTime(currentDate) {
-    if (currentDate) {
+    if (Datetime.moment.isMoment(currentDate) && currentDate.isValid()) {
       const clonedDate = currentDate.clone()
         .set('hours', '23')
         .set('minutes', '59')
@@ -56,7 +72,7 @@ class DateFields extends Component {
       });
 
       this.props.onChange({'endTime': currentDate});
-    }  else {
+    } else if (!currentDate) {
       this.setState({
         formData: {
           ...this.state.formData,

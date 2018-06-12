@@ -6,6 +6,7 @@ import Resolver from 'truffle-resolver';
 import log4js from 'log4js';
 import callAsync from '../src/util/web3Util';
 import { denormalizeBalance } from '../src/util/token';
+import { getDeployAccount } from './util/getDeployAccountUtil';
 
 const argv = require('yargs-parser')(process.argv.slice(2));
 const address = '0x' + argv._[0].toString();
@@ -55,6 +56,7 @@ logger.level = 'debug';
   web3.eth.defaultAccount = coinbase;
 
   let token, main, accounts;
+  let deployAccount;
 
   await new Promise((resolve, reject) => {
     web3.eth.getAccounts((err, accs) => {
@@ -75,14 +77,20 @@ logger.level = 'debug';
   try {
     token = await Token.deployed();
     main = await Main.deployed();
+    deployAccount = getDeployAccount(accounts);
   } catch (error) {
     fatal(error);
   }
 
   console.log(`Generating ${tokens} TOSS for ${address}`);
 
-  await token.setUnpausedWallet(address, true, {from: accounts[0]});
+  console.log('Begin token.setUnpausedWallet');
+  await token.setUnpausedWallet(address, true, {from: deployAccount});
 
-  await token.mint(address, denormalizeBalance(tokens), {from: accounts[0]});
+  console.log('Begin token.mint');
+  await token.mint(address, denormalizeBalance(tokens), {from: deployAccount});
+
+  console.log(`Done`);
+  process.exit(0);
 
 })(() => { logger.trace('Exit...'); }).catch((error) => { logger.fatal(error); });

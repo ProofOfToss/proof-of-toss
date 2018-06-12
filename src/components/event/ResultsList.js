@@ -69,33 +69,6 @@ class ResultsList extends Component {
     });
   }
 
-  renderAllowBidding() {
-    return <Fragment>
-      <table className="table table-striped results"><tbody>
-      <tr>
-        <th className="name col-md-5">{this.props.translate('pages.event.result.name')}</th>
-        <th className="coefficient col-md-1">{this.props.translate('pages.event.result.coefficient')}</th>
-        <th className="bet_count col-md-1">{this.props.translate('pages.event.result.bet_count')}</th>
-        <th className="bet_sum col-md-1">{this.props.translate('pages.event.result.bet_sum')}</th>
-        <th className="action col-md-3" />
-      </tr>
-      {this.props.results.map((result, key) => {
-
-        return <tr key={key}>
-          <td>{result.description}</td>
-          <td>{result.coefficient}</td>
-          <td>{result.betCount}</td>
-          <td>{result.betSum}</td>
-          <td>
-            {this.renderAddBetColumn(key)}
-          </td>
-        </tr>
-      }, this)}
-      </tbody></table>
-      {this.props.showNewBetModal ? <ModalNewBet eventInstance={this.props.eventInstance} /> : null}
-    </Fragment>
-  }
-
   renderAddBetColumn(key) {
     if(this.props.balance > 0) {
 
@@ -133,16 +106,30 @@ class ResultsList extends Component {
       ;
     });
 
-    let content = '';
-    if(this.state.allowBiddingError) {
-      content = this.renderDisallowBidding();
-    } else {
-      content = this.renderAllowBidding();
-    }
+    return <Fragment>
+      <table className="table table-striped results"><tbody>
+      <tr>
+        <th className="name col-md-5">{this.props.translate('pages.event.result.name')}</th>
+        <th className="coefficient col-md-1">{this.props.translate('pages.event.result.coefficient')}</th>
+        <th className="bet_count col-md-1">{this.props.translate('pages.event.result.bet_count')}</th>
+        <th className="bet_sum col-md-1">{this.props.translate('pages.event.result.bet_sum')}</th>
+        <th className="action col-md-3" />
+      </tr>
+      {this.props.results.map((result, key) => {
 
-    return <div>
-      {content}
-    </div>
+        return <tr className={result.resolved ? 'success' : ''} key={key}>
+          <td>{result.description}</td>
+          <td>{result.coefficient}</td>
+          <td>{result.betCount}</td>
+          <td>{result.betSum}</td>
+          <td>
+            {this.state.allowBiddingError ? this.renderDisallowBidding() : this.renderAddBetColumn(key)}
+          </td>
+        </tr>
+      }, this)}
+      </tbody></table>
+      {this.props.showNewBetModal ? <ModalNewBet eventInstance={this.props.eventInstance} /> : null}
+    </Fragment>;
   }
 }
 
