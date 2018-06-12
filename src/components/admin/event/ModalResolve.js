@@ -69,12 +69,6 @@ class ModalResolve extends Component {
         </div>
       }
 
-      {this.props.resolveApproving &&
-        <div className='alert alert-info' role='alert'>
-          {this.props.translate('pages.event.resolve_approving')}
-        </div>
-      }
-
       <dl className="dl-horizontal">
 
         <dt>{this.props.translate('pages.event.result.name')}</dt>
@@ -166,7 +160,13 @@ class ModalResolve extends Component {
 
       <main className='container'>
         <div>
-          <BaseModal handleHideModal={this.props.modalResolveClose} buttons={this._buttons()} title={ this.props.translate('pages.event.modal_resolve_title')} >
+          <BaseModal
+            handleHideModal={this.props.modalResolveClose}
+            buttons={this._buttons()}
+            title={ this.props.translate('pages.event.modal_resolve_title')}
+            showInProgress={this.props.resolveApproving}
+            showInProgressMessage='pages.event.resolve_approving'
+          >
             { this.props.resolveApproved ? this._savedContent() : this._confirmContent() }
           </BaseModal>
         </div>

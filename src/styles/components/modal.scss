@@ -1,0 +1,10 @@
+.modal {
+  &-body {
+    .alert.show-in-progress {
+      & > * {
+        vertical-align: top;
+        line-height: normal;
+      }
+    }
+  }
+}
