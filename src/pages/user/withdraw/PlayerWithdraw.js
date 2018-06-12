@@ -391,7 +391,7 @@ class PlayerWithdraw extends Component {
 
                   return (
                     (txStatus.status === TX_STATUS_REJECTED || txStatus.status === TX_STATUS_DEFAULT)
-                      ? <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.index, row.tx, cell)}}>
+                      ? <span className="btn btn-primary" onClick={() => {this.modalWithdrawShow(row.address, row.userIndex, row.tx, cell)}}>
                         {
                           row.hasDefinedResult
                             ? this.props.translate('pages.play.withdraw_button', {
