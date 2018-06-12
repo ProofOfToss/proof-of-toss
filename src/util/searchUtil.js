@@ -194,6 +194,7 @@ function bidInfo (bid, event) {
     coefficient: coefficient,
     prize: prize,
     index: bid.index,
+    userIndex: bid.userIndex,
     hasDefinedResult: hasDefinedResult,
   };
 }
