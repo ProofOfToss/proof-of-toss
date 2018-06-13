@@ -82,7 +82,7 @@ class ResultsList extends Component {
         min: 0
       };
 
-      return <form className="form-inline">
+      return <form className="form-inline add-bet">
         <BootstrapInput valueLink={betAmountLink} showError={this.state.errors[`betAmount_${key}`]} attr={inputAttr}/>
         <span className="btn btn-primary" onClick={() => this.newBet(key)}>
                     {this.props.translate('pages.event.newBet')}</span>
@@ -119,11 +119,11 @@ class ResultsList extends Component {
       {this.props.results.map((result, key) => {
 
         return <tr className={result.resolved ? 'success' : ''} key={key}>
-          <td>{result.description}</td>
-          <td>{result.coefficient}</td>
-          <td>{result.betCount}</td>
-          <td>{result.betSum}</td>
-          <td>
+          <td className="name col-md-5">{result.description}</td>
+          <td className="coefficient col-md-1">{result.coefficient}</td>
+          <td className="bet_count col-md-1">{result.betCount}</td>
+          <td className="bet_sum col-md-1">{result.betSum}</td>
+          <td className="action col-md-3">
             {this.state.allowBiddingError ? this.renderDisallowBidding() : this.renderAddBetColumn(key)}
           </td>
         </tr>
