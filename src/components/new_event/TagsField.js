@@ -76,7 +76,7 @@ class TagsField extends Component {
         shouldRenderSuggestions={(value) => value && value.trim().length > 0}
         getSuggestionValue={(suggestion) => suggestion.name}
         renderSuggestion={(suggestion) => <span>{suggestion.name}</span>}
-        inputProps={{...props, onChange: handleOnChange}}
+        inputProps={{...props, onChange: handleOnChange, maxLength: 16}}
         onSuggestionSelected={(e, {suggestion}) => {
           addTag(suggestion.name)
         }}
