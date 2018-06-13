@@ -179,6 +179,7 @@
         "submit": "Submit",
         "tags": {
           "label": "Tags",
+          "help": "Maximum 10 tags",
           "error": "Please add at least one tag"
         },
         "dates": {

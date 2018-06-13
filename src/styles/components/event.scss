@@ -1,6 +1,21 @@
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
 
 .event {
+
+  &__main-info {
+    dd {
+      word-wrap: break-word;
+    }
+  }
+
+  &__tags {
+    .label {
+      display: inline-block;
+      margin-right: 5px;
+      padding: .3em .6em .4em;
+    }
+  }
+
   .results {
     th {
       white-space: nowrap;
