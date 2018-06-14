@@ -20,7 +20,10 @@ class DateFields extends Component {
       },
       startTimeError: false,
       endTimeError: false
-    }
+    };
+
+    this.dateStartRef = React.createRef();
+    this.dateEndRef = React.createRef();
   }
 
   onChangeStartTime(currentDate) {
@@ -84,6 +87,10 @@ class DateFields extends Component {
     }
   }
 
+  clearValueInDateTimeInput(ref) {
+    ref.current.onInputChange({target: {value: ''}});
+  }
+
   static isValidEndDate(currentDate, startDate, unit = 'day') {
     return !startDate || (!!currentDate && currentDate.isSameOrAfter(startDate, unit));
   }
@@ -104,27 +111,43 @@ class DateFields extends Component {
   render() {
     return <Fragment>
       <div className="row">
-        <div className="col-md-6">
-          <div className="form-group">
+        <div className="col-md-5">
+          <div className="form-group date-start">
             <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_start') }</label>
             <Datetime
+              ref={this.dateStartRef}
               onChange={this.onChangeStartTime}
               value={this.state.formData.startTime}
               timeFormat={false}
+              inputProps={{readOnly: true}}
               />
           </div>
         </div>
-        <div className="col-md-6">
-          <div className="form-group">
+        <div className="col-md-1">
+          <div className="form-group reset-date">
+            <label>&nbsp;</label>
+            <button className="btn btn-secondary" onClick={() => { this.clearValueInDateTimeInput(this.dateStartRef); }}>{this.props.translate('pages.play.filters.reset_date')}</button>
+          </div>
+        </div>
+        <div className="col-md-5">
+          <div className="form-group date-end">
             <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_end') }</label>
             <Datetime
+              ref={this.dateEndRef}
               isValidDate={(currentDate) => {return DateFields.isValidEndDate(currentDate, this.state.formData.startTime)}}
               onChange={this.onChangeEndTime}
               inputProps={this.getEndDateInputProps()}
               value={this.state.formData.endTime}
               timeFormat={false}
               error={this.showEndTimeError() ? this.props.translate('pages.play.columns.date_end') : false}
+              inputProps={{readOnly: true}}
             />
+          </div>
+        </div>
+        <div className="col-md-1">
+          <div className="form-group reset-date">
+            <label>&nbsp;</label>
+            <button className="btn btn-secondary" onClick={() => { this.clearValueInDateTimeInput(this.dateEndRef); }}>{this.props.translate('pages.play.filters.reset_date')}</button>
           </div>
         </div>
       </div>

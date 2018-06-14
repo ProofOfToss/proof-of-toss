@@ -273,15 +273,13 @@ class MyBets extends Component {
         <div>
           <h1>{ this.props.translate('pages.my_bets.header') }</h1>
 
-          <form className="form" onSubmit={this.handleSubmit}>
+          <form className="form play-form" onSubmit={this.handleSubmit}>
 
             <DateFields onChange={this.handleFieldsChange} defaultStartTime={this.state.fromDate} defaultEndTime={this.state.toDate}/>
 
             <div className="row">
-              <div className="col-md-6">
-                <div className="input-group">
-                  <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
-                </div>
+              <div className="col-md-12">
+                <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
               </div>
             </div>
 
