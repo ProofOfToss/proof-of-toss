@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import appConfig from './../data/config.json';
+import buildDirConfig from './../../build_dir.json';
 
 /**
  * Gets built contract JSON object.
@@ -9,5 +9,5 @@ import appConfig from './../data/config.json';
  * @returns {*}
  */
 export function getBuiltContract(contract) {
-  return require('../../' + appConfig.base_build_dir + '/contracts/' + contract + '.json');
+  return require('../../' + buildDirConfig.base_build_dir + '/contracts/' + contract + '.json');
 }

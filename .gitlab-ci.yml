@@ -157,7 +157,7 @@ deploy_production:
     # The results are saved in build_prod dir which is kept in the repository.
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
-    - echo "build" > build_dir.conf
+    - echo "{\"base_build_dir\":\"build\"}" > build_dir.conf
 #    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
     - echo "Deloy to production server"
@@ -187,7 +187,7 @@ deploy_production_reindex:
     # The results are saved in build_prod dir which is kept in the repository.
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
-    - echo "build" > build_dir.conf
+    - echo "{\"base_build_dir\":\"build\"}" > build_dir.conf
 #    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
     - echo "Deloy to production server"
@@ -217,7 +217,7 @@ deploy_production_contracts:
     # The results are saved in build_prod dir which is kept in the repository.
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
-    - echo "build" > build_dir.conf
+    - echo "{\"base_build_dir\":\"build\"}" > build_dir.conf
 #    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
     - npm run build
     - echo "Deloy to production server"
