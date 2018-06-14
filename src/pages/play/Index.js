@@ -37,6 +37,9 @@ class Index extends Component {
     this.getUrlParams = this.getUrlParams.bind(this);
     this.update = this.update.bind(this);
     this.updateDebounce = this.updateDebounce.bind(this);
+
+    this.dateStartRef = React.createRef();
+    this.dateEndRef = React.createRef();
   }
 
   static defaultProps = {
@@ -62,6 +65,17 @@ class Index extends Component {
 
   getStateFromQueryString(props) {
     const parsed = props.location && props.location.search ? queryString.parse(props.location.search) : {};
+    let toDate = null;
+
+    if (parsed.toTimestamp) {
+      let date = new Date(parseInt(parsed.toTimestamp, 10) * 1000);
+
+      date.setHours(23);
+      date.setMinutes(59);
+      date.setSeconds(59);
+
+      toDate = Datetime.moment(date);
+    }
 
     return {
       locale: parsed.locale ? parsed.locale:  props.locale,
@@ -76,7 +90,7 @@ class Index extends Component {
       q: parsed.q,
       category: parsed.category ? parseInt(parsed.category, 10) : null,
       fromDate: parsed.fromTimestamp ? Datetime.moment(new Date(parseInt(parsed.fromTimestamp, 10) * 1000)) : null,
-      toDate: parsed.toTimestamp ? Datetime.moment(new Date(parseInt(parsed.toTimestamp, 10) * 1000)) : null,
+      toDate: toDate,
       fromTimestamp: parsed.fromTimestamp && parseInt(parsed.fromTimestamp, 10),
       toTimestamp: parsed.toTimestamp && parseInt(parsed.toTimestamp, 10),
 
@@ -128,6 +142,10 @@ class Index extends Component {
 
   isValidDate(currentDate) {
     return currentDate.isSameOrAfter(Datetime.moment().add(BIDDING_END_MINUTES, 'minute'), 'day');
+  }
+
+  clearValueInDateTimeInput(ref) {
+    ref.current.onInputChange({target: {value: ''}});
   }
 
   handleSubmit(event) {
@@ -243,14 +261,19 @@ class Index extends Component {
     }
 
     if (this.state.fromTimestamp || this.state.toTimestamp) {
-      const condition = {};
+      conditions.push({
+        range: {
+          startDate: { gte: this.state.fromTimestamp }
+        }
+      });
+    }
 
-      if (this.state.fromTimestamp) { condition.gte = this.state.fromTimestamp; }
-      if (this.state.toTimestamp) { condition.lte = this.state.toTimestamp; }
+    if (this.state.toTimestamp) {
+      const value = this.state.toTimestamp;
 
       conditions.push({
         range: {
-          startDate: condition
+          endDate: { lte: this.state.toTimestamp }
         }
       });
     }
@@ -361,19 +384,45 @@ class Index extends Component {
             }
           </div>
 
-          <form className="form" onSubmit={this.handleSubmit}>
+          <form className="form play-form" onSubmit={this.handleSubmit}>
 
             <div className="row">
-              <div className="col-md-6">
-                <div className="form-group">
+              <div className="col-md-5">
+                <div className="form-group date-start">
                   <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_start') }</label>
-                  <Datetime value={this.state.fromDate} timeFormat={false} closeOnSelect={true} onChange={this.onChangeFromDate} isValidDate={this.isValidDate} />
+                  <Datetime
+                    ref={this.dateStartRef}
+                    value={this.state.fromDate}
+                    timeFormat={false}
+                    closeOnSelect={true}
+                    onChange={this.onChangeFromDate}
+                    isValidDate={this.isValidDate}
+                    inputProps={{readOnly: true}} />
                 </div>
               </div>
-              <div className="col-md-6">
-                <div className="form-group">
+              <div className="col-md-1">
+                <div className="form-group reset-date">
+                  <label>&nbsp;</label>
+                  <button className="btn btn-secondary" onClick={() => { this.clearValueInDateTimeInput(this.dateStartRef); }}>{this.props.translate('pages.play.reset_date')}</button>
+                </div>
+              </div>
+              <div className="col-md-5">
+                <div className="form-group date-end">
                   <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_end') }</label>
-                  <Datetime value={this.state.toDate} timeFormat={false} closeOnSelect={true} onChange={this.onChangeToDate} isValidDate={this.isValidDate} />
+                  <Datetime
+                    ref={this.dateEndRef}
+                    value={this.state.toDate}
+                    timeFormat={false}
+                    closeOnSelect={true}
+                    onChange={this.onChangeToDate}
+                    isValidDate={this.isValidDate}
+                    inputProps={{readOnly: true}} />
+                </div>
+              </div>
+              <div className="col-md-1">
+                <div className="form-group reset-date">
+                  <label>&nbsp;</label>
+                  <button className="btn btn-secondary" onClick={() => { this.clearValueInDateTimeInput(this.dateEndRef); }}>{this.props.translate('pages.play.reset_date')}</button>
                 </div>
               </div>
             </div>

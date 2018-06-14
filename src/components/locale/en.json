@@ -224,6 +224,7 @@
       "search": "Searching for...",
       "withdraw_button": "Withdraw ${ amount } ${ symbol }",
       "get_back_button": "Get back ${ amount } ${ symbol }",
+      "reset_date": "Reset date",
       "columns": {
         "name": "Name",
         "tags": "Tags",
