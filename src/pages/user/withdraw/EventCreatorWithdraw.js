@@ -146,7 +146,7 @@ class EventCreatorWithdraw extends Component {
   onChangeFromDate(fromDate) {
     this.setState({
       fromDate,
-      fromTimestamp: fromDate ? parseInt(fromDate.unix(), 10) : null,
+      fromTimestamp: fromDate ? parseInt(fromDate.hour(0).minute(0).second(0).unix(), 10) : null,
       page: 1,
     }, this.update);
   }
@@ -154,7 +154,7 @@ class EventCreatorWithdraw extends Component {
   onChangeToDate(toDate) {
     this.setState({
       toDate,
-      toTimestamp: toDate ? parseInt(toDate.unix(), 10) : null,
+      toTimestamp: toDate ? parseInt(toDate.hour(23).minute(59).second(59).unix(), 10) : null,
       page: 1,
     }, this.update);
   }
