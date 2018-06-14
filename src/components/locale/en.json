@@ -229,7 +229,6 @@
         "from_date": "Start date range from",
         "to_date": "Start date range to"
       },
-      "reset_date": "Reset date",
       "columns": {
         "name": "Name",
         "tags": "Tags",
