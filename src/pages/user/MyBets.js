@@ -298,6 +298,7 @@ class MyBets extends Component {
                   dataField: "name",
                   sort: false,
                   attrs: rowAttrs,
+                  classes: 'name col-md-4'
                 },
                 {
                   text: this.props.translate('pages.play.columns.tags'),
@@ -312,6 +313,7 @@ class MyBets extends Component {
                   sort: false,
                   attrs: rowAttrs,
                   width: 200,
+                  classes: 'bid-type col-md-4'
                 },
                 {
                   text: this.props.translate('pages.play.columns.category'),

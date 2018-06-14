@@ -92,7 +92,9 @@ class TagsField extends Component {
 
   render() {
     return <div className={"form-group" + (this._showErrors() ? ' has-error' : '')}>
-      <label htmlFor="event[tags]">{ this.props.translate('pages.new_event.form.tags.label')}*</label>
+      <label htmlFor="event[tags]">{ this.props.translate('pages.new_event.form.tags.label')}*<br />
+        <small>{this.props.translate('pages.new_event.form.tags.help')}</small>
+      </label>
       <TagsInput ref="tagsinput"
                  value={this.state.formData.tags}
                  onChange={this.onChangeTags}

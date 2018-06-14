@@ -277,12 +277,14 @@ class Index extends Component {
         text: this.props.translate('pages.play.columns.name'),
         dataField: "name",
         sort: false,
+        classes: 'name col-md-4'
       },
       {
         text: this.props.translate('pages.play.columns.bid_type'),
         dataField: "bidType",
         sort: false,
         width: 200,
+        classes: 'bid-type col-md-4'
       },
       {
         text: this.props.translate('pages.play.columns.start_date'),
