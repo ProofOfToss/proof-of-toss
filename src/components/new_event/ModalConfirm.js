@@ -87,12 +87,6 @@ class ModalConfirm extends Component {
         </div>
       }
 
-      {this.props.saving &&
-        <div className='alert alert-info' role='alert'>
-          {this.props.translate('pages.new_event.saving')}
-        </div>
-      }
-
       <dl className="dl-horizontal">
         <dt>{this.props.translate('pages.new_event.form.language')}</dt>
         <dd>{this.props.formData.language}</dd>
@@ -224,7 +218,13 @@ class ModalConfirm extends Component {
     return(
       <main className='container'>
         <div>
-          <BaseModal handleHideModal={this.props.modalClose} buttons={this._buttons()} title={ this.props.translate('pages.new_event.modal.submit')} >
+          <BaseModal
+            title={this.props.translate('pages.new_event.modal.submit')}
+            handleHideModal={this.props.modalClose}
+            buttons={this._buttons()}
+            showInProgress={this.props.saving}
+            showInProgressMessage='pages.new_event.saving'
+          >
             { this.props.saved ? this._savedContent() : this._confirmContent() }
           </BaseModal>
         </div>

@@ -271,12 +271,6 @@ class ModalSend extends Component {
         </div>
       }
 
-      {this.state.waiting &&
-        <div className='alert alert-info' role='alert'>
-          {this.props.translate('pages.wallet.send.sending_tokens')}
-        </div>
-      }
-
       <div className='form-group'>
         <label>{ this.props.translate('pages.wallet.send.balance') }: { formatBalance(this.props.balance) } {config.view.token_symbol}</label>
       </div>
@@ -384,7 +378,13 @@ class ModalSend extends Component {
     return(
       <main className='container'>
         <div>
-          <BaseModal handleHideModal={this.props.handleHideModal} buttons={buttons} title={ this.props.translate('pages.wallet.send.title') }>
+          <BaseModal
+            handleHideModal={this.props.handleHideModal}
+            buttons={buttons}
+            title={ this.props.translate('pages.wallet.send.title') }
+            showInProgress={this.state.waiting}
+            showInProgressMessage='pages.wallet.send.sending_tokens'
+          >
             { content }
           </BaseModal>
         </div>

@@ -102,12 +102,6 @@ class ModalWithdraw extends Component {
         </div>
       }
 
-      {this.props.withdrawApproving &&
-        <div className='alert alert-info' role='alert'>
-          {this.props.translate('pages.withdraw.withdraw_approving')}
-        </div>
-      }
-
       <dl className="dl-horizontal">
 
         {this.state.gasLimit && <div>
@@ -214,7 +208,13 @@ class ModalWithdraw extends Component {
 
       <main className='container'>
         <div>
-          <BaseModal handleHideModal={this.props.modalWithdrawClose} buttons={this._buttons()} title={ this.props.translate('pages.withdraw.modal_withdraw_title')} >
+          <BaseModal
+            handleHideModal={this.props.modalWithdrawClose}
+            buttons={this._buttons()}
+            title={ this.props.translate('pages.withdraw.modal_withdraw_title')}
+            showInProgress={this.props.withdrawApproving}
+            showInProgressMessage='pages.withdraw.withdraw_approving'
+          >
             { this.props.withdrawApproved ? this._savedContent() : this._confirmContent() }
           </BaseModal>
         </div>

@@ -77,12 +77,6 @@ class ModalNewBet extends Component {
         </div>
       }
 
-      {this.props.newBetSaving &&
-        <div className='alert alert-info' role='alert'>
-          {this.props.translate('pages.event.new_bet_saving')}
-        </div>
-      }
-
       <dl className="dl-horizontal">
 
         <dt>{this.props.translate('pages.event.result.name')}</dt>
@@ -174,7 +168,13 @@ class ModalNewBet extends Component {
 
       <main className='container'>
         <div>
-          <BaseModal handleHideModal={this.props.modalAddNewBetClose} buttons={this._buttons()} title={ this.props.translate('pages.new_event.modal.submit')} >
+          <BaseModal
+            handleHideModal={this.props.modalAddNewBetClose}
+            buttons={this._buttons()}
+            title={ this.props.translate('pages.new_event.modal.submit')}
+            showInProgress={this.props.newBetSaving}
+            showInProgressMessage='pages.event.new_bet_saving'
+          >
             { this.props.newBetSaved ? this._savedContent() : this._confirmContent() }
           </BaseModal>
         </div>
