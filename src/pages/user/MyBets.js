@@ -117,7 +117,7 @@ class MyBets extends Component {
   onChangeFromDate(fromDate) {
     this.setState({
       fromDate,
-      fromTimestamp: fromDate ? parseInt(fromDate.unix(), 10) : null,
+      fromTimestamp: fromDate ? parseInt(fromDate.hours(0).minutes(0).seconds(0).unix(), 10) : null,
       page: 1,
     }, this.update);
   }
@@ -125,7 +125,7 @@ class MyBets extends Component {
   onChangeToDate(toDate) {
     this.setState({
       toDate,
-      toTimestamp: toDate ? parseInt(toDate.unix(), 10) : null,
+      toTimestamp: toDate ? parseInt(toDate.hours(23).minutes(59).seconds(59).unix(), 10) : null,
       page: 1,
     }, this.update);
   }

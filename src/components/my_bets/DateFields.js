@@ -61,16 +61,10 @@ class DateFields extends Component {
 
   onChangeEndTime(currentDate) {
     if (Datetime.moment.isMoment(currentDate) && currentDate.isValid()) {
-      const clonedDate = currentDate.clone()
-        .set('hours', '23')
-        .set('minutes', '59')
-        .set('seconds', '59')
-        .set('milliseconds', '999');
-
       this.setState({
         formData: {
           ...this.state.formData,
-          endTime: clonedDate
+          endTime: currentDate
         }
       });
 
