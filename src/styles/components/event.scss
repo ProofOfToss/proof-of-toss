@@ -1,6 +1,21 @@
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
 
 .event {
+
+  &__main-info {
+    dd {
+      word-wrap: break-word;
+    }
+  }
+
+  &__tags {
+    .label {
+      display: inline-block;
+      margin-right: 5px;
+      padding: .3em .6em .4em;
+    }
+  }
+
   .results {
     th {
       white-space: nowrap;
@@ -12,6 +27,32 @@
 
       .alert {
         margin-bottom: 0;
+      }
+
+      &.action {
+        form.add-bet {
+          position: relative;
+          white-space: nowrap;
+
+          & > * {
+            vertical-align: top;
+          }
+
+          .form-group {
+            margin-right: 5px;
+
+            &.has-error {
+              padding: 0 0 20px 0;
+
+              .help-block {
+                position: absolute;
+                margin: 0;
+                bottom: 0;
+                left: 0;
+              }
+            }
+          }
+        }
       }
     }
   }

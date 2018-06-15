@@ -1,9 +1,11 @@
-import MainContract from '../../../build/contracts/Main.json'
-import TokenContract from '../../../build/contracts/Token.json'
+import {getBuiltContract} from '../../util/buildDir';
 import { getTranslate } from 'react-localize-redux';
 import { denormalizeBalance } from './../../util/token';
 import { serializeEvent } from '../../util/eventUtil';
 import { decodeEvent } from '../../util/web3Util';
+
+const MainContract = getBuiltContract('Main');
+const TokenContract = getBuiltContract('Token');
 
 export const FORM_SAVE_EVENT = 'FORM_SAVE_EVENT';
 export const MODAL_SAVE_EVENT = 'MODAL_SAVE_EVENT';

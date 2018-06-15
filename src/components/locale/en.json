@@ -89,6 +89,9 @@
     "previous_label": "Previous",
     "next_label": "Next"
   },
+  "modal": {
+    "show_in_progress_message": "Transaction is executing. Check metamask extension for the info."
+  },
   "pages": {
     "home": {
       "title": "Start!"
@@ -179,6 +182,7 @@
         "submit": "Submit",
         "tags": {
           "label": "Tags",
+          "help": "Maximum 10 tags",
           "error": "Please add at least one tag"
         },
         "dates": {

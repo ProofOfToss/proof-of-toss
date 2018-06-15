@@ -6,7 +6,8 @@ import moment from 'moment';
 
 import BootstrapInput from '../../components/form/BootstrapInput';
 
-import { STATUS_PUBLISHED, STATUS_ACCEPTED } from '../../util/eventUtil';
+import { STATUS_PUBLISHED, STATUS_ACCEPTED, STATUS_CLOSED } from '../../util/eventUtil';
+import { RESULT_DID_NOT_HAPPEN } from "../../classes/event";
 import ModalNewBet from './ModalNewBet';
 import { newBet } from '../../actions/pages/event';
 
@@ -81,7 +82,7 @@ class ResultsList extends Component {
         min: 0
       };
 
-      return <form className="form-inline">
+      return <form className="form-inline add-bet">
         <BootstrapInput valueLink={betAmountLink} showError={this.state.errors[`betAmount_${key}`]} attr={inputAttr}/>
         <span className="btn btn-primary" onClick={() => this.newBet(key)}>
                     {this.props.translate('pages.event.newBet')}</span>
@@ -109,25 +110,34 @@ class ResultsList extends Component {
     return <Fragment>
       <table className="table table-striped results"><tbody>
       <tr>
-        <th className="col-md-6">{this.props.translate('pages.event.result.name')}</th>
-        <th>{this.props.translate('pages.event.result.coefficient')}</th>
-        <th>{this.props.translate('pages.event.result.bet_count')}</th>
-        <th>{this.props.translate('pages.event.result.bet_sum')}</th>
-        <th />
+        <th className="name col-md-5">{this.props.translate('pages.event.result.name')}</th>
+        <th className="coefficient col-md-1">{this.props.translate('pages.event.result.coefficient')}</th>
+        <th className="bet_count col-md-1">{this.props.translate('pages.event.result.bet_count')}</th>
+        <th className="bet_sum col-md-1">{this.props.translate('pages.event.result.bet_sum')}</th>
+        <th className="action col-md-3" />
       </tr>
       {this.props.results.map((result, key) => {
 
         return <tr className={result.resolved ? 'success' : ''} key={key}>
-          <td>{result.description}</td>
-          <td>{result.coefficient}</td>
-          <td>{result.betCount}</td>
-          <td>{result.betSum}</td>
-          <td>
+          <td className="name col-md-5">{result.description}</td>
+          <td className="coefficient col-md-1">{result.coefficient}</td>
+          <td className="bet_count col-md-1">{result.betCount}</td>
+          <td className="bet_sum col-md-1">{result.betSum}</td>
+          <td className="action col-md-3">
             {this.state.allowBiddingError ? this.renderDisallowBidding() : this.renderAddBetColumn(key)}
           </td>
         </tr>
       }, this)}
       </tbody></table>
+
+      {
+        this.props.status === STATUS_CLOSED &&
+        this.props.resolvedResult === RESULT_DID_NOT_HAPPEN &&
+        <div className="did_not_happen_success">
+          {this.props.translate('pages.event.did_not_happen')}
+        </div>
+      }
+
       {this.props.showNewBetModal ? <ModalNewBet eventInstance={this.props.eventInstance} /> : null}
     </Fragment>;
   }

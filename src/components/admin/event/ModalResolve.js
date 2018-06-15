@@ -2,12 +2,14 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
-import EventBaseContract from '../../../../build/contracts/EventBase.json';
+import {getBuiltContract} from '../../../util/buildDir';
 import { Input } from 'valuelink/tags'
 import BaseModal from '../../modal/BaseModal'
 import { modalResolveClose, modalResolveApprove } from '../../../actions/pages/event'
 import { getGasCalculation } from '../../../util/gasPriceOracle';
 import config from '../../../data/config.json';
+
+const EventBaseContract = getBuiltContract('EventBase');
 
 class ModalResolve extends Component {
 
@@ -66,12 +68,6 @@ class ModalResolve extends Component {
       {this.state.estimateGasError &&
         <div className='alert alert-danger' role='alert'>
           {this.props.translate('pages.event.estimate_gas_error')}
-        </div>
-      }
-
-      {this.props.resolveApproving &&
-        <div className='alert alert-info' role='alert'>
-          {this.props.translate('pages.event.resolve_approving')}
         </div>
       }
 
@@ -166,7 +162,13 @@ class ModalResolve extends Component {
 
       <main className='container'>
         <div>
-          <BaseModal handleHideModal={this.props.modalResolveClose} buttons={this._buttons()} title={ this.props.translate('pages.event.modal_resolve_title')} >
+          <BaseModal
+            handleHideModal={this.props.modalResolveClose}
+            buttons={this._buttons()}
+            title={ this.props.translate('pages.event.modal_resolve_title')}
+            showInProgress={this.props.resolveApproving}
+            showInProgressMessage='pages.event.resolve_approving'
+          >
             { this.props.resolveApproved ? this._savedContent() : this._confirmContent() }
           </BaseModal>
         </div>

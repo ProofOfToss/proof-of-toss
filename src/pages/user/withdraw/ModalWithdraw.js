@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
-import EventBaseContract from '../../../../build/contracts/EventBase.json';
+import {getBuiltContract} from '../../../util/buildDir';
 import { Input } from 'valuelink/tags'
 import BaseModal from '../../../components/modal/BaseModal'
 import { modalWithdrawClose, modalWithdrawApprove, fetchEvent, resetEvent } from '../../../actions/pages/event'
 import { getGasCalculation } from '../../../util/gasPriceOracle';
 import config from '../../../data/config.json';
 import CategoryUtil from '../../../util/CategoryUtil';
+
+const EventBaseContract = getBuiltContract('EventBase');
 
 class ModalWithdraw extends Component {
 
@@ -99,12 +101,6 @@ class ModalWithdraw extends Component {
       {this.state.estimateGasError &&
         <div className='alert alert-danger' role='alert'>
           {this.props.translate('pages.event.estimate_gas_error')}
-        </div>
-      }
-
-      {this.props.withdrawApproving &&
-        <div className='alert alert-info' role='alert'>
-          {this.props.translate('pages.withdraw.withdraw_approving')}
         </div>
       }
 
@@ -214,7 +210,13 @@ class ModalWithdraw extends Component {
 
       <main className='container'>
         <div>
-          <BaseModal handleHideModal={this.props.modalWithdrawClose} buttons={this._buttons()} title={ this.props.translate('pages.withdraw.modal_withdraw_title')} >
+          <BaseModal
+            handleHideModal={this.props.modalWithdrawClose}
+            buttons={this._buttons()}
+            title={ this.props.translate('pages.withdraw.modal_withdraw_title')}
+            showInProgress={this.props.withdrawApproving}
+            showInProgressMessage='pages.withdraw.withdraw_approving'
+          >
             { this.props.withdrawApproved ? this._savedContent() : this._confirmContent() }
           </BaseModal>
         </div>

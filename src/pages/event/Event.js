@@ -28,8 +28,9 @@ class Event extends Component {
         <MainInfo eventData={this.props.eventData} />
         <TagsList tags={this.props.eventData.tag} />
         <ResultsList status={this.props.eventData.status}
-                     results={this.props.eventData.possibleResults}
+                     resolvedResult={this.props.eventData.resolvedResult}
                      startTime={this.props.eventData.startDate}
+                     results={this.props.eventData.possibleResults}
         />
       </Fragment>
     )

@@ -1,4 +1,5 @@
 import { getLanguageAnalyzerByCode } from './i18n';
+import { RESULT_DID_NOT_HAPPEN } from '../classes/event';
 
 function filterEventsConditions(locale, q, fromTimestamp, toTimestamp) {
   const conditions = [];
@@ -52,8 +53,6 @@ function filterEventsConditions(locale, q, fromTimestamp, toTimestamp) {
     });
   }
 
-  console.log(fromTimestamp, JSON.stringify(conditions));
-
   return {conditions, shouldConditions};
 }
 
@@ -81,6 +80,12 @@ function myRewardConditions(locale, currentAddress, q, fromTimestamp, toTimestam
   conditions.push({
     term: {
       'withdrawn': false,
+    }
+  });
+
+  conditions.push({
+    range: {
+      'bidSum': {gt: 0},
     }
   });
 
@@ -133,7 +138,7 @@ function myPrizeBetConditions(currentAddress, eventHits) {
   conditions.push({ // bet on winning result
     'script' : {
       'script' : {
-        'source': 'for (item in params.events) { if(doc["event"].value == item.address) { return Long.parseLong(item.result, 10) == doc["result"].value } } return false',
+        'source': `for (item in params.events) { if(doc["event"].value == item.address) { return (Long.parseLong(item.result, 10) == doc["result"].value || Long.parseLong(item.result, 10) == ${RESULT_DID_NOT_HAPPEN}) } } return false`,
         'lang': 'painless',
         'params' : {
           'events': eventHits.map((hit) => ({address: hit._id, result: hit._source.result})),

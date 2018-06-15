@@ -1,4 +1,4 @@
-import EventBaseContract from '../../../build/contracts/EventBase.json';
+import {getBuiltContract} from '../../util/buildDir';
 import { getTranslate } from 'react-localize-redux';
 import { deployed } from "../../util/contracts";
 import { formatBalance, denormalizeBalance } from './../../util/token';
@@ -6,6 +6,8 @@ import { toBytesTruffle as toBytes } from '../../util/serialityUtil';
 import appConfig from "../../data/config.json";
 import {refreshBalance} from "../token";
 import {newTx} from "../tx";
+
+const EventBaseContract = getBuiltContract('EventBase');
 
 export const FETCHED_EVENT = 'FETCHED_EVENT';
 export const FETCHING_ERROR_EVENT = 'FETCHING_ERROR_EVENT';

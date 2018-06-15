@@ -9,6 +9,23 @@
 
 .playTable {
   margin-top: 15px;
+
+  table {
+    width: 100%;
+    max-width: 100%;
+
+    .name {
+      max-width: 30%;
+      word-wrap: break-word;
+      word-break: break-all;
+    }
+
+    .bid-type {
+      max-width: 30%;
+      word-wrap: break-word;
+      word-break: break-all;
+    }
+  }
 }
 
 .multiple-bets-row {

@@ -76,7 +76,7 @@ class TagsField extends Component {
         shouldRenderSuggestions={(value) => value && value.trim().length > 0}
         getSuggestionValue={(suggestion) => suggestion.name}
         renderSuggestion={(suggestion) => <span>{suggestion.name}</span>}
-        inputProps={{...props, onChange: handleOnChange}}
+        inputProps={{...props, onChange: handleOnChange, maxLength: 16}}
         onSuggestionSelected={(e, {suggestion}) => {
           addTag(suggestion.name)
         }}
@@ -92,7 +92,9 @@ class TagsField extends Component {
 
   render() {
     return <div className={"form-group" + (this._showErrors() ? ' has-error' : '')}>
-      <label htmlFor="event[tags]">{ this.props.translate('pages.new_event.form.tags.label')}*</label>
+      <label htmlFor="event[tags]">{ this.props.translate('pages.new_event.form.tags.label')}*<br />
+        <small>{this.props.translate('pages.new_event.form.tags.help')}</small>
+      </label>
       <TagsInput ref="tagsinput"
                  value={this.state.formData.tags}
                  onChange={this.onChangeTags}
