@@ -8,7 +8,7 @@ contract TestMainSC is Main {
     constructor(address _token, address _whitelist, address _eventBase) public Main(_token, _whitelist, _eventBase) {}
 
     function tokenFallback(address _from, uint256 _value, bytes memory _data) public {
-        lastEvent = newEvent(_from, uint256(_value), _data);
+        lastEvent = newEvent(_from, _value, _data);
         token.transfer(lastEvent, _value);
     }
 
