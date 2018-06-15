@@ -270,28 +270,6 @@ contract('Event', function(accounts) {
     await event.withdrawPrize(0, {from: accounts[1]});
     await event.withdrawReward({from: accounts[0]});
 
-    /*
-    eventCreatorBalance
-    98765000009999990000000
-    10000000
-    98765000000000000000000
-    1419750000000000000000
-
-    10000010000000
-    1419750010000000000000
-
-
-    eventCreatorBalance
-    98765000000000000000000
-    10000000000000000000000000
-    98765000000000000000000
-    1419750000000000000000
-
-    3181795956718829568
-    10001419750000000000000000
-
-     */
-
     console.log('eventCreatorBalance', (new BigNumber(eventCreatorBalance)).toString());
     console.log('(await token.balanceOf(accounts[0])).toString()', (await token.balanceOf(accounts[0])).toString());
     console.log('new BigNumber(eventCreatorBalance.plus(eventDeposit).minus(denormalizeBalance(98765)).plus(denormalizeBalance((98765 + 43210) * 0.01))).toString()', new BigNumber(eventCreatorBalance.plus(eventDeposit).minus(denormalizeBalance(98765)).plus(denormalizeBalance((98765 + 43210) * 0.01))).toString());
