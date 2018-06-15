@@ -8,13 +8,9 @@ import Config from 'truffle-config';
 import Resolver from 'truffle-resolver';
 import {IndexingUtil} from '../src/util/indexingUtil';
 import callAsync from '../src/util/web3Util';
+import {getBuiltContract} from '../src/util/buildDir';
 
-const buildDir = fs.readFileSync(path.join(__dirname, '..', 'build_dir.conf'), 'utf8');
-const tokenJsonPath = '../' + buildDir + '/contracts/Token.json';
-
-console.log('Using token json path: ' + tokenJsonPath);
-
-const tokenJson = require(tokenJsonPath);
+const tokenJson = getBuiltContract('Token');
 
 import log4js from 'log4js';
 
