@@ -1,3 +1,9 @@
+import appConfig from './data/config.json';
+
+if (appConfig.redirectWwwToNonWww === true && window.location.hostname.indexOf('www') === 0) {
+  window.location.href = window.location.href.replace('www', '');
+}
+
 import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router'
