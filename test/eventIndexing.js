@@ -237,8 +237,12 @@ contract('Event', function(accounts) {
     assert.equal(bidsResult.hits.hits.length, 2, 'Invalid bets count');
     assert.equal(bidsResult.hits.hits[0]._source.bettor, accounts[0], 'Invalid bet');
     assert.equal(bidsResult.hits.hits[0]._source.amount, 98765, 'Invalid bet');
+    assert.equal(bidsResult.hits.hits[0]._source.index, 0, 'Invalid index');
+    assert.equal(bidsResult.hits.hits[0]._source.userIndex, 0, 'Invalid userIndex');
     assert.equal(bidsResult.hits.hits[1]._source.bettor, accounts[1], 'Invalid bet');
     assert.equal(bidsResult.hits.hits[1]._source.amount, 43210, 'Invalid bet');
+    assert.equal(bidsResult.hits.hits[1]._source.index, 1, 'Invalid index');
+    assert.equal(bidsResult.hits.hits[1]._source.userIndex, 0, 'Invalid userIndex');
 
 
 
