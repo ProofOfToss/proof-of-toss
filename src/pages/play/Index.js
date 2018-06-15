@@ -31,6 +31,7 @@ class Index extends Component {
     this.onChangeFromDate = this.onChangeFromDate.bind(this);
     this.onChangeToDate = this.onChangeToDate.bind(this);
     this.onChangeQuery = this.onChangeQuery.bind(this);
+    this.onChangeLanguage = this.onChangeLanguage.bind(this);
     this.onChangeCategory = this.onChangeCategory.bind(this);
     this.isValidDate = this.isValidDate.bind(this);
     this.getUrlParams = this.getUrlParams.bind(this);
@@ -50,7 +51,7 @@ class Index extends Component {
   getUrlParams() {
     let params = {};
 
-    ['q', 'category', 'fromTimestamp', 'toTimestamp', 'page', 'sortField', 'sortOrder'].forEach((field) => {
+    ['q', 'locale', 'category', 'fromTimestamp', 'toTimestamp', 'page', 'sortField', 'sortOrder'].forEach((field) => {
       if (this.state[field]) {
         params[field] = this.state[field];
       }
@@ -62,10 +63,13 @@ class Index extends Component {
   getStateFromQueryString(props) {
     const parsed = props.location && props.location.search ? queryString.parse(props.location.search) : {};
 
+    console.log(parsed);
+
     return {
-      locale: props.locale,
+      locale: parsed.locale ? parsed.locale:  props.locale,
 
       categories: appConfig.categories.list,
+      languages: appConfig.languages.list,
       data: [],
 
       loading: true,
@@ -150,6 +154,13 @@ class Index extends Component {
   onChangeQuery(e) {
     this.setState({
       q: e.target.value,
+      page: 1,
+    }, this.updateDebounce);
+  }
+
+  onChangeLanguage(e) {
+    this.setState({
+      locale: e.target.value,
       page: 1,
     }, this.updateDebounce);
   }
@@ -271,7 +282,7 @@ class Index extends Component {
   }
 
   render() {
-    const { data, categories } = this.state;
+    const { data, categories, languages } = this.state;
     let columns = [
       {
         text: this.props.translate('pages.play.columns.name'),
@@ -358,8 +369,22 @@ class Index extends Component {
             </div>
 
             <div className="row">
-              <div className="col-md-6">
+              <div className="col-md-2">
                 <div className="input-group">
+                  <label htmlFor="event[locale]">{ this.props.translate('pages.play.filter.locale') }</label>
+                  <select id="event[locale]" className="form-control" value={this.state.locale} onChange={this.onChangeLanguage}>
+                    {
+                      appConfig.languages.list.map((language, key) => {
+                        return <option key={language.code} value={language.code}>{language.name}</option>
+                      })
+                    }
+                  </select>
+                </div>
+              </div>
+
+              <div className="col-md-2">
+                <div className="input-group">
+                  <label htmlFor="event[locale]">{ this.props.translate('pages.play.filter.search') }</label>
                   <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
                 </div>
               </div>

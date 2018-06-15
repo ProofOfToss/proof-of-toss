@@ -12,7 +12,8 @@ class Language extends Component {
         <ul className="dropdown-menu" role="menu">
           { this.props.languages.map(language =>
             <li key={language.code}>
-              <Link className="pure-menu-link" to={this.props.location.pathname.replace(this.props.currentLanguage, language.code)}
+              <Link className="pure-menu-link"
+                    to={this.props.location.pathname.replace(this.props.currentLanguage, language.code) + this.props.location.search}
                     onClick={ () => this.props.setActiveLanguage(language.code)}
               >
                 {this.props.translate('language.' + language.code)}

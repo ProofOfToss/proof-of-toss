@@ -240,6 +240,10 @@
         "prize": "Выигрыш",
         "deposit": "Депозит",
         "reward": "Вознаграждение / Возврат"
+      },
+      "filter": {
+        "locale": "Language",
+        "search": "Search"
       }
     },
     "my_bets": {
