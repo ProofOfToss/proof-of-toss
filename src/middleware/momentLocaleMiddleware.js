@@ -8,7 +8,7 @@ const momentLocaleMiddleware = store => next => action => {
   }
 
   if(action.type === SET_ACTIVE_LANGUAGE) {
-    //TODO::change the date format if locale changed?
+    moment.locale(action.payload.languageCode);
   }
 
   next(action);
