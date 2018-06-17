@@ -242,8 +242,8 @@
         "reward": "Вознаграждение / Возврат"
       },
       "filter": {
-        "locale": "Language",
-        "search": "Search"
+        "locale": "Язык",
+        "search": "Поиск"
       }
     },
     "my_bets": {

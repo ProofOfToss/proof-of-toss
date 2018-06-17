@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import _ from "lodash";
 const queryString = require('query-string');
-import { Link } from 'react-router';
+import { Link, withRouter } from 'react-router';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
@@ -63,8 +63,6 @@ class Index extends Component {
   getStateFromQueryString(props) {
     const parsed = props.location && props.location.search ? queryString.parse(props.location.search) : {};
 
-    console.log(parsed);
-
     return {
       locale: parsed.locale ? parsed.locale:  props.locale,
 
@@ -98,6 +96,8 @@ class Index extends Component {
     // @todo: we use defaultSorted prop for BootstrapTable which triggers table change which triggers elastic search query
     // if we uncomment this.update() below there will be two identical queries to elastic search at the initial page loading
     //this.update();
+
+    this.props.router.push(`/${this.props.locale}/${this.props.routeName}?${this.getUrlParams()}`);
 
     if (this.props.refreshInterval !== false) {
       this.refreshIntervalId = setInterval(this.update, parseInt(this.props.refreshInterval, 10));
@@ -140,7 +140,10 @@ class Index extends Component {
       fromDate,
       fromTimestamp: fromDate ? parseInt(fromDate.unix(), 10) : null,
       page: 1,
-    }, this.update);
+    }, () => {
+      this.props.router.push(`/${this.props.locale}/${this.props.routeName}?${this.getUrlParams()}`);
+      this.updateDebounce();
+    });
   }
 
   onChangeToDate(toDate) {
@@ -148,21 +151,30 @@ class Index extends Component {
       toDate,
       toTimestamp: toDate ? parseInt(toDate.unix(), 10) : null,
       page: 1,
-    }, this.update);
+    }, () => {
+      this.props.router.push(`/${this.props.locale}/${this.props.routeName}?${this.getUrlParams()}`);
+      this.updateDebounce();
+    });
   }
 
   onChangeQuery(e) {
     this.setState({
       q: e.target.value,
       page: 1,
-    }, this.updateDebounce);
+    }, () => {
+      this.props.router.push(`/${this.props.locale}/${this.props.routeName}?${this.getUrlParams()}`);
+      this.updateDebounce();
+    });
   }
 
   onChangeLanguage(e) {
     this.setState({
       locale: e.target.value,
       page: 1,
-    }, this.updateDebounce);
+    }, () => {
+      this.props.router.push(`/${this.props.locale}/${this.props.routeName}?${this.getUrlParams()}`);
+      this.updateDebounce();
+    });
   }
 
   onChangeCategory(category) {
@@ -181,8 +193,6 @@ class Index extends Component {
   async update() {
     const conditions = [];
     const shouldConditions = [];
-
-    history.replaceState({}, '', `/${this.props.locale}/${this.props.routeName}?${this.getUrlParams()}`);
 
     conditions.push({
       term: {
@@ -282,7 +292,7 @@ class Index extends Component {
   }
 
   render() {
-    const { data, categories, languages } = this.state;
+    const { data, categories } = this.state;
     let columns = [
       {
         text: this.props.translate('pages.play.columns.name'),
@@ -434,4 +444,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Index);
+export default withRouter(connect(mapStateToProps)(Index));

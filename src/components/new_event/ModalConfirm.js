@@ -18,6 +18,8 @@ class ModalConfirm extends Component {
 
     this.saveEventHandler = this.saveEventHandler.bind(this);
 
+    this.redirectTimeout = null;
+
     this.state = {
       gasLimit: undefined,
       gasPrice: undefined,
@@ -62,6 +64,12 @@ class ModalConfirm extends Component {
         });
       });
     });
+  }
+
+  componentWillUnmount() {
+    if(this.redirectTimeout) {
+      clearTimeout(this.redirectTimeout);
+    }
   }
 
   saveEventHandler() {
@@ -164,7 +172,7 @@ class ModalConfirm extends Component {
   }
 
   _savedContent() {
-    setTimeout(() => {
+    this.redirectTimeout = setTimeout(() => {
       this.props.router.push(`/${this.props.router.params.locale}/event/${this.props.eventAddress}`);
     }, 5000);
 
