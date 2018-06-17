@@ -1,3 +1,4 @@
+require('babel-polyfill');
 import {serializeEvent, deserializeEvent} from '../src/util/eventUtil';
 
 describe('EventUtil', function() {
