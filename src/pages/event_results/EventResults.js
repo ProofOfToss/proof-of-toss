@@ -14,6 +14,7 @@ class EventResults extends Component {
       includeEndDateColumn="true"
       defaultSortField="endDate"
       defaultSortOrder="asc"
+      location={this.props.location}
     />);
   }
 

@@ -5,12 +5,6 @@ function filterEventsConditions(locale, q, fromTimestamp, toTimestamp) {
   const conditions = [];
   const shouldConditions = [];
 
-  conditions.push({
-    term: {
-      locale: locale,
-    }
-  });
-
   if (q) {
     shouldConditions.push({
       query_string: {
