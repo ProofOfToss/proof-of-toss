@@ -3,6 +3,7 @@ import { serializeEvent } from '../src/util/eventUtil';
 import {toBytesTruffle as toBytes} from '../src/util/serialityUtil';
 import {AwsEsPublicClient} from '../src/util/esClient';
 import {IndexingUtil} from '../src/util/indexingUtil';
+import BigNumber from '../src/util/bignumber';
 import appConfig from '../src/data/config.json';
 import log4js from 'log4js';
 import _ from 'lodash';
@@ -53,7 +54,7 @@ contract('Event', function(accounts) {
   const now = Math.floor((new Date()).getTime() / 1000);
 
   const eventName = 'Test event';
-  const eventDeposit = 10000000;
+  const eventDeposit = denormalizeBalance(10000000);
   const eventDescription = 'description';
 
   const bidType = 'bid_type';
@@ -89,10 +90,9 @@ contract('Event', function(accounts) {
     eventBase = await EventBase.deployed();
 
     await token.setPause(false);
-    await token.mint(accounts[0], 10000000000000);
+    await token.mint(accounts[0], eventDeposit);
 
     main = await Main.deployed();
-    await token.approve(main.address, 10000000, {from: accounts[0]});
     await token.grantToSetUnpausedWallet(main.address, true);
 
     try {
@@ -123,9 +123,13 @@ contract('Event', function(accounts) {
   it("should index bets", async () => {
     let balance = (await token.balanceOf(accounts[1])).toNumber();
     if (balance > 0) { await token.burn(accounts[1], balance); }
-    await token.mint(accounts[1], 43210);
+    await token.mint(accounts[0], denormalizeBalance(98765));
+    await token.mint(accounts[1], denormalizeBalance(43210));
 
-    const eventCreatorBalance = (await token.balanceOf(accounts[0])).toNumber();
+    assert.equal(new BigNumber(await token.balanceOf(event.address)).toString(), eventDeposit.toString(), 'Invalid event balance');
+    assert.equal(new BigNumber(await event.deposit()).toString(), eventDeposit.toString(), 'Invalid event deposit');
+
+    const eventCreatorBalance = await token.balanceOf(accounts[0]);
 
     await indexingUtil.syncIndeces(true);
 
@@ -142,7 +146,7 @@ contract('Event', function(accounts) {
       }
     });
 
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 12000));
 
     events = eventBase.Updated({}, {fromBlock: 0});
 
@@ -161,7 +165,7 @@ contract('Event', function(accounts) {
 
     await token.transferToContract(
       event.address,
-      98765,
+      denormalizeBalance(98765),
       toBytes(
         {type: 'uint', size: 8, value: 1}, // action – bet
         {type: 'uint', size: 8, value: 0}, // result index
@@ -169,9 +173,11 @@ contract('Event', function(accounts) {
       {from: accounts[0]}
     );
 
+    assert.equal((await token.balanceOf(accounts[0])).toString(), (new BigNumber(eventCreatorBalance.minus(denormalizeBalance(98765)))).toString(), '1st player balance is invalid');
+
     await token.transferToContract(
       event.address,
-      43210,
+      denormalizeBalance(43210),
       toBytes(
         {type: 'uint', size: 8, value: 1}, // action – bet
         {type: 'uint', size: 8, value: 1}, // result index
@@ -179,7 +185,9 @@ contract('Event', function(accounts) {
       {from: accounts[1]}
     );
 
-    await new Promise((resolve) => setTimeout(resolve, 6000));
+    assert.equal((await token.balanceOf(accounts[0])).toNumber(), 0, '2nd player balance is invalid');
+
+    await new Promise((resolve) => setTimeout(resolve, 12000));
 
     let eventsResult = await esClient.search(Object.assign({
       index: EVENT_INDEX,
@@ -201,7 +209,7 @@ contract('Event', function(accounts) {
       assert.equal(error, null, error.toString());
     });
 
-    console.log(_.map(eventsResult.hits.hits, '_source'));
+    console.log('eventsResult', _.map(eventsResult.hits.hits, '_source'));
 
     assert.equal(eventsResult.hits.total, 1, 'Invalid hits count');
     assert.equal(eventsResult.hits.hits[0]._id, event.address, 'Invalid event found');
@@ -224,11 +232,17 @@ contract('Event', function(accounts) {
       }
     }));
 
+    console.log('bidsResult', _.map(bidsResult.hits.hits, '_source'));
+
     assert.equal(bidsResult.hits.hits.length, 2, 'Invalid bets count');
     assert.equal(bidsResult.hits.hits[0]._source.bettor, accounts[0], 'Invalid bet');
-    assert.equal(denormalizeBalance(bidsResult.hits.hits[0]._source.amount), 98765, 'Invalid bet');
+    assert.equal(bidsResult.hits.hits[0]._source.amount, 98765, 'Invalid bet');
+    assert.equal(bidsResult.hits.hits[0]._source.index, 0, 'Invalid index');
+    assert.equal(bidsResult.hits.hits[0]._source.userIndex, 0, 'Invalid userIndex');
     assert.equal(bidsResult.hits.hits[1]._source.bettor, accounts[1], 'Invalid bet');
-    assert.equal(denormalizeBalance(bidsResult.hits.hits[1]._source.amount), 43210, 'Invalid bet');
+    assert.equal(bidsResult.hits.hits[1]._source.amount, 43210, 'Invalid bet');
+    assert.equal(bidsResult.hits.hits[1]._source.index, 1, 'Invalid index');
+    assert.equal(bidsResult.hits.hits[1]._source.userIndex, 0, 'Invalid userIndex');
 
 
 
@@ -248,16 +262,28 @@ contract('Event', function(accounts) {
     assert.equal(await event.resolvedResult(), 1, 'Event result must be 1');
     assert.equal(await event.getState(), 5, 'Event state must be Closed');
 
+    const betSums = await event.calculateBetsSums();
+
+    assert.equal(new BigNumber(betSums[0]).toString(), denormalizeBalance(98765 + 43210).toString(), 'Invalid bets sum');
+    assert.equal(new BigNumber(betSums[1]).toString(), denormalizeBalance(43210).toString(), 'Invalid winners bets sum');
+    assert.equal(new BigNumber(betSums[2]).toString(), denormalizeBalance(98765).toString(), 'Invalid losers bets sum');
+
+    assert.equal(new BigNumber(await event.getEventCreatorReward()).toString(), denormalizeBalance((98765 + 43210) * 0.01).plus(eventDeposit).toString(), 'Invalid EC reward');
+
     await expectThrow(event.withdrawPrize(0, {from: accounts[0]}));
     await event.withdrawPrize(0, {from: accounts[1]});
     await event.withdrawReward({from: accounts[0]});
 
-    assert.equal((await token.balanceOf(accounts[1])).toNumber(), Math.floor(98765 * 0.99) + Math.floor(43210 * 0.99), 'Winner balance is invalid');
-    assert.equal((await token.balanceOf(accounts[0])).toNumber(), Math.floor(eventCreatorBalance + eventDeposit - 98765 + (98765 + 43210) * 0.01), 'EC balance is invalid');
+    console.log('eventCreatorBalance', (new BigNumber(eventCreatorBalance)).toString());
+    console.log('(await token.balanceOf(accounts[0])).toString()', (await token.balanceOf(accounts[0])).toString());
+    console.log('new BigNumber(eventCreatorBalance.plus(eventDeposit).minus(denormalizeBalance(98765)).plus(denormalizeBalance((98765 + 43210) * 0.01))).toString()', new BigNumber(eventCreatorBalance.plus(eventDeposit).minus(denormalizeBalance(98765)).plus(denormalizeBalance((98765 + 43210) * 0.01))).toString());
+
+    assert.equal(new BigNumber(await token.balanceOf(accounts[1])).toString(), denormalizeBalance(98765 * 0.99 + 43210 * 0.99).toString(), 'Winner balance is invalid');
+    assert.equal(new BigNumber(await token.balanceOf(accounts[0])).toString(), new BigNumber(eventCreatorBalance.plus(eventDeposit).minus(denormalizeBalance(98765)).plus(denormalizeBalance((98765 + 43210) * 0.01))).toString(), 'EC balance is invalid');
 
     // assert.equal((await token.balanceOf(event.address)).toNumber(), 0, 'Event balance is invalid');
 
-    await new Promise((resolve) => setTimeout(resolve, 6000));
+    await new Promise((resolve) => setTimeout(resolve, 12000));
     events.stopWatching();
 
 
@@ -310,9 +336,9 @@ contract('Event', function(accounts) {
 
     assert.equal(bidsResult.hits.hits.length, 2, 'Invalid bets count');
     assert.equal(bidsResult.hits.hits[0]._source.bettor, accounts[0], 'Invalid bet');
-    assert.equal(denormalizeBalance(bidsResult.hits.hits[0]._source.amount), 98765, 'Invalid bet');
+    assert.equal(bidsResult.hits.hits[0]._source.amount, 98765, 'Invalid bet');
     assert.equal(bidsResult.hits.hits[1]._source.bettor, accounts[1], 'Invalid bet');
-    assert.equal(denormalizeBalance(bidsResult.hits.hits[1]._source.amount), 43210, 'Invalid bet');
+    assert.equal(bidsResult.hits.hits[1]._source.amount, 43210, 'Invalid bet');
 
     assert.equal(bidsResult.hits.hits[0]._source.withdrawn, false, 'Bet 1 must not be withdrawn');
     assert.equal(bidsResult.hits.hits[1]._source.withdrawn, true, 'Bet 2 must be withdrawn');

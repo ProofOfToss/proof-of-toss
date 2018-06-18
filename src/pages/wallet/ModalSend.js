@@ -8,11 +8,13 @@ import { getGasPrices } from '../../util/gasPriceOracle';
 import { validateTossAddress } from '../../util/validators';
 import Link from 'valuelink'
 import { Input } from 'valuelink/tags'
-import TokenContract from '../../../build/contracts/Token.json'
+import {getBuiltContract} from '../../util/buildDir';
 import { refreshBalance } from '../../actions/token'
 import { transactionSaved } from '../../actions/pages/wallet'
 import store from '../../store';
 import { formatBalance, denormalizeBalance } from './../../util/token'
+
+const TokenContract = getBuiltContract('Token');
 
 class ModalSend extends Component {
 
@@ -292,7 +294,7 @@ class ModalSend extends Component {
       </div>
       <div className={ feeLink.error ? 'form-group has-error' : 'form-group' }>
         <label className='control-label' htmlFor='send[fee]'>{ this.props.translate('pages.wallet.send.fee') } ({config.view.currency_symbol})</label>
-        <Input valueLink={ feeLink } type='number' className='form-control' id='send[fee]' placeholder={ this.props.translate('pages.wallet.send.fee') } onKeyPress={this.preventNonDigit} />
+        <Input valueLink={ feeLink } type='number' min='0' step='0.001' className='form-control' id='send[fee]' placeholder={ this.props.translate('pages.wallet.send.fee') } onKeyPress={this.preventNonDigit} />
         <span className='help-block'>{ feeLink.error || '' }</span>
       </div>
       <div className='form-group'>

@@ -1,6 +1,6 @@
 import {BigNumber} from 'bignumber.js';
 
-BigNumber.config({ EXPONENTIAL_AT: 30 });
+BigNumber.config({ EXPONENTIAL_AT: 256 });
 
 // add methods for web3.BigNumber (<6.0.0) back compatibility
 

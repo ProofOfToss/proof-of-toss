@@ -2,12 +2,14 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import Link from 'valuelink'
-import EventBaseContract from '../../../../build/contracts/EventBase.json';
+import {getBuiltContract} from '../../../util/buildDir';
 import { Input } from 'valuelink/tags'
 import BaseModal from '../../modal/BaseModal'
 import { modalResolveClose, modalResolveApprove } from '../../../actions/pages/event'
 import { getGasCalculation } from '../../../util/gasPriceOracle';
 import config from '../../../data/config.json';
+
+const EventBaseContract = getBuiltContract('EventBase');
 
 class ModalResolve extends Component {
 
@@ -89,7 +91,7 @@ class ModalResolve extends Component {
             <dt className="fees-block-fee-label">{ this.props.translate('pages.wallet.send.fee') } ({config.view.currency_symbol})</dt>
             <dd className="fees-block-fee-field">
               <div className={ this.links.fee.error ? 'form-group has-error' : 'form-group' }>
-                <Input valueLink={ this.links.fee } type='number' className='form-control' id='event[fee]' placeholder={ this.props.translate('pages.new_event.fee') } />
+                <Input valueLink={ this.links.fee } type='number' min='0' step='0.001' className='form-control' id='event[fee]' placeholder={ this.props.translate('pages.new_event.fee') } />
                 <span className='help-block'>{ this.links.fee.error || '' }</span>
               </div>
             </dd>

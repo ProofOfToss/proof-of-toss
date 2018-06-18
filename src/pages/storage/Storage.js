@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import SimpleStorageContract from '../../../build/contracts/SimpleStorage.json'
+import {getBuiltContract} from '../../util/buildDir';
 import getWeb3 from '../../util/getWeb3'
 
 import './Storage.scss'
+
+const SimpleStorageContract = getBuiltContract('SimpleStorage');
 
 class Storage extends Component {
   constructor(props) {

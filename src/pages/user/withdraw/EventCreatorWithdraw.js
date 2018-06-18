@@ -291,7 +291,7 @@ class EventCreatorWithdraw extends Component {
         <div className="playTable">
           <BootstrapTable
             ref="table"
-            keyField="tx"
+            keyField="address"
             data={ data }
             columns={ [
               {
