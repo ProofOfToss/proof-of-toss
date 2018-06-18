@@ -1,3 +1,20 @@
+run_tests:
+  stage: test
+  tags:
+    - demo
+  script:
+    - source /opt/rh/devtoolset-2/enable
+    - rm -rf node_modules
+    - nvm use system
+    - npm install
+    - ./truffle-config-gen.sh
+    - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/config.json $CI_PROJECT_DIR/src/data/
+    - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
+    - mkdir $CI_PROJECT_DIR/build
+    - ./node_modules/truffle/build/cli.bundled.js --network test migrate
+    - npm run build
+    - ./node_modules/truffle/build/cli.bundled.js --network test test
+
 deploy_demo:
   stage: deploy
   variables:
