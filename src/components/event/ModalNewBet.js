@@ -97,7 +97,7 @@ class ModalNewBet extends Component {
             <dt className="fees-block-fee-label">{ this.props.translate('pages.wallet.send.fee') } ({config.view.currency_symbol})</dt>
             <dd className="fees-block-fee-field">
               <div className={ this.links.fee.error ? 'form-group has-error' : 'form-group' }>
-                <Input valueLink={ this.links.fee } type='number' min='0' className='form-control' id='event[fee]' placeholder={ this.props.translate('pages.new_event.fee') } />
+                <Input valueLink={ this.links.fee } type='number' min='0' step='0.001' className='form-control' id='event[fee]' placeholder={ this.props.translate('pages.new_event.fee') } />
                 <span className='help-block'>{ this.links.fee.error || '' }</span>
               </div>
             </dd>
