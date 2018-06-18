@@ -1,8 +1,8 @@
 import expectThrow from './helpers/expectThrow';
 import { serializeEvent } from '../src/util/eventUtil';
 
-var Main = artifacts.require("./Main.sol");
-var EventBase = artifacts.require("./EventBase.sol");
+var Main = artifacts.require("./test/TestMainSC.sol");
+var EventBase = artifacts.require("./test/TestEventBase.sol");
 var Token = artifacts.require("./token-sale-contracts/TokenSale/Token/Token.sol");
 var Whitelist = artifacts.require("./Whitelist.sol");
 
@@ -17,8 +17,8 @@ contract('Main', function(accounts) {
   const eventLocale = 'en';
 
   const now = Math.floor((new Date()).getTime() / 1000);
-  const eventStartDate = now - 24 * 3600;
-  const eventEndDate = now - 22 * 3600;
+  const eventStartDate = now + 24 * 3600;
+  const eventEndDate = now + 25 * 3600;
 
   const eventSourceUrl = 'source_url';
   const eventTags = ['tag1_name', 'tag2_name', 'tag3_name'];
@@ -75,7 +75,6 @@ contract('Main', function(accounts) {
 
       return transactionResult;
     }).then(async function(transactionResult) {
-
       const events = await new Promise((resolve, reject) => {
         main.NewEvent({}, {fromBlock: transactionResult.receipt.blockNumber, toBlock: 'pending', topics: transactionResult.receipt.logs[0].topics}).get((error, log) => {
           if (error) {
@@ -102,9 +101,14 @@ contract('Main', function(accounts) {
 
       return event.creator();
 
-    }).then(function(creator) {
+    }).then(async function(creator) {
 
       assert.equal(creator, accounts[0], "wrong creator");
+
+      await event.setStartDate(now - 120);
+      await event.setEndDate(now - 60);
+
+      assert.equal(await event.getState(), 5, 'Event state must be Closed');
 
       return event.getShare(accounts[0], {from: accounts[0]})
 
@@ -137,8 +141,6 @@ contract('Main', function(accounts) {
     }).then((eventData) => {
 
       assert.equal(eventData[0], eventDeposit, `Deposit is invalid`);
-      assert.equal(eventData[1], eventStartDate, `Start date is invalid`);
-      assert.equal(eventData[2], eventEndDate, `End date is invalid`);
       assert.equal(eventData[3].toNumber(), 2, `Results count is invalid`);
 
       return Promise.all([event.possibleResults(0), event.possibleResults(1)]);

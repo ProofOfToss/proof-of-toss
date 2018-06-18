@@ -17,8 +17,8 @@ contract('Main', function(accounts) {
   const eventLocale = 'en';
 
   const now = Math.floor((new Date()).getTime() / 1000);
-  const eventStartDate = now - 24 * 3600;
-  const eventEndDate = now - 22 * 3600;
+  const eventStartDate = now + 24 * 3600;
+  const eventEndDate = now + 25 * 3600;
 
   const eventSourceUrl = 'source_url';
   const eventTags = ['tag1_name', 'tag2_name', 'tag3_name'];
@@ -52,7 +52,11 @@ contract('Main', function(accounts) {
     const main = await Main.deployed();
     const whitelist = await Whitelist.deployed();
 
-    const newEventBase = await EventBase.new(token.address, {gas: 45000000});
+    await token.mint(accounts[0], 10000000000000);
+    await token.setUnpausedWallet(main.address, true);
+    await token.grantToSetUnpausedWallet(main.address, true);
+
+    const newEventBase = await EventBase.new(token.address, {gas: 4500000});
     await main.updateEventBase(newEventBase.address, {from: accounts[0]});
     const newEventBaseAddress = await main.eventBase();
 
