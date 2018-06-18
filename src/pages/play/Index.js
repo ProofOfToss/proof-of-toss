@@ -385,7 +385,7 @@ class Index extends Component {
                   <select id="event[locale]" className="form-control" value={this.state.locale} onChange={this.onChangeLanguage}>
                     {
                       appConfig.languages.list.map((language, key) => {
-                        return <option key={language.code} value={language.code}>{language.name}</option>
+                        return <option key={language.code} value={language.code}>{this.props.translate('language.' + language.code)}</option>
                       })
                     }
                   </select>
