@@ -45,6 +45,5 @@
   ],
   "faucetUrl": "",
   "txCheckUrl": "",
-  "redirectWwwToNonWww": false,
   "deploy_from": false
 }
