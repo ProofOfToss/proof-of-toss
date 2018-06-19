@@ -81,7 +81,7 @@ getFilesListFromBasket.then(data => {
       {
         name: './build_webpack/favicon.png',
         key: 'favicon.png',
-        contentType: 'text/html',
+        contentType: 'image/png',
         cacheControl: 'no-cache'
       }
     ];
