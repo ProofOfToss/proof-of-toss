@@ -79,8 +79,8 @@ getFilesListFromBasket.then(data => {
         cacheControl: 'no-cache'
       },
       {
-        name: './build_webpack/favicon.ico',
-        key: 'favicon.ico',
+        name: './build_webpack/favicon.png',
+        key: 'favicon.png',
         contentType: 'text/html',
         cacheControl: 'no-cache'
       }
