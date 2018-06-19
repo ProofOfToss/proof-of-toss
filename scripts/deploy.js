@@ -8,13 +8,28 @@ const glob = require("glob");
 const config = require('../config/deploy_config.js');
 
 const credentialsParams = process.argv.slice(2);
+
 if(credentialsParams.length < 3) {
   console.log('Please provide Access key ID, Secret access key and CloudFront Distribution ID: node ' +
     'scripts/deploy.js accessKeyId secretAccessKey cloudFrontDistributionID');
   process.exit();
 }
 
-const credentials = new AWS.Credentials(credentialsParams[0], credentialsParams[1]);
+let accessKeyId = credentialsParams[0];
+let secretAccessKey = credentialsParams[1];
+let cloudFrontDistributionId = credentialsParams[2];
+let bucketName = config.bucketName;
+
+if(credentialsParams.length === 4 && credentialsParams[0] === '--prod') {
+  console.log('Will update prod server!');
+
+  accessKeyId = credentialsParams[1];
+  secretAccessKey = credentialsParams[2];
+  cloudFrontDistributionId = credentialsParams[3];
+  bucketName = config.bucketNameStaging;
+}
+
+const credentials = new AWS.Credentials(accessKeyId, secretAccessKey);
 
 AWS.config.logger = console;
 
@@ -22,7 +37,7 @@ const s3 = new S3({
   credentials: credentials,
   region: config.region,
   params: {
-    Bucket: config.bucketName
+    Bucket: bucketName
   }
 });
 
@@ -132,7 +147,7 @@ getFilesListFromBasket.then(data => {
       console.log('All files uploaded');
 
       const params = {
-        DistributionId: credentialsParams[2],
+        DistributionId: cloudFrontDistributionId,
         InvalidationBatch: {
           CallerReference: Date.now().toString(),
           Paths: {
