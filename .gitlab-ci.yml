@@ -135,6 +135,7 @@ deploy_demo_full:
     - npm run renew_es_index
     - ssh testrpc@vs04.axioma.lv "/usr/local/bin/pm2 start event_watcher"
 
+
 #Deploy staging full
 deploy_staging_full:
   stage: deploy
