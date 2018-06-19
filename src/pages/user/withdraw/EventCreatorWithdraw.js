@@ -40,6 +40,9 @@ class EventCreatorWithdraw extends Component {
     this.getUrlParams = this.getUrlParams.bind(this);
     this.update = this.update.bind(this);
     this.updateDebounce = this.updateDebounce.bind(this);
+
+    this.dateStartRef = React.createRef();
+    this.dateEndRef = React.createRef();
   }
 
   getUrlParams() {
@@ -143,7 +146,7 @@ class EventCreatorWithdraw extends Component {
   onChangeFromDate(fromDate) {
     this.setState({
       fromDate,
-      fromTimestamp: fromDate ? parseInt(fromDate.unix(), 10) : null,
+      fromTimestamp: fromDate ? parseInt(fromDate.hour(0).minute(0).second(0).unix(), 10) : null,
       page: 1,
     }, this.update);
   }
@@ -151,9 +154,13 @@ class EventCreatorWithdraw extends Component {
   onChangeToDate(toDate) {
     this.setState({
       toDate,
-      toTimestamp: toDate ? parseInt(toDate.unix(), 10) : null,
+      toTimestamp: toDate ? parseInt(toDate.hour(23).minute(59).second(59).unix(), 10) : null,
       page: 1,
     }, this.update);
+  }
+
+  clearValueInDateTimeInput(ref) {
+    ref.current.onInputChange({target: {value: ''}});
   }
 
   onChangeQuery(e) {
@@ -262,28 +269,54 @@ class EventCreatorWithdraw extends Component {
 
     return(
       <Fragment>
-        <form className="form" onSubmit={this.handleSubmit}>
+        <form className="form play-form" onSubmit={this.handleSubmit}>
 
           <div className="row">
-            <div className="col-md-6">
-              <div className="form-group">
+            <div className="col-md-5">
+              <div className="form-group date-start">
                 <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_start') }</label>
-                <Datetime value={this.state.fromDate} timeFormat={false} closeOnSelect={true} onChange={this.onChangeFromDate} isValidDate={this.isValidDate} />
+                <Datetime
+                  ref={this.dateStartRef}
+                  value={this.state.fromDate}
+                  timeFormat={false}
+                  closeOnSelect={true}
+                  onChange={this.onChangeFromDate}
+                  isValidDate={this.isValidDate}
+                  inputProps={{readOnly: true}}
+                />
               </div>
             </div>
-            <div className="col-md-6">
-              <div className="form-group">
+            <div className="col-md-1">
+              <div className="form-group reset-date">
+                <label>&nbsp;</label>
+                <button className="btn btn-secondary" onClick={() => { this.clearValueInDateTimeInput(this.dateStartRef); }}>{this.props.translate('pages.play.filters.reset_date')}</button>
+              </div>
+            </div>
+            <div className="col-md-5">
+              <div className="form-group date-end">
                 <label htmlFor="event[date_start]">{ this.props.translate('pages.play.columns.date_end') }</label>
-                <Datetime value={this.state.toDate} timeFormat={false} closeOnSelect={true} onChange={this.onChangeToDate} isValidDate={this.isValidDate} />
+                <Datetime
+                  ref={this.dateEndRef}
+                  value={this.state.toDate}
+                  timeFormat={false}
+                  closeOnSelect={true}
+                  onChange={this.onChangeToDate}
+                  isValidDate={this.isValidDate}
+                  inputProps={{readOnly: true}}
+                />
+              </div>
+            </div>
+            <div className="col-md-1">
+              <div className="form-group reset-date">
+                <label>&nbsp;</label>
+                <button className="btn btn-secondary" onClick={() => { this.clearValueInDateTimeInput(this.dateEndRef); }}>{this.props.translate('pages.play.filters.reset_date')}</button>
               </div>
             </div>
           </div>
 
           <div className="row">
-            <div className="col-md-6">
-              <div className="input-group">
-                <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
-              </div>
+            <div className="col-md-12">
+              <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
             </div>
           </div>
 

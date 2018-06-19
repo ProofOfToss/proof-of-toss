@@ -28,7 +28,7 @@ function filterEventsConditions(locale, q, fromTimestamp, toTimestamp) {
     });
   }
 
-  if ((fromTimestamp || toTimestamp) && (fromTimestamp !== toTimestamp)) {
+  if ((fromTimestamp || toTimestamp)) {
     const condition = {};
 
     if (fromTimestamp) { condition.gte = fromTimestamp; }
@@ -37,12 +37,6 @@ function filterEventsConditions(locale, q, fromTimestamp, toTimestamp) {
     conditions.push({
       range: {
         startDate: condition
-      }
-    });
-  } else if ((fromTimestamp || toTimestamp) && (fromTimestamp === toTimestamp)) {
-    conditions.push({
-      term: {
-        startDate: fromTimestamp
       }
     });
   }

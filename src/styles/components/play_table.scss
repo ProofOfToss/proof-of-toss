@@ -43,3 +43,23 @@
 .playTable .table th {
   white-space: nowrap;
 }
+
+.play-form {
+  margin-top: 10px;
+
+  .date-start,
+  .date-end {
+    input[readonly] {
+      background-color: #fff;
+      cursor: pointer;
+    }
+  }
+
+  .reset-date {
+    margin-left: -26px;
+
+    .btn {
+      display: block;
+    }
+  }
+}

@@ -224,6 +224,11 @@
       "search": "Поиск...",
       "withdraw_button": "Вывести выигрыш - ${ amount } ${ symbol }",
       "get_back_button": "Получить назад ${ amount } ${ symbol }",
+      "filters": {
+        "reset_date": "Очистить",
+        "from_date": "Диапазон даты начала от",
+        "to_date": "Диапазон даты начала до"
+      },
       "columns": {
         "name": "Название",
         "tags": "Тэги",
