@@ -124,8 +124,8 @@ const esClient = new AwsEsPublicClient(
   await eventWatcher.initPromise;
 
   try {
-    // await eventWatcher.cacheEvents();
-    // await eventWatcher.cacheEventUpdates();
+    await eventWatcher.cacheEvents();
+    await eventWatcher.cacheEventUpdates();
 
     eventWatcher.tryWatchEvents();
     eventWatcher.tryWatchEventUpdates();

@@ -75,10 +75,6 @@ export class IndexingUtil {
     this.web3 = web3;
 
     this.forceRefresh = forceRefresh;
-
-    this.indexTags = this.indexTags.bind(this);
-    this.indexEvents = this.indexEvents.bind(this);
-    this.updateEvents = this.updateEvents.bind(this);
   }
 
   /**

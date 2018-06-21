@@ -53,7 +53,7 @@ const indexingUtil = new IndexingUtil(
 const eventBaseConfig = {};
 eventBaseConfig[EventBase.address] = {
   "expired": false,
-    "artifacts": "EventBaseV1.json",
+    "artifacts": EventBase,
     "indexer": "eventIndexerV1",
     "serializer": "eventSerializerV1"
 };
@@ -64,13 +64,13 @@ const eventWatcher = new EventWatcher(
   BET_INDEX,
   esClient,
   logger,
-  Main.web3,
+  EventBase.web3,
   {
-    provider: Main.web3.currentProvider,
-    network_id: Main.network_id,
-    from: Main.defaults.from,
-    gas: Main.defaults.gas,
-    gasPrice: Main.defaults.gasPrice,
+    provider: EventBase.web3.currentProvider,
+    network_id: EventBase.network_id,
+    from: EventBase.defaults.from,
+    gas: EventBase.defaults.gas,
+    gasPrice: EventBase.defaults.gasPrice,
   },
   {
     Token,
