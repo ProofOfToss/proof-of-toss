@@ -224,6 +224,11 @@
       "search": "Searching for...",
       "withdraw_button": "Withdraw ${ amount } ${ symbol }",
       "get_back_button": "Get back ${ amount } ${ symbol }",
+      "filters": {
+        "reset_date": "Reset date",
+        "from_date": "Start date range from",
+        "to_date": "Start date range to"
+      },
       "columns": {
         "name": "Name",
         "tags": "Tags",
@@ -240,6 +245,10 @@
         "prize": "Prize",
         "deposit": "Deposit",
         "reward": "Reward/Refund"
+      },
+      "filter": {
+        "locale": "Language",
+        "search": "Search"
       }
     },
     "my_bets": {
