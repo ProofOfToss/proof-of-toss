@@ -10,6 +10,7 @@ import { getGasCalculation } from '../../util/gasPriceOracle';
 import { deployed } from '../../util/contracts';
 import { serializeEvent } from '../../util/eventUtil';
 import config from '../../data/config.json';
+import CategoryUtil from '../../util/CategoryUtil';
 
 class ModalConfirm extends Component {
 
@@ -27,6 +28,8 @@ class ModalConfirm extends Component {
       gasPriceStr: '',
       estimateGasError: false
     }
+
+    this.categoryUtil = new CategoryUtil(props.translate);
   }
 
   componentWillMount() {
@@ -100,7 +103,7 @@ class ModalConfirm extends Component {
         <dd>{this.props.formData.language}</dd>
 
         <dt>{this.props.translate('pages.new_event.form.category')}</dt>
-        <dd>{this.props.formData.category}</dd>
+        <dd>{this.categoryUtil.getName(this.props.formData.category)}</dd>
 
         <dt>{this.props.translate('pages.new_event.form.name')}</dt>
         <dd>{this.props.formData.name}</dd>

@@ -329,8 +329,20 @@
   },
   "categories": {
     "all": "All categories",
-    "sport": "Sport",
-    "economy": "Economy",
-    "weather": "Weather"
+    "sports": "Sports",
+    "hockey": "Hockey",
+    "football": "Football",
+    "air_sports": "Air sports",
+    "golf": "Golf",
+    "politics": "Politics",
+    "elections": "Elections",
+    "political_decisions": "Political decisions",
+    "international_relations": "International relations",
+    "summits_and_official_events": "Summits and official events",
+    "e-sports": "E-Sports",
+    "counter_strike_go": "Counter Strike GO",
+    "league_of_legends": "League of legends",
+    "pubg": "PUBG",
+    "fifa": "FIFA"
   }
 }

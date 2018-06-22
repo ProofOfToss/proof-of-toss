@@ -11,15 +11,27 @@ class CategoryUtil {
    * @returns {string} Category name
    */
   getName(id) {
-    const category = config.categories.list.find((category) => {
-      return category.id === parseInt(id, 10);
-    });
+    this.category = undefined;
+    this.findCategoryById(config.categories.list, id);
 
-    if(undefined === category) {
+    if(undefined === this.category) {
       return '';
     }
 
-    return this.translator(`categories.${category.name}`)
+    return this.translator(`categories.${this.category.name}`)
+  }
+
+  findCategoryById(categories, id) {
+    return categories.forEach((category) => {
+
+      if(category.children !== undefined) {
+        this.findCategoryById(category.children, id);
+      }
+
+      if(category.id === parseInt(id, 10)) {
+        this.category = category;
+      }
+    });
   }
 }
 

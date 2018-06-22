@@ -329,8 +329,20 @@
   },
   "categories": {
     "all": "Все категории",
-    "sport": "Спорт",
-    "economy": "Экономика",
-    "weather": "Погода"
+    "sports": "Спорт",
+    "hockey": "Хоккей",
+    "football": "Футбол",
+    "air_sports": "Авиационный спорт",
+    "golf": "Гольф",
+    "politics": "Политика",
+    "elections": "Выборы",
+    "political_decisions": "Политические решения",
+    "international_relations": "Международные оношения",
+    "summits_and_official_events": "Саммиты и официальные события",
+    "e-sports": "E-Sports",
+    "counter_strike_go": "Counter Strike GO",
+    "league_of_legends": "League of legends",
+    "pubg": "PUBG",
+    "fifa": "FIFA"
   }
 }
