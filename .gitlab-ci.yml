@@ -180,7 +180,7 @@ deploy_staging_full:
     - echo "Deloy to staging server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID_STAGING
     - scp -r ./build $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/
-    - ssh $AWS_HOST_LOGIN "bash -c 'export NVM_DIR=\"/home/ubuntu/.nvm\" && /home/ubuntu/.nvm/nvm.sh && export PATH=\"\$PATH:\$NVM_DIR/versions/node/v7.10.1/bin\" && cd /home/ec2-user/proof-of-toss; git pull origin prod; npm install; pm2 restart event_watcher'"
+    - ssh $AWS_HOST_LOGIN "bash -c 'export NVM_DIR=\"/home/ubuntu/.nvm\" && /home/ubuntu/.nvm/nvm.sh && export PATH=\"\$PATH:\$NVM_DIR/versions/node/v7.10.1/bin\" && cd /home/ec2-user/proof-of-toss; git pull origin staging; npm install; pm2 restart event_watcher'"
 
 # Deploy only frontend.
 deploy_production:

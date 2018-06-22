@@ -18,7 +18,7 @@ if(credentialsParams.length < 3) {
 let accessKeyId = credentialsParams[0];
 let secretAccessKey = credentialsParams[1];
 let cloudFrontDistributionId = credentialsParams[2];
-let bucketName = config.bucketName;
+let bucketName = config.bucketNameStaging;
 
 if(credentialsParams.length === 4 && credentialsParams[0] === '--prod') {
   console.log('Will update prod server!');
@@ -26,7 +26,7 @@ if(credentialsParams.length === 4 && credentialsParams[0] === '--prod') {
   accessKeyId = credentialsParams[1];
   secretAccessKey = credentialsParams[2];
   cloudFrontDistributionId = credentialsParams[3];
-  bucketName = config.bucketNameStaging;
+  bucketName = config.bucketName;
 }
 
 const credentials = new AWS.Credentials(accessKeyId, secretAccessKey);
