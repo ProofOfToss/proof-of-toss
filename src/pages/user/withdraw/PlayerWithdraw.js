@@ -319,6 +319,7 @@ class PlayerWithdraw extends Component {
                 dataField: "name",
                 sort: false,
                 attrs: rowAttrs,
+                classes: 'break-word col-md-2'
               },
               {
                 text: this.props.translate('pages.play.columns.tags'),
@@ -333,6 +334,7 @@ class PlayerWithdraw extends Component {
                 sort: false,
                 attrs: rowAttrs,
                 width: 200,
+                classes: 'break-word col-md-2'
               },
               {
                 text: this.props.translate('pages.play.columns.category'),

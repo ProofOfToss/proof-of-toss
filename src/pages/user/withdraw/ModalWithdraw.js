@@ -113,16 +113,16 @@ class ModalWithdraw extends Component {
               <dd></dd>
 
               <dt>{this.props.translate('pages.event.labels.name')}</dt>
-              <dd>{this.props.eventData.name}</dd>
+              <dd className="break-word">{this.props.eventData.name}</dd>
 
               <dt>{this.props.translate('pages.event.labels.description')}</dt>
-              <dd>{this.props.eventData.description}</dd>
+              <dd className="break-word">{this.props.eventData.description}</dd>
 
               <dt>{this.props.translate('pages.event.labels.resolved_result')}</dt>
               <dd className="result-description">{this.props.eventData.resolvedResultDescription}</dd>
 
               <dt>{this.props.translate('pages.event.labels.source_url')}</dt>
-              <dd>{this.props.eventData.sourceUrl}</dd>
+              <dd className="break-word">{this.props.eventData.sourceUrl}</dd>
 
               <dt>{this.props.translate('pages.event.labels.category')}</dt>
               <dd>{this.categoryUtil.getName(this.props.eventData.category)}</dd>
