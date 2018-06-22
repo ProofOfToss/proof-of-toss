@@ -11,6 +11,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
 import '../../styles/components/play_table.scss';
 
+import FilterCategories from '../../components/play/FilterCategories';
 import appConfig from "../../data/config.json"
 import { getLanguageAnalyzerByCode } from '../../util/i18n';
 
@@ -300,7 +301,7 @@ class Index extends Component {
   }
 
   render() {
-    const { data, categories } = this.state;
+    const { data } = this.state;
     let columns = [
       {
         text: this.props.translate('pages.play.columns.name'),
@@ -358,16 +359,7 @@ class Index extends Component {
         <div>
           <h1>{ this.props.translate(this.props.header) }</h1>
 
-          <div>
-            <a className={this.state.category ? 'btn btn-link' : 'btn btn-default'} onClick={this.onChangeCategory.bind(this, null)}>{this.props.translate(`categories.all`)}</a>
-            {
-              categories.map((category, key) => <a
-                key={key}
-                className={this.state.category === category.id ? 'btn btn-default' : 'btn btn-link'}
-                onClick={this.onChangeCategory.bind(this, category.id)}
-              >{this.props.translate(`categories.${category.name}`)}</a>)
-            }
-          </div>
+          {<FilterCategories activeCategory={this.state.category} onChangeCategory={this.onChangeCategory} />}
 
           <form className="form play-form" onSubmit={this.handleSubmit}>
 
