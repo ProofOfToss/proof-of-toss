@@ -32,8 +32,6 @@ function deployed(web3, ...contracts) {
       instances[contracts[key] + 'Instance'] = arrayInstances;
     });
 
-    window.instances = instances;
-
     return instances;
   });
 }
