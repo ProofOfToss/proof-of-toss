@@ -46,20 +46,19 @@ class Footer extends Component {
 
   render() {
     return (
-      <footer>
-        <div className="container">
-          { this.renderFooterMenu() }
-          <hr />
-          <div className="row copyright">
-            <div className="col-md-6">
-              <a href="https://toss.pro/terms-and-conditions" target="_blank">{this.props.translate('footer.terms_conditions')}</a>
-              <a href="https://toss.pro/privacy-policy" target="_blank">{this.props.translate('footer.privacy')}</a>
-              <a href="https://toss.pro" target="_blank">{this.props.translate('footer.about')}</a>
-            </div>
-            <div className="col-md-6">
-              <p className="muted pull-right">{this.props.translate('footer.copyright', {year: this.state.currentYear})}</p>
-            </div>
-          </div>
+      <footer className="footer">
+        <div className="footer__logo">
+          <img src="/images/logo.png" />
+        </div>
+
+        <div className="footer__nav">
+          <a className="footer__nav_link" href="https://toss.pro/terms-and-conditions" target="_blank">{this.props.translate('footer.terms_conditions')}</a>
+          <a className="footer__nav_link" href="https://toss.pro/privacy-policy" target="_blank">{this.props.translate('footer.privacy')}</a>
+          <a className="footer__nav_link" href="https://toss.pro" target="_blank">{this.props.translate('footer.about')}</a>
+        </div>
+
+        <div className="footer__copyright">
+          {this.props.translate('footer.copyright', {year: this.state.currentYear})}
         </div>
       </footer>
     )

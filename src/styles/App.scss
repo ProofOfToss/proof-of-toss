@@ -1,6 +1,7 @@
-@import "~bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
-@import "./bootstrap/bootstrap";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/normalize";
+@import "~bootstrap-sass/assets/stylesheets/bootstrap/print";
 
+@import "./components/common";
 @import "./components/header";
 @import "./components/fees_block";
 @import "./components/new_event";
@@ -9,14 +10,13 @@
 @import "./components/modal_new_bet";
 @import "./components/user_withdraw_modal_withdraw";
 @import "./components/my_bets";
+@import "./components/footer";
 
 html {
   position: relative;
   min-height: 100%;
-}
-
-.App {
-  margin-bottom: 200px;
+  font-size: 16px;
+  font-family: 'Roboto', sans-serif;
 }
 
 .bottom-margin-5 {
@@ -29,36 +29,6 @@ html {
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  background-color: #f5f5f5;
-
-  .container {
-    padding-top: 15px;
-    padding-bottom: 15px;
-
-    a {
-      color: #777777;
-    }
-
-    hr {
-      margin: 10px 0;
-    }
-
-    .copyright {
-      a {
-        margin-right: 10px;
-      }
-
-      p {
-        margin: 0;
-      }
-    }
-  }
 }
 
 .logout-button {

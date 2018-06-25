@@ -1,0 +1,13 @@
+.page-content {
+  display: flex;
+
+  &__sidebar {
+    background-color: #131823;
+    width: 260px;
+  }
+
+  &__main {
+    background-color: #1d2535;
+    flex-grow: 1;
+  }
+}

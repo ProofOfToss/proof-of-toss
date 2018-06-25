@@ -354,21 +354,19 @@ class Index extends Component {
     });
 
     return(
-      <main className="container">
-        <div>
-          <h1>{ this.props.translate(this.props.header) }</h1>
+      <div className="page-content page-content--play">
+        <aside className="page-content__sidebar">
+          <a className={this.state.category ? 'btn btn-link' : 'btn btn-default'} onClick={this.onChangeCategory.bind(this, null)}>{this.props.translate(`categories.all`)}</a>
+          {
+            categories.map((category, key) => <a
+              key={key}
+              className={this.state.category === category.id ? 'btn btn-default' : 'btn btn-link'}
+              onClick={this.onChangeCategory.bind(this, category.id)}
+            >{this.props.translate(`categories.${category.name}`)}</a>)
+          }
+        </aside>
 
-          <div>
-            <a className={this.state.category ? 'btn btn-link' : 'btn btn-default'} onClick={this.onChangeCategory.bind(this, null)}>{this.props.translate(`categories.all`)}</a>
-            {
-              categories.map((category, key) => <a
-                key={key}
-                className={this.state.category === category.id ? 'btn btn-default' : 'btn btn-link'}
-                onClick={this.onChangeCategory.bind(this, category.id)}
-              >{this.props.translate(`categories.${category.name}`)}</a>)
-            }
-          </div>
-
+        <main className="page-content__main">
           <form className="form play-form" onSubmit={this.handleSubmit}>
 
             <div className="row">
@@ -463,8 +461,8 @@ class Index extends Component {
               }}
             />
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     )
   }
 }

@@ -28,9 +28,13 @@ class Header extends Component {
     }
 
     return (
-      <ul className="nav navbar-nav">
-        <li className={ this._menuLinkClass('/') }><Link to="/" className="pure-menu-link">{this.props.translate('header.nav.play')}</Link></li>
-        <li className={ this._menuLinkClass('/wallet') }><Link to="/wallet" className="pure-menu-link">{this.props.translate('header.nav.wallet')}</Link></li>
+      <ul>
+        <li className={ 'selected ' + this._menuLinkClass('/') }>
+          <Link to="/" className="pure-menu-link">{this.props.translate('header.nav.play')}</Link>
+        </li>
+        <li className={ this._menuLinkClass('/wallet') }>
+          <Link to="/wallet" className="pure-menu-link">{this.props.translate('header.nav.wallet')}</Link>
+        </li>
 
         <li className="dropdown">
           <a href="#" className="dropdown-toggle" data-toggle="dropdown">{this.props.translate('header.nav.cabinet')} <span className="caret"></span></a>
@@ -58,37 +62,18 @@ class Header extends Component {
 
   render() {
     return (
-      <header>
-        <nav className="navbar navbar-default">
-          <div className="container-fluid">
-            <div className="navbar-header">
-              <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span className="sr-only">{this.props.translate('header.nav.toggle_navigation')}</span>
-                <span className="icon-bar" />
-                <span className="icon-bar" />
-                <span className="icon-bar" />
-              </button>
-              <Link to="/" className="navbar-brand">{this.props.translate('header.nav.proof_of_toss')}</Link>
-            </div>
+      <header class="header">
+        <Link to="/" className="header__logo">
+          <img src="/images/logo.png" />
+        </Link>
 
-            <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              { this.renderHeaderMenu() }
-
-              <div className="navbar-right">
-                <NavbarUser />
-                <ul className="nav navbar-nav navbar-right">
-                  <Language />
-                </ul>
-              </div>
-
-            </div>
-          </div>
-          <div className=""></div>
+        <nav class="header__nav">
+          { this.renderHeaderMenu() }
         </nav>
 
-        {this.props.isAuthenticated &&
-          <div className="container-fluid address">{this.props.translate('header.address')}: {this.props.currentAddress}</div>
-        }
+        <Language />
+
+        <NavbarUser />
       </header>
     )
   }

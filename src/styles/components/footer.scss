@@ -1,0 +1,27 @@
+.footer {
+  display: flex;
+  padding: 31px 0 58px 0;
+  background-color: #0b0e15;
+
+  &__logo {
+    padding: 0 58px 0 30px;
+  }
+
+  &__nav {
+    flex-grow: 1;
+
+    &_link {
+      line-height: 30px;
+      text-decoration: none;
+      color: #ffffff;
+      margin-right: 20px;
+    }
+  }
+
+  &__copyright {
+    display: block;
+    line-height: 30px;
+    color: #ffffff;
+    padding: 0 25px 0 0;
+  }
+}

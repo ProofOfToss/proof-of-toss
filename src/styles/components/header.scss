@@ -1,26 +1,87 @@
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
+.header {
+  display: flex;
+  height: 70px;
 
-header {
-  .navbar {
-    @media (max-width: $screen-sm-min - 1) {
-      margin-bottom: 10px;
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#fc0000+0,fc0000+15,750075+35,750075+100 */
+  background: #fc0000; /* Old browsers */
+  background: -moz-linear-gradient(left,  #fc0000 0%, #fc0000 15%, #750075 35%, #750075 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left,  #fc0000 0%,#fc0000 15%,#750075 35%,#750075 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right,  #fc0000 0%,#fc0000 15%,#750075 35%,#750075 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fc0000', endColorstr='#750075',GradientType=1 ); /* IE6-9 */
+
+  &__logo {
+    display: block;
+    box-sizing: border-box;
+    padding: 22px 0 0 29px;
+    width: 262px;
+
+    &_link {
     }
+  }
 
-    .navbar-text.address {
-      @media (max-width: $screen-sm-min - 1) {
-        display: none;
+  &__nav {
+    flex-grow: 1;
+
+    ul {
+      margin: 0;
+      list-style-type: none;
+
+      li {
+        float: left;
+        padding: 0;
+        margin-right: 15px;
+
+        a {
+          box-sizing: border-box;
+          display: block;
+          padding: 0 10px;
+          vertical-align: middle;
+          height: 70px;
+          line-height: 70px;
+          font-size: 1rem;
+          color: #ffffff;
+          text-decoration: none;
+        }
+
+        &.selected {
+          a {
+            border-bottom: 6px solid #e4b756;
+          }
+        }
+
+        .dropdown-menu {
+          display: none;
+        }
       }
     }
   }
 
-  > .address {
-    @media (max-width: $screen-sm-min - 1) {
-      margin-bottom: 10px;
+  &__address {
+    line-height: 70px;
+    color: #ffffff;
+    padding: 0 20px;
+    border-left: 1px solid #3d063d;
+  }
+
+  &__language {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 20px;
+    border-left: 1px solid #3d063d;
+
+    a {
+      color: #ffffff;
+      text-decoration: none;
     }
 
+    .dropdown-toggle {
+      line-height: 70px;
+    }
 
-    @media (min-width: $screen-sm-min) {
+    .dropdown-menu {
       display: none;
+      margin: 0;
+      padding: 0;
     }
   }
 }
