@@ -8,6 +8,7 @@ import config from '../../data/config.json';
 import { denormalizeBalance } from './../../util/token';
 import {submitQuery} from "../../actions/pages/faucet";
 import BootstrapInput from '../../components/form/BootstrapInput';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 class Index extends Component {
   constructor(props) {
@@ -15,29 +16,44 @@ class Index extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.isValid = this.isValid.bind(this);
+    this.storeCaptcha = this.storeCaptcha.bind(this);
 
     this.state = {
       showErrors: false,
       errors: {},
       address: props.address,
-      amount: 1,
-
     }
   }
 
   isValid() {
-    return this.links.address.error === undefined && this.links.amount.error === undefined;
+    if (!this.state.captchaResponse) {
+      const errors = this.state.errors;
+      errors.recaptcha = this.props.translate('pages.faucet.recaptchaError');
+      this.setState({errors: errors});
+    }
+
+    return this.links.address.error === undefined && this.state.captchaResponse;
   }
 
   handleSubmit(event) {
     event.preventDefault();
 
     if (this.isValid()) {
-      const faucetUrl = `${config.faucetUrl}?account=${this.state.address}&sum=${denormalizeBalance(this.state.amount).toString()}`;
+      const faucetUrl = `${config.faucetUrl}?account=${this.state.address}&captchaResponse=${this.state.captchaResponse}`;
       this.props.submitQuery(faucetUrl);
     } else {
       this.setState({showErrors: true});
     }
+  }
+
+  storeCaptcha(captchaValue){
+    console.log(captchaValue);
+
+    const errors = this.state.errors;
+    delete errors.recaptcha;
+    this.setState({errors: errors});
+
+    this.setState({captchaResponse: captchaValue});
   }
 
   render() {
@@ -45,20 +61,9 @@ class Index extends Component {
       .check( v => v, this.props.translate('validation.required'))
       .check( validateTossAddress, this.props.translate('validation.invalid_address'));
 
-    const amountLink = Link.state(this, 'amount')
-      .check( v => v, this.props.translate('validation.required'))
-      .check( v => parseFloat(v) >= 1, this.props.translate('validation.to_small', {value: 1}));
-
     const addressAttr = {
       id: 'faucet[address]',
       placeholder: this.props.translate('pages.faucet.address')
-    };
-
-    const amountAttr = {
-      type: 'number',
-      id: 'faucet[amount]',
-      placeholder: this.props.translate('pages.faucet.amount'),
-      min: 1
     };
 
     return(
@@ -67,11 +72,24 @@ class Index extends Component {
 
           <BootstrapInput valueLink={addressLink} label={this.props.translate('pages.faucet.address')} showError={this.state.showErrors}
                           attr={addressAttr} horizontal={true} />
-          <BootstrapInput valueLink={amountLink} label={this.props.translate('pages.faucet.amount')} showError={this.state.showErrors}
-                          attr={amountAttr} horizontal={true} />
+
+          <div className="row">
+            <label className="col-sm-2 control-label" />
+            <div className="col-sm-10">
+              <ReCAPTCHA sitekey={config.recaptchaKey} onChange={this.storeCaptcha}/>
+              {
+                this.state.showErrors && this.state.errors.recaptcha
+                  ? <div className="help-block">
+                    {this.state.errors.recaptcha}
+                  </div>
+                  : null
+              }
+            </div>
+          </div>
+
           <div className="form-group">
             <div className="col-sm-offset-2 col-sm-10">
-              <button type="submit" disabled={!!this.props._submitQuery || !!this.props.fetchingTransactionStatus} className="btn btn-default">{this.props.translate('pages.faucet.add')}</button>
+              <button type="submit" disabled={!!this.props._submitQuery || !!this.props.fetchingTransactionStatus} className="btn btn-default">{this.props.translate('pages.faucet.get')}</button>
             </div>
           </div>
         </form>
