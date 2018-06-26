@@ -1,0 +1,27 @@
+.form-input-text {
+  display: inline-block;
+  height: 27px;
+  line-height: 27px;
+  background-color: #2e3647;
+  padding: 0 5px 0 9px;
+  border-radius: 2px;
+  border: none;
+  color: #b6bece;
+  font-size: 0.8125rem;
+}
+
+.form-datetime {
+  display: inline-block;
+
+  input {
+    display: block;
+    height: 27px;
+    line-height: 27px;
+    border-radius: 2px;
+    border: none;
+    background-color: #2e3647;
+    padding: 0 5px 0 9px;
+    color: #b6bece;
+    font-size: 0.8125rem;
+  }
+}

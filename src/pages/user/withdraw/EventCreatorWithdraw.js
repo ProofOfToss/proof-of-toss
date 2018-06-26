@@ -13,7 +13,7 @@ import { modalWithdrawShow } from '../../../actions/pages/event';
 import { refreshBalance } from '../../../actions/token';
 import store from '../../../store';
 import { TX_STATUS_DEFAULT, TX_STATUS_REJECTED } from '../../../actions/tx';
-import '../../../styles/components/play_table.scss';
+import '../../../styles/components/table.scss';
 
 import appConfig from "../../../data/config.json"
 import { myRewardConditions } from '../../../util/searchUtil';

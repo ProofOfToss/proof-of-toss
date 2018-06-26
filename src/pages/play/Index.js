@@ -210,13 +210,13 @@ class Index extends Component {
     });
 
     if(this.props.routeName !== 'admin/event_results') {
-      // conditions.push({
-      //   range: {
-      //     startDate: {
-      //       gte: parseInt(Datetime.moment().add(BIDDING_END_MINUTES, 'minute').unix(), 10),
-      //     }
-      //   }
-      // });
+      conditions.push({
+        range: {
+          startDate: {
+            gte: parseInt(Datetime.moment().add(BIDDING_END_MINUTES, 'minute').unix(), 10),
+          }
+        }
+      });
     }
 
     if (this.state.q) {
@@ -385,7 +385,7 @@ class Index extends Component {
                 className="form-datetime form-datetime_from"
                 inputProps={{
                   readOnly: true,
-                  placeholder: 'From...'
+                  placeholder: this.props.translate('pages.play.filters.from_date')
                 }} />
 
               <Datetime
@@ -398,7 +398,7 @@ class Index extends Component {
                 className="form-datetime form-datetime_to"
                 inputProps={{
                   readOnly: true,
-                  placeholder: 'To...'
+                  placeholder: this.props.translate('pages.play.filters.to_date')
                 }} />
 
               {/*<select id="event[locale]" className="form-control" value={this.state.locale} onChange={this.onChangeLanguage}>*/}

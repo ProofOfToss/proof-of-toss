@@ -226,11 +226,11 @@
       "get_back_button": "Получить назад ${ amount } ${ symbol }",
       "filters": {
         "reset_date": "Очистить",
-        "from_date": "Диапазон даты начала от",
-        "to_date": "Диапазон даты начала до"
+        "from_date": "Начало...",
+        "to_date": "Конец..."
       },
       "columns": {
-        "name": "Название",
+        "name": "Событие | Тип ставки",
         "tags": "Тэги",
         "category": "Категория",
         "bid_type": "Вид ставки",

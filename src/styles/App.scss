@@ -1,16 +1,23 @@
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/normalize";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap/print";
 
+@import "./components/variables";
 @import "./components/common";
 @import "./components/header";
+@import "./components/footer";
+@import "./components/form";
+@import "./components/table";
+@import "./components/pagination";
+@import "./components/breadcrumbs";
 @import "./components/fees_block";
+
+@import "./pages/play";
 @import "./components/new_event";
 @import "./components/event";
 @import "./components/tags_input";
 @import "./components/modal_new_bet";
 @import "./components/user_withdraw_modal_withdraw";
 @import "./components/my_bets";
-@import "./components/footer";
 
 html {
   position: relative;

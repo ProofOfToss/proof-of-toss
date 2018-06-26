@@ -14,12 +14,21 @@ class FilterCategories extends Component {
   renderCategories(categories) {
     return categories.map((category, key) => {
       if(category.children !== undefined) {
-        return this.renderCategories(category.children);
+        return <div className="categories-filter__item-container">
+          <a className="categories-filter__item categories-filter__item_level-1">
+            {this.props.translate(`categories.${category.name}`)}
+          </a>
+          <div className="categories-filter__dropdown">
+            {this.renderCategories(category.children)}
+          </div>
+        </div>
       }
 
       return <a
         key={category.name}
-        className={this.props.activeCategory === category.id ? 'btn btn-default' : 'btn btn-link'}
+        className={this.props.activeCategory === category.id ?
+          'categories-filter__item categories-filter__item_level-2 categories-filter__item-selected' :
+          'categories-filter__item categories-filter__item_level-2'}
         onClick={this.props.onChangeCategory.bind(this, category.id)}>
           {this.props.translate(`categories.${category.name}`)}
       </a>
@@ -27,9 +36,11 @@ class FilterCategories extends Component {
   }
 
   render() {
-    return <div>
-      <a className={this.props.activeCategory ? 'btn btn-link' : 'btn btn-default'}
-         onClick={this.props.onChangeCategory.bind(this, null)}>{this.props.translate(`categories.all`)}</a>
+    return <div className="categories-filter">
+      {/*<a*/}
+        {/*className={this.props.activeCategory ? 'categories-filter' :*/}
+          {/*'categories-filter__item categories-filter_item-selected'}*/}
+         {/*onClick={this.props.onChangeCategory.bind(this, null)}>{this.props.translate(`categories.all`)}</a>*/}
       {this.renderCategories(appConfig.categories.list)}
     </div>
   }

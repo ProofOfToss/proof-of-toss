@@ -4,10 +4,13 @@
   &__sidebar {
     background-color: #131823;
     width: 260px;
+    min-width: 260px;
+    padding: 0 0 45px 0;
   }
 
   &__main {
     background-color: #1d2535;
     flex-grow: 1;
+    padding-bottom: 45px;
   }
 }

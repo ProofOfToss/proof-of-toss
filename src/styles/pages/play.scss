@@ -1,0 +1,104 @@
+.categories-filter {
+
+  &__item-container {
+
+  }
+
+  &__item {
+    display: block;
+    color: #ffffff;
+    font-size: 0.825rem;
+    border-bottom: 1px solid #202732;
+    cursor: pointer;
+
+    &_level-1 {
+      padding: 0 10px 0 30px;
+      height: 64px;
+      line-height: 64px;
+      text-transform: uppercase;
+    }
+
+    &_level-2 {
+      padding: 0 10px 0 30px;
+      height: 30px;
+      line-height: 30px;
+    }
+  }
+}
+.play-filter {
+  display: flex;
+  padding: 20px 25px;
+
+  .breadcrumbs {
+    flex-grow: 1;
+  }
+
+  &__form {
+
+    .form-input-text_search {
+      margin-right: 1px;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .form-datetime_from {
+      margin-right: 1px;
+      border-radius: 0;
+    }
+
+    .form-datetime_to {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}
+
+.play-table {
+  padding: 5px 23px;
+  overflow: hidden;
+
+  .react-bootstrap-table {
+    margin-bottom: 20px;
+
+    .table {
+      width: 100%;
+
+      td {
+        &.name {
+          word-break: break-all;
+          width: 70%;
+
+          .name {
+            padding-right: 8px;
+            margin-right: 5px;
+          }
+
+          .bid-type {
+            color: $orange;
+          }
+        }
+
+        &.start-date {
+          font-weight: bold;
+        }
+
+        &.end-date {
+          font-weight: bold;
+        }
+
+        &.bid-sum {
+          font-weight: bold;
+          text-align: right;
+
+          span {
+            color: $orange;
+          }
+        }
+      }
+    }
+  }
+
+  .react-bootstrap-table-pagination {
+    float: right;
+  }
+}

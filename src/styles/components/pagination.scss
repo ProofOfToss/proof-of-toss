@@ -1,0 +1,29 @@
+.pagination {
+  margin: 0;
+  padding: 0;
+  background-color: #2e3647;
+  border-radius: 2px;
+
+  .page-item {
+    display: inline-block;
+
+    .page-link {
+      display: block;
+      box-sizing: border-box;
+      width: 27px;
+      height: 27px;
+      line-height: 27px;
+      text-align: center;
+      font-size: 0.8125rem;
+      text-decoration: none;
+      color: #ffffff;
+    }
+
+    &.active {
+      .page-link {
+        background-color: #202634;
+        border-bottom: 2px solid $orange;
+      }
+    }
+  }
+}

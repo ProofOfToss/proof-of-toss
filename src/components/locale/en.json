@@ -226,11 +226,11 @@
       "get_back_button": "Get back ${ amount } ${ symbol }",
       "filters": {
         "reset_date": "Reset date",
-        "from_date": "Start date range from",
-        "to_date": "Start date range to"
+        "from_date": "From...",
+        "to_date": "To..."
       },
       "columns": {
-        "name": "Name",
+        "name": "Event | Bet type",
         "tags": "Tags",
         "category": "Category",
         "bid_type": "Bid Type",
