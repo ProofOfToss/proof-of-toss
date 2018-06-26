@@ -46,9 +46,7 @@ class Index extends Component {
     }
   }
 
-  storeCaptcha(captchaValue){
-    console.log(captchaValue);
-
+  storeCaptcha(captchaValue) {
     const errors = this.state.errors;
     delete errors.recaptcha;
     this.setState({errors: errors});

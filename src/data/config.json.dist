@@ -45,7 +45,7 @@
   ],
   "faucetUrl": "",
   "txCheckUrl": "https://explorer.testnet.rsk.co/tx/",
-  "recaptchaKey": "6LcxiWAUAAAAALDkiZ4DTiWnNNwhfrgV59GOTPu2",
+  "recaptchaKey": "RECAPTCHA_PUBLIC_KEY",
   "deploy_from": false,
   "EventBase": {
     "0x91f9ce046b7e7542bc55f2c058a32fba918b1222": {
