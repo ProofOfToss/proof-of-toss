@@ -3,6 +3,7 @@ var Token = artifacts.require("Token");
 var Main = artifacts.require("Main");
 var TestMainSC = artifacts.require("TestMainSC");
 var TestEventBase = artifacts.require("TestEventBase");
+var TestEventBase2 = artifacts.require("TestEventBase2");
 var BlockingGranter = artifacts.require("BlockingGranter");
 var Blocker = artifacts.require("Blocker");
 var EventBase = artifacts.require("EventBase");

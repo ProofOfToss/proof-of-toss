@@ -1,5 +1,11 @@
 from web3 import Web3, HTTPProvider
 import os
+import boto3
+from boto3.dynamodb.conditions import Key, Attr
+from botocore.exceptions import ClientError
+import time
+import json
+import requests
 
 abi = [{'constant': True,
   'inputs': [],
@@ -344,26 +350,76 @@ def lambda_handler(event, context):
     if 'token_address' not in event or event['token_address'] is None:
         raise Exception('Invalid argument')
 
+    if os.environ['CHECK_CAPTCHA']:
+        if 'captchaResponse' not in event or event['captchaResponse'] is None:
+            raise Exception('Invalid argument')
+
+        url = "https://www.google.com/recaptcha/api/siteverify"
+        params = {
+            'secret': os.environ['RECAPTCHA_PRIVKEY'],
+            'response': event['captchaResponse'],
+        }
+        verify_rs = requests.get(url, params=params, verify=True)
+        verify_rs = verify_rs.json()
+
+        if not verify_rs.get("success", False):
+            raise Exception('Invalid recaptcha: {}'.format(verify_rs.get('error-codes', None) or "Unspecified error."))
+
     private_key = os.environ['PRIVATE_KEY']
     wallet = os.environ['WALLET']
     server = os.environ['SERVER']
 
     w3 = Web3(HTTPProvider(server))
-    token = w3.eth.contract(address=event['token_address'], abi=abi, bytecode=binary)
+
+    address = w3.toChecksumAddress(event['token_address'])
+
+    table = boto3.resource('dynamodb').Table('toss_faucet_rsk')
+
+    try:
+        response = table.get_item(
+            Key={
+                'address': address,
+            }
+        )
+    except ClientError as e:
+        raise Exception('Dynamodb exception: {}'.format(e.response['Error']['Message']))
+    else:
+        item_exists = 'Item' in response
+        item = response['Item'] if item_exists else {'last_request': 0}
+
+    now = int(round(time.time() * 1000))
+    day_ago = now - 24 * 60 * 60 * 1000
+
+    if int(item['last_request']) > day_ago:
+        raise Exception('Address already used today')
+
+
+    token = w3.eth.contract(address=w3.toChecksumAddress(event['token_address']), abi=abi, bytecode=binary)
     
     nonce = w3.eth.getTransactionCount(wallet)
     txn = token.functions.mint(w3.toChecksumAddress(event['account']), int(event['sum'])).buildTransaction({
         'nonce': nonce, 
-        'gas': 500000
+        'gas': 500000,
+        'gasPrice': 1,
     })
     signed_txn = w3.eth.account.signTransaction(txn, private_key=private_key)
-    
-    tx_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)  
-    
-    
+    tx_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
+
+    txn_sbtc = {
+        'nonce': nonce + 1,
+        'gas': 500000,
+        'gasPrice': 1,
+        'to': w3.toChecksumAddress(event['account']),
+        'value': 1000,
+        'data': w3.toBytes(text='from faucet'),
+    }
+    signed_txn_sbtc = w3.eth.account.signTransaction(txn_sbtc, private_key=private_key)
+    tx_hash_sbtc = w3.eth.sendRawTransaction(signed_txn_sbtc.rawTransaction)
+
     # Display the new greeting value
-    print('Tx sent: {}'.format(
-        w3.toHex(w3.sha3(signed_txn.rawTransaction))
+    print('Tx sent: {} / {}'.format(
+        w3.toHex(w3.sha3(signed_txn.rawTransaction)),
+        w3.toHex(w3.sha3(signed_txn_sbtc.rawTransaction)),
     ))
     
     # Wait for transaction to be mined...
@@ -374,5 +430,28 @@ def lambda_handler(event, context):
     #   token.functions.paused().call()
     #))
 
-    return w3.toHex(w3.sha3(signed_txn.rawTransaction))
+
+    if item_exists:
+        response = table.update_item(
+            Key={
+                'address': address,
+            },
+            UpdateExpression="set last_request=:lr",
+            ExpressionAttributeValues={
+                ':lr': now,
+            },
+            ReturnValues="UPDATED_NEW"
+        )
+    else:
+        response = table.put_item(
+            Item={
+                'address': address,
+                'last_request': now,
+            }
+        )
+
+    return {
+        'toss': w3.toHex(w3.sha3(signed_txn.rawTransaction)),
+        'sbtc': w3.toHex(w3.sha3(signed_txn_sbtc.rawTransaction))
+    }
 
