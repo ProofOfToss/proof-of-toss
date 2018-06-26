@@ -320,7 +320,7 @@
     "faucet": {
       "address": "Address",
       "amount": "Amount",
-      "get": "Get 1000 TOSS and 1 kwei",
+      "get": "Get 1000 TOSS and 1 gwei",
       "submitQueryError": "Please, try again later",
       "fetchingTransaction": "Transaction <span class='alert-link'>${ txHash }</span> is processing.",
       "successTransaction": "Transaction completed successfully",

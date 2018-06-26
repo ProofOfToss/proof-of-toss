@@ -320,7 +320,7 @@
     "faucet": {
       "address": "Адрес",
       "amount": "Сумма",
-      "get": "Получить 1000 TOSS и 1 kwei",
+      "get": "Получить 1000 TOSS и 1 gwei",
       "submitQueryError": "Пожалуйста, попробуйте ещё раз позже",
       "fetchingTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> находится в обработке.",
       "successTransaction": "Транзакция завершена успешно",
