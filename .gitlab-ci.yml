@@ -152,14 +152,13 @@ deploy_demo_full:
     - npm run renew_es_index
     - ssh testrpc@vs04.axioma.lv "/usr/local/bin/pm2 start event_watcher"
 
-
-#Deploy staging full
-deploy_staging_full:
+# Deploy only frontend.
+deploy_staging:
   stage: deploy
   environment:
-    name: staging
+    name: deploy_staging
   tags:
-    - demo
+    - staging
   when: manual
   only:
     - staging
@@ -170,17 +169,79 @@ deploy_staging_full:
     - nvm use system
     - npm install
     - ./truffle-config-gen.sh
-    - scp $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
-    # Currently we deploy contracts into staging (testnet / mainnet) locally from a developer's machine.
-    # The results are saved in build_staging dir which is kept in the repository.
+    - scp $AWS_HOST_LOGIN_STAGING:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
+    # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
+    # The results are saved in build_prod dir which is kept in the repository.
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_staging/ $CI_PROJECT_DIR/build/
     - echo "{\"base_build_dir\":\"build\"}" > build_dir.json
+#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
     - npm run build
     - echo "Deloy to staging server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID_STAGING
-    - scp -r ./build $AWS_HOST_LOGIN:/home/ec2-user/proof-of-toss/
-    - ssh $AWS_HOST_LOGIN "bash -c 'export NVM_DIR=\"/home/ubuntu/.nvm\" && /home/ubuntu/.nvm/nvm.sh && export PATH=\"\$PATH:\$NVM_DIR/versions/node/v7.10.1/bin\" && cd /home/ec2-user/proof-of-toss; git pull origin staging; npm install; pm2 restart event_watcher'"
+    - scp -r ./build $AWS_HOST_LOGIN_STAGING:/home/ec2-user/proof-of-toss/
+    - ssh $AWS_HOST_LOGIN_STAGING "bash -c 'export NVM_DIR=\"/home/ubuntu/.nvm\" && /home/ubuntu/.nvm/nvm.sh && export PATH=\"\$PATH:\$NVM_DIR/versions/node/v7.10.1/bin\" && cd /home/ec2-user/proof-of-toss; git pull origin staging; npm install; pm2 restart event_watcher'"
+
+# Deploy only frontend + refresh ES index.
+deploy_staging_reindex:
+  stage: deploy
+  environment:
+    name: deploy_staging
+  tags:
+    - staging
+  when: manual
+  only:
+    - staging
+  script:
+    - echo "Build app"
+    - source /opt/rh/devtoolset-2/enable
+    - rm -rf node_modules
+    - nvm use system
+    - npm install
+    - ./truffle-config-gen.sh
+    - scp $AWS_HOST_LOGIN_STAGING:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
+    # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
+    # The results are saved in build_prod dir which is kept in the repository.
+    - mkdir $CI_PROJECT_DIR/build
+    - rsync -hrlv --delete $CI_PROJECT_DIR/build_staging/ $CI_PROJECT_DIR/build/
+    - echo "{\"base_build_dir\":\"build\"}" > build_dir.json
+#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
+    - npm run build
+    - echo "Deloy to staging server"
+    - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID_STAGING
+    - scp -r ./build $AWS_HOST_LOGIN_STAGING:/home/ec2-user/proof-of-toss/
+    - ssh $AWS_HOST_LOGIN_STAGING "bash -c 'export NVM_DIR=\"/home/ubuntu/.nvm\" && /home/ubuntu/.nvm/nvm.sh && export PATH=\"\$PATH:\$NVM_DIR/versions/node/v7.10.1/bin\" && cd /home/ec2-user/proof-of-toss; git pull origin staging; npm install; pm2 stop event_watcher; npm run renew_es_index; rm -f scripts/cache_state.json; pm2 restart event_watcher'"
+
+# Deploy frontend + new contracts + clear and recreate ES index.
+deploy_staging_contracts:
+  stage: deploy
+  environment:
+    name: deploy_staging
+  tags:
+    - staging
+  when: manual
+  only:
+    - staging
+  script:
+    - echo "Build app"
+    - source /opt/rh/devtoolset-2/enable
+    - rm -rf node_modules
+    - nvm use system
+    - npm install
+    - ./truffle-config-gen.sh
+    - scp $AWS_HOST_LOGIN_STAGING:/home/ec2-user/proof-of-toss/src/data/config.json src/data/config.json
+    # Currently we deploy contracts into prod (testnet / mainnet) locally from a developer's machine.
+    # The results are saved in build_prod dir which is kept in the repository.
+    - mkdir $CI_PROJECT_DIR/build
+    - rsync -hrlv --delete $CI_PROJECT_DIR/build_staging/ $CI_PROJECT_DIR/build/
+    - echo "{\"base_build_dir\":\"build\"}" > build_dir.json
+#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
+    - npm run build
+    - echo "Deloy to staging server"
+    - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID_STAGING
+    - echo "Deloy to event-watcher server"
+    - scp -r ./build $AWS_HOST_LOGIN_STAGING:/home/ec2-user/proof-of-toss/
+    - ssh $AWS_HOST_LOGIN_STAGING "bash -c 'export NVM_DIR=\"/home/ubuntu/.nvm\" && /home/ubuntu/.nvm/nvm.sh && export PATH=\"\$PATH:\$NVM_DIR/versions/node/v7.10.1/bin\" && cd /home/ec2-user/proof-of-toss; git pull origin staging; npm install; pm2 stop event_watcher; npm run renew_es_index; rm -f scripts/cache_state.json; pm2 restart event_watcher'"
 
 # Deploy only frontend.
 deploy_production:
