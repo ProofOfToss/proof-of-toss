@@ -74,7 +74,7 @@ class ModalResolve extends Component {
       <dl className="dl-horizontal">
 
         <dt>{this.props.translate('pages.event.result.name')}</dt>
-        <dd>{this.props.resolveResult.description}</dd>
+        <dd className="break-word">{this.props.resolveResult.description}</dd>
 
         {this.props.resolveResult < 220 && <Fragment>
             <dt>{this.props.translate('pages.event.result.coefficient')}</dt>

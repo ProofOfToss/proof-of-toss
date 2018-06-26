@@ -97,9 +97,12 @@ class DateFields extends Component {
   getEndDateInputProps() {
     if(null === this.state.formData.startTime) {
       return {
-        disabled: true
+        disabled: true,
+        readOnly: true
       }
     }
+
+    return {readOnly: true};
   }
 
   render() {
@@ -134,7 +137,6 @@ class DateFields extends Component {
               value={this.state.formData.endTime}
               timeFormat={false}
               error={this.showEndTimeError() ? this.props.translate('pages.play.columns.date_end') : false}
-              inputProps={{readOnly: true}}
             />
           </div>
         </div>
