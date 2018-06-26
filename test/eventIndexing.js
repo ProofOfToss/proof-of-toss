@@ -3,6 +3,7 @@ import { serializeEvent } from '../src/util/eventUtil';
 import {toBytesTruffle as toBytes} from '../src/util/serialityUtil';
 import {AwsEsPublicClient} from '../src/util/esClient';
 import {IndexingUtil} from '../src/util/indexingUtil';
+import EventWatcher from '../src/EventWatcher';
 import BigNumber from '../src/util/bignumber';
 import appConfig from '../src/data/config.json';
 import log4js from 'log4js';
@@ -46,6 +47,39 @@ const indexingUtil = new IndexingUtil(
     Main,
     EventBase,
   },
+  true
+);
+
+const eventBaseConfig = {};
+eventBaseConfig[EventBase.address] = {
+  "expired": false,
+    "artifacts": EventBase,
+    "indexer": "eventIndexerV1",
+    "serializer": "eventSerializerV1"
+};
+
+const eventWatcher = new EventWatcher(
+  EVENT_INDEX,
+  TAG_INDEX,
+  BET_INDEX,
+  esClient,
+  logger,
+  EventBase.web3,
+  {
+    provider: EventBase.web3.currentProvider,
+    network_id: EventBase.network_id,
+    from: EventBase.defaults.from,
+    gas: EventBase.defaults.gas,
+    gasPrice: EventBase.defaults.gasPrice,
+  },
+  {
+    Token,
+    Main,
+    EventBase,
+  },
+  eventBaseConfig,
+  '',
+  0,
   true
 );
 
@@ -121,6 +155,9 @@ contract('Event', function(accounts) {
   });
 
   it("should index bets", async () => {
+    await eventWatcher.initPromise;
+    const indexer = eventWatcher.eventBases[EventBase.address].indexer;
+
     let balance = (await token.balanceOf(accounts[1])).toNumber();
     if (balance > 0) { await token.burn(accounts[1], balance); }
     await token.mint(accounts[0], denormalizeBalance(98765));
@@ -140,7 +177,7 @@ contract('Event', function(accounts) {
       }
 
       try {
-        await indexingUtil.indexEvents(log);
+        await indexer.indexEvents(log);
       } catch (err) {
         assert.equal(err, null, err.toString());
       }
@@ -156,7 +193,7 @@ contract('Event', function(accounts) {
       }
 
       try {
-        await indexingUtil.updateEvents([response]);
+        await indexer.updateEvents([response]);
       } catch (err) {
         assert.equal(err, null, err.toString());
       }

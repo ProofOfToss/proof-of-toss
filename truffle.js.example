@@ -23,7 +23,7 @@ module.exports = {
       from: 'your address',
       host: 'localhost',
       port: 4444,
-      network_id: '778' // Match any network id
+      network_id: '31' // Match any network id
     },
     ropsten: {
       provider: function() {

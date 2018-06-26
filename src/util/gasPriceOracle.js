@@ -1,6 +1,8 @@
 const _ = require('lodash');
 import config from '../data/config.json'
 
+const defaultGasPrice = 1; // 21000000000;
+
 function getBlockTransactions(web3, block) {
   let transactions = [];
   var i;
@@ -104,7 +106,7 @@ function getGasPrices(web3) {
       for (let i = 0; i < transactionsByBlocks.length; i++) {
         const minMax = _.reduce(transactionsByBlocks[i], ({min, max}, tx) => {
 
-          let gasPrice = tx ? Number(tx.gasPrice) : 21000000000;
+          let gasPrice = tx ? Number(tx.gasPrice) : defaultGasPrice;
           return {
             min: gasPrice < min ? gasPrice : min,
             max: gasPrice > max ? gasPrice : max,
@@ -118,7 +120,7 @@ function getGasPrices(web3) {
 
       resolve({
         min: minGasPrice,
-        avg: avgGasPrice < 21000000000 ? 21000000000 : avgGasPrice,
+        avg: avgGasPrice < defaultGasPrice ? defaultGasPrice : avgGasPrice,
         max: maxGasPrice,
       });
     })
