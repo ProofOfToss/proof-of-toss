@@ -6,6 +6,7 @@
 snippets/
 build/
 build_prod/
+build_staging/
 deploy.sh
 deploy-aws.sh
 deploy-demo.sh
