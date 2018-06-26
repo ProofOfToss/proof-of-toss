@@ -5,7 +5,6 @@ import Link from 'valuelink'
 import { validateTossAddress } from '../../util/validators';
 
 import config from '../../data/config.json';
-import { denormalizeBalance } from './../../util/token';
 import {submitQuery} from "../../actions/pages/faucet";
 import BootstrapInput from '../../components/form/BootstrapInput';
 import ReCAPTCHA from 'react-google-recaptcha';
