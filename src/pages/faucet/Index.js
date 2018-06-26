@@ -77,7 +77,7 @@ class Index extends Component {
         </form>
 
         {this.props.fetchingTransactionStatus && <div className="alert alert-warning" role="alert">
-          {this.props.translate('pages.faucet.fetchingTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash}" target="_blank"}>${this.props.txHash}</a>`})}
+          {this.props.translate('pages.faucet.fetchingTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash}" target="_blank">${this.props.txHash}</a>`})}
         </div>}
 
         {this.props.submittingQuery && <div className="alert alert-warning" role="alert">

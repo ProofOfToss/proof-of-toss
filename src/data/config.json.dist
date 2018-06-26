@@ -22,11 +22,26 @@
     ]
   },
   "categories": {
-    "default": 1,
+    "default": 101,
     "list": [
-      {"id": 1, "name": "sport"},
-      {"id": 2, "name": "economy"},
-      {"id": 3, "name": "weather"}
+      {"id": 10, "name": "sports", "children": [
+        {"id": 101, "name": "hockey"},
+        {"id": 102, "name": "football"},
+        {"id": 103, "name": "air_sports"},
+        {"id": 104, "name": "golf"}
+      ]},
+      {"id": 20, "name": "politics", "children": [
+        {"id": 201, "name": "elections"},
+        {"id": 202, "name": "political_decisions"},
+        {"id": 203, "name": "international_relations"},
+        {"id": 204, "name": "summits_and_official_events"}
+      ]},
+      {"id": 30, "name": "e-sports", "children": [
+        {"id": 301, "name": "counter_strike_go"},
+        {"id": 302, "name": "league_of_legends"},
+        {"id": 303, "name": "pubg"},
+        {"id": 304, "name": "fifa"}
+      ]}
     ]
   },
   "whitelist": [
