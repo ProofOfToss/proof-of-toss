@@ -183,7 +183,8 @@
         "tags": {
           "label": "Tags",
           "help": "Maximum 10 tags",
-          "error": "Please add at least one tag"
+          "error": "Please add at least one tag",
+          "placeholder": "Add a tag"
         },
         "dates": {
           "date_start": "Start time",
