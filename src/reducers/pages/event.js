@@ -169,6 +169,7 @@ const eventReducer = (state = initialState, action) => {
     case MODAL_WITHDRAW_APPROVED_EVENT:
       return action.modalId === state.withdrawModalId ? {
         ...state,
+        withdrawApproving: false,
         withdrawApproved: true,
         withdraw: {}
       } : state;
