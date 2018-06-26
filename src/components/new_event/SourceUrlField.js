@@ -67,7 +67,7 @@ class SourceUrlField extends Component {
         <ul>
           {this.state.sourceUrls.map((sourceUrl, key) => {
             return <li key={key}>
-              {sourceUrl}&nbsp;
+              <span className="break-word">{sourceUrl}&nbsp;</span>
               <a className="btn btn-default btn-xs" onClick={() => {this.removeSourceUrl(key)}}>
                 { this.props.translate('pages.new_event.form.source_url.remove')}
               </a>
