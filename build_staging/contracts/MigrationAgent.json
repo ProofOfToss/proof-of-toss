@@ -1,0 +1,282 @@
+{
+  "contractName": "MigrationAgent",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_from",
+          "type": "address"
+        },
+        {
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "migrateFrom",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.4.21;\n\ncontract MigrationAgent\n{\n    function migrateFrom(address _from, uint256 _value) public;\n}\n",
+  "sourcePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
+  "ast": {
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
+    "exportedSymbols": {
+      "MigrationAgent": [
+        6243
+      ]
+    },
+    "id": 6244,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 6235,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".21"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:25"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 6243,
+        "linearizedBaseContracts": [
+          6243
+        ],
+        "name": "MigrationAgent",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 6242,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "migrateFrom",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 6240,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6237,
+                  "name": "_from",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6242,
+                  "src": "77:13:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 6236,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "77:7:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 6239,
+                  "name": "_value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6242,
+                  "src": "92:14:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 6238,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "92:7:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "76:31:25"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 6241,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "114:0:25"
+            },
+            "scope": 6243,
+            "src": "56:59:25",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 6244,
+        "src": "26:91:25"
+      }
+    ],
+    "src": "0:118:25"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
+    "exportedSymbols": {
+      "MigrationAgent": [
+        6243
+      ]
+    },
+    "id": 6244,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 6235,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".21"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:25"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 6243,
+        "linearizedBaseContracts": [
+          6243
+        ],
+        "name": "MigrationAgent",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 6242,
+            "implemented": false,
+            "isConstructor": false,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "migrateFrom",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 6240,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 6237,
+                  "name": "_from",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6242,
+                  "src": "77:13:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 6236,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "77:7:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 6239,
+                  "name": "_value",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 6242,
+                  "src": "92:14:25",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 6238,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "92:7:25",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "76:31:25"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 6241,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "114:0:25"
+            },
+            "scope": 6243,
+            "src": "56:59:25",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          }
+        ],
+        "scope": 6244,
+        "src": "26:91:25"
+      }
+    ],
+    "src": "0:118:25"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2018-06-23T12:35:52.215Z"
+}
