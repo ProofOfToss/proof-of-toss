@@ -5,8 +5,9 @@ const initialState = {
   submitQuery: false,
   submitQueryError: false,
   fetchingTransactionStatus: false,
-  txHash: '',
-  successTransaction: false
+  txHash: {},
+  successTransaction: false,
+  error: null
 };
 
 const faucetReducer = (state = initialState, action) => {
@@ -31,7 +32,8 @@ const faucetReducer = (state = initialState, action) => {
       return {
         ...state,
         ...initialState,
-        submitQueryError: true
+        submitQueryError: true,
+        error: action.payload
       };
 
     case FETCHING_TRANSACTION_STATUS:

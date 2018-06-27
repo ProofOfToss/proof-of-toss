@@ -59,6 +59,15 @@
     "0x0c1e057003ba8ef98d45c3f642eac55c01e53711"
   ],
   "faucetUrl": "",
-  "txCheckUrl": "",
-  "deploy_from": false
+  "txCheckUrl": "https://explorer.testnet.rsk.co/tx/",
+  "recaptchaKey": "RECAPTCHA_PUBLIC_KEY",
+  "deploy_from": false,
+  "EventBase": {
+    "0x91f9ce046b7e7542bc55f2c058a32fba918b1222": {
+      "expired": false,
+      "artifacts": "EventBaseV1.json",
+      "indexer": "eventIndexerV1",
+      "serializer": "eventSerializerV1"
+    }
+  }
 }

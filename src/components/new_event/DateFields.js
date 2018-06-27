@@ -128,7 +128,7 @@ class DateFields extends Component {
           onChange={this.onChangeStartTime}
           timeConstraints={this.calculateStartTimeConstraints()}
           value={this.state.formData.startTime}
-          error={this.showStartTimeError() ? this.props.translate('pages.new_event.form.errors.start_time') : false} />
+          error={this.showStartTimeError() ? this.props.translate('pages.new_event.form.dates.errors.start_time') : false} />
       </div>
 
       <div className={"form-group" + (this.showEndTimeError() ? ' has-error' : '')}>
@@ -141,7 +141,7 @@ class DateFields extends Component {
           timeConstraints={this.calculateEndTimeConstraints()}
           inputProps={this.getEndDateInputProps()}
           value={this.state.formData.endTime}
-          error={this.showEndTimeError() ? this.props.translate('pages.new_event.form.errors.end_time') : false}
+          error={this.showEndTimeError() ? this.props.translate('pages.new_event.form.dates.errors.end_time') : false}
          />
       </div>
     </Fragment>

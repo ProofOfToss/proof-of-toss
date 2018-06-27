@@ -183,7 +183,8 @@
         "tags": {
           "label": "Тэги",
           "help": "Максимум 10 тэгов",
-          "error": "Пожалуйста, добавьте хотя бы один тэг"
+          "error": "Пожалуйста, добавьте хотя бы один тэг",
+          "placeholder": "Добавить тег"
         },
         "dates": {
           "date_start": "Время начала",
@@ -320,11 +321,13 @@
     "faucet": {
       "address": "Адрес",
       "amount": "Сумма",
-      "add": "Добавить",
+      "get": "Получить 1000 TOSS и 1 gwei",
       "submitQueryError": "Пожалуйста, попробуйте ещё раз позже",
-      "fetchingTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> находится в обработке.",
+      "fetchingTOSSTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> (1000 TOSS) находится в обработке.",
+      "fetchingSBTCTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> (1 gwei) находится в обработке.",
       "successTransaction": "Транзакция завершена успешно",
-      "submittingQuery": "Отправляем запрос на faucet..."
+      "submittingQuery": "Отправляем запрос на faucet...",
+      "recaptchaError": "Неправильная каптча"
     }
   },
   "categories": {
