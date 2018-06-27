@@ -76,7 +76,12 @@ class TagsField extends Component {
         shouldRenderSuggestions={(value) => value && value.trim().length > 0}
         getSuggestionValue={(suggestion) => suggestion.name}
         renderSuggestion={(suggestion) => <span>{suggestion.name}</span>}
-        inputProps={{...props, onChange: handleOnChange, maxLength: 16}}
+        inputProps={{
+          ...props,
+          onChange: handleOnChange,
+          maxLength: 16,
+          placeholder: this.props.translate('pages.new_event.form.tags.placeholder')
+        }}
         onSuggestionSelected={(e, {suggestion}) => {
           addTag(suggestion.name)
         }}
