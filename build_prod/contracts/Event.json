@@ -188,7 +188,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 12738,
+                        "referencedDeclaration": 12758,
                         "src": "179:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -542,7 +542,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 12738,
+                        "referencedDeclaration": 12758,
                         "src": "179:3:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -766,5 +766,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-12T11:29:04.024Z"
+  "updatedAt": "2018-06-26T21:38:39.826Z"
 }
