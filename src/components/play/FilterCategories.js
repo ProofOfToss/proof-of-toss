@@ -16,7 +16,8 @@ class FilterCategories extends Component {
       if(category.children !== undefined) {
         return <div className="categories-filter__item-container">
           <a className="categories-filter__item categories-filter__item_level-1">
-            {this.props.translate(`categories.${category.name}`)}
+            <span className={`icon categories-filter__item-icon categories-filter__item-icon_category-${category.name}`} />
+            <span className="categories-filter__item-name">{this.props.translate(`categories.${category.name}`)}</span>
           </a>
           <div className="categories-filter__dropdown">
             {this.renderCategories(category.children)}

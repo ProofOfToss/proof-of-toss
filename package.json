@@ -69,6 +69,7 @@
     "webpack": "1.14.0",
     "webpack-dev-server": "1.16.2",
     "webpack-manifest-plugin": "1.1.0",
+    "webpack-spritesmith": "^0.4.1",
     "whatwg-fetch": "1.0.0",
     "glob": "^7.1.2",
     "redux-logger": "^3.0.6"

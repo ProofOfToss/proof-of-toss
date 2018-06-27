@@ -64,7 +64,7 @@ class Header extends Component {
     return (
       <header class="header">
         <Link to="/" className="header__logo">
-          <img src="/images/logo.png" />
+          <img src="/img/logo.png" alt="ProofOfToss" />
         </Link>
 
         <nav class="header__nav">

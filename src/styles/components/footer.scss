@@ -5,16 +5,24 @@
 
   &__logo {
     padding: 0 58px 0 30px;
+    line-height: 30px;
+
+    &-img {
+      width: 125px;
+      vertical-align: middle;
+    }
   }
 
   &__nav {
     flex-grow: 1;
+    line-height: 30px;
 
     &_link {
-      line-height: 30px;
+      vertical-align: middle;
       text-decoration: none;
       color: #ffffff;
       margin-right: 20px;
+      font-size: 0.875rem;
     }
   }
 
@@ -23,5 +31,10 @@
     line-height: 30px;
     color: #ffffff;
     padding: 0 25px 0 0;
+    font-size: 0.875rem;
+
+    span {
+      vertical-align: middle;
+    }
   }
 }

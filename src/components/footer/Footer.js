@@ -48,7 +48,7 @@ class Footer extends Component {
     return (
       <footer className="footer">
         <div className="footer__logo">
-          <img src="/images/logo.png" />
+          <img className="footer__logo-img" src="/img/logo.png" alt="ProofOfToss" />
         </div>
 
         <div className="footer__nav">

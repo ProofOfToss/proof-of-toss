@@ -352,10 +352,6 @@ class Index extends Component {
     //   }
     // });
 
-    const options = {
-      hideSizePerPage: true
-    };
-
     return(
       <div className="page-content">
         <aside className="page-content__sidebar">
@@ -365,9 +361,17 @@ class Index extends Component {
         <main className="page-content__main">
           <div className="play-filter">
             <div className="breadcrumbs">
-              <a className="breadcrumbs__item">Play</a>
-              <a className="breadcrumbs__item">Motorsports</a>
-              <a className="breadcrumbs__item">Formula 1 Racing</a>
+              <a className="breadcrumbs__item">
+                <span className="breadcrumbs__item-name">Play</span>
+                <span className="icon breadcrumbs__item-icon" />
+              </a>
+              <a className="breadcrumbs__item">
+                <span className="breadcrumbs__item-name">Motorsports</span>
+                <span className="icon breadcrumbs__item-icon" />
+              </a>
+              <a className="breadcrumbs__item">
+                <span className="breadcrumbs__item-name">Formula 1 Racing</span>
+              </a>
             </div>
 
             <form className="play-filter__form" onSubmit={this.handleSubmit}>
@@ -431,7 +435,11 @@ class Index extends Component {
                 page: this.state.page,
                 sizePerPage: this.state.pageSize,
                 totalSize: this.state.total,
-                hideSizePerPage: true
+                prePageText: <span className="icon icon-pagination icon-pagination_left" />,
+                nextPageText: <span className="icon icon-pagination icon-pagination_right" />,
+                hideSizePerPage: true,
+                alwaysShowAllBtns: true,
+                withFirstAndLast: false
               }) }
               noDataIndication={ () => <div>{ this.props.translate('pages.play.empty') }</div> }
               loading={ this.state.loading }

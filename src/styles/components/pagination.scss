@@ -1,4 +1,8 @@
+@import "../sprite";
+
 .pagination {
+  height: 27px;
+  overflow: hidden;
   margin: 0;
   padding: 0;
   background-color: #2e3647;
@@ -17,6 +21,26 @@
       font-size: 0.8125rem;
       text-decoration: none;
       color: #ffffff;
+
+      .icon-pagination {
+        width: 50px;
+        height: 27px;
+        line-height: 27px;
+
+        &_left {
+          @include sprite($arrow-pagination-left);
+        }
+
+        &_right {
+          @include sprite($arrow-pagination-right);
+        }
+      }
+    }
+
+    &:first-child, &:last-child {
+      .page-link {
+        width: 50px;
+      }
     }
 
     &.active {
@@ -25,5 +49,12 @@
         border-bottom: 2px solid $orange;
       }
     }
+
+    //&:first-child, &:last-child {
+    //  .page-link {
+    //    //font-size: 0;
+    //    //text-indent: -1000px;
+    //  }
+    //}
   }
 }

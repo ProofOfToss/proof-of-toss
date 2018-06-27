@@ -4,6 +4,8 @@ import initLocale  from './components/locale/init'
 import Header  from './components/navbar_user/Header';
 import Footer  from './components/footer/Footer';
 import ModalWeb3LostConnection from './components/modal/ModalWeb3LostConnection'
+import '../src/img/logo.png';
+import '../src/img/sprite.png';
 
 global.jQuery = require("jquery");
 require("bootstrap-sass");

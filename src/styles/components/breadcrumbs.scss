@@ -1,8 +1,20 @@
+@import "../sprite";
+
 .breadcrumbs {
   &__item {
     display: inline-block;
     margin: 0 10px 0 0;
     font-size: 0.8125rem;
     color: #b6bece;
+
+    &-name {
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    &-icon {
+      vertical-align: middle;
+      @include sprite($arrow-breadcrumbs);
+    }
   }
 }

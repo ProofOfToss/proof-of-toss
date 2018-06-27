@@ -1,9 +1,6 @@
+@import "../sprite";
+
 .categories-filter {
-
-  &__item-container {
-
-  }
-
   &__item {
     display: block;
     color: #ffffff;
@@ -23,6 +20,27 @@
       height: 30px;
       line-height: 30px;
     }
+  }
+
+  &__item-icon {
+    vertical-align: middle;
+    margin-right: 8px;
+
+    &_category-sports {
+      @include sprite($category-sports);
+    }
+
+    &_category-politics {
+      @include sprite($category-politics);
+    }
+
+    &_category-e-sports {
+      @include sprite($category-esports);
+    }
+  }
+
+  &__item-name {
+    vertical-align: middle;
   }
 }
 .play-filter {
