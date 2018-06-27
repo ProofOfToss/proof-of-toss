@@ -1,13 +1,10 @@
+@import "../sprite";
+
 .header {
   display: flex;
   height: 70px;
 
-  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#fc0000+0,fc0000+15,750075+35,750075+100 */
-  background: #fc0000; /* Old browsers */
-  background: -moz-linear-gradient(left,  #fc0000 0%, #fc0000 15%, #750075 35%, #750075 100%); /* FF3.6-15 */
-  background: -webkit-linear-gradient(left,  #fc0000 0%,#fc0000 15%,#750075 35%,#750075 100%); /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(to right,  #fc0000 0%,#fc0000 15%,#750075 35%,#750075 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fc0000', endColorstr='#750075',GradientType=1 ); /* IE6-9 */
+  @include bg-header();
 
   &__logo {
     display: block;
@@ -61,6 +58,17 @@
     color: #ffffff;
     padding: 0 20px;
     border-left: 1px solid #3d063d;
+    font-size: 1.0625rem;
+
+    .icon-wallet {
+      vertical-align: middle;
+      margin-right: 17px;
+      @include sprite($wallet);
+    }
+
+    &-text {
+      vertical-align: middle;
+    }
   }
 
   &__language {
@@ -70,8 +78,12 @@
     border-left: 1px solid #3d063d;
 
     a {
+      display: inline-block;
+      height: 14px;
       color: #ffffff;
       text-decoration: none;
+      vertical-align: middle;
+
     }
 
     .dropdown-toggle {
@@ -82,6 +94,21 @@
       display: none;
       margin: 0;
       padding: 0;
+    }
+
+    .icon-language-en {
+      @include sprite($language-en);
+    }
+  }
+
+  &__menu {
+    line-height: 70px;
+    padding: 0 23px;
+    border-left: 1px solid #3d063d;
+
+    .icon-menu {
+      vertical-align: middle;
+      @include sprite($menu);
     }
   }
 }

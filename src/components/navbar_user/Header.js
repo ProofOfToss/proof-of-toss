@@ -74,6 +74,11 @@ class Header extends Component {
         <Language />
 
         <NavbarUser />
+
+        <div className="header__menu">
+          <span className="icon icon-menu" />
+        </div>
+
       </header>
     )
   }

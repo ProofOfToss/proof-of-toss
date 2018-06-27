@@ -28,7 +28,7 @@ class FilterCategories extends Component {
       return <a
         key={category.name}
         className={this.props.activeCategory === category.id ?
-          'categories-filter__item categories-filter__item_level-2 categories-filter__item-selected' :
+          'categories-filter__item categories-filter__item_level-2 categories-filter__item_level-2_selected' :
           'categories-filter__item categories-filter__item_level-2'}
         onClick={this.props.onChangeCategory.bind(this, category.id)}>
           {this.props.translate(`categories.${category.name}`)}

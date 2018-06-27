@@ -32,7 +32,8 @@ class Wallet extends Component {
     return(
       <React.Fragment>
         <div className="header__address">
-          {this.props.currentAddress}
+          <span className="icon icon-wallet" />
+          <span className="header__address-text">{this.props.currentAddress}</span>
         </div>
       </React.Fragment>
     )

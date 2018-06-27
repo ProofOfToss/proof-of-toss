@@ -9,7 +9,9 @@ class Language extends Component {
     return(
       <ul className="header__language">
         <li className="dropdown">
-          <a href="" className="dropdown-toggle" data-toggle="dropdown">{this.props.translate('header.language')} <span className="caret"></span></a>
+          <a href="" className="dropdown-toggle" data-toggle="dropdown">
+            <span className={`icon icon-language-${this.props.currentLanguage}`} />
+          </a>
           <ul className="dropdown-menu" role="menu">
             { this.props.languages.map(language =>
               <li key={language.code}>
@@ -17,7 +19,7 @@ class Language extends Component {
                       to={this.props.location.pathname.replace(this.props.currentLanguage, language.code) + this.props.location.search}
                       onClick={ () => this.props.setActiveLanguage(language.code)}
                 >
-                  {this.props.translate('language.' + language.code)}
+                  <span className={`icon icon-language-${language.code}`} />
                 </Link>
               </li>
             )}
