@@ -47,7 +47,7 @@ deploy_demo:
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete /srv/www/proof-of-toss-demo.axioma.lv/htdocs/build/ $CI_PROJECT_DIR/build/
-    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
+    - ./node_modules/truffle/build/cli.bundled.js --network development migrate
     - npm run build
     - echo "Deploy to Demo"
     - rsync -hrlv --delete --exclude=.git --exclude=node_modules --exclude=npm-debug.log --exclude=testrpc_db --exclude=nohup.out $CI_PROJECT_DIR/ /srv/www/proof-of-toss-demo.axioma.lv/htdocs/
@@ -76,7 +76,7 @@ deploy_demo_reindex:
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete /srv/www/proof-of-toss-demo.axioma.lv/htdocs/build/ $CI_PROJECT_DIR/build/
-    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
+    - ./node_modules/truffle/build/cli.bundled.js --network development migrate -f 3
     - npm run build
     - echo "Deploy to Demo"
     - ssh testrpc@vs04.axioma.lv "/usr/local/bin/pm2 stop event_watcher"
@@ -108,7 +108,7 @@ deploy_demo_contracts:
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete /srv/www/proof-of-toss-demo.axioma.lv/htdocs/build/ $CI_PROJECT_DIR/build/
-    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
+    - ./node_modules/truffle/build/cli.bundled.js --network development migrate -f 3
     - npm run build
     - echo "Deploy to Demo"
     - ssh testrpc@vs04.axioma.lv "/usr/local/bin/pm2 stop event_watcher"
@@ -141,7 +141,7 @@ deploy_demo_full:
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/config.json $CI_PROJECT_DIR/src/data/
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
     - mkdir $CI_PROJECT_DIR/build
-    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate --reset
+    - ./node_modules/truffle/build/cli.bundled.js --network development migrate --reset
     - npm run build
     - echo "Deploy to Demo"
     - ssh testrpc@vs04.axioma.lv "/usr/local/bin/pm2 stop event_watcher"
@@ -175,7 +175,7 @@ deploy_staging:
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_staging/ $CI_PROJECT_DIR/build/
     - echo "{\"base_build_dir\":\"build\"}" > build_dir.json
-#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
+#    - ./node_modules/truffle/build/cli.bundled.js --network development migrate
     - npm run build
     - echo "Deloy to staging server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID_STAGING
@@ -205,7 +205,7 @@ deploy_staging_reindex:
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_staging/ $CI_PROJECT_DIR/build/
     - echo "{\"base_build_dir\":\"build\"}" > build_dir.json
-#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
+#    - ./node_modules/truffle/build/cli.bundled.js --network development migrate
     - npm run build
     - echo "Deloy to staging server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID_STAGING
@@ -235,7 +235,7 @@ deploy_staging_contracts:
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_staging/ $CI_PROJECT_DIR/build/
     - echo "{\"base_build_dir\":\"build\"}" > build_dir.json
-#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
+#    - ./node_modules/truffle/build/cli.bundled.js --network development migrate -f 3
     - npm run build
     - echo "Deloy to staging server"
     - node scripts/deploy.js $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID_STAGING
@@ -266,7 +266,7 @@ deploy_production:
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
     - echo "{\"base_build_dir\":\"build\"}" > build_dir.json
-#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
+#    - ./node_modules/truffle/build/cli.bundled.js --network development migrate
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js --prod $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
@@ -296,7 +296,7 @@ deploy_production_reindex:
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
     - echo "{\"base_build_dir\":\"build\"}" > build_dir.json
-#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate
+#    - ./node_modules/truffle/build/cli.bundled.js --network development migrate
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js --prod $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
@@ -326,7 +326,7 @@ deploy_production_contracts:
     - mkdir $CI_PROJECT_DIR/build
     - rsync -hrlv --delete $CI_PROJECT_DIR/build_prod/ $CI_PROJECT_DIR/build/
     - echo "{\"base_build_dir\":\"build\"}" > build_dir.json
-#    - ./node_modules/truffle/build/cli.bundled.js --network ropsten migrate -f 3
+#    - ./node_modules/truffle/build/cli.bundled.js --network development migrate -f 3
     - npm run build
     - echo "Deloy to production server"
     - node scripts/deploy.js --prod $AWS_DEPLOY_ACCESS_KEY_ID $AWS_DEPLOY_SECRET_ACCESS_KEY $AWS_CLOUDFRONT_DISTRIBUTION_ID
