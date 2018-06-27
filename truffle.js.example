@@ -6,24 +6,24 @@ const path = require('path');
 const mnemonic = 'ROPSTEN_MNEMONIC';
 
 const buildDirConfig = require('./build_dir.json');
-const HDWalletProvider = require('truffle-hdwallet-provider');
-const provider = new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/ROPSTEN_INFURA_ID');
+// const HDWalletProvider = require('truffle-hdwallet-provider');
+// const provider = new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/ROPSTEN_INFURA_ID');
 
-// const HDWalletProvider = require("./HDWalletProvider");
-// const privKeys = ["PRIVATE_KEY_1", "PRIVATE_KEY_2", "PRIVATE_KEY_3", "PRIVATE_KEY_4", "PRIVATE_KEY_5"]; // private keys
-// const provider = new HDWalletProvider(privKeys, "https://ropsten.infura.io/ROPSTEN_INFURA_ID");
+const HDWalletProvider = require("./HDWalletProvider");
+const privKeys = ["PRIVATE_KEY_1", "PRIVATE_KEY_2", "PRIVATE_KEY_3", "PRIVATE_KEY_4", "PRIVATE_KEY_5"]; // private keys
+const provider = new HDWalletProvider(privKeys, "https://rsk.toss.pro");
 
 
 module.exports = {
   contracts_build_directory: path.join(__dirname, buildDirConfig.base_build_dir, 'contracts'),
   networks: {
     development: {
-      gas: 6721975,
+      gas: 4500000,
       gasPrice: 0,
-      from: 'your address',
-      host: 'localhost',
-      port: 4444,
-      network_id: '31' // Match any network id
+      provider: function() {
+        return provider;
+      },
+      network_id: '31'
     },
     ropsten: {
       provider: function() {

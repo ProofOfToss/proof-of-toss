@@ -13,7 +13,7 @@ const fetchTransactionStatus = () => {
     });
 
     const transactionInterval = setInterval(function() {
-      if(getState().faucet.txHash && getState().faucet.txHash.toss) {
+      if(!getState().faucet.txHash || !getState().faucet.txHash.toss) {
         clearInterval(transactionInterval);
         return;
       }
