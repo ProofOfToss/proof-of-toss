@@ -12,7 +12,7 @@ run_tests:
     - cp /srv/www/proof-of-toss-demo.axioma.lv/htdocs/src/data/private_config.json $CI_PROJECT_DIR/src/data/
     - mkdir $CI_PROJECT_DIR/build
     - ./node_modules/truffle/build/cli.bundled.js --network test migrate
-    - npm run build
+    # - npm run build
     - ./node_modules/truffle/build/cli.bundled.js --network test test
 
 deploy_demo:
@@ -158,7 +158,7 @@ deploy_staging:
   environment:
     name: deploy_staging
   tags:
-    - staging
+    - demo
   when: manual
   only:
     - staging
@@ -188,7 +188,7 @@ deploy_staging_reindex:
   environment:
     name: deploy_staging
   tags:
-    - staging
+    - demo
   when: manual
   only:
     - staging
@@ -218,7 +218,7 @@ deploy_staging_contracts:
   environment:
     name: deploy_staging
   tags:
-    - staging
+    - demo
   when: manual
   only:
     - staging

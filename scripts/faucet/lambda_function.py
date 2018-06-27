@@ -371,9 +371,9 @@ def lambda_handler(event, context):
 
     w3 = Web3(HTTPProvider(server))
 
-    address = w3.toChecksumAddress(event['token_address'])
+    address = w3.toChecksumAddress(event['account'])
 
-    table = boto3.resource('dynamodb').Table('toss_faucet_rsk')
+    table = boto3.resource('dynamodb').Table(event['table_name'])
 
     try:
         response = table.get_item(
@@ -410,7 +410,7 @@ def lambda_handler(event, context):
         'gas': 500000,
         'gasPrice': 1,
         'to': w3.toChecksumAddress(event['account']),
-        'value': 1000,
+        'value': 1000000000,
         'data': w3.toBytes(text='from faucet'),
     }
     signed_txn_sbtc = w3.eth.account.signTransaction(txn_sbtc, private_key=private_key)
