@@ -371,9 +371,9 @@ def lambda_handler(event, context):
 
     w3 = Web3(HTTPProvider(server))
 
-    address = w3.toChecksumAddress(event['token_address'])
+    address = w3.toChecksumAddress(event['account'])
 
-    table = boto3.resource('dynamodb').Table('toss_faucet_rsk')
+    table = boto3.resource('dynamodb').Table(event['table_name'])
 
     try:
         response = table.get_item(
