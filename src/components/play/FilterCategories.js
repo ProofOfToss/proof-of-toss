@@ -14,7 +14,7 @@ class FilterCategories extends Component {
   renderCategories(categories) {
     return categories.map((category, key) => {
       if(category.children !== undefined) {
-        return <div className="categories-filter__item-container">
+        return <div key={category.name} className="categories-filter__item-container">
           <a className="categories-filter__item categories-filter__item_level-1">
             <span className={`icon categories-filter__item-icon categories-filter__item-icon_category-${category.name}`} />
             <span className="categories-filter__item-name">{this.props.translate(`categories.${category.name}`)}</span>

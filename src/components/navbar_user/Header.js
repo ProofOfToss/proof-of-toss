@@ -62,12 +62,12 @@ class Header extends Component {
 
   render() {
     return (
-      <header class="header">
+      <header className="header">
         <Link to="/" className="header__logo">
           <img src="/img/logo.png" alt="ProofOfToss" />
         </Link>
 
-        <nav class="header__nav">
+        <nav className="header__nav">
           { this.renderHeaderMenu() }
         </nav>
 

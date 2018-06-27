@@ -12,6 +12,7 @@ import overlayFactory from 'react-bootstrap-table2-overlay';
 import '../../styles/components/table.scss';
 
 import FilterCategories from '../../components/play/FilterCategories';
+import Filter from '../../components/play/Filter';
 import appConfig from "../../data/config.json"
 import { getLanguageAnalyzerByCode } from '../../util/i18n';
 
@@ -34,7 +35,6 @@ class Index extends Component {
     this.onChangeQuery = this.onChangeQuery.bind(this);
     this.onChangeLanguage = this.onChangeLanguage.bind(this);
     this.onChangeCategory = this.onChangeCategory.bind(this);
-    this.isValidDate = this.isValidDate.bind(this);
     this.getUrlParams = this.getUrlParams.bind(this);
     this.update = this.update.bind(this);
     this.updateDebounce = this.updateDebounce.bind(this);
@@ -129,10 +129,6 @@ class Index extends Component {
       sortField: state.sortField || this.state.sortField,
       sortOrder: state.sortOrder || this.state.sortOrder,
     }, this.update);
-  }
-
-  isValidDate(currentDate) {
-    return currentDate.isSameOrAfter(Datetime.moment().add(BIDDING_END_MINUTES, 'minute'), 'day');
   }
 
   clearValueInDateTimeInput(ref) {
@@ -374,46 +370,9 @@ class Index extends Component {
               </a>
             </div>
 
-            <form className="play-filter__form" onSubmit={this.handleSubmit}>
+            <Filter q={this.state.q} onChangeQuery={this.onChangeQuery} onChangeFromDate={this.onChangeFromDate}
+                    fromDate={this.state.fromDate} toDate={this.props.toDate} />
 
-              <input type="text" className="form-input-text form-input-text_search" value={this.state.q}
-                     placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
-
-              <Datetime
-                ref={this.dateStartRef}
-                value={this.state.fromDate}
-                timeFormat={false}
-                closeOnSelect={true}
-                onChange={this.onChangeFromDate}
-                isValidDate={this.isValidDate}
-                className="form-datetime form-datetime_from"
-                inputProps={{
-                  readOnly: true,
-                  placeholder: this.props.translate('pages.play.filters.from_date')
-                }} />
-
-              <Datetime
-                ref={this.dateEndRef}
-                value={this.state.toDate}
-                timeFormat={false}
-                closeOnSelect={true}
-                onChange={this.onChangeToDate}
-                isValidDate={this.isValidDate}
-                className="form-datetime form-datetime_to"
-                inputProps={{
-                  readOnly: true,
-                  placeholder: this.props.translate('pages.play.filters.to_date')
-                }} />
-
-              {/*<select id="event[locale]" className="form-control" value={this.state.locale} onChange={this.onChangeLanguage}>*/}
-                {/*{*/}
-                  {/*appConfig.languages.list.map((language, key) => {*/}
-                    {/*return <option key={language.code} value={language.code}>{this.props.translate('language.' + language.code)}</option>*/}
-                  {/*})*/}
-                {/*}*/}
-              {/*</select>*/}
-
-            </form>
           </div>
 
           <div className="play-table">

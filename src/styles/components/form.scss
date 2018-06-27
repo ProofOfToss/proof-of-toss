@@ -1,3 +1,5 @@
+@import "../sprite";
+
 .form-input-text {
   display: inline-block;
   height: 27px;
@@ -12,9 +14,22 @@
 
 .form-datetime {
   display: inline-block;
+  cursor: pointer;
+
+  &__input-wrapper {
+    position: relative;
+
+    &-icon {
+      position: absolute;
+      top: 7px;
+      right: 15px;
+      @include sprite($calendar);
+    }
+  }
 
   input {
     display: block;
+    cursor: pointer;
     height: 27px;
     line-height: 27px;
     border-radius: 2px;
