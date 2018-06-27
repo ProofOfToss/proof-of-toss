@@ -117,7 +117,7 @@ class MyBets extends Component {
   onChangeFromDate(fromDate) {
     this.setState({
       fromDate,
-      fromTimestamp: fromDate ? parseInt(fromDate.unix(), 10) : null,
+      fromTimestamp: fromDate ? parseInt(fromDate.hours(0).minutes(0).seconds(0).unix(), 10) : null,
       page: 1,
     }, this.update);
   }
@@ -125,7 +125,7 @@ class MyBets extends Component {
   onChangeToDate(toDate) {
     this.setState({
       toDate,
-      toTimestamp: toDate ? parseInt(toDate.unix(), 10) : null,
+      toTimestamp: toDate ? parseInt(toDate.hours(23).minutes(59).seconds(59).unix(), 10) : null,
       page: 1,
     }, this.update);
   }
@@ -273,15 +273,13 @@ class MyBets extends Component {
         <div>
           <h1>{ this.props.translate('pages.my_bets.header') }</h1>
 
-          <form className="form" onSubmit={this.handleSubmit}>
+          <form className="form play-form" onSubmit={this.handleSubmit}>
 
             <DateFields onChange={this.handleFieldsChange} defaultStartTime={this.state.fromDate} defaultEndTime={this.state.toDate}/>
 
             <div className="row">
-              <div className="col-md-6">
-                <div className="input-group">
-                  <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
-                </div>
+              <div className="col-md-12">
+                <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
               </div>
             </div>
 

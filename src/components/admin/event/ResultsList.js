@@ -32,11 +32,11 @@ class ResultsList extends Component {
     return <Fragment>
       <table className="table table-striped results"><tbody>
       <tr>
-        <th>{this.props.translate('pages.event.result.name')}</th>
-        <th>{this.props.translate('pages.event.result.coefficient')}</th>
-        <th>{this.props.translate('pages.event.result.bet_count')}</th>
-        <th>{this.props.translate('pages.event.result.bet_sum')}</th>
-        <th />
+        <th class="col-md-6">{this.props.translate('pages.event.result.name')}</th>
+        <th class="col-md-1">{this.props.translate('pages.event.result.coefficient')}</th>
+        <th class="col-md-1">{this.props.translate('pages.event.result.bet_count')}</th>
+        <th class="col-md-1">{this.props.translate('pages.event.result.bet_sum')}</th>
+        <th class="col-md-3" />
       </tr>
       {this.props.results.map((result) => {
         return <ResultItem

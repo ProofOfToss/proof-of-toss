@@ -224,6 +224,11 @@
       "search": "Searching for...",
       "withdraw_button": "Withdraw ${ amount } ${ symbol }",
       "get_back_button": "Get back ${ amount } ${ symbol }",
+      "filters": {
+        "reset_date": "Reset date",
+        "from_date": "Start date range from",
+        "to_date": "Start date range to"
+      },
       "columns": {
         "name": "Name",
         "tags": "Tags",
@@ -315,11 +320,13 @@
     "faucet": {
       "address": "Address",
       "amount": "Amount",
-      "add": "Add",
+      "get": "Get 1000 TOSS and 1 gwei",
       "submitQueryError": "Please, try again later",
-      "fetchingTransaction": "Transaction <span class='alert-link'>${ txHash }</span> is processing.",
+      "fetchingTOSSTransaction": "Transaction <span class='alert-link'>${ txHash }</span> (1000 TOSS) is processing.",
+      "fetchingSBTCTransaction": "Transaction <span class='alert-link'>${ txHash }</span> (1 gwei) is processing.",
       "successTransaction": "Transaction completed successfully",
-      "submittingQuery": "Sending query to faucet..."
+      "submittingQuery": "Sending query to faucet...",
+      "recaptchaError": "Invalid captcha"
     }
   },
   "categories": {

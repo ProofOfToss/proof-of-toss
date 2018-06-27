@@ -179,7 +179,7 @@
         "name": "Название",
         "bid_type": "Вид ставки",
         "deposit": "Депозит",
-        "submit": "Внести",
+        "submit": "Создать",
         "tags": {
           "label": "Тэги",
           "help": "Максимум 10 тэгов",
@@ -224,6 +224,11 @@
       "search": "Поиск...",
       "withdraw_button": "Вывести выигрыш - ${ amount } ${ symbol }",
       "get_back_button": "Получить назад ${ amount } ${ symbol }",
+      "filters": {
+        "reset_date": "Очистить",
+        "from_date": "Диапазон даты начала от",
+        "to_date": "Диапазон даты начала до"
+      },
       "columns": {
         "name": "Название",
         "tags": "Тэги",
@@ -315,11 +320,13 @@
     "faucet": {
       "address": "Адрес",
       "amount": "Сумма",
-      "add": "Добавить",
+      "get": "Получить 1000 TOSS и 1 gwei",
       "submitQueryError": "Пожалуйста, попробуйте ещё раз позже",
-      "fetchingTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> находится в обработке.",
+      "fetchingTOSSTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> (1000 TOSS) находится в обработке.",
+      "fetchingSBTCTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> (1 gwei) находится в обработке.",
       "successTransaction": "Транзакция завершена успешно",
-      "submittingQuery": "Отправляем запрос на faucet..."
+      "submittingQuery": "Отправляем запрос на faucet...",
+      "recaptchaError": "Неправильная каптча"
     }
   },
   "categories": {

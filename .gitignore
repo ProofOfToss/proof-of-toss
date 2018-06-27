@@ -5,6 +5,7 @@
 .idea/
 snippets/
 build/
+build_staging/
 deploy.sh
 deploy-aws.sh
 deploy-demo.sh
