@@ -13,12 +13,12 @@ const fetchTransactionStatus = () => {
     });
 
     const transactionInterval = setInterval(function() {
-      if(getState().faucet.txHash === '') {
+      if(getState().faucet.txHash && getState().faucet.txHash.toss) {
         clearInterval(transactionInterval);
         return;
       }
 
-      getState().web3.web3.eth.getTransaction(getState().faucet.txHash, (error, data) => {
+      getState().web3.web3.eth.getTransaction(getState().faucet.txHash.toss, (error, data) => {
         if(data.blockNumber !== null) {
           clearInterval(transactionInterval);
           dispatch({
