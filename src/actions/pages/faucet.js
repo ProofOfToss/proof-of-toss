@@ -41,7 +41,8 @@ export const submitQuery = (url) => {
 
     if(data.errorMessage) {
       dispatch({
-        type: ERROR_RESPONSE
+        type: ERROR_RESPONSE,
+        payload: data,
       });
 
       return;

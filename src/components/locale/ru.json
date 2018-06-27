@@ -322,7 +322,8 @@
       "amount": "Сумма",
       "get": "Получить 1000 TOSS и 1 gwei",
       "submitQueryError": "Пожалуйста, попробуйте ещё раз позже",
-      "fetchingTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> находится в обработке.",
+      "fetchingTOSSTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> (1000 TOSS) находится в обработке.",
+      "fetchingSBTCTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> (1 gwei) находится в обработке.",
       "successTransaction": "Транзакция завершена успешно",
       "submittingQuery": "Отправляем запрос на faucet...",
       "recaptchaError": "Неправильная каптча"

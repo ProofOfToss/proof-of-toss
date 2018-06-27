@@ -92,7 +92,8 @@ class Index extends Component {
         </form>
 
         {this.props.fetchingTransactionStatus && <div className="alert alert-warning" role="alert">
-          {this.props.translate('pages.faucet.fetchingTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash}" target="_blank"}>${this.props.txHash}</a>`})}
+          {this.props.translate('pages.faucet.fetchingTOSSTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash.toss}" target="_blank"}>${this.props.txHash.toss}</a>`})}
+          {this.props.translate('pages.faucet.fetchingSBTCTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash.sbtc}" target="_blank"}>${this.props.txHash.sbtc}</a>`})}
         </div>}
 
         {this.props.submittingQuery && <div className="alert alert-warning" role="alert">
@@ -106,7 +107,16 @@ class Index extends Component {
 
         {this.props.submitQueryError && <div className="alert alert-danger alert-dismissible" role="alert">
           <button type="button" className="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          {this.props.translate('pages.faucet.submitQueryError')}
+          <div>
+            {this.props.translate('pages.faucet.submitQueryError')}
+          </div>
+          {
+            this.props.error && this.props.error.errorMessage
+              ? <div>
+                {this.props.error.errorMessage}
+                </div>
+              : null
+          }
         </div>}
       </main>
     )
@@ -120,6 +130,7 @@ function mapPropsToState(state) {
     address: state.user.address,
     fetchingTransactionStatus: state.faucet.fetchingTransactionStatus,
     submitQueryError: state.faucet.submitQueryError,
+    error: state.faucet.error,
     _submitQuery: state.faucet.submitQuery,
     txHash: state.faucet.txHash,
     successTransaction: state.faucet.successTransaction,
