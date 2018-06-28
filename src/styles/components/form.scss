@@ -1,42 +1,15 @@
 @import "../sprite";
+@import "form/date_picker";
+@import "form/select";
 
 .form-input-text {
   display: inline-block;
   height: 27px;
   line-height: 27px;
-  background-color: #2e3647;
+  background-color: $background_1;
   padding: 0 5px 0 9px;
   border-radius: 2px;
   border: none;
   color: #b6bece;
   font-size: 0.8125rem;
-}
-
-.form-datetime {
-  display: inline-block;
-  cursor: pointer;
-
-  &__input-wrapper {
-    position: relative;
-
-    &-icon {
-      position: absolute;
-      top: 7px;
-      right: 15px;
-      @include sprite($calendar);
-    }
-  }
-
-  input {
-    display: block;
-    cursor: pointer;
-    height: 27px;
-    line-height: 27px;
-    border-radius: 2px;
-    border: none;
-    background-color: #2e3647;
-    padding: 0 5px 0 9px;
-    color: #b6bece;
-    font-size: 0.8125rem;
-  }
 }

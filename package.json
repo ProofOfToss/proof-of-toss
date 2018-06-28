@@ -88,6 +88,7 @@
     "jquery": "^3.2.1",
     "log4js": "^2.5.3",
     "moment": "^2.20.1",
+    "react-select": "^1.2.1",
     "qrcode": "^1.2.0",
     "react": "^16.3.0",
     "react-autosuggest": "^9.3.4",

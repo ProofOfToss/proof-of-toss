@@ -1,5 +1,9 @@
+@import '../sprite';
+@import './variables';
+
 .table {
   thead {
+
     th {
       font-size: 0.8125rem;
       color: #7b869d;
@@ -13,6 +17,34 @@
 
       &:last-child {
         text-align: right;
+      }
+
+      &.sortable {
+        &.sort_active {
+          color: $orange;
+        }
+
+        .order {
+          margin-left: 5px;
+          display: inline-block;
+          background-image: url(/img/sprite.png);
+          @include sprite-position($table-sort);
+          @include sprite-width($table-sort);
+          @include sprite-height($table-sort);
+        }
+
+        .react-bootstrap-table-sort-order {
+          margin-left: 5px;
+          display: inline-block;
+          background-image: url(/img/sprite.png);
+          @include sprite-position($table-sort-enabled);
+          @include sprite-width($table-sort);
+          @include sprite-height($table-sort);
+
+          &.dropup {
+            transform: rotate(180deg);
+          }
+        }
       }
     }
   }

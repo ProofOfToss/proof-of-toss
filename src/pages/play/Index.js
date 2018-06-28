@@ -172,9 +172,9 @@ class Index extends Component {
     });
   }
 
-  onChangeLanguage(e) {
+  onChangeLanguage(selectedOption) {
     this.setState({
-      locale: e.target.value,
+      locale: selectedOption.value,
       page: 1,
     }, () => {
       this.props.router.push(`/${this.props.locale}/${this.props.routeName}?${this.getUrlParams()}`);
@@ -302,7 +302,8 @@ class Index extends Component {
       {
         text: this.props.translate('pages.play.columns.name'),
         dataField: "name",
-        sort: false,
+        sort: true,
+        headerSortingClasses: "sort_active",
         classes: 'name',
         formatter: (cell, row) => {
           return <Fragment><span className="name">{cell}</span><span className="bid-type">{row.bidType}</span></Fragment>
@@ -312,6 +313,7 @@ class Index extends Component {
         text: this.props.translate('pages.play.columns.start_date'),
         dataField: "startDate",
         sort: true,
+        headerSortingClasses: "sort_active",
         classes: 'start-date',
         formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
       }
@@ -322,6 +324,7 @@ class Index extends Component {
         text: this.props.translate('pages.play.columns.end_date'),
         dataField: "endDate",
         sort: true,
+        headerSortingClasses: "sort_active",
         classes: 'end-date',
         formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
       });
@@ -331,6 +334,7 @@ class Index extends Component {
       text: this.props.translate('pages.play.columns.bid_sum'),
       dataField: "bidSum",
       sort: true,
+      headerSortingClasses: "sort_active",
       classes: 'bid-sum',
       formatter: (cell) => {
         return <Fragment>{cell} <span>{appConfig.view.token_symbol}</span></Fragment>
@@ -371,7 +375,8 @@ class Index extends Component {
             </div>
 
             <Filter q={this.state.q} onChangeQuery={this.onChangeQuery} onChangeFromDate={this.onChangeFromDate}
-                    fromDate={this.state.fromDate} toDate={this.props.toDate} />
+                    fromDate={this.state.fromDate} toDate={this.props.toDate}
+                    locale={this.state.locale} onChangeLanguage={this.onChangeLanguage} />
 
           </div>
 
@@ -394,8 +399,8 @@ class Index extends Component {
                 page: this.state.page,
                 sizePerPage: this.state.pageSize,
                 totalSize: this.state.total,
-                prePageText: <span className="icon icon-pagination icon-pagination_left" />,
-                nextPageText: <span className="icon icon-pagination icon-pagination_right" />,
+                prePageText: '<',
+                nextPageText: '>',
                 hideSizePerPage: true,
                 alwaysShowAllBtns: true,
                 withFirstAndLast: false

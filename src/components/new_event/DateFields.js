@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { getTranslate } from 'react-localize-redux';
 import DatePicker from "../form/DatePicker";
-import 'react-datetime/css/react-datetime.css'
 
 class DateFields extends Component {
   constructor(props) {

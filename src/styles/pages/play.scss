@@ -3,6 +3,8 @@
 .categories-filter {
   &__item {
     display: block;
+    position: relative;
+    height: 64px;
     color: #ffffff;
     font-size: 0.825rem;
     border-bottom: 1px solid #202732;
@@ -27,6 +29,7 @@
   }
 
   &__item-icon {
+    line-height: 64px;
     vertical-align: middle;
     margin-right: 8px;
 
@@ -46,7 +49,35 @@
   &__item-name {
     vertical-align: middle;
   }
+
+  &__control-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    margin-top: -5px;
+    line-height: 64px;
+    vertical-align: middle;
+    @include sprite($categories-close);
+
+    &_open {
+      @include sprite($categories-open);
+    }
+  }
+
+  .categories-filter__dropdown {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 450ms ease;
+  }
+
+  &__item-container_open {
+    .categories-filter__dropdown {
+      max-height: 500px;
+      transition: max-height 1000ms ease;
+    }
+  }
 }
+
 .play-filter {
   display: flex;
   padding: 20px 25px;
@@ -58,19 +89,58 @@
   &__form {
 
     .form-input-text_search {
+      width: 200px;
+      vertical-align: top;
       margin-right: 1px;
       border-top-right-radius: 0;
       border-bottom-right-radius: 0;
     }
 
     .form-datetime_from {
+      vertical-align: top;
+      width: 90px;
       margin-right: 1px;
-      border-radius: 0;
+
+      input {
+        border-radius: 0;
+      }
     }
 
     .form-datetime_to {
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+      vertical-align: top;
+      width: 90px;
+      margin-right: 1px;
+
+      input {
+        border-radius: 0;
+      }
+    }
+
+    .form-reset {
+      display: inline-block;
+      vertical-align: top;
+      cursor: pointer;
+      margin-right: 1px;
+      width: 29px;
+      height: 27px;
+      line-height: 27px;
+      text-align: center;
+      background-color: $background_1;
+
+      &_date-to {
+        margin-right: 25px;
+        border-top-right-radius: 2px;
+        border-bottom-right-radius: 2px;
+      }
+
+      span {
+        @include sprite($form-reset);
+      }
+    }
+
+    .form-input-select {
+      vertical-align: top;
+      width: 170px;
     }
   }
 }

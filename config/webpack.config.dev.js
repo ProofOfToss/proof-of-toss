@@ -8,8 +8,6 @@ var SpritesmithPlugin = require('webpack-spritesmith');
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
 
-console.log(webpack.version);
-
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 var publicPath = '/';

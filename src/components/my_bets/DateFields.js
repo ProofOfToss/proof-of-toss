@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
-import 'react-datetime/css/react-datetime.css'
 import Datetime from "react-datetime";
 
 class DateFields extends Component {

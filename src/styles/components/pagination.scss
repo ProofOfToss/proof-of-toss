@@ -5,7 +5,7 @@
   overflow: hidden;
   margin: 0;
   padding: 0;
-  background-color: #2e3647;
+  background-color: $background_1;
   border-radius: 2px;
 
   .page-item {
@@ -26,13 +26,10 @@
         width: 50px;
         height: 27px;
         line-height: 27px;
-
-        &_left {
-          @include sprite($arrow-pagination-left);
-        }
+        @include sprite($arrow-pagination-left);
 
         &_right {
-          @include sprite($arrow-pagination-right);
+          transform: rotate(180deg);
         }
       }
     }

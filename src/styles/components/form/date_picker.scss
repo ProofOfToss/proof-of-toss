@@ -1,0 +1,128 @@
+@import "../../sprite";
+
+.form-datetime {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+
+  &__input-wrapper {
+    position: relative;
+
+    &-icon {
+      position: absolute;
+      top: 7px;
+      right: 15px;
+      @include sprite($calendar);
+    }
+
+    input {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      cursor: pointer;
+      height: 27px;
+      line-height: 27px;
+      border-radius: 2px;
+      border: none;
+      background-color: $background_1;
+      padding: 0 5px 0 9px;
+      color: #b6bece;
+      font-size: 0.8125rem;
+    }
+  }
+
+  .rdtPicker {
+    display: none;
+    position: absolute;
+    width: 220px;
+    padding: 0;
+    margin-top: 1px;
+    z-index: 99999 !important;
+    background: $background_1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+    border: none;
+
+    table {
+      width: 100%;
+      margin: 0;
+
+      thead {
+        tr {
+          &:first-child {
+            th {
+              border-bottom: 1px solid #151a26;
+              padding: 11px 0;
+            }
+          }
+
+          th {
+            border-bottom: none;
+            color: #ffffff;
+            font-size: 0.8125rem;
+            font-weight: 200;
+            text-align: center;
+
+            &.rdtPrev, &.rdtNext {
+              font-size: 0;
+
+              span {
+                display: inline-block;
+                @include sprite($arrow-calendar-left);
+              }
+            }
+
+            &.rdtNext {
+              span {
+                transform: rotate(180deg);
+              }
+            }
+
+            &.dow {
+              padding: 10px 0 0 0;
+              width: 14.2857%;
+              color: #57647f;
+              font-size: 0.6875rem;
+              font-weight: normal;
+            }
+          }
+        }
+      }
+
+      tbody {
+        tr {
+          td {
+            color: #ffffff;
+            text-align: center;
+            font-weight: bold;
+
+            &.rdtDay {
+              padding: 10px 0;
+              font-size: 16px;
+            }
+
+            &.rdtMonth, &.rdtYear {
+              height: 50px;
+              width: 25%;
+              cursor: pointer;
+            }
+
+            &.rdtDisabled {
+              cursor: default;
+              color: #57647f;
+            }
+
+            &:not(.rdtDisabled):hover {
+              color: #e4b756;
+              background-color: #151a26;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.rdtOpen .rdtPicker {
+    display: block;
+  }
+}
