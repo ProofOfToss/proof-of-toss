@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
 import _ from "lodash";
 const queryString = require('query-string');
-import { Link, withRouter } from 'react-router';
+import { /*Link, */ withRouter } from 'react-router';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
