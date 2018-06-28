@@ -9,7 +9,7 @@ import { Link } from 'react-router';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
-import '../../styles/components/play_table.scss';
+import '../../styles/components/table.scss';
 import DateFields from './../../components/my_bets/DateFields';
 
 import appConfig from "../../data/config.json"

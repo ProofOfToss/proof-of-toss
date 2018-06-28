@@ -1,26 +1,114 @@
-@import "~bootstrap-sass/assets/stylesheets/bootstrap/variables";
+@import "../sprite";
 
-header {
-  .navbar {
-    @media (max-width: $screen-sm-min - 1) {
-      margin-bottom: 10px;
+.header {
+  display: flex;
+  height: 70px;
+
+  @include bg-header();
+
+  &__logo {
+    display: block;
+    box-sizing: border-box;
+    padding: 22px 0 0 29px;
+    width: 262px;
+
+    &_link {
     }
+  }
 
-    .navbar-text.address {
-      @media (max-width: $screen-sm-min - 1) {
-        display: none;
+  &__nav {
+    flex-grow: 1;
+
+    ul {
+      margin: 0;
+      list-style-type: none;
+
+      li {
+        float: left;
+        padding: 0;
+        margin-right: 15px;
+
+        a {
+          box-sizing: border-box;
+          display: block;
+          padding: 0 10px;
+          vertical-align: middle;
+          height: 70px;
+          line-height: 70px;
+          font-size: 1rem;
+          color: #ffffff;
+          text-decoration: none;
+        }
+
+        &.selected {
+          a {
+            border-bottom: 6px solid #e4b756;
+          }
+        }
+
+        .dropdown-menu {
+          display: none;
+        }
       }
     }
   }
 
-  > .address {
-    @media (max-width: $screen-sm-min - 1) {
-      margin-bottom: 10px;
+  &__address {
+    line-height: 70px;
+    color: #ffffff;
+    padding: 0 20px;
+    border-left: 1px solid #3d063d;
+    font-size: 1.0625rem;
+
+    .icon-wallet {
+      vertical-align: middle;
+      margin-right: 17px;
+      @include sprite($wallet);
     }
 
+    &-text {
+      vertical-align: middle;
+    }
+  }
 
-    @media (min-width: $screen-sm-min) {
+  &__language {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 20px;
+    border-left: 1px solid #3d063d;
+
+    a {
+      display: inline-block;
+      height: 14px;
+      color: #ffffff;
+      text-decoration: none;
+      vertical-align: middle;
+
+    }
+
+    .dropdown-toggle {
+      line-height: 70px;
+    }
+
+    .dropdown-menu {
       display: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .icon-language-en {
+      @include sprite($language-en);
+    }
+  }
+
+  &__menu {
+    line-height: 70px;
+    padding: 0 23px;
+    border-left: 1px solid #3d063d;
+
+    .icon-menu {
+      vertical-align: middle;
+      @include sprite($menu);
     }
   }
 }

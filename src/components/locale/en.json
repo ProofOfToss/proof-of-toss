@@ -227,11 +227,11 @@
       "get_back_button": "Get back ${ amount } ${ symbol }",
       "filters": {
         "reset_date": "Reset date",
-        "from_date": "Start date range from",
-        "to_date": "Start date range to"
+        "from_date": "From...",
+        "to_date": "To..."
       },
       "columns": {
-        "name": "Name",
+        "name": "Event | Bet type",
         "tags": "Tags",
         "category": "Category",
         "bid_type": "Bid Type",
@@ -332,8 +332,20 @@
   },
   "categories": {
     "all": "All categories",
-    "sport": "Sport",
-    "economy": "Economy",
-    "weather": "Weather"
+    "sports": "Sports",
+    "hockey": "Hockey",
+    "football": "Football",
+    "air_sports": "Air sports",
+    "golf": "Golf",
+    "politics": "Politics",
+    "elections": "Elections",
+    "political_decisions": "Political decisions",
+    "international_relations": "International relations",
+    "summits_and_official_events": "Summits and official events",
+    "e-sports": "E-Sports",
+    "counter_strike_go": "Counter Strike GO",
+    "league_of_legends": "League of legends",
+    "pubg": "PUBG",
+    "fifa": "FIFA"
   }
 }

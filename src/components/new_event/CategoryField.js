@@ -19,16 +19,24 @@ class CategoryField extends Component {
     });
   }
 
-  render() {
+  renderCategories(categories) {
+    return categories.map((category, key) => {
+      if(category.children !== undefined) {
+        return <optgroup key={category.name} label={this.props.translate(`categories.${category.name}`)}>
+          {this.renderCategories(category.children)}</optgroup>;
+      }
 
+      return <option key={category.name} value={category.id}>{this.props.translate(`categories.${category.name}`)}</option>
+    })
+  }
+
+  render() {
     return <div className={"form-group" + (this.props.valueLink.error ? ' has-error' : '')}>
       {this.state.categories.length > 0 &&
         <Fragment>
           <label htmlFor="event[category]">{ this.props.translate('pages.new_event.form.category')}*</label>
           <Select valueLink={this.props.valueLink} type='text' id="event[category]" className='form-control'>
-            {this.state.categories.map((category, key) => {
-              return <option key={key} value={category.id}>{this.props.translate(`categories.${category.name}`)}</option>
-            }, this)}
+            {this.renderCategories(this.state.categories)}
           </Select>
           <span id="helpBlock" className="help-block">{ this.props.valueLink.error || '' }</span>
         </Fragment>

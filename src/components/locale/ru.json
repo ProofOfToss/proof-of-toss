@@ -227,11 +227,11 @@
       "get_back_button": "Получить назад ${ amount } ${ symbol }",
       "filters": {
         "reset_date": "Очистить",
-        "from_date": "Диапазон даты начала от",
-        "to_date": "Диапазон даты начала до"
+        "from_date": "Начало...",
+        "to_date": "Конец..."
       },
       "columns": {
-        "name": "Название",
+        "name": "Событие | Тип ставки",
         "tags": "Тэги",
         "category": "Категория",
         "bid_type": "Вид ставки",
@@ -332,8 +332,20 @@
   },
   "categories": {
     "all": "Все категории",
-    "sport": "Спорт",
-    "economy": "Экономика",
-    "weather": "Погода"
+    "sports": "Спорт",
+    "hockey": "Хоккей",
+    "football": "Футбол",
+    "air_sports": "Авиационный спорт",
+    "golf": "Гольф",
+    "politics": "Политика",
+    "elections": "Выборы",
+    "political_decisions": "Политические решения",
+    "international_relations": "Международные отношения",
+    "summits_and_official_events": "Саммиты и официальные события",
+    "e-sports": "E-Sports",
+    "counter_strike_go": "Counter Strike GO",
+    "league_of_legends": "League of legends",
+    "pubg": "PUBG",
+    "fifa": "FIFA"
   }
 }

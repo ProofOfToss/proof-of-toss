@@ -4,6 +4,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var ManifestPlugin = require('webpack-manifest-plugin');
 var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
+var SpritesmithPlugin = require('webpack-spritesmith');
 var url = require('url');
 var paths = require('./paths');
 var getClientEnvironment = require('./env');
@@ -120,7 +121,8 @@ module.exports = {
           /\.json$/,
           /\.woff$/,
           /\.woff2$/,
-          /\.(ttf|svg|eot)$/
+          /\.(ttf|svg|eot)$/,
+          /\.png$/
         ],
         loader: 'url',
         query: {
@@ -216,6 +218,13 @@ module.exports = {
         }
       },
       {
+        test: /\.png$/,
+        loader: 'file',
+        query: {
+          name: 'img/[name].[ext]'
+        }
+      },
+      {
         test: require.resolve('jquery'),
         loader: 'expose?jQuery!expose?$'
       }
@@ -296,6 +305,19 @@ module.exports = {
       "$": "jquery",
       "jQuery": "jquery",
       "window.jQuery": "jquery"
+    }),
+    new SpritesmithPlugin({
+      src: {
+        cwd: paths.iconsDir,
+        glob: '*.png'
+      },
+      target: {
+        image: paths.spriteImageSrc,
+        css: paths.spriteStylesSrc
+      },
+      apiOptions: {
+        cssImageRef: '../img/sprite.png'
+      }
     })
   ],
   // Some libraries import Node modules but don't use them in the browser.

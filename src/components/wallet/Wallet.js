@@ -31,15 +31,10 @@ class Wallet extends Component {
   render() {
     return(
       <React.Fragment>
-        <p className="navbar-text address">
-          {this.props.currentAddress}
-        </p>
-        <p className="navbar-text">
-          {this.props.balance !== null ? <span title={ formatBalance(this.props.balance, config.view.token_precision) + config.view.token_symbol }>{this.props.translate('header.wallet.balance')}: {formatBalance(this.props.balance)} {config.view.token_symbol}</span> : this.props.translate('header.wallet.info')}
-        </p>
-        <p className="navbar-text logout-button">
-          { this.renderLogoutButton() }
-        </p>
+        <div className="header__address">
+          <span className="icon icon-wallet" />
+          <span className="header__address-text">{this.props.currentAddress}</span>
+        </div>
       </React.Fragment>
     )
   }

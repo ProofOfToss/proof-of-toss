@@ -4,10 +4,11 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
+var SpritesmithPlugin = require('webpack-spritesmith');
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
 
-
+console.log(webpack.version);
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -115,7 +116,8 @@ module.exports = {
           /\.json$/,
           /\.woff$/,
           /\.woff2$/,
-          /\.(ttf|svg|eot)$/
+          /\.(ttf|svg|eot)$/,
+          /\.png$/
         ],
         loader: 'url',
         query: {
@@ -187,6 +189,13 @@ module.exports = {
           name: 'fonts/[name].[hash].[ext]'
         }
       },
+      {
+        test: /\.png$/,
+        loader: 'file',
+        query: {
+          name: 'img/[name].[ext]'
+        }
+      },
       // Truffle solidity loader to watch for changes in Solitiy files and hot
       // reload contracts with webpack.
       //
@@ -247,6 +256,19 @@ module.exports = {
       "$": "jquery",
       "jQuery": "jquery",
       "window.jQuery": "jquery"
+    }),
+    new SpritesmithPlugin({
+      src: {
+        cwd: paths.iconsDir,
+        glob: '*.png'
+      },
+      target: {
+        image: paths.spriteImageSrc,
+        css: paths.spriteStylesSrc
+      },
+      apiOptions: {
+        cssImageRef: '../img/sprite.png'
+      }
     })
   ],
   // Some libraries import Node modules but don't use them in the browser.
