@@ -25,10 +25,10 @@ deploy_demo:
 # deploy will run on shared runner "Deploy on vs04"
   tags:
     - demo
-# the following configuration will deploy every commit of master branch
+# the following configuration will deploy every commit of dev branch
   # when: manual
   only:
-    - master
+    - dev
 # actual deployment commands starts here
 # need a testrpc running on localhost
 # mkdir testrpc_db
@@ -64,7 +64,7 @@ deploy_demo_reindex:
     - demo
   when: manual
   only:
-    - master
+    - dev
   script:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
@@ -96,7 +96,7 @@ deploy_demo_contracts:
     - demo
   when: manual
   only:
-    - master
+    - dev
   script:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
@@ -130,7 +130,7 @@ deploy_demo_full:
     - demo
   when: manual
   only:
-    - master
+    - dev
   script:
     - echo "Build app"
     - source /opt/rh/devtoolset-2/enable
