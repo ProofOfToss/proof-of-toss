@@ -1,0 +1,12 @@
+//== Colors
+
+$orange: #e4b756;
+
+@mixin bg-header {
+  /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#fc0000+0,fc0000+15,750075+35,750075+100 */
+  background: #fc0000; /* Old browsers */
+  background: -moz-linear-gradient(left,  #fc0000 0%, #fc0000 15%, #750075 35%, #750075 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left,  #fc0000 0%,#fc0000 15%,#750075 35%,#750075 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right,  #fc0000 0%,#fc0000 15%,#750075 35%,#750075 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fc0000', endColorstr='#750075',GradientType=1 ); /* IE6-9 */
+}

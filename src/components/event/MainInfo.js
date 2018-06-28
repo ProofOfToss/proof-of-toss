@@ -11,6 +11,7 @@ class MainInfo extends Component {
     super(props);
     this.categoryUtil = new CategoryUtil(props.translate);
   }
+
   render() {
     return <div className="event__main-info">
       <dl className="dl-horizontal">

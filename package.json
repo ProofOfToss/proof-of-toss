@@ -69,6 +69,7 @@
     "webpack": "1.14.0",
     "webpack-dev-server": "1.16.2",
     "webpack-manifest-plugin": "1.1.0",
+    "webpack-spritesmith": "^0.4.1",
     "whatwg-fetch": "1.0.0",
     "glob": "^7.1.2",
     "redux-logger": "^3.0.6"
@@ -88,7 +89,7 @@
     "log4js": "^2.5.3",
     "moment": "^2.20.1",
     "qrcode": "^1.2.0",
-    "react": "^16.2.0",
+    "react": "^16.3.0",
     "react-autosuggest": "^9.3.4",
     "react-bootstrap-table-next": "^0.1.4",
     "react-bootstrap-table2-overlay": "^0.1.1",

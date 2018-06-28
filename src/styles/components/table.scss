@@ -1,0 +1,39 @@
+.table {
+  thead {
+    th {
+      font-size: 0.8125rem;
+      color: #7b869d;
+      font-weight: normal;
+      text-align: left;
+      padding: 0 15px 10px;
+
+      &:first-child {
+        padding-left: 9px;
+      }
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid #1d2535;
+
+      &:nth-child(even) {
+        background-color: #2f3d58;
+      }
+
+      &:nth-child(odd) {
+        background-color: #434f67;
+      }
+
+      td {
+        color: #ffffff;
+        font-size: 0.9375rem;
+        padding: 13px 15px;
+      }
+    }
+  }
+}

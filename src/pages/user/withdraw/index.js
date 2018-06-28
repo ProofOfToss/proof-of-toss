@@ -7,7 +7,7 @@ import { modalWithdrawShow } from '../../../actions/pages/event';
 import EventCreatorWithdraw from './EventCreatorWithdraw';
 import PlayerWithdraw from './PlayerWithdraw';
 import ModalWithdraw from './ModalWithdraw';
-import '../../../styles/components/play_table.scss';
+import '../../../styles/components/table.scss';
 
 class Withdraw extends Component {
   render() {

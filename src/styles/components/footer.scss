@@ -1,0 +1,40 @@
+.footer {
+  display: flex;
+  padding: 31px 0 58px 0;
+  background-color: #0b0e15;
+
+  &__logo {
+    padding: 0 58px 0 30px;
+    line-height: 30px;
+
+    &-img {
+      width: 125px;
+      vertical-align: middle;
+    }
+  }
+
+  &__nav {
+    flex-grow: 1;
+    line-height: 30px;
+
+    &_link {
+      vertical-align: middle;
+      text-decoration: none;
+      color: #ffffff;
+      margin-right: 20px;
+      font-size: 0.875rem;
+    }
+  }
+
+  &__copyright {
+    display: block;
+    line-height: 30px;
+    color: #ffffff;
+    padding: 0 25px 0 0;
+    font-size: 0.875rem;
+
+    span {
+      vertical-align: middle;
+    }
+  }
+}

@@ -92,8 +92,8 @@ class Index extends Component {
         </form>
 
         {this.props.fetchingTransactionStatus && <div className="alert alert-warning" role="alert">
-          {this.props.translate('pages.faucet.fetchingTOSSTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash.toss}" target="_blank"}>${this.props.txHash.toss}</a>`})}
-          {this.props.translate('pages.faucet.fetchingSBTCTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash.sbtc}" target="_blank"}>${this.props.txHash.sbtc}</a>`})}
+          {this.props.translate('pages.faucet.fetchingTOSSTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash.toss}" target="_blank">${this.props.txHash.toss}</a>`})}
+          {this.props.translate('pages.faucet.fetchingSBTCTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash.sbtc}" target="_blank">${this.props.txHash.sbtc}</a>`})}
         </div>}
 
         {this.props.submittingQuery && <div className="alert alert-warning" role="alert">

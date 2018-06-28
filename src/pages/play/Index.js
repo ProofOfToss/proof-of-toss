@@ -1,5 +1,5 @@
 import 'babel-polyfill';
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import Datetime from "react-datetime";
 import { connect } from 'react-redux';
 import { getTranslate } from 'react-localize-redux';
@@ -9,8 +9,10 @@ import { Link, withRouter } from 'react-router';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import overlayFactory from 'react-bootstrap-table2-overlay';
-import '../../styles/components/play_table.scss';
+import '../../styles/components/table.scss';
 
+import FilterCategories from '../../components/play/FilterCategories';
+import Filter from '../../components/play/Filter';
 import appConfig from "../../data/config.json"
 import { getLanguageAnalyzerByCode } from '../../util/i18n';
 
@@ -33,7 +35,6 @@ class Index extends Component {
     this.onChangeQuery = this.onChangeQuery.bind(this);
     this.onChangeLanguage = this.onChangeLanguage.bind(this);
     this.onChangeCategory = this.onChangeCategory.bind(this);
-    this.isValidDate = this.isValidDate.bind(this);
     this.getUrlParams = this.getUrlParams.bind(this);
     this.update = this.update.bind(this);
     this.updateDebounce = this.updateDebounce.bind(this);
@@ -128,10 +129,6 @@ class Index extends Component {
       sortField: state.sortField || this.state.sortField,
       sortOrder: state.sortOrder || this.state.sortOrder,
     }, this.update);
-  }
-
-  isValidDate(currentDate) {
-    return currentDate.isSameOrAfter(Datetime.moment().add(BIDDING_END_MINUTES, 'minute'), 'day');
   }
 
   clearValueInDateTimeInput(ref) {
@@ -300,26 +297,22 @@ class Index extends Component {
   }
 
   render() {
-    const { data, categories } = this.state;
+    const { data } = this.state;
     let columns = [
       {
         text: this.props.translate('pages.play.columns.name'),
         dataField: "name",
         sort: false,
-        classes: 'name col-md-4'
-      },
-      {
-        text: this.props.translate('pages.play.columns.bid_type'),
-        dataField: "bidType",
-        sort: false,
-        width: 200,
-        classes: 'bid-type col-md-4'
+        classes: 'name',
+        formatter: (cell, row) => {
+          return <Fragment><span className="name">{cell}</span><span className="bid-type">{row.bidType}</span></Fragment>
+        },
       },
       {
         text: this.props.translate('pages.play.columns.start_date'),
         dataField: "startDate",
         sort: true,
-        width: 200,
+        classes: 'start-date',
         formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
       }
     ];
@@ -329,7 +322,7 @@ class Index extends Component {
         text: this.props.translate('pages.play.columns.end_date'),
         dataField: "endDate",
         sort: true,
-        width: 200,
+        classes: 'end-date',
         formatter: (cell) => Datetime.moment(new Date(parseInt(cell, 10) * 1000)).format('LLL'),
       });
     }
@@ -338,105 +331,51 @@ class Index extends Component {
       text: this.props.translate('pages.play.columns.bid_sum'),
       dataField: "bidSum",
       sort: true,
-      width: 150,
-    });
-
-    columns.push({
-      text: '',
-      dataField: 'address',
-      sort: false,
-      width: 100,
+      classes: 'bid-sum',
       formatter: (cell) => {
-        return (this.props.routeName === 'admin/event_results') ?
-          <Link to={`/${this.props.locale}/admin/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link> :
-          <Link to={`/${this.props.locale}/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link>
+        return <Fragment>{cell} <span>{appConfig.view.token_symbol}</span></Fragment>
       }
     });
 
-    return(
-      <main className="container">
-        <div>
-          <h1>{ this.props.translate(this.props.header) }</h1>
+    // columns.push({
+    //   text: '',
+    //   dataField: 'address',
+    //   sort: false,
+    //   formatter: (cell) => {
+    //     return (this.props.routeName === 'admin/event_results') ?
+    //       <Link to={`/${this.props.locale}/admin/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link> :
+    //       <Link to={`/${this.props.locale}/event/${cell}`}>{ this.props.translate('pages.play.more') }</Link>
+    //   }
+    // });
 
-          <div>
-            <a className={this.state.category ? 'btn btn-link' : 'btn btn-default'} onClick={this.onChangeCategory.bind(this, null)}>{this.props.translate(`categories.all`)}</a>
-            {
-              categories.map((category, key) => <a
-                key={key}
-                className={this.state.category === category.id ? 'btn btn-default' : 'btn btn-link'}
-                onClick={this.onChangeCategory.bind(this, category.id)}
-              >{this.props.translate(`categories.${category.name}`)}</a>)
-            }
+    return(
+      <div className="page-content">
+        <aside className="page-content__sidebar">
+          <FilterCategories activeCategory={this.state.category} onChangeCategory={this.onChangeCategory} />
+        </aside>
+
+        <main className="page-content__main">
+          <div className="play-filter">
+            <div className="breadcrumbs">
+              <a className="breadcrumbs__item">
+                <span className="breadcrumbs__item-name">Play</span>
+                <span className="icon breadcrumbs__item-icon" />
+              </a>
+              <a className="breadcrumbs__item">
+                <span className="breadcrumbs__item-name">Motorsports</span>
+                <span className="icon breadcrumbs__item-icon" />
+              </a>
+              <a className="breadcrumbs__item">
+                <span className="breadcrumbs__item-name">Formula 1 Racing</span>
+              </a>
+            </div>
+
+            <Filter q={this.state.q} onChangeQuery={this.onChangeQuery} onChangeFromDate={this.onChangeFromDate}
+                    fromDate={this.state.fromDate} toDate={this.props.toDate} />
+
           </div>
 
-          <form className="form play-form" onSubmit={this.handleSubmit}>
-
-            <div className="row">
-              <div className="col-md-5">
-                <div className="form-group date-start">
-                  <label htmlFor="event[date_start]">{ this.props.translate('pages.play.filters.from_date') }</label>
-                  <Datetime
-                    ref={this.dateStartRef}
-                    value={this.state.fromDate}
-                    timeFormat={false}
-                    closeOnSelect={true}
-                    onChange={this.onChangeFromDate}
-                    isValidDate={this.isValidDate}
-                    inputProps={{readOnly: true}} />
-                </div>
-              </div>
-              <div className="col-md-1">
-                <div className="form-group reset-date">
-                  <label>&nbsp;</label>
-                  <button className="btn btn-secondary" onClick={() => { this.clearValueInDateTimeInput(this.dateStartRef); }}>{this.props.translate('pages.play.filters.reset_date')}</button>
-                </div>
-              </div>
-              <div className="col-md-5">
-                <div className="form-group date-end">
-                  <label htmlFor="event[date_start]">{ this.props.translate('pages.play.filters.to_date') }</label>
-                  <Datetime
-                    ref={this.dateEndRef}
-                    value={this.state.toDate}
-                    timeFormat={false}
-                    closeOnSelect={true}
-                    onChange={this.onChangeToDate}
-                    isValidDate={this.isValidDate}
-                    inputProps={{readOnly: true}} />
-                </div>
-              </div>
-              <div className="col-md-1">
-                <div className="form-group reset-date">
-                  <label>&nbsp;</label>
-                  <button className="btn btn-secondary" onClick={() => { this.clearValueInDateTimeInput(this.dateEndRef); }}>{this.props.translate('pages.play.filters.reset_date')}</button>
-                </div>
-              </div>
-            </div>
-
-            <div className="row">
-              <div className="col-md-2">
-                <div className="input-group">
-                  <label htmlFor="event[locale]">{ this.props.translate('pages.play.filter.locale') }</label>
-                  <select id="event[locale]" className="form-control" value={this.state.locale} onChange={this.onChangeLanguage}>
-                    {
-                      appConfig.languages.list.map((language, key) => {
-                        return <option key={language.code} value={language.code}>{this.props.translate('language.' + language.code)}</option>
-                      })
-                    }
-                  </select>
-                </div>
-              </div>
-
-              <div className="col-md-2">
-                <div className="input-group">
-                  <label htmlFor="event[locale]">{ this.props.translate('pages.play.filter.search') }</label>
-                  <input type="text" className="form-control" value={this.state.q} placeholder={ this.props.translate('pages.play.search') } onChange={this.onChangeQuery} />
-                </div>
-              </div>
-            </div>
-
-          </form>
-
-          <div className="playTable">
+          <div className="play-table">
             <BootstrapTable
               ref="table"
               keyField="address"
@@ -451,7 +390,16 @@ class Index extends Component {
                 }
               ]}
               onTableChange={ this.handleTableChange }
-              pagination={ paginationFactory({ page: this.state.page, sizePerPage: this.state.pageSize, totalSize: this.state.total }) }
+              pagination={ paginationFactory({
+                page: this.state.page,
+                sizePerPage: this.state.pageSize,
+                totalSize: this.state.total,
+                prePageText: <span className="icon icon-pagination icon-pagination_left" />,
+                nextPageText: <span className="icon icon-pagination icon-pagination_right" />,
+                hideSizePerPage: true,
+                alwaysShowAllBtns: true,
+                withFirstAndLast: false
+              }) }
               noDataIndication={ () => <div>{ this.props.translate('pages.play.empty') }</div> }
               loading={ this.state.loading }
               overlay={ overlayFactory({ spinner: true, background: 'rgba(192,192,192,0.3)' }) }
@@ -463,8 +411,8 @@ class Index extends Component {
               }}
             />
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     )
   }
 }
