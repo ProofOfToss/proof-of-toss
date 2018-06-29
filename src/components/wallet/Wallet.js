@@ -2,11 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { withRouter } from "react-router";
 import { getTranslate } from 'react-localize-redux';
-
-// import { formatBalance } from './../../util/token'
 import { logout } from './../../util/auth';
 import { logoutUser } from '../../actions/user';
-// import config from '../../data/config.json'
+
 
 class Wallet extends Component {
   constructor(props) {
