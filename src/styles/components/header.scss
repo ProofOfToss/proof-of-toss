@@ -105,10 +105,36 @@
     line-height: 70px;
     padding: 0 23px;
     border-left: 1px solid #3d063d;
+    position: relative;
 
     .icon-menu {
       vertical-align: middle;
       @include sprite($menu);
+    }
+
+    &-dropdown {
+      display: none;
+      position: absolute;
+      width: 150px;
+      background-color: #131823;
+      z-index: 1000;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      right: 0;
+
+      &-item {
+        padding: 0 10px;
+        font-size: 1.0625rem;
+        color: #ffffff;
+        cursor: pointer;
+      }
+    }
+
+    &:hover {
+      .header__menu-dropdown {
+        display: block;
+      }
     }
   }
 }

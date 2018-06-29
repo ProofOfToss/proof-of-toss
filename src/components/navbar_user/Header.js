@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from "react-router";
 import Link from '../routing/Link'
 import { getTranslate } from 'react-localize-redux';
+import { logout } from './../../util/auth';
+import { logoutUser } from '../../actions/user';
 import NavbarUser from './NavbarUser';
 import Language from './Language';
 
@@ -12,6 +15,7 @@ class Header extends Component {
 
     this._menuLinkClass = this._menuLinkClass.bind(this);
     this.renderHeaderMenu = this.renderHeaderMenu.bind(this);
+    this.handleSuccessfulLogout = this.handleSuccessfulLogout.bind(this);
   }
 
   _menuLinkClass(path) {
@@ -20,6 +24,12 @@ class Header extends Component {
     }
 
     return this.props.location.pathname === path ? 'active' : '';
+  }
+
+
+  handleSuccessfulLogout() {
+    this.props.dispatch(logoutUser());
+    this.props.router.push("/sign-in");
   }
 
   renderHeaderMenu() {
@@ -75,8 +85,11 @@ class Header extends Component {
 
         <NavbarUser />
 
-        <div className="header__menu">
+        <div className="header__menu header__menu_dropdown">
           <span className="icon icon-menu" />
+          <ul className="header__menu-dropdown" onClick={ () => { logout(this.props.currentAddress, this.handleSuccessfulLogout) } }>
+            <li className="header__menu-dropdown-item">{this.props.translate('header.nav.logout')}</li>
+          </ul>
         </div>
 
       </header>
@@ -91,4 +104,4 @@ const mapStateToProps = state => ({
   isWhitelisted: state.user.isWhitelisted,
 });
 
-export default connect(mapStateToProps)(Header);
+export default withRouter(connect(mapStateToProps)(Header));

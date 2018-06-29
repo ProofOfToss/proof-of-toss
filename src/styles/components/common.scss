@@ -23,6 +23,17 @@ html, body, #root {
     background-color: #1d2535;
     flex-grow: 1;
     padding-bottom: 45px;
+
+    .page-title {
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 1.875rem;
+      margin: 0 0 10px 0;
+
+      &__orange {
+        color: $orange;
+      }
+    }
   }
 }
 

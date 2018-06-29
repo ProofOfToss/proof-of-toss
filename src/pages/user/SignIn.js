@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from "react-router";
 import { getTranslate } from 'react-localize-redux';
@@ -60,11 +60,9 @@ class SignIn extends Component {
 
   renderErrorMessage() {
     if (this.state.loginFailed === true) {
-      return (
-        <div className="alert alert-danger" role="alert">
-          { this.props.translate('pages.login.error') }
-        </div>
-      );
+      return <div className="alert alert-danger" role="alert">
+        { this.props.translate('pages.login.error') }
+      </div>
     }
 
     return '';
@@ -126,54 +124,39 @@ class SignIn extends Component {
 
   renderSignInContent() {
     if (this.props.web3 === null) {
-      return (
-        <div>
-          <div className="alert alert-danger" role="alert">
-            <p>{ this.props.translate('pages.login.please_install_metamask') }</p>
-            <p><a href="#" onClick={ () => { /*window.location.reload()*/ } }>{ this.props.translate('pages.login.i_have_enabled_metamask') }</a></p>
-          </div>
-
-          {this.renderFAQ()}
-        </div>
-      );
+      return <div className="alert alert-danger" role="alert">
+        <p>{ this.props.translate('pages.login.please_install_metamask') }</p>
+        <p><a href="#" onClick={ () => { /*window.location.reload()*/ } }>{ this.props.translate('pages.login.i_have_enabled_metamask') }</a></p>
+      </div>
     }
 
     if (this.props.isWalletLocked === true) {
-      return (
-        <div>
-          <div className="alert alert-danger" role="alert">{ this.props.translate('pages.login.metamask_locked') }</div>
-
-          {this.renderFAQ()}
-        </div>
-      );
+      return <div className="alert alert-danger" role="alert">{ this.props.translate('pages.login.metamask_locked') }</div>
     }
 
-    return (
-      <div>
-        <p className="text-center">
-          <a className="btn btn-primary btn-lg" onClick={ () => { this.handleLogin() } }>
-            Sign in
-          </a>
-        </p>
+    return <Fragment>
+        <a className="btn btn_login btn_lg" onClick={ () => { this.handleLogin() } }>
+          {this.props.translate('pages.login.title')}
+        </a>
 
         { this.renderErrorMessage() }
-
-        {this.renderFAQ()}
-        
-      </div>
-    );
+      </Fragment>
   }
 
   render() {
     return(
-      <main className="container login">
-        <div>
-          <h1>{this.props.translate('pages.login.header')}</h1>
-          <div>
-            { this.renderSignInContent() }
+      <div className="page-content">
+        <main className="page-content__main page-content__main_login">
+          <h1 className="page-title">{this.props.translate('pages.login.title')}</h1>
+          <div className="login-welcome">
+            {this.props.translate('pages.login.welcome')}
           </div>
-        </div>
-      </main>
+          <div>
+            {this.renderSignInContent()}
+            {this.renderFAQ()}
+          </div>
+        </main>
+      </div>
     )
   }
 }
