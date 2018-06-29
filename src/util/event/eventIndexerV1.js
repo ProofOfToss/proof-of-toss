@@ -43,19 +43,25 @@ export default class EventIndexer {
       const eventData = deserializeEvent(_event.eventData);
       const event = this.contractAPIs.EventBase.at(_event.eventAddress);
 
+      this.logger.info('convertBlockchainEventToEventDoc');
+      this.logger.info(_event.eventAddress);
+
       const creator = await event.creator();
+      this.logger.info(creator);
 
       if (creator == 0) {
         throw new Error('Failed to get event creator');
       }
 
       const resultsCount = await event.resultsCount();
+      this.logger.info(resultsCount);
 
       if (resultsCount <= 0) {
         throw new Error('Failed to get event resultsCount');
       }
 
       const result = await event.resolvedResult();
+      this.logger.info(result);
 
       if (result <= 0) {
         throw new Error('Failed to get event result');
