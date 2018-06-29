@@ -324,7 +324,7 @@
       "get": "Get 1000 TOSS and 1 gwei",
       "submitQueryError": "Please, try again later",
       "fetchingTOSSTransaction": "Transaction <span class='alert-link'>${ txHash }</span> (1000 TOSS) is processing.",
-      "fetchingSBTCTransaction": "Transaction <span class='alert-link'>${ txHash }</span> (1 gwei) is processing.",
+      "fetchingSBTCTransaction": "Transaction <span class='alert-link'>${ txHash }</span> (0.0001 SBTC) is processing.",
       "successTransaction": "Transaction completed successfully",
       "submittingQuery": "Sending query to faucet...",
       "recaptchaError": "Invalid captcha"

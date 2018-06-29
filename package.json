@@ -122,8 +122,8 @@
     "renew_es_index": "babel-node scripts/create_es_index.js --force",
     "sync_whitelist": "babel-node scripts/sync_whitelist.js",
     "prepare_demo_token": "babel-node scripts/prepare_demo_token.js",
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "start": "node --max-old-space-size=4096 scripts/start.js",
+    "build": "node --max-old-space-size=4096 scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {

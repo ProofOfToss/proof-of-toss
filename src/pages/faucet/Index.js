@@ -5,7 +5,7 @@ import Link from 'valuelink'
 import { validateTossAddress } from '../../util/validators';
 
 import config from '../../data/config.json';
-import {submitQuery} from "../../actions/pages/faucet";
+import {submitQuery, resetFaucet} from "../../actions/pages/faucet";
 import BootstrapInput from '../../components/form/BootstrapInput';
 import ReCAPTCHA from 'react-google-recaptcha';
 
@@ -16,12 +16,17 @@ class Index extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.isValid = this.isValid.bind(this);
     this.storeCaptcha = this.storeCaptcha.bind(this);
+    this.onExpired = this.onExpired.bind(this);
 
     this.state = {
       showErrors: false,
       errors: {},
       address: props.address,
     }
+  }
+
+  componentDidMount() {
+    this.props.resetFaucet();
   }
 
   isValid() {
@@ -40,6 +45,7 @@ class Index extends Component {
     if (this.isValid()) {
       const faucetUrl = `${config.faucetUrl}?account=${this.state.address}&captchaResponse=${this.state.captchaResponse}`;
       this.props.submitQuery(faucetUrl);
+      this.refs.recaptcha.reset();
     } else {
       this.setState({showErrors: true});
     }
@@ -51,6 +57,10 @@ class Index extends Component {
     this.setState({errors: errors});
 
     this.setState({captchaResponse: captchaValue});
+  }
+
+  onExpired() {
+    this.refs.recaptcha.reset();
   }
 
   render() {
@@ -73,7 +83,7 @@ class Index extends Component {
           <div className="row">
             <label className="col-sm-2 control-label" />
             <div className="col-sm-10">
-              <ReCAPTCHA sitekey={config.recaptchaKey} onChange={this.storeCaptcha}/>
+              <ReCAPTCHA ref="recaptcha" sitekey={config.recaptchaKey} onChange={this.storeCaptcha} onExpired={this.onExpired}/>
               {
                 this.state.showErrors && this.state.errors.recaptcha
                   ? <div className="help-block">
@@ -93,6 +103,7 @@ class Index extends Component {
 
         {this.props.fetchingTransactionStatus && <div className="alert alert-warning" role="alert">
           {this.props.translate('pages.faucet.fetchingTOSSTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash.toss}" target="_blank">${this.props.txHash.toss}</a>`})}
+          <br/>
           {this.props.translate('pages.faucet.fetchingSBTCTransaction', {txHash: `<a href="${config.txCheckUrl}${this.props.txHash.sbtc}" target="_blank">${this.props.txHash.sbtc}</a>`})}
         </div>}
 
@@ -140,7 +151,8 @@ function mapPropsToState(state) {
 }
 
 const mapDispatchToProps = {
-  submitQuery
+  submitQuery,
+  resetFaucet
 };
 
 
