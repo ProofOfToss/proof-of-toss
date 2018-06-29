@@ -102,7 +102,8 @@
       "not_connted_to_rpc": "Looks like that MetaMask is not connected to RPC server. Please check the connection.",
       "please_install_metamask": "Please install or activate MetaMask extension.",
       "i_have_enabled_metamask": "I have installed and activated it!",
-      "metamask_locked": "MetaMask is disabled. Please enable it to authorize!"
+      "metamask_locked": "MetaMask is disabled. Please enable it to authorize!",
+      "welcome": "Welcome to the PROOF OF TOSS MVP! Take advantage of a unique opportunity to test the functionality of our upcoming blockchain platform for smart betting! In the PROOF OF TOSS MVP, you can create a wallet, get test TOSS tokens, make a bet and withdraw your \"reward\" to your wallet. We aim to improve the betting experience for all parties involved! Feel free to test the platform and provide us with as much feedback as possible! Click \"Sign In\" to get started!"
     },
     "wallet": {
       "header": "TOSS",
