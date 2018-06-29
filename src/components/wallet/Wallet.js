@@ -5,7 +5,6 @@ import { getTranslate } from 'react-localize-redux';
 import { logout } from './../../util/auth';
 import { logoutUser } from '../../actions/user';
 
-
 class Wallet extends Component {
   constructor(props) {
     super(props);
