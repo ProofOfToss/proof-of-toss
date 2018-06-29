@@ -108,8 +108,7 @@ class SignIn extends Component {
           </li>
           <li className="list-group-item">
             <b>How can I get test TOSS tokens?</b><br />
-            You can’t buy the test TOSS tokens for dollars or any other fiat currency before the token sale. To get TOSS you need to login and go to
-            <a href="/faucet">Faucet</a> page to get test TOSS tokens that will work in RSK test network.<br />
+            You can’t buy the test TOSS tokens for dollars or any other fiat currency before the token sale. To get TOSS you need to login and go to <a href="/faucet">Faucet</a> page to get test TOSS tokens that will work in RSK test network.<br />
             The Faucet page is a special page within the system to get test TOSS tokens.<br />
             TOSS tokens allow you to participate in the testing environment of betting ecosystem PROOF OF TOSS before tokensale.
           </li>
