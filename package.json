@@ -88,7 +88,7 @@
     "log4js": "^2.5.3",
     "moment": "^2.20.1",
     "qrcode": "^1.2.0",
-    "react": "^16.2.0",
+    "react": "^16.3.0",
     "react-autosuggest": "^9.3.4",
     "react-bootstrap-table-next": "^0.1.4",
     "react-bootstrap-table2-overlay": "^0.1.1",
@@ -121,8 +121,8 @@
     "renew_es_index": "babel-node scripts/create_es_index.js --force",
     "sync_whitelist": "babel-node scripts/sync_whitelist.js",
     "prepare_demo_token": "babel-node scripts/prepare_demo_token.js",
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "start": "node --max-old-space-size=4096 scripts/start.js",
+    "build": "node --max-old-space-size=4096 scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
