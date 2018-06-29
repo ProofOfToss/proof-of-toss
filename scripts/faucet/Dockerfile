@@ -19,5 +19,5 @@ WORKDIR /root/work
 RUN pyenv local 3.6.1
 ADD lambda_function.py .
 # RUN source ~/.bash_profile && pip install ethereum web3 -t .
-RUN source ~/.bash_profile && pip install web3 -t .
+RUN source ~/.bash_profile && pip install 'web3<4.4.0' -t .
 RUN zip -r upload.zip *
