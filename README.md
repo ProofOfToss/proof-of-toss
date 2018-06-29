@@ -2,8 +2,9 @@
 
 * Solidity smart-contracts
     - developed using truffle [truffle 4.x](http://truffleframework.com/), [solc >= 0.4.22](http://solidity.readthedocs.io)
-    - public MVP will be deployed to Ethereum blockchain. Product is planned to work on RSK blockchain
     - store data in compressed cost-effective format
+    - public MVP will be deployed to RSK testnet blockchain. Product is planned to work on RSK mainnet blockchain.
+      RSK (https://www.rsk.co/) is a smart contract platform with a 2-way peg to Bitcoin. RSK´s blockchain is secured by merge-mining, which means that it can achieve the same security as Bitcoin in terms of double-spend prevention and settlement finality.
 * Elasticsearch index
     - stores data from blockchain in a suitable format for effective filtration and sorting
 * Web-app
@@ -13,6 +14,12 @@
 * Data indexer
     - developed on [node.js](https://nodejs.org)
     - listens for blockchain events, fetching data from blockchain and sends it to elasticsearch
+
+# Git repository branches
+
+* master – contains official MVP releases
+* dev – contains all MVP features
+* v1/dev – contains all version 1 features
 
 # Project structure
 
