@@ -321,7 +321,7 @@
     "faucet": {
       "address": "Адрес",
       "amount": "Сумма",
-      "get": "Получить 1000 TOSS и 1 gwei",
+      "get": "Получить 1000 TOSS и 0.0001 SBTC",
       "submitQueryError": "Пожалуйста, попробуйте ещё раз позже",
       "fetchingTOSSTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> (1000 TOSS) находится в обработке.",
       "fetchingSBTCTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> (0.0001 SBTC) находится в обработке.",
