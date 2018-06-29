@@ -1,5 +1,16 @@
+html, body, #root {
+  height: 100%;
+}
+
+.App {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
 .page-content {
   display: flex;
+  flex-grow: 1;
 
   &__sidebar {
     background-color: #131823;

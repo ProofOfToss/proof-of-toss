@@ -10,6 +10,7 @@
 
   .page-item {
     display: inline-block;
+    vertical-align: top;
 
     .page-link {
       display: block;
@@ -21,22 +22,31 @@
       font-size: 0.8125rem;
       text-decoration: none;
       color: #ffffff;
-
-      .icon-pagination {
-        width: 50px;
-        height: 27px;
-        line-height: 27px;
-        @include sprite($arrow-pagination-left);
-
-        &_right {
-          transform: rotate(180deg);
-        }
-      }
     }
 
     &:first-child, &:last-child {
       .page-link {
         width: 50px;
+        font-size: 0;
+        position: relative;
+
+        &:after {
+          display: block;
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          margin: -5px 0 0 -2.5px;
+          @include sprite($arrow-pagination-left);
+        }
+      }
+    }
+
+    &:last-child {
+      .page-link {
+        &:after {
+          transform: rotate(180deg);
+        }
       }
     }
 
@@ -46,12 +56,5 @@
         border-bottom: 2px solid $orange;
       }
     }
-
-    //&:first-child, &:last-child {
-    //  .page-link {
-    //    //font-size: 0;
-    //    //text-indent: -1000px;
-    //  }
-    //}
   }
 }
