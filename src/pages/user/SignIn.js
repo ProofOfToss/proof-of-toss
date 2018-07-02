@@ -169,6 +169,7 @@ class SignIn extends Component {
       <main className="container login">
         <div>
           <h1>{this.props.translate('pages.login.header')}</h1>
+          <p>{this.props.translate('pages.login.welcome')}</p>
           <div>
             { this.renderSignInContent() }
           </div>
