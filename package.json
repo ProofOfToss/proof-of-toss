@@ -49,6 +49,7 @@
     "file-loader": "0.9.0",
     "filesize": "3.3.0",
     "fs-extra": "0.30.0",
+    "glob": "^7.1.2",
     "gzip-size": "3.0.0",
     "html-webpack-plugin": "2.24.0",
     "http-proxy-middleware": "0.17.2",
@@ -62,16 +63,16 @@
     "promise": "7.1.1",
     "react-dev-utils": "^0.4.2",
     "recursive-readdir": "2.1.0",
+    "redux-logger": "^3.0.6",
     "sass-loader": "4.0.2",
+    "shared-git-hooks": "^1.2.1",
     "strip-ansi": "3.0.1",
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
     "webpack": "1.14.0",
     "webpack-dev-server": "1.16.2",
     "webpack-manifest-plugin": "1.1.0",
-    "whatwg-fetch": "1.0.0",
-    "glob": "^7.1.2",
-    "redux-logger": "^3.0.6"
+    "whatwg-fetch": "1.0.0"
   },
   "dependencies": {
     "abi-decoder": "^1.1.0",
@@ -123,7 +124,8 @@
     "prepare_demo_token": "babel-node scripts/prepare_demo_token.js",
     "start": "node --max-old-space-size=4096 scripts/start.js",
     "build": "node --max-old-space-size=4096 scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "install": "node node_modules/shared-git-hooks/index.js"
   },
   "jest": {
     "collectCoverageFrom": [
