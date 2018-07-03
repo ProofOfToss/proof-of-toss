@@ -57,7 +57,7 @@ export default class EventIndexer {
 
       const result = await event.resolvedResult();
 
-      if (result <= 0) {
+      if (result < 0) {
         throw new Error('Failed to get event result');
       }
 
