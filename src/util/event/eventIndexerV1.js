@@ -45,7 +45,7 @@ export default class EventIndexer {
 
       const creator = await event.creator();
 
-      if (creator == 0) {
+      if (creator <= 0) {
         throw new Error('Failed to get event creator');
       }
 
@@ -210,7 +210,7 @@ export default class EventIndexer {
         const sender = transaction.from;
         const transactionMethod = decodeEventMethod(this.contractAPIs.EventBase, this.contractAPIs.Token, transaction.input);
 
-        let action;
+        let action; // eslint-disable-line no-unused-vars
         let betCount = 0;
         let userBetIndex = 0;
         let rewardWithdrawn = false;
@@ -262,6 +262,9 @@ export default class EventIndexer {
           case 'withdrawReward':
             action = 'withdrawReward';
             rewardWithdrawn = true;
+            break;
+
+          default:
             break;
         }
 
