@@ -71,9 +71,7 @@ class SignIn extends Component {
   }
 
   renderFAQ() {
-      return
-
-          <div className="panel panel-default">
+      return <div className="panel panel-default">
             <div className="panel-body">
               <h3>FAQ</h3>
               <ul className="list-group">
