@@ -76,10 +76,19 @@ export default class EventWatcher {
 
       if (typeof this.EventBaseConfig[address].artifacts === 'string') {
         const artifacts = require(`../build_archive/contracts/${this.EventBaseConfig[address].artifacts}`);
+        const networks = {};
+        
+        networks[this.truffleConfig.network_id] = {
+          'events': {},
+          'links': {},
+          'address': address,
+          'transactionHash': null
+        };
 
         eventBases[address].artifacts = {
           contractName: artifacts.contractName,
-          abi: artifacts.abi
+          abi: artifacts.abi,
+          networks
         };
       }
 
