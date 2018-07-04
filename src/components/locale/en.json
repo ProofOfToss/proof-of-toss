@@ -105,6 +105,10 @@
       "metamask_locked": "MetaMask is disabled. Please enable it to authorize!",
       "welcome": "Welcome to the PROOF OF TOSS MVP! Take advantage of a unique opportunity to test the functionality of our upcoming blockchain platform for smart betting! In the PROOF OF TOSS MVP, you can create a wallet, get test TOSS tokens, make a bet and withdraw your \"reward\" to your wallet. We aim to improve the betting experience for all parties involved! Feel free to test the platform and provide us with as much feedback as possible! Click \"Sign In\" to get started!"
     },
+    "terms_and_conditions": {
+      "header": "Terms & Conditions",
+      "body": "The Demo Account is provided solely for demonstration purposes and \"AS IS\". We make no warranty that demo product or service is error-free. The Demo Account or any portions thereof may become inaccessible or inoperable at any time or from time-to-time. Your use of Demo Account for any other purposes then for demonstration is at your own risk, solely in your personal capacity and shall not on behalf of a company. Any bets you place in the Demo Account do not create any rights between us and you. In particular, you will not have any rights to gained profits or any other credits to the Demo Account. Under no circumstances will we be liable for any direct or indirect losses resulting from use of the Demo Account or the underlying platform(s) or software, including but not limited to loss of profits or goodwill, consequential losses or other damages, this applies as far as permitted by law."
+    },
     "wallet": {
       "header": "TOSS",
       "send": {
