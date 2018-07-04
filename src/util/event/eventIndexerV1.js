@@ -44,9 +44,28 @@ export default class EventIndexer {
       const event = this.contractAPIs.EventBase.at(_event.eventAddress);
 
       const creator = await event.creator();
+
+      if (creator <= 0) {
+        throw new Error('Failed to get event creator');
+      }
+
       const resultsCount = await event.resultsCount();
+
+      if (resultsCount <= 0) {
+        throw new Error('Failed to get event resultsCount');
+      }
+
       const result = await event.resolvedResult();
+
+      if (result < 0) {
+        throw new Error('Failed to get event result');
+      }
+
       const deposit = await event.deposit();
+
+      if (deposit <= 0) {
+        throw new Error('Failed to get event deposit');
+      }
 
       const promises = [];
 
@@ -191,7 +210,7 @@ export default class EventIndexer {
         const sender = transaction.from;
         const transactionMethod = decodeEventMethod(this.contractAPIs.EventBase, this.contractAPIs.Token, transaction.input);
 
-        let action;
+        let action; // eslint-disable-line no-unused-vars
         let betCount = 0;
         let userBetIndex = 0;
         let rewardWithdrawn = false;
@@ -243,6 +262,9 @@ export default class EventIndexer {
           case 'withdrawReward':
             action = 'withdrawReward';
             rewardWithdrawn = true;
+            break;
+
+          default:
             break;
         }
 

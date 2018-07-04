@@ -98,6 +98,12 @@ getFilesListFromBasket.then(data => {
         key: 'favicon.png',
         contentType: 'image/png',
         cacheControl: 'no-cache'
+      },
+      {
+        name: './build_webpack/images/faq-locked.png',
+        key: 'images/faq-locked.png',
+        contentType: 'image/png',
+        cacheControl: 'no-cache'
       }
     ];
 

@@ -1,4 +1,4 @@
-import { SUBMIT_QUERY, SUCCESS_RESPONSE, ERROR_RESPONSE, FETCHING_TRANSACTION_STATUS, TRANSACTION_STATUS_SUCCESS
+import { RESET_FAUCET, SUBMIT_QUERY, SUCCESS_RESPONSE, ERROR_RESPONSE, FETCHING_TRANSACTION_STATUS, TRANSACTION_STATUS_SUCCESS
 } from '../../actions/pages/faucet';
 
 const initialState = {
@@ -13,6 +13,11 @@ const initialState = {
 const faucetReducer = (state = initialState, action) => {
 
   switch (action.type) {
+    case RESET_FAUCET:
+      return {
+        ...initialState,
+      };
+
     case SUBMIT_QUERY:
       return {
         ...state,

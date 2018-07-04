@@ -69,6 +69,7 @@ export const fetchEvent = (address) => {
       }
 
       Promise.all(resultsPromises).then((results) => {
+        console.log(eventData, results);
         for(let i = 0; i < results.length; i++) {
           let esResult = eventData.possibleResults.find((result) => {
             return result.index === i;

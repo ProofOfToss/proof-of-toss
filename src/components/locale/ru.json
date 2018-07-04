@@ -102,7 +102,12 @@
       "not_connted_to_rpc": "Скорее всего, MetaMask не подключен к RPC серверу. Пожалуйста, проверьте соединение.",
       "please_install_metamask": "Пожалуйста установите и активируйте плагин MetaMask.",
       "i_have_enabled_metamask": "Я установил и активировал его!",
-      "metamask_locked": "MetaMask отключен. Пожалуйста, включите его, чтобы авторизироваться!"
+      "metamask_locked": "MetaMask отключен. Пожалуйста, включите его, чтобы авторизироваться!",
+      "welcome": "Добро пожаловать в MVP PROOF OF TOSS! Воспользуйтесь уникальной возможностью протестировать функциональность новой блокчейн-платформы для смарт-ставок! В MVP PROOF OF TOSS Вы сможете создать свой кошелёк, получить тестовые TOSS токены, сделать ставку и получить свой \"выигрыш\". Наша цель - улучшить опыт использования платформ для ставок для всех пользователей. Мы ждём Ваших отзывов! Нажмите \"Зарегистрироваться\", чтобы начать!"
+    },
+    "terms_and_conditions": {
+      "header": "Условия и положения",
+      "body": "The Demo Account is provided solely for demonstration purposes and \"AS IS\". We make no warranty that demo product or service is error-free. The Demo Account or any portions thereof may become inaccessible or inoperable at any time or from time-to-time. Your use of Demo Account for any other purposes then for demonstration is at your own risk, solely in your personal capacity and shall not on behalf of a company. Any bets you place in the Demo Account do not create any rights between us and you. In particular, you will not have any rights to gained profits or any other credits to the Demo Account. Under no circumstances will we be liable for any direct or indirect losses resulting from use of the Demo Account or the underlying platform(s) or software, including but not limited to loss of profits or goodwill, consequential losses or other damages, this applies as far as permitted by law."
     },
     "wallet": {
       "header": "TOSS",
@@ -321,10 +326,10 @@
     "faucet": {
       "address": "Адрес",
       "amount": "Сумма",
-      "get": "Получить 1000 TOSS и 1 gwei",
+      "get": "Получить 1000 TOSS и 0.0001 SBTC",
       "submitQueryError": "Пожалуйста, попробуйте ещё раз позже",
       "fetchingTOSSTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> (1000 TOSS) находится в обработке.",
-      "fetchingSBTCTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> (1 gwei) находится в обработке.",
+      "fetchingSBTCTransaction": "Транзакция <span class='alert-link'>${ txHash }</span> (0.0001 SBTC) находится в обработке.",
       "successTransaction": "Транзакция завершена успешно",
       "submittingQuery": "Отправляем запрос на faucet...",
       "recaptchaError": "Неправильная каптча"
