@@ -19,6 +19,7 @@ import MyBets from './pages/user/MyBets';
 import Withdraw from './pages/user/withdraw';
 
 import Faucet from './pages/faucet/Index';
+import Terms from './pages/user/Terms';
 
 //Admin components
 import AdminEvent from './pages/admin/event/Index';
@@ -62,6 +63,8 @@ function renderReactDOM() {
         <Route path='event(/:id)' component={AdminEvent} onEnter={ checkAuthorization } />
         <Route path='event_results' component={EventResults} onEnter={ checkAuthorization } />
       </Route>
+
+      <Route path='terms_and_conditions' component={Terms} />
 
       <Route path='*' component={NotFound} />
     </Fragment>
