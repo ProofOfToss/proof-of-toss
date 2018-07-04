@@ -75,7 +75,21 @@ export default class EventWatcher {
       eventBases[address] = Object.assign({address}, this.EventBaseConfig[address]);
 
       if (typeof this.EventBaseConfig[address].artifacts === 'string') {
-        eventBases[address].artifacts = require(`../build_archive/contracts/${this.EventBaseConfig[address].artifacts}`);
+        const artifacts = require(`../build_archive/contracts/${this.EventBaseConfig[address].artifacts}`);
+        const networks = {};
+        
+        networks[this.truffleConfig.network_id] = {
+          'events': {},
+          'links': {},
+          'address': address,
+          'transactionHash': null
+        };
+
+        eventBases[address].artifacts = {
+          contractName: artifacts.contractName,
+          abi: artifacts.abi,
+          networks
+        };
       }
 
       eventBases[address].serializer = require(`../src/util/event/${this.EventBaseConfig[address].serializer}`);
@@ -102,9 +116,6 @@ export default class EventWatcher {
           EventBase: eventBases[address].contractClass,
         }
       );
-
-      const contractTransactionHash = eventBases[address].artifacts.networks[this.truffleConfig.network_id].transactionHash;
-      eventBases[address].fromBlock = (await callAsync(this.web3.eth.getTransactionReceipt.bind(this.web3.eth, contractTransactionHash))).blockNumber;
     }
 
     eventBases = _.sortBy(eventBases, 'fromBlock');
