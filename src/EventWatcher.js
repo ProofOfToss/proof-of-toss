@@ -75,7 +75,12 @@ export default class EventWatcher {
       eventBases[address] = Object.assign({address}, this.EventBaseConfig[address]);
 
       if (typeof this.EventBaseConfig[address].artifacts === 'string') {
-        eventBases[address].artifacts = require(`../build_archive/contracts/${this.EventBaseConfig[address].artifacts}`);
+        const artifacts = require(`../build_archive/contracts/${this.EventBaseConfig[address].artifacts}`);
+
+        eventBases[address].artifacts = {
+          contractName: artifacts.contractName,
+          abi: artifacts.abi
+        };
       }
 
       eventBases[address].serializer = require(`../src/util/event/${this.EventBaseConfig[address].serializer}`);
