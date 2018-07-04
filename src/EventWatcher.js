@@ -102,9 +102,6 @@ export default class EventWatcher {
           EventBase: eventBases[address].contractClass,
         }
       );
-
-      const contractTransactionHash = eventBases[address].artifacts.networks[this.truffleConfig.network_id].transactionHash;
-      eventBases[address].fromBlock = (await callAsync(this.web3.eth.getTransactionReceipt.bind(this.web3.eth, contractTransactionHash))).blockNumber;
     }
 
     eventBases = _.sortBy(eventBases, 'fromBlock');
