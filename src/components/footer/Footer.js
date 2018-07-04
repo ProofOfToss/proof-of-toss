@@ -52,7 +52,7 @@ class Footer extends Component {
         </div>
 
         <div className="footer__nav">
-          <a className="footer__nav_link" href="https://toss.pro/terms-and-conditions" target="_blank">{this.props.translate('footer.terms_conditions')}</a>
+          <Link className="footer__nav_link" to="/terms_and_conditions">{this.props.translate('footer.terms_conditions')}</Link>
           <a className="footer__nav_link" href="https://toss.pro/privacy-policy" target="_blank">{this.props.translate('footer.privacy')}</a>
           <a className="footer__nav_link" href="https://toss.pro" target="_blank">{this.props.translate('footer.about')}</a>
         </div>
