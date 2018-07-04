@@ -64,6 +64,7 @@
   "deploy_from": false,
   "EventBase": {
     "0x91f9ce046b7e7542bc55f2c058a32fba918b1222": {
+      "fromBlock": 605964,
       "expired": false,
       "artifacts": "EventBaseV1.json",
       "indexer": "eventIndexerV1",
