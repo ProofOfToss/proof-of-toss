@@ -138,7 +138,7 @@ function getGasCalculation(web3, gasAmount) {
 
         resolve({
           gasLimit: gasLimit,
-          gasPrice: Math.round(gasPrices.avg),
+          gasPrice: defaultGasPrice,
           minFee: web3.fromWei((gasLimit * gasPrices.min), 'ether'),
           fee: web3.fromWei((gasLimit * gasPrices.avg), 'ether'),
           gasPriceStr: Math.round(web3.fromWei(gasPrices.avg, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei'
