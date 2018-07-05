@@ -1,7 +1,7 @@
 const _ = require('lodash');
 import config from '../data/config.json'
 
-const defaultGasPrice = 1; // 21000000000;
+const defaultGasPrice = 600; // 21000000000;
 
 function getBlockTransactions(web3, block) {
   let transactions = [];
