@@ -80,7 +80,7 @@ function getBlockNumber(web3) {
 function getGasPrices(web3) {
   const BLOCKS_DEPTH = 10;
 
-  var minGasPrice, avgGasPrice, maxGasPrice;
+  var minGasPrice, avgGasPrice, maxGasPrice; // eslint-disable-line no-unused-vars
 
   const promise = new Promise((resolve, reject) => {
     getGasPrice(web3)
@@ -120,7 +120,7 @@ function getGasPrices(web3) {
 
       resolve({
         min: minGasPrice,
-        avg: avgGasPrice < defaultGasPrice ? defaultGasPrice : avgGasPrice,
+        avg: defaultGasPrice, // avgGasPrice < defaultGasPrice ? defaultGasPrice : avgGasPrice,
         max: maxGasPrice,
       });
     })
@@ -138,7 +138,7 @@ function getGasCalculation(web3, gasAmount) {
 
         resolve({
           gasLimit: gasLimit,
-          gasPrice: defaultGasPrice,
+          gasPrice: Math.round(gasPrices.avg),
           minFee: web3.fromWei((gasLimit * gasPrices.min), 'ether'),
           fee: web3.fromWei((gasLimit * gasPrices.avg), 'ether'),
           gasPriceStr: Math.round(web3.fromWei(gasPrices.avg, 'gwei')).toFixed(config.view.gwei_precision) + ' gwei'
