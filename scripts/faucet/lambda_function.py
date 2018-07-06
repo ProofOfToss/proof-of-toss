@@ -400,7 +400,7 @@ def lambda_handler(event, context):
     txn = token.functions.mint(w3.toChecksumAddress(event['account']), int(event['sum'])).buildTransaction({
         'nonce': nonce, 
         'gas': 500000,
-        'gasPrice': 1,
+        'gasPrice': 1000,
     })
     signed_txn = w3.eth.account.signTransaction(txn, private_key=private_key)
     tx_hash = w3.eth.sendRawTransaction(signed_txn.rawTransaction)
@@ -408,7 +408,7 @@ def lambda_handler(event, context):
     txn_sbtc = {
         'nonce': nonce + 1,
         'gas': 500000,
-        'gasPrice': 1,
+        'gasPrice': 1000,
         'to': w3.toChecksumAddress(event['account']),
         'value': 100000000000000,
         'data': w3.toBytes(text='from faucet'),
