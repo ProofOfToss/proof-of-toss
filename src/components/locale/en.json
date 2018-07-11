@@ -1,6 +1,7 @@
 {
   "access_denied": "Access denied",
   "web3_lost_connection": "You have no connection with RPC server. Please check that MetaMask is connected to one of the RPC servers.",
+  "web3_invalid_network": "Switch to rsk testnet",
   "notfound": {
     "error": "Error 404: File Not Found",
     "message": "The requested file could not be found."
