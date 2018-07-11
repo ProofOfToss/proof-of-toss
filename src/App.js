@@ -4,6 +4,7 @@ import initLocale  from './components/locale/init'
 import Header  from './components/navbar_user/Header';
 import Footer  from './components/footer/Footer';
 import ModalWeb3LostConnection from './components/modal/ModalWeb3LostConnection'
+import ModalInvalidNetwork from './components/modal/ModalInvalidNetwork'
 
 global.jQuery = require("jquery");
 require("bootstrap-sass");
@@ -33,7 +34,7 @@ class App extends Component {
 
           <Header />
 
-          {this.props.children}
+          { this.props.web3HasConnection && !this.props.validNetworkSelected ? <ModalInvalidNetwork /> : this.props.children }
 
           <Footer />
 
@@ -48,6 +49,7 @@ function mapPropsToState(state) {
   return {
     isAuthenticated: state.user.isAuthenticated,
     web3HasConnection: state.web3.hasConnection,
+    validNetworkSelected: state.web3.validNetworkSelected,
     isWhitelisted: state.user.isWhitelisted,
   };
 }

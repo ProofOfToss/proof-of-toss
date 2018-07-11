@@ -1,10 +1,15 @@
-import { INIT_WEB3, LOCK_WALLET, UNLOCK_WALLET, CHANGE_ADDRESS, WEB3_LOST_CONNECTION } from '../actions/web3';
+import { INIT_WEB3, LOCK_WALLET, UNLOCK_WALLET, CHANGE_ADDRESS, WEB3_LOST_CONNECTION, WEB3_NETWORK_CHANGED } from '../actions/web3';
+import config from '../data/config.json';
+
+const productNetworkId = config.network_id || 31;
 
 const initialState = {
   'web3': null,
   'currentAddress': null,
   'isWalletLocked': true,
-  'hasConnection': true
+  'hasConnection': true,
+  'currentNetworkId': 0,
+  'validNetworkSelected': true,
 };
 
 function getCurrentAddress(web3) {
@@ -48,6 +53,12 @@ const web3Reducer = (state = initialState, action) => {
     case WEB3_LOST_CONNECTION:
       return Object.assign({}, state, {
         'hasConnection': false
+      });
+
+    case WEB3_NETWORK_CHANGED:
+      return Object.assign({}, state, {
+        'currentNetworkId': parseInt(action.networkId, 10),
+        'validNetworkSelected': parseInt(action.networkId, 10) === parseInt(productNetworkId, 10),
       });
 
     default:
