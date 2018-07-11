@@ -21,11 +21,13 @@ class BaseModal extends Component {
 
   render() {
     return (
-      <div className="modal fade in" ref={(input) => {this.modal = input }}>
+      <div className="modal fade in" ref={(input) => {this.modal = input }} {...(this.props.staticBackdrop ? {'data-backdrop': 'static'} : {})}>
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              {
+                this.props.hideCloseBtn ? null : <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              }
               <h4 className="modal-title">{this.props.title}</h4>
             </div>
             <div className="modal-body">

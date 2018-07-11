@@ -6,6 +6,7 @@ export const LOCK_WALLET = 'LOCK_WALLET';
 export const UNLOCK_WALLET = 'UNLOCK_WALLET';
 export const CHANGE_ADDRESS = 'CHANGE_ADDRESS';
 export const WEB3_LOST_CONNECTION = 'WEB3_LOST_CONNECTION';
+export const WEB3_NETWORK_CHANGED = 'WEB3_NETWORK_CHANGED';
 
 export const initWeb3 = (web3) => ({
   'type': INIT_WEB3,
@@ -34,4 +35,9 @@ export const changeAddress = (newAddress) => {
 
 export const web3LostConnection = () => ({
   'type': WEB3_LOST_CONNECTION
+});
+
+export const web3NetworkChanged = (networkId) => ({
+  'type': WEB3_NETWORK_CHANGED,
+  'networkId': networkId,
 });
