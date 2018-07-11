@@ -30,7 +30,7 @@ import NotFound from './pages/not_found/NotFound';
 
 // Redux Store
 import store from './store';
-import { initWeb3, lockWallet, unlockWallet, changeAddress, web3LostConnection } from './actions/web3';
+import { initWeb3, lockWallet, unlockWallet, changeAddress, web3LostConnection, web3NetworkChanged } from './actions/web3';
 import { watchTransactions } from './actions/tx';
 
 // Put ReactDOM.render() to a function because we need to wrap the rendering with web3 detection
@@ -128,6 +128,13 @@ getWeb3
         hasConnection = false;
 
         store.dispatch(web3LostConnection());
+      }
+
+      if (
+        results.web3.version.network !== 'loading'
+        && parseInt(results.web3.version.network, 10) !== store.getState().web3.currentNetworkId
+      ) {
+        store.dispatch(web3NetworkChanged(results.web3.version.network));
       }
 
       results.web3.eth.getAccounts(function (err, accounts) {
