@@ -136,7 +136,7 @@ class DateFields extends Component {
           <small>{this.props.translate('pages.new_event.form.dates.help')}</small>
         </label>
         <DatePicker
-          isValidDate={(currentDate) => {return DateFields.isValidEndDate(currentDate, this.state.formData.endTime)}}
+          isValidDate={(currentDate) => {return DateFields.isValidEndDate(currentDate, this.state.formData.startTime)}}
           onChange={this.onChangeEndTime}
           timeConstraints={this.calculateEndTimeConstraints()}
           inputProps={this.getEndDateInputProps()}
