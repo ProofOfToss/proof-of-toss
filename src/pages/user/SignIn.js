@@ -89,7 +89,7 @@ class SignIn extends Component {
                   <b>Installing your digital wallet - MetaMask</b><br />
                   To start with PROOF OF TOSS, you will need to install a digital wallet <a href="https://metamask.io">MetaMask</a>.<br />
             Then you need to set up connection with RSK in your MetaMask wallet. In the left upper corner in the MetaMask window press name of  the network (Main, Ropsten etc.).<br />
-            In the dropdown list choose Custom RPC option. Then enter <a href="https://rsk.toss.pro">https://rsk.toss.pro</a> URL in the field New RPC and press Save. That’s it!<br />
+            In the dropdown list choose Custom RPC option. Then enter <a href="https://public-node.testnet.rsk.co/">https://public-node.testnet.rsk.co/</a> URL in the field New RPC and press Save. That’s it!<br />
             In your MetaMask wallet you will see amount in ETH, although it will be SBTC.<br />
             <b>Note</b>: Don't’ forget that digital wallets like MetaMask act like a bank account. Thus, make sure you remember your password or the seed words to recover your wallet.<br />
             Follow the short video instruction <a href="https://www.youtube.com/watch?v=6Gf_kRE4MJU">https://www.youtube.com/watch?v=6Gf_kRE4MJU</a>.<br />
