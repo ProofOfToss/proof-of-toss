@@ -36,7 +36,7 @@ class App extends Component {
 
           <Header />
 
-          { this.props.web3HasConnection && !this.props.validNetworkSelected ? <ModalInvalidNetwork /> : this.props.children }
+          { (this.props.web3HasConnection && this.props.isAuthenticated && !this.props.validNetworkSelected) ? <ModalInvalidNetwork /> : this.props.children }
 
           <Footer />
 
