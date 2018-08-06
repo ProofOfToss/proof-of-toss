@@ -78,35 +78,32 @@ class DateFields extends Component {
   }
 
   calculateStartTimeConstraints() {
+    const timeConstraints = {
+      hours: {min: 0, max: 23},
+    };
+
     if(this.state.formData.startTime.isSame(moment(), 'day')) {
-      return {
-        hours: {
-          min: moment().hours()
-        }
-      }
+      timeConstraints.hours.min = moment().hours();
     }
 
-    return {};
+    return timeConstraints;
   }
 
   calculateEndTimeConstraints() {
+    const timeConstraints = {
+      hours: {min: 0, max: 23},
+      minutes: {min: 0, max: 59},
+    };
+
     if(this.state.formData.endTime.isSame(this.state.formData.startTime, 'day')) {
-      let timeConstraints = {
-        hours: {
-          min: this.state.formData.startTime.hours()
-        }
-      };
+      timeConstraints.hours.min = this.state.formData.startTime.hours();
 
       if(this.state.formData.endTime.isSame(this.state.formData.startTime, 'hour')) {
-        timeConstraints.minutes = {
-          min: this.state.formData.startTime.minutes()
-        }
+        timeConstraints.minutes.min = this.state.formData.startTime.minutes();
       }
-
-      return timeConstraints;
     }
 
-    return {};
+    return timeConstraints;
   }
 
   getEndDateInputProps() {
