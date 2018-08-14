@@ -12,6 +12,7 @@ class EventResults extends Component {
       routeName="admin/event_results"
       refreshInterval="5000"
       includeEndDateColumn="true"
+      freeDateInterval={true}
       defaultSortField="endDate"
       defaultSortOrder="asc"
       location={this.props.location}
