@@ -281,11 +281,23 @@ class Index extends Component {
         }
       } : {}));
 
-      this.setState({
-        data: _.map(res.hits.hits, '_source'),
-        total: res.hits.total,
-        loading: false,
-      });
+      const data = _.map(res.hits.hits, '_source');
+
+      if (
+        (
+          (Array.isArray(this.state.data) && this.state.data.length > 0)
+          && (Array.isArray(data) && data.length > 0)
+          && _.xor(_.map(this.state.data, 'address'), _.map(data, 'address')).length > 0
+        )
+        || this.state.total !== res.hits.total
+        || this.state.loading !== false
+      ) {
+        this.setState({
+          data,
+          total: res.hits.total,
+          loading: false,
+        });
+      }
     } catch (e) {
       console.error(e);
 
@@ -371,7 +383,7 @@ class Index extends Component {
             </div>
 
             <Filter q={this.state.q} onChangeQuery={this.onChangeQuery} onChangeFromDate={this.onChangeFromDate}
-                    fromDate={this.state.fromDate} toDate={this.props.toDate} />
+                    fromDate={this.state.fromDate} toDate={this.props.toDate} freeDateInterval={this.props.freeDateInterval} />
 
           </div>
 

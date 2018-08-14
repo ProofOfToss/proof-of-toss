@@ -16,7 +16,7 @@ class Filter extends Component {
   }
 
   isValidDate(currentDate) {
-    return currentDate.isSameOrAfter(Datetime.moment().add(BIDDING_END_MINUTES, 'minute'), 'day');
+    return this.props.freeDateInterval || currentDate.isSameOrAfter(Datetime.moment().add(BIDDING_END_MINUTES, 'minute'), 'day');
   }
 
   renderInput(props, openCalendar, closeCalendar) {
