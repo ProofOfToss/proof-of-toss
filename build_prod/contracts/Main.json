@@ -154,7 +154,7 @@
         "id": 1445,
         "nodeType": "ImportDirective",
         "scope": 1689,
-        "sourceUnit": 12744,
+        "sourceUnit": 7164,
         "src": "25:58:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -187,7 +187,7 @@
         "id": 1448,
         "nodeType": "ImportDirective",
         "scope": 1689,
-        "sourceUnit": 1811,
+        "sourceUnit": 1754,
         "src": "132:25:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -198,7 +198,7 @@
         "id": 1449,
         "nodeType": "ImportDirective",
         "scope": 1689,
-        "sourceUnit": 10983,
+        "sourceUnit": 5403,
         "src": "158:70:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -212,10 +212,10 @@
               "id": 1450,
               "name": "ERC223ReceivingContract",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 10982,
+              "referencedDeclaration": 5402,
               "src": "247:23:2",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC223ReceivingContract_$10982",
+                "typeIdentifier": "t_contract$_ERC223ReceivingContract_$5402",
                 "typeString": "contract ERC223ReceivingContract"
               }
             },
@@ -226,7 +226,7 @@
         ],
         "contractDependencies": [
           29,
-          10982
+          5402
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -234,7 +234,7 @@
         "id": 1688,
         "linearizedBaseContracts": [
           1688,
-          10982
+          5402
         ],
         "name": "Main",
         "nodeType": "ContractDefinition",
@@ -249,7 +249,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_Token_$12743",
+              "typeIdentifier": "t_contract$_Token_$7163",
               "typeString": "contract Token"
             },
             "typeName": {
@@ -257,10 +257,10 @@
               "id": 1452,
               "name": "Token",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12743,
+              "referencedDeclaration": 7163,
               "src": "277:5:2",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Token_$12743",
+                "typeIdentifier": "t_contract$_Token_$7163",
                 "typeString": "contract Token"
               }
             },
@@ -277,7 +277,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_Whitelist_$1810",
+              "typeIdentifier": "t_contract$_Whitelist_$1753",
               "typeString": "contract Whitelist"
             },
             "typeName": {
@@ -285,10 +285,10 @@
               "id": 1454,
               "name": "Whitelist",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1810,
+              "referencedDeclaration": 1753,
               "src": "294:9:2",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Whitelist_$1810",
+                "typeIdentifier": "t_contract$_Whitelist_$1753",
                 "typeString": "contract Whitelist"
               }
             },
@@ -421,7 +421,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 12758,
+                            "referencedDeclaration": 7178,
                             "src": "434:3:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -475,10 +475,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        12761,
-                        12762
+                        7181,
+                        7182
                       ],
-                      "referencedDeclaration": 12761,
+                      "referencedDeclaration": 7181,
                       "src": "426:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -656,10 +656,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        12761,
-                        12762
+                        7181,
+                        7182
                       ],
-                      "referencedDeclaration": 12761,
+                      "referencedDeclaration": 7181,
                       "src": "703:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -768,7 +768,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 12758,
+                        "referencedDeclaration": 7178,
                         "src": "844:3:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -816,7 +816,7 @@
                       "referencedDeclaration": 1453,
                       "src": "865:5:2",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Token_$12743",
+                        "typeIdentifier": "t_contract$_Token_$7163",
                         "typeString": "contract Token"
                       }
                     },
@@ -850,10 +850,10 @@
                         "name": "Token",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 12743,
+                        "referencedDeclaration": 7163,
                         "src": "873:5:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Token_$12743_$",
+                          "typeIdentifier": "t_type$_t_contract$_Token_$7163_$",
                           "typeString": "type(contract Token)"
                         }
                       },
@@ -867,13 +867,13 @@
                       "nodeType": "FunctionCall",
                       "src": "873:13:2",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Token_$12743",
+                        "typeIdentifier": "t_contract$_Token_$7163",
                         "typeString": "contract Token"
                       }
                     },
                     "src": "865:21:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Token_$12743",
+                      "typeIdentifier": "t_contract$_Token_$7163",
                       "typeString": "contract Token"
                     }
                   },
@@ -898,7 +898,7 @@
                       "referencedDeclaration": 1455,
                       "src": "896:9:2",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Whitelist_$1810",
+                        "typeIdentifier": "t_contract$_Whitelist_$1753",
                         "typeString": "contract Whitelist"
                       }
                     },
@@ -932,10 +932,10 @@
                         "name": "Whitelist",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1810,
+                        "referencedDeclaration": 1753,
                         "src": "908:9:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Whitelist_$1810_$",
+                          "typeIdentifier": "t_type$_t_contract$_Whitelist_$1753_$",
                           "typeString": "type(contract Whitelist)"
                         }
                       },
@@ -949,13 +949,13 @@
                       "nodeType": "FunctionCall",
                       "src": "908:21:2",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Whitelist_$1810",
+                        "typeIdentifier": "t_contract$_Whitelist_$1753",
                         "typeString": "contract Whitelist"
                       }
                     },
                     "src": "896:33:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Whitelist_$1810",
+                      "typeIdentifier": "t_contract$_Whitelist_$1753",
                       "typeString": "contract Whitelist"
                     }
                   },
@@ -1263,10 +1263,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        12761,
-                        12762
+                        7181,
+                        7182
                       ],
-                      "referencedDeclaration": 12761,
+                      "referencedDeclaration": 7181,
                       "src": "1057:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1432,7 +1432,7 @@
                         "referencedDeclaration": 1453,
                         "src": "1206:5:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Token_$12743",
+                          "typeIdentifier": "t_contract$_Token_$7163",
                           "typeString": "contract Token"
                         }
                       }
@@ -1440,7 +1440,7 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_Token_$12743",
+                          "typeIdentifier": "t_contract$_Token_$7163",
                           "typeString": "contract Token"
                         }
                       ],
@@ -1755,7 +1755,7 @@
                         "referencedDeclaration": 1453,
                         "src": "1401:5:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Token_$12743",
+                          "typeIdentifier": "t_contract$_Token_$7163",
                           "typeString": "contract Token"
                         }
                       },
@@ -1766,7 +1766,7 @@
                       "lValueRequested": false,
                       "memberName": "transfer",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 11762,
+                      "referencedDeclaration": 6182,
                       "src": "1401:14:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -1896,7 +1896,7 @@
             "scope": 1688,
             "src": "1310:152:2",
             "stateMutability": "nonpayable",
-            "superFunction": 10981,
+            "superFunction": 5401,
             "visibility": "public"
           },
           {
@@ -2009,10 +2009,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        12761,
-                        12762
+                        7181,
+                        7182
                       ],
-                      "referencedDeclaration": 12761,
+                      "referencedDeclaration": 7181,
                       "src": "1565:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2260,7 +2260,7 @@
                                 "name": "tx",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 12770,
+                                "referencedDeclaration": 7190,
                                 "src": "1794:2:2",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_magic_transaction",
@@ -2298,7 +2298,7 @@
                               "referencedDeclaration": 1455,
                               "src": "1774:9:2",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Whitelist_$1810",
+                                "typeIdentifier": "t_contract$_Whitelist_$1753",
                                 "typeString": "contract Whitelist"
                               }
                             },
@@ -2309,7 +2309,7 @@
                             "lValueRequested": false,
                             "memberName": "whitelist",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1751,
+                            "referencedDeclaration": 1694,
                             "src": "1774:19:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_bool_$",
@@ -2368,10 +2368,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        12761,
-                        12762
+                        7181,
+                        7182
                       ],
-                      "referencedDeclaration": 12761,
+                      "referencedDeclaration": 7181,
                       "src": "1766:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2423,7 +2423,7 @@
                                   "name": "this",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 12823,
+                                  "referencedDeclaration": 7243,
                                   "src": "1872:4:2",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_contract$_Main_$1688",
@@ -2482,7 +2482,7 @@
                               "referencedDeclaration": 1453,
                               "src": "1831:5:2",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Token_$12743",
+                                "typeIdentifier": "t_contract$_Token_$7163",
                                 "typeString": "contract Token"
                               }
                             },
@@ -2493,7 +2493,7 @@
                             "lValueRequested": false,
                             "memberName": "grantedToSetUnpausedWallet",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 12017,
+                            "referencedDeclaration": 6437,
                             "src": "1831:32:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_bool_$",
@@ -2552,10 +2552,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        12761,
-                        12762
+                        7181,
+                        7182
                       ],
-                      "referencedDeclaration": 12761,
+                      "referencedDeclaration": 7181,
                       "src": "1823:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -2808,7 +2808,7 @@
                             "referencedDeclaration": 1453,
                             "src": "2004:5:2",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Token_$12743",
+                              "typeIdentifier": "t_contract$_Token_$7163",
                               "typeString": "contract Token"
                             }
                           }
@@ -2816,7 +2816,7 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_Token_$12743",
+                              "typeIdentifier": "t_contract$_Token_$7163",
                               "typeString": "contract Token"
                             }
                           ],
@@ -2859,7 +2859,7 @@
                             "referencedDeclaration": 1455,
                             "src": "2020:9:2",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Whitelist_$1810",
+                              "typeIdentifier": "t_contract$_Whitelist_$1753",
                               "typeString": "contract Whitelist"
                             }
                           }
@@ -2867,7 +2867,7 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_Whitelist_$1810",
+                              "typeIdentifier": "t_contract$_Whitelist_$1753",
                               "typeString": "contract Whitelist"
                             }
                           ],
@@ -3100,7 +3100,7 @@
                         "referencedDeclaration": 1453,
                         "src": "2070:5:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Token_$12743",
+                          "typeIdentifier": "t_contract$_Token_$7163",
                           "typeString": "contract Token"
                         }
                       },
@@ -3111,7 +3111,7 @@
                       "lValueRequested": false,
                       "memberName": "setUnpausedWallet",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 12133,
+                      "referencedDeclaration": 6553,
                       "src": "2070:23:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_bool_$returns$__$",
@@ -3488,7 +3488,7 @@
         "id": 1445,
         "nodeType": "ImportDirective",
         "scope": 1689,
-        "sourceUnit": 12744,
+        "sourceUnit": 7164,
         "src": "25:58:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -3521,7 +3521,7 @@
         "id": 1448,
         "nodeType": "ImportDirective",
         "scope": 1689,
-        "sourceUnit": 1811,
+        "sourceUnit": 1754,
         "src": "132:25:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -3532,7 +3532,7 @@
         "id": 1449,
         "nodeType": "ImportDirective",
         "scope": 1689,
-        "sourceUnit": 10983,
+        "sourceUnit": 5403,
         "src": "158:70:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -3546,10 +3546,10 @@
               "id": 1450,
               "name": "ERC223ReceivingContract",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 10982,
+              "referencedDeclaration": 5402,
               "src": "247:23:2",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_ERC223ReceivingContract_$10982",
+                "typeIdentifier": "t_contract$_ERC223ReceivingContract_$5402",
                 "typeString": "contract ERC223ReceivingContract"
               }
             },
@@ -3560,7 +3560,7 @@
         ],
         "contractDependencies": [
           29,
-          10982
+          5402
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -3568,7 +3568,7 @@
         "id": 1688,
         "linearizedBaseContracts": [
           1688,
-          10982
+          5402
         ],
         "name": "Main",
         "nodeType": "ContractDefinition",
@@ -3583,7 +3583,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_Token_$12743",
+              "typeIdentifier": "t_contract$_Token_$7163",
               "typeString": "contract Token"
             },
             "typeName": {
@@ -3591,10 +3591,10 @@
               "id": 1452,
               "name": "Token",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 12743,
+              "referencedDeclaration": 7163,
               "src": "277:5:2",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Token_$12743",
+                "typeIdentifier": "t_contract$_Token_$7163",
                 "typeString": "contract Token"
               }
             },
@@ -3611,7 +3611,7 @@
             "stateVariable": true,
             "storageLocation": "default",
             "typeDescriptions": {
-              "typeIdentifier": "t_contract$_Whitelist_$1810",
+              "typeIdentifier": "t_contract$_Whitelist_$1753",
               "typeString": "contract Whitelist"
             },
             "typeName": {
@@ -3619,10 +3619,10 @@
               "id": 1454,
               "name": "Whitelist",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 1810,
+              "referencedDeclaration": 1753,
               "src": "294:9:2",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Whitelist_$1810",
+                "typeIdentifier": "t_contract$_Whitelist_$1753",
                 "typeString": "contract Whitelist"
               }
             },
@@ -3755,7 +3755,7 @@
                             "name": "msg",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 12758,
+                            "referencedDeclaration": 7178,
                             "src": "434:3:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_magic_message",
@@ -3809,10 +3809,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        12761,
-                        12762
+                        7181,
+                        7182
                       ],
-                      "referencedDeclaration": 12761,
+                      "referencedDeclaration": 7181,
                       "src": "426:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -3990,10 +3990,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        12761,
-                        12762
+                        7181,
+                        7182
                       ],
-                      "referencedDeclaration": 12761,
+                      "referencedDeclaration": 7181,
                       "src": "703:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -4102,7 +4102,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 12758,
+                        "referencedDeclaration": 7178,
                         "src": "844:3:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -4150,7 +4150,7 @@
                       "referencedDeclaration": 1453,
                       "src": "865:5:2",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Token_$12743",
+                        "typeIdentifier": "t_contract$_Token_$7163",
                         "typeString": "contract Token"
                       }
                     },
@@ -4184,10 +4184,10 @@
                         "name": "Token",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 12743,
+                        "referencedDeclaration": 7163,
                         "src": "873:5:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Token_$12743_$",
+                          "typeIdentifier": "t_type$_t_contract$_Token_$7163_$",
                           "typeString": "type(contract Token)"
                         }
                       },
@@ -4201,13 +4201,13 @@
                       "nodeType": "FunctionCall",
                       "src": "873:13:2",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Token_$12743",
+                        "typeIdentifier": "t_contract$_Token_$7163",
                         "typeString": "contract Token"
                       }
                     },
                     "src": "865:21:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Token_$12743",
+                      "typeIdentifier": "t_contract$_Token_$7163",
                       "typeString": "contract Token"
                     }
                   },
@@ -4232,7 +4232,7 @@
                       "referencedDeclaration": 1455,
                       "src": "896:9:2",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Whitelist_$1810",
+                        "typeIdentifier": "t_contract$_Whitelist_$1753",
                         "typeString": "contract Whitelist"
                       }
                     },
@@ -4266,10 +4266,10 @@
                         "name": "Whitelist",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 1810,
+                        "referencedDeclaration": 1753,
                         "src": "908:9:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_type$_t_contract$_Whitelist_$1810_$",
+                          "typeIdentifier": "t_type$_t_contract$_Whitelist_$1753_$",
                           "typeString": "type(contract Whitelist)"
                         }
                       },
@@ -4283,13 +4283,13 @@
                       "nodeType": "FunctionCall",
                       "src": "908:21:2",
                       "typeDescriptions": {
-                        "typeIdentifier": "t_contract$_Whitelist_$1810",
+                        "typeIdentifier": "t_contract$_Whitelist_$1753",
                         "typeString": "contract Whitelist"
                       }
                     },
                     "src": "896:33:2",
                     "typeDescriptions": {
-                      "typeIdentifier": "t_contract$_Whitelist_$1810",
+                      "typeIdentifier": "t_contract$_Whitelist_$1753",
                       "typeString": "contract Whitelist"
                     }
                   },
@@ -4597,10 +4597,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        12761,
-                        12762
+                        7181,
+                        7182
                       ],
-                      "referencedDeclaration": 12761,
+                      "referencedDeclaration": 7181,
                       "src": "1057:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -4766,7 +4766,7 @@
                         "referencedDeclaration": 1453,
                         "src": "1206:5:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Token_$12743",
+                          "typeIdentifier": "t_contract$_Token_$7163",
                           "typeString": "contract Token"
                         }
                       }
@@ -4774,7 +4774,7 @@
                     "expression": {
                       "argumentTypes": [
                         {
-                          "typeIdentifier": "t_contract$_Token_$12743",
+                          "typeIdentifier": "t_contract$_Token_$7163",
                           "typeString": "contract Token"
                         }
                       ],
@@ -5089,7 +5089,7 @@
                         "referencedDeclaration": 1453,
                         "src": "1401:5:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Token_$12743",
+                          "typeIdentifier": "t_contract$_Token_$7163",
                           "typeString": "contract Token"
                         }
                       },
@@ -5100,7 +5100,7 @@
                       "lValueRequested": false,
                       "memberName": "transfer",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 11762,
+                      "referencedDeclaration": 6182,
                       "src": "1401:14:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_uint256_$returns$_t_bool_$",
@@ -5230,7 +5230,7 @@
             "scope": 1688,
             "src": "1310:152:2",
             "stateMutability": "nonpayable",
-            "superFunction": 10981,
+            "superFunction": 5401,
             "visibility": "public"
           },
           {
@@ -5343,10 +5343,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        12761,
-                        12762
+                        7181,
+                        7182
                       ],
-                      "referencedDeclaration": 12761,
+                      "referencedDeclaration": 7181,
                       "src": "1565:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -5594,7 +5594,7 @@
                                 "name": "tx",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 12770,
+                                "referencedDeclaration": 7190,
                                 "src": "1794:2:2",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_magic_transaction",
@@ -5632,7 +5632,7 @@
                               "referencedDeclaration": 1455,
                               "src": "1774:9:2",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Whitelist_$1810",
+                                "typeIdentifier": "t_contract$_Whitelist_$1753",
                                 "typeString": "contract Whitelist"
                               }
                             },
@@ -5643,7 +5643,7 @@
                             "lValueRequested": false,
                             "memberName": "whitelist",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 1751,
+                            "referencedDeclaration": 1694,
                             "src": "1774:19:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_bool_$",
@@ -5702,10 +5702,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        12761,
-                        12762
+                        7181,
+                        7182
                       ],
-                      "referencedDeclaration": 12761,
+                      "referencedDeclaration": 7181,
                       "src": "1766:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -5757,7 +5757,7 @@
                                   "name": "this",
                                   "nodeType": "Identifier",
                                   "overloadedDeclarations": [],
-                                  "referencedDeclaration": 12823,
+                                  "referencedDeclaration": 7243,
                                   "src": "1872:4:2",
                                   "typeDescriptions": {
                                     "typeIdentifier": "t_contract$_Main_$1688",
@@ -5816,7 +5816,7 @@
                               "referencedDeclaration": 1453,
                               "src": "1831:5:2",
                               "typeDescriptions": {
-                                "typeIdentifier": "t_contract$_Token_$12743",
+                                "typeIdentifier": "t_contract$_Token_$7163",
                                 "typeString": "contract Token"
                               }
                             },
@@ -5827,7 +5827,7 @@
                             "lValueRequested": false,
                             "memberName": "grantedToSetUnpausedWallet",
                             "nodeType": "MemberAccess",
-                            "referencedDeclaration": 12017,
+                            "referencedDeclaration": 6437,
                             "src": "1831:32:2",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_external_view$_t_address_$returns$_t_bool_$",
@@ -5886,10 +5886,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        12761,
-                        12762
+                        7181,
+                        7182
                       ],
-                      "referencedDeclaration": 12761,
+                      "referencedDeclaration": 7181,
                       "src": "1823:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -6142,7 +6142,7 @@
                             "referencedDeclaration": 1453,
                             "src": "2004:5:2",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Token_$12743",
+                              "typeIdentifier": "t_contract$_Token_$7163",
                               "typeString": "contract Token"
                             }
                           }
@@ -6150,7 +6150,7 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_Token_$12743",
+                              "typeIdentifier": "t_contract$_Token_$7163",
                               "typeString": "contract Token"
                             }
                           ],
@@ -6193,7 +6193,7 @@
                             "referencedDeclaration": 1455,
                             "src": "2020:9:2",
                             "typeDescriptions": {
-                              "typeIdentifier": "t_contract$_Whitelist_$1810",
+                              "typeIdentifier": "t_contract$_Whitelist_$1753",
                               "typeString": "contract Whitelist"
                             }
                           }
@@ -6201,7 +6201,7 @@
                         "expression": {
                           "argumentTypes": [
                             {
-                              "typeIdentifier": "t_contract$_Whitelist_$1810",
+                              "typeIdentifier": "t_contract$_Whitelist_$1753",
                               "typeString": "contract Whitelist"
                             }
                           ],
@@ -6434,7 +6434,7 @@
                         "referencedDeclaration": 1453,
                         "src": "2070:5:2",
                         "typeDescriptions": {
-                          "typeIdentifier": "t_contract$_Token_$12743",
+                          "typeIdentifier": "t_contract$_Token_$7163",
                           "typeString": "contract Token"
                         }
                       },
@@ -6445,7 +6445,7 @@
                       "lValueRequested": false,
                       "memberName": "setUnpausedWallet",
                       "nodeType": "MemberAccess",
-                      "referencedDeclaration": 12133,
+                      "referencedDeclaration": 6553,
                       "src": "2070:23:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_external_nonpayable$_t_address_$_t_bool_$returns$__$",
@@ -6803,10 +6803,10 @@
     "31": {
       "events": {},
       "links": {},
-      "address": "0xe4044341d5c9f79fa07fe56db4786db6dfb5f161",
-      "transactionHash": "0x31d13e40a27df7d7da6c6c3d21bda1dfa26dd3c6258b1009ad6054ea96e600e2"
+      "address": "0x8860f5fea6300e53dee0bd309d6dfab089810d4d",
+      "transactionHash": "0xf58c1bc9b05374232febb3898c4ef723fa9b3daa2ef3e10b88a2d658175e1a98"
     }
   },
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-26T21:47:52.792Z"
+  "updatedAt": "2018-10-15T20:45:32.537Z"
 }

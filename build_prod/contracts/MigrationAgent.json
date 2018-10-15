@@ -30,14 +30,14 @@
     "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
     "exportedSymbols": {
       "MigrationAgent": [
-        11943
+        6363
       ]
     },
-    "id": 11944,
+    "id": 6364,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 11935,
+        "id": 6355,
         "literals": [
           "solidity",
           "^",
@@ -45,7 +45,7 @@
           ".21"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:35"
+        "src": "0:24:27"
       },
       {
         "baseContracts": [],
@@ -53,9 +53,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 11943,
+        "id": 6363,
         "linearizedBaseContracts": [
-          11943
+          6363
         ],
         "name": "MigrationAgent",
         "nodeType": "ContractDefinition",
@@ -63,7 +63,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 11942,
+            "id": 6362,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -71,16 +71,16 @@
             "name": "migrateFrom",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 11940,
+              "id": 6360,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 11937,
+                  "id": 6357,
                   "name": "_from",
                   "nodeType": "VariableDeclaration",
-                  "scope": 11942,
-                  "src": "77:13:35",
+                  "scope": 6362,
+                  "src": "77:13:27",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -88,10 +88,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 11936,
+                    "id": 6356,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "77:7:35",
+                    "src": "77:7:27",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -102,11 +102,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 11939,
+                  "id": 6359,
                   "name": "_value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 11942,
-                  "src": "92:14:35",
+                  "scope": 6362,
+                  "src": "92:14:27",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -114,10 +114,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 11938,
+                    "id": 6358,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "92:7:35",
+                    "src": "92:7:27",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -127,40 +127,40 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "76:31:35"
+              "src": "76:31:27"
             },
             "payable": false,
             "returnParameters": {
-              "id": 11941,
+              "id": 6361,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "114:0:35"
+              "src": "114:0:27"
             },
-            "scope": 11943,
-            "src": "56:59:35",
+            "scope": 6363,
+            "src": "56:59:27",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 11944,
-        "src": "26:91:35"
+        "scope": 6364,
+        "src": "26:91:27"
       }
     ],
-    "src": "0:118:35"
+    "src": "0:118:27"
   },
   "legacyAST": {
     "absolutePath": "/Users/nickolay/workspace/rsk/app/contracts/token-sale-contracts/TokenSale/Token/MigrationAgent.sol",
     "exportedSymbols": {
       "MigrationAgent": [
-        11943
+        6363
       ]
     },
-    "id": 11944,
+    "id": 6364,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 11935,
+        "id": 6355,
         "literals": [
           "solidity",
           "^",
@@ -168,7 +168,7 @@
           ".21"
         ],
         "nodeType": "PragmaDirective",
-        "src": "0:24:35"
+        "src": "0:24:27"
       },
       {
         "baseContracts": [],
@@ -176,9 +176,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 11943,
+        "id": 6363,
         "linearizedBaseContracts": [
-          11943
+          6363
         ],
         "name": "MigrationAgent",
         "nodeType": "ContractDefinition",
@@ -186,7 +186,7 @@
           {
             "body": null,
             "documentation": null,
-            "id": 11942,
+            "id": 6362,
             "implemented": false,
             "isConstructor": false,
             "isDeclaredConst": false,
@@ -194,16 +194,16 @@
             "name": "migrateFrom",
             "nodeType": "FunctionDefinition",
             "parameters": {
-              "id": 11940,
+              "id": 6360,
               "nodeType": "ParameterList",
               "parameters": [
                 {
                   "constant": false,
-                  "id": 11937,
+                  "id": 6357,
                   "name": "_from",
                   "nodeType": "VariableDeclaration",
-                  "scope": 11942,
-                  "src": "77:13:35",
+                  "scope": 6362,
+                  "src": "77:13:27",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -211,10 +211,10 @@
                     "typeString": "address"
                   },
                   "typeName": {
-                    "id": 11936,
+                    "id": 6356,
                     "name": "address",
                     "nodeType": "ElementaryTypeName",
-                    "src": "77:7:35",
+                    "src": "77:7:27",
                     "typeDescriptions": {
                       "typeIdentifier": "t_address",
                       "typeString": "address"
@@ -225,11 +225,11 @@
                 },
                 {
                   "constant": false,
-                  "id": 11939,
+                  "id": 6359,
                   "name": "_value",
                   "nodeType": "VariableDeclaration",
-                  "scope": 11942,
-                  "src": "92:14:35",
+                  "scope": 6362,
+                  "src": "92:14:27",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -237,10 +237,10 @@
                     "typeString": "uint256"
                   },
                   "typeName": {
-                    "id": 11938,
+                    "id": 6358,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "92:7:35",
+                    "src": "92:7:27",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -250,27 +250,27 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "76:31:35"
+              "src": "76:31:27"
             },
             "payable": false,
             "returnParameters": {
-              "id": 11941,
+              "id": 6361,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "114:0:35"
+              "src": "114:0:27"
             },
-            "scope": 11943,
-            "src": "56:59:35",
+            "scope": 6363,
+            "src": "56:59:27",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
-        "scope": 11944,
-        "src": "26:91:35"
+        "scope": 6364,
+        "src": "26:91:27"
       }
     ],
-    "src": "0:118:35"
+    "src": "0:118:27"
   },
   "compiler": {
     "name": "solc",
@@ -278,5 +278,5 @@
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-06-26T21:38:39.895Z"
+  "updatedAt": "2018-10-15T20:39:09.808Z"
 }
